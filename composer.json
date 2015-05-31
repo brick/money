@@ -1,0 +1,25 @@
+{
+    "name": "brick/money",
+    "description": "Money and currency library",
+    "type": "library",
+    "keywords": [
+        "Brick",
+        "Money",
+        "Currency"
+    ],
+    "license": "MIT",
+    "require": {
+        "php": ">=5.6",
+        "brick/math": "0.2.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*",
+        "satooshi/php-coveralls": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "Brick\\Money\\": "src/",
+            "Brick\\Money\\Tests\\": "tests/"
+        }
+    }
+}
