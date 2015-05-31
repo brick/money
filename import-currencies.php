@@ -191,23 +191,22 @@ $symbols = [
     'ZWL' => '$',
 ];
 
-$data = file_get_contents('http://www.currency-iso.org/dam/downloads/dl_iso_table_a1.xml');
+$data = file_get_contents('http://www.currency-iso.org/dam/downloads/table_a1.xml');
 
 $document = new DOMDocument();
 $document->loadXML($data);
 
-$currencies = $document->getElementsByTagName('ISO_CURRENCY');
+$countries = $document->getElementsByTagName('CcyNtry');
 $result = [];
 
-foreach ($currencies as $currency) {
-    /** @var $currency DOMElement */
-    $entity = getDomElementString($currency, 'ENTITY');
-    $name = getDomElementString($currency, 'CURRENCY');
-    $currencyCode = getDomElementString($currency, 'ALPHABETIC_CODE');
-    $numericCode = getDomElementString($currency, 'NUMERIC_CODE');
-    $minorUnit = getDomElementString($currency, 'MINOR_UNIT');
+foreach ($countries as $country) {
+    /** @var DOMElement $country */
+    $name = getDomElementString($country, 'CcyNm');
+    $currencyCode = getDomElementString($country, 'Ccy');
+    $numericCode = getDomElementString($country, 'CcyNbr');
+    $minorUnit = getDomElementString($country, 'CcyMnrUnts');
 
-    if ($currencyCode == '' && $numericCode == '' && $minorUnit == '') {
+    if ($name === null || $currencyCode === null && $numericCode === null && $minorUnit == null) {
         continue;
     }
 
@@ -220,6 +219,14 @@ foreach ($currencies as $currency) {
         $symbol = $symbols[$currencyCode];
     } else {
         die("Missing symbol for $currencyCode");
+    }
+
+    $value = [$currencyCode, $numericCode, $name, $symbol, $minorUnit];
+
+    if (isset($result[$currencyCode])) {
+        if ($result[$currencyCode] !== $value) {
+            throw new \RuntimeException('Inconsistent values found for currency code ' . $currencyCode);
+        }
     }
 
     $result[$currencyCode] = [$currencyCode, $numericCode, $name, $symbol, $minorUnit];
@@ -244,9 +251,7 @@ function exportToFile($file, $data)
  * @param DOMElement $element
  * @param string     $name
  *
- * @return string
- *
- * @throws RuntimeException
+ * @return string|null
  */
 function getDomElementString(DOMElement $element, $name)
 {
@@ -255,7 +260,7 @@ function getDomElementString(DOMElement $element, $name)
         return $child->textContent;
     }
 
-    throw new \RuntimeException('Could not find an element named ' . $name);
+    return null;
 }
 
 /**

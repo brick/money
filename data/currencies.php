@@ -275,7 +275,7 @@
   array (
     0 => 'CVE',
     1 => 132,
-    2 => 'Cape Verde Escudo',
+    2 => 'Cabo Verde Escudo',
     3 => '$',
     4 => 2,
   ),
@@ -291,9 +291,9 @@
   array (
     0 => 'CLF',
     1 => 990,
-    2 => 'Unidades de fomento',
+    2 => 'Unidad de Fomento',
     3 => 'CLF',
-    4 => 0,
+    4 => 4,
   ),
   'CLP' => 
   array (
@@ -703,14 +703,6 @@
     3 => '₭',
     4 => 2,
   ),
-  'LVL' => 
-  array (
-    0 => 'LVL',
-    1 => 428,
-    2 => 'Latvian Lats',
-    3 => 'Ls',
-    4 => 2,
-  ),
   'LBP' => 
   array (
     0 => 'LBP',
@@ -757,14 +749,6 @@
     1 => 756,
     2 => 'Swiss Franc',
     3 => 'CHF',
-    4 => 2,
-  ),
-  'LTL' => 
-  array (
-    0 => 'LTL',
-    1 => 440,
-    2 => 'Lithuanian Litas',
-    3 => 'Lt',
     4 => 2,
   ),
   'MOP' => 
@@ -1287,14 +1271,6 @@
     3 => 'USN',
     4 => 2,
   ),
-  'USS' => 
-  array (
-    0 => 'USS',
-    1 => 998,
-    2 => 'US Dollar (Same day)',
-    3 => 'USS',
-    4 => 2,
-  ),
   'UYI' => 
   array (
     0 => 'UYI',
@@ -1331,7 +1307,7 @@
   array (
     0 => 'VEF',
     1 => 937,
-    2 => 'Bolivar ',
+    2 => 'Bolivar',
     3 => 'Bs',
     4 => 2,
   ),
@@ -1397,14 +1373,6 @@
     1 => 958,
     2 => 'Bond Markets Unit European Unit of Account 17 (E.U.A.-17)',
     3 => 'XBD',
-    4 => -1,
-  ),
-  'XFU' => 
-  array (
-    0 => 'XFU',
-    1 => 0,
-    2 => 'UIC-Franc',
-    3 => 'XFU',
     4 => -1,
   ),
   'XTS' => 
