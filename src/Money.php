@@ -96,7 +96,7 @@ class Money
     /**
      * @param Currency|string                $currency     A Currency instance or currency code.
      * @param Money|BigDecimal|number|string $amount       A Money instance or decimal amount.
-     * @param integer                        $roundingMode The rounding mode to use.
+     * @param int                            $roundingMode The rounding mode to use.
      *
      * @return Money
      *
@@ -121,8 +121,8 @@ class Money
     }
 
     /**
-     * @param Currency|string           $currency The currency.
-     * @param BigInteger|integer|string $cents    The amount in cents.
+     * @param Currency|string       $currency The currency.
+     * @param BigInteger|int|string $cents    The amount in cents.
      *
      * @return Money
      */
@@ -245,7 +245,7 @@ class Money
 
     /**
      * @param BigDecimal|number|string $that
-     * @param integer                  $roundingMode
+     * @param int                      $roundingMode
      *
      * @return \Brick\Money\Money
      */
@@ -261,7 +261,7 @@ class Money
 
     /**
      * @param BigDecimal|number|string $that
-     * @param integer                  $roundingMode
+     * @param int                      $roundingMode
      *
      * @return \Brick\Money\Money
      */
@@ -288,7 +288,7 @@ class Money
     /**
      * Returns whether this Money has zero value.
      *
-     * @return boolean
+     * @return bool
      */
     public function isZero()
     {
@@ -298,7 +298,7 @@ class Money
     /**
      * Returns whether this Money has a negative value.
      *
-     * @return boolean
+     * @return bool
      */
     public function isNegative()
     {
@@ -308,7 +308,7 @@ class Money
     /**
      * Returns whether this Money has a negative or zero value.
      *
-     * @return boolean
+     * @return bool
      */
     public function isNegativeOrZero()
     {
@@ -318,7 +318,7 @@ class Money
     /**
      * Returns whether this Money has a positive value.
      *
-     * @return boolean
+     * @return bool
      */
     public function isPositive()
     {
@@ -328,7 +328,7 @@ class Money
     /**
      * Returns whether this Money has a positive or zero value.
      *
-     * @return boolean
+     * @return bool
      */
     public function isPositiveOrZero()
     {
@@ -340,7 +340,7 @@ class Money
      *
      * @param Money|BigDecimal|number|string $that
      *
-     * @return integer -1, 0 or 1.
+     * @return int -1, 0 or 1.
      *
      * @throws CurrencyMismatchException
      */
@@ -356,7 +356,7 @@ class Money
      *
      * @param Money|BigDecimal|number|string $that
      *
-     * @return boolean
+     * @return bool
      *
      * @throws CurrencyMismatchException
      */
@@ -372,7 +372,7 @@ class Money
      *
      * @param Money|BigDecimal|number|string $that
      *
-     * @return boolean
+     * @return bool
      *
      * @throws CurrencyMismatchException
      */
@@ -388,7 +388,7 @@ class Money
      *
      * @param Money|BigDecimal|number|string $that
      *
-     * @return boolean
+     * @return bool
      *
      * @throws CurrencyMismatchException
      */
@@ -404,7 +404,7 @@ class Money
      *
      * @param Money|BigDecimal|number|string $that
      *
-     * @return boolean
+     * @return bool
      *
      * @throws CurrencyMismatchException
      */
@@ -420,7 +420,7 @@ class Money
      *
      * @param Money|BigDecimal|number|string $that
      *
-     * @return boolean
+     * @return bool
      *
      * @throws CurrencyMismatchException
      */

@@ -49,9 +49,9 @@ class Currency
      * Private constructor. Use getInstance() to obtain an instance.
      *
      * @param string  $currencyCode  The ISO 4217 alphabetic currency code.
-     * @param integer $numericCode   The ISO 4217 numeric currency code.
+     * @param int     $numericCode   The ISO 4217 numeric currency code.
      * @param string  $name          The English currency name.
-     * @param integer $decimalPlaces The default number of fraction digits.
+     * @param int     $decimalPlaces The default number of fraction digits.
      */
     private function __construct($currencyCode, $numericCode, $name, $decimalPlaces)
     {

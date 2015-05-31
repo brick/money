@@ -16,13 +16,13 @@ class CurrencyConverter
     private $exchangeRateProvider;
 
     /**
-     * @var integer
+     * @var int
      */
     private $roundingMode = RoundingMode::FLOOR;
 
     /**
      * @param ExchangeRateProvider $exchangeRateProvider The exchange rate provider.
-     * @param integer              $roundingMode         The rounding mode to use for conversions.
+     * @param int                  $roundingMode         The rounding mode to use for conversions.
      */
     public function __construct(ExchangeRateProvider $exchangeRateProvider, $roundingMode = RoundingMode::FLOOR)
     {
@@ -62,7 +62,7 @@ class CurrencyConverter
      * @param Money $a
      * @param Money $b
      *
-     * @return integer -1, 0 or 1.
+     * @return int -1, 0 or 1.
      */
     public function compare(Money $a, Money $b)
     {
