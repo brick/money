@@ -39,13 +39,6 @@ class Currency
     private $name;
 
     /**
-     * The UTF-8 currency symbol.
-     *
-     * @var string
-     */
-    private $symbol;
-
-    /**
      * The default number of fraction digits used with this currency.
      *
      * @var int
@@ -58,15 +51,13 @@ class Currency
      * @param string  $currencyCode  The ISO 4217 alphabetic currency code.
      * @param integer $numericCode   The ISO 4217 numeric currency code.
      * @param string  $name          The English currency name.
-     * @param string  $symbol        The UTF-8 currency symbol.
      * @param integer $decimalPlaces The default number of fraction digits.
      */
-    private function __construct($currencyCode, $numericCode, $name, $symbol, $decimalPlaces)
+    private function __construct($currencyCode, $numericCode, $name, $decimalPlaces)
     {
         $this->currencyCode          = $currencyCode;
         $this->numericCode           = $numericCode;
         $this->name                  = $name;
-        $this->symbol                = $symbol;
         $this->defaultFractionDigits = $decimalPlaces;
     }
 
@@ -104,9 +95,9 @@ class Currency
                 throw new \InvalidArgumentException('Invalid currency code: ' . $currency);
             }
 
-            list ($currencyCode, $numericCode, $name, $symbol, $fractionDigits) = self::$currencies[$currency];
+            list ($currencyCode, $numericCode, $name, $fractionDigits) = self::$currencies[$currency];
 
-            self::$instances[$currency] = new self($currencyCode, $numericCode, $name, $symbol, $fractionDigits);
+            self::$instances[$currency] = new self($currencyCode, $numericCode, $name, $fractionDigits);
         }
 
         return self::$instances[$currency];
@@ -154,14 +145,6 @@ class Currency
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSymbol()
-    {
-        return $this->symbol;
     }
 
     /**

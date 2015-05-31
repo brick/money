@@ -1,195 +1,11 @@
 <?php
 
 /**
- * Currency symbols.
+ * This script creates an array of currencies from a trusted source.
+ * The result of the script is exported in PHP format to be used by the library at runtime.
  *
- * @see http://www.xe.com/symbols.php
- * @see http://en.wikipedia.org/wiki/ISO_4217
+ * This script is meant to be run by project maintainers, on a regular basis.
  */
-$symbols = [
-    'AED' => 'د.إ',
-    'AFN' => 'Af',
-    'ALL' => 'Lek',
-    'AMD' => "\xd6\x8f",
-    'ANG' => 'ƒ',
-    'AOA' => 'Kz',
-    'ARS' => '$',
-    'AUD' => '$',
-    'AWG' => 'Afl.',
-    'AZN' => 'ман',
-    'BAM' => 'KM',
-    'BBD' => 'Bds$',
-    'BDT' => "\xe0\xa7\xb3",
-    'BGN' => 'лв',
-    'BHD' => '.د.ب',
-    'BIF' => 'FBu',
-    'BMD' => 'BD$',
-    'BND' => 'B$',
-    'BOB' => 'Bs.',
-    'BOV' => 'BOV',
-    'BRL' => 'R$',
-    'BSD' => 'B$',
-    'BTN' => 'Nu.',
-    'BWP' => 'P',
-    'BYR' => 'Br',
-    'BZD' => 'BZ$',
-    'CAD' => '$',
-    'CDF' => 'FC',
-    'CHE' => 'CHE',
-    'CHF' => 'CHF',
-    'CHW' => 'CHW',
-    'CLF' => 'CLF',
-    'CLP' => '$',
-    'CNY' => '¥',
-    'COP' => '$',
-    'COU' => 'COU',
-    'CRC' => '₡',
-    'CUC' => '$',
-    'CUP' => '$',
-    'CVE' => '$',
-    'CZK' => 'Kč',
-    'DJF' => 'Fdj',
-    'DKK' => 'kr.',
-    'DOP' => '$',
-    'DZD' => 'دج',
-    'EGP' => 'ج.م',
-    'ERN' => 'Nfk',
-    'ETB' => 'Br',
-    'EUR' => '€',
-    'FJD' => 'FJ$',
-    'FKP' => '£',
-    'GBP' => '£',
-    'GEL' => 'ლ',
-    'GHS' => 'GH₵',
-    'GIP' => '£',
-    'GMD' => 'D',
-    'GNF' => 'FG',
-    'GTQ' => 'Q',
-    'GYD' => '$',
-    'HKD' => '$',
-    'HNL' => 'L',
-    'HRK' => 'kn',
-    'HTG' => 'G',
-    'HUF' => 'Ft',
-    'IDR' => 'Rp',
-    'ILS' => '₪',
-    'INR' => "\xe2\x82\xb9",
-    'IQD' => 'ع.د',
-    'IRR' => "\xef\xb7\xbc",
-    'ISK' => 'kr',
-    'JMD' => '$',
-    'JOD' => 'ينار',
-    'JPY' => '¥',
-    'KES' => 'KSh',
-    'KGS' => 'сом',
-    'KHR' => "\xe1\x9f\x9b",
-    'KMF' => 'CF',
-    'KPW' => '₩',
-    'KRW' => '₩',
-    'KWD' => 'د.ك',
-    'KYD' => '$',
-    'KZT' => "\xe2\x82\xb8",
-    'LAK' => '₭',
-    'LBP' => 'ل.ل',
-    'LKR' => '₨',
-    'LRD' => 'L$',
-    'LSL' => 'L',
-    'LTL' => 'Lt',
-    'LVL' => 'Ls',
-    'LYD' => 'ل.د',
-    'MAD' => 'د.م.',
-    'MDL' => 'L',
-    'MGA' => 'Ar',
-    'MKD' => 'ден',
-    'MMK' => 'K',
-    'MNT' => '₮',
-    'MOP' => 'MOP$',
-    'MRO' => 'UM',
-    'MUR' => '₨',
-    'MVR' => 'Rf',
-    'MWK' => 'MK',
-    'MXN' => '$',
-    'MXV' => 'MXV',
-    'MYR' => 'RM',
-    'MZN' => 'MT',
-    'NAD' => '$',
-    'NGN' => '₦',
-    'NIO' => 'C$',
-    'NOK' => 'kr',
-    'NPR' => '₨',
-    'NZD' => '$',
-    'OMR' => '﷼',
-    'PAB' => 'B/.',
-    'PEN' => 'S/.',
-    'PGK' => 'K',
-    'PHP' => '₱',
-    'PKR' => '₨',
-    'PLN' => 'zł',
-    'PYG' => 'Gs',
-    'QAR' => '﷼',
-    'RON' => 'lei',
-    'RSD' => 'Дин.',
-    'RUB' => 'руб',
-    'RWF' => 'FRw',
-    'SAR' => '﷼',
-    'SBD' => '$',
-    'SCR' => '₨',
-    'SDG' => 'SDG',
-    'SEK' => 'kr',
-    'SGD' => '$',
-    'SHP' => '£',
-    'SLL' => 'Le',
-    'SOS' => 'S',
-    'SRD' => '$',
-    'SSP' => 'SSP',
-    'STD' => 'Db',
-    'SVC' => '₡',
-    'SYP' => '£',
-    'SZL' => 'L',
-    'THB' => '฿',
-    'TJS' => 'TJS',
-    'TMT' => 'T',
-    'TND' => 'د.ت',
-    'TOP' => 'T$',
-    'TRY' => "\xe2\x82\xba",
-    'TTD' => 'TT$',
-    'TWD' => 'NT$',
-    'TZS' => 'TZS',
-    'UAH' => '₴',
-    'UGX' => 'USh',
-    'USD' => '$',
-    'USN' => 'USN',
-    'USS' => 'USS',
-    'UYI' => 'UYI',
-    'UYU' => '$U',
-    'UZS' => 'лв',
-    'VEF' => 'Bs',
-    'VND' => '₫',
-    'VUV' => 'VT',
-    'WST' => 'WS$',
-    'XAF' => 'FCFA',
-    'XAG' => 'XAG',
-    'XAU' => 'XAU',
-    'XBA' => 'XBA',
-    'XBB' => 'XBB',
-    'XBC' => 'XBC',
-    'XBD' => 'XBD',
-    'XCD' => '$',
-    'XDR' => 'XDR',
-    'XFU' => 'XFU',
-    'XOF' => 'CFA',
-    'XPD' => 'XPD',
-    'XPF' => 'F',
-    'XPT' => 'XPT',
-    'XSU' => 'XSU',
-    'XTS' => 'XTS',
-    'XUA' => 'XUA',
-    'XXX' => 'XXX',
-    'YER' => '﷼',
-    'ZAR' => 'R',
-    'ZMW' => 'ZK',
-    'ZWL' => '$',
-];
 
 $data = file_get_contents('http://www.currency-iso.org/dam/downloads/table_a1.xml');
 
@@ -215,21 +31,15 @@ foreach ($countries as $country) {
     $numericCode = checkNumericCode($numericCode);
     $minorUnit = checkMinorUnit($minorUnit);
 
-    if (isset($symbols[$currencyCode])) {
-        $symbol = $symbols[$currencyCode];
-    } else {
-        die("Missing symbol for $currencyCode");
-    }
-
-    $value = [$currencyCode, $numericCode, $name, $symbol, $minorUnit];
+    $value = [$currencyCode, $numericCode, $name, $minorUnit];
 
     if (isset($result[$currencyCode])) {
         if ($result[$currencyCode] !== $value) {
             throw new \RuntimeException('Inconsistent values found for currency code ' . $currencyCode);
         }
+    } else {
+        $result[$currencyCode] = $value;
     }
-
-    $result[$currencyCode] = [$currencyCode, $numericCode, $name, $symbol, $minorUnit];
 }
 
 exportToFile('data/currencies.php', $result);
@@ -265,7 +75,9 @@ function getDomElementString(DOMElement $element, $name)
 
 /**
  * @param string $name
+ *
  * @return string
+ *
  * @throws RuntimeException
  */
 function checkName($name)
@@ -279,7 +91,9 @@ function checkName($name)
 
 /**
  * @param string $currencyCode
+ *
  * @return string
+ *
  * @throws RuntimeException
  */
 function checkCurrencyCode($currencyCode)
@@ -293,7 +107,9 @@ function checkCurrencyCode($currencyCode)
 
 /**
  * @param string $numericCode
+ *
  * @return int
+ *
  * @throws RuntimeException
  */
 function checkNumericCode($numericCode)
@@ -311,7 +127,9 @@ function checkNumericCode($numericCode)
 
 /**
  * @param string $minorUnit
+ *
  * @return int
+ *
  * @throws RuntimeException
  */
 function checkMinorUnit($minorUnit)
