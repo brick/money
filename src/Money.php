@@ -14,13 +14,6 @@ use Brick\Math\ArithmeticException;
 class Money
 {
     /**
-     * The currency.
-     *
-     * @var \Brick\Money\Currency
-     */
-    private $currency;
-
-    /**
      * The amount, with a scale matching the currency's fraction digits.
      *
      * @var \Brick\Math\BigDecimal
@@ -28,15 +21,22 @@ class Money
     private $amount;
 
     /**
+     * The currency.
+     *
+     * @var \Brick\Money\Currency
+     */
+    private $currency;
+
+    /**
      * Class constructor.
      *
-     * @param Currency   $currency The currency.
      * @param BigDecimal $amount   The amount, with scale matching the currency's fraction digits.
+     * @param Currency   $currency The currency.
      */
-    private function __construct(Currency $currency, BigDecimal $amount)
+    private function __construct(BigDecimal $amount, Currency $currency)
     {
-        $this->currency = $currency;
         $this->amount   = $amount;
+        $this->currency = $currency;
     }
 
     /**
@@ -94,8 +94,8 @@ class Money
     }
 
     /**
-     * @param Currency|string                $currency     A Currency instance or currency code.
      * @param Money|BigDecimal|number|string $amount       A Money instance or decimal amount.
+     * @param Currency|string                $currency     A Currency instance or currency code.
      * @param int                            $roundingMode The rounding mode to use.
      *
      * @return Money
@@ -104,7 +104,7 @@ class Money
      * @throws ArithmeticException       If the scale exceeds the currency scale and no rounding is requested.
      * @throws \InvalidArgumentException If an invalid rounding mode is given.
      */
-    public static function of($currency, $amount, $roundingMode = RoundingMode::UNNECESSARY)
+    public static function of($amount, $currency, $roundingMode = RoundingMode::UNNECESSARY)
     {
         $currency = Currency::of($currency);
 
@@ -117,21 +117,23 @@ class Money
         $scale  = $currency->getDefaultFractionDigits();
         $amount = BigDecimal::of($amount)->withScale($scale, $roundingMode);
 
-        return new Money($currency, $amount);
+        return new Money($amount, $currency);
     }
 
     /**
+     * @todo rename: cents is not appropriate
+     *
+     * @param BigInteger|int|string $cents    The integer amount in cents.
      * @param Currency|string       $currency The currency.
-     * @param BigInteger|int|string $cents    The amount in cents.
      *
      * @return Money
      */
-    public static function ofCents($currency, $cents)
+    public static function ofCents($cents, $currency)
     {
         $currency = Currency::of($currency);
         $amount   = BigDecimal::ofUnscaledValue($cents, $currency->getDefaultFractionDigits());
 
-        return new Money($currency, $amount);
+        return new Money($amount, $currency);
     }
 
     /**
@@ -164,7 +166,7 @@ class Money
         }
 
         try {
-            return Money::of($currency, $amount);
+            return Money::of($amount, $currency);
         }
         catch (ArithmeticException $e) {
             throw MoneyParseException::wrap($e);
@@ -180,7 +182,7 @@ class Money
      */
     public static function zero($currency)
     {
-        return Money::of($currency, 0);
+        return Money::of(0, $currency);
     }
 
     /**
@@ -226,9 +228,9 @@ class Money
      */
     public function plus($that)
     {
-        $that = Money::of($this->currency, $that);
+        $that = Money::of($that, $this->currency);
 
-        return new Money($this->currency, $this->amount->plus($that->amount));
+        return new Money($this->amount->plus($that->amount), $this->currency);
     }
 
     /**
@@ -238,9 +240,9 @@ class Money
      */
     public function minus($that)
     {
-        $that = Money::of($this->currency, $that);
+        $that = Money::of($that, $this->currency);
 
-        return new Money($this->currency, $this->amount->minus($that->amount));
+        return new Money($this->amount->minus($that->amount), $this->currency);
     }
 
     /**
@@ -256,7 +258,7 @@ class Money
         $scale  = $this->currency->getDefaultFractionDigits();
         $amount = $this->amount->multipliedBy($that)->withScale($scale, $roundingMode);
 
-        return new Money($this->currency, $amount);
+        return new Money($amount, $this->currency);
     }
 
     /**
@@ -272,7 +274,7 @@ class Money
         $scale  = $this->currency->getDefaultFractionDigits();
         $amount = $this->amount->dividedBy($that, $scale, $roundingMode);
 
-        return new Money($this->currency, $amount);
+        return new Money($amount, $this->currency);
     }
 
     /**
@@ -282,7 +284,7 @@ class Money
      */
     public function negated()
     {
-        return new Money($this->currency, $this->amount->negated());
+        return new Money($this->amount->negated(), $this->currency);
     }
 
     /**
@@ -346,7 +348,7 @@ class Money
      */
     public function compareTo($that)
     {
-        $that = Money::of($this->currency, $that);
+        $that = Money::of($that, $this->currency);
 
         return $this->amount->compareTo($that->amount);
     }
@@ -362,7 +364,7 @@ class Money
      */
     public function isEqualTo($that)
     {
-        $that = Money::of($this->currency, $that);
+        $that = Money::of($that, $this->currency);
 
         return $this->amount->isEqualTo($that->amount);
     }
@@ -378,7 +380,7 @@ class Money
      */
     public function isLessThan($that)
     {
-        $that = Money::of($this->currency, $that);
+        $that = Money::of($that, $this->currency);
 
         return $this->amount->isLessThan($that->amount);
     }
@@ -394,7 +396,7 @@ class Money
      */
     public function isLessThanOrEqualTo($that)
     {
-        $that = Money::of($this->currency, $that);
+        $that = Money::of($that, $this->currency);
 
         return $this->amount->isLessThanOrEqualTo($that->amount);
     }
@@ -410,7 +412,7 @@ class Money
      */
     public function isGreaterThan($that)
     {
-        $that = Money::of($this->currency, $that);
+        $that = Money::of($that, $this->currency);
 
         return $this->amount->isGreaterThan($that->amount);
     }
@@ -426,7 +428,7 @@ class Money
      */
     public function isGreaterThanOrEqualTo($that)
     {
-        $that = Money::of($this->currency, $that);
+        $that = Money::of($that, $this->currency);
 
         return $this->amount->isGreaterThanOrEqualTo($that->amount);
     }

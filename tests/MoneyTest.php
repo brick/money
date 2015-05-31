@@ -12,11 +12,11 @@ use Brick\Math\RoundingMode;
 class MoneyTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @param string       $expectedCurrency The expected currency code.
-     * @param string       $expectedAmount   The expected decimal amount.
-     * @param Money|string $actual           The value to test.
+     * @param string $expectedAmount The expected decimal amount.
+     * @param string $expectedCurrency The expected currency code.
+     * @param Money|string $actual The value to test.
      */
-    private function assertMoneyEquals($expectedCurrency, $expectedAmount, Money $actual)
+    private function assertMoneyEquals($expectedAmount, $expectedCurrency, Money $actual)
     {
         $this->assertSame($expectedCurrency, $actual->getCurrency()->getCode());
         $this->assertSame($expectedAmount, (string) $actual->getAmount());
@@ -31,7 +31,7 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
      */
     public function testOfCents($currency, $cents, $expectedAmount)
     {
-        $this->assertMoneyEquals($currency, $expectedAmount, Money::ofCents($currency, $cents));
+        $this->assertMoneyEquals($expectedAmount, $currency, Money::ofCents($cents, $currency));
     }
 
     /**
@@ -48,11 +48,11 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
 
     public function testPlus()
     {
-        $money = Money::of('USD', '12.34');
+        $money = Money::of('12.34', 'USD');
 
-        $this->assertMoneyEquals('USD', '13.34', $money->plus(1));
-        $this->assertMoneyEquals('USD', '13.57', $money->plus('1.23'));
-        $this->assertMoneyEquals('USD', '24.68', $money->plus($money));
+        $this->assertMoneyEquals('13.34', 'USD', $money->plus(1));
+        $this->assertMoneyEquals('13.57', 'USD', $money->plus('1.23'));
+        $this->assertMoneyEquals('24.68', 'USD', $money->plus($money));
     }
 
     /**
@@ -60,7 +60,7 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
      */
     public function testPlusOutOfScaleThrowsException()
     {
-        Money::of('USD', '12.34')->plus('0.001');
+        Money::of('12.34', 'USD')->plus('0.001');
     }
 
     /**
@@ -68,16 +68,16 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
      */
     public function testPlusDifferentCurrencyThrowsException()
     {
-        Money::of('USD', '12.34')->plus(Money::of('EUR', '1'));
+        Money::of('12.34', 'USD')->plus(Money::of('1', 'EUR'));
     }
 
     public function testMinus()
     {
-        $money = Money::of('USD', '12.34');
+        $money = Money::of('12.34', 'USD');
 
-        $this->assertMoneyEquals('USD', '11.34', $money->minus(1));
-        $this->assertMoneyEquals('USD', '11.11', $money->minus('1.23'));
-        $this->assertMoneyEquals('USD', '0.00', $money->minus($money));
+        $this->assertMoneyEquals('11.34', 'USD', $money->minus(1));
+        $this->assertMoneyEquals('11.11', 'USD', $money->minus('1.23'));
+        $this->assertMoneyEquals('0.00', 'USD', $money->minus($money));
     }
 
     /**
@@ -85,7 +85,7 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
      */
     public function testMinusOutOfScaleThrowsException()
     {
-        Money::of('USD', '12.34')->minus('0.001');
+        Money::of('12.34', 'USD')->minus('0.001');
     }
 
     /**
@@ -93,17 +93,17 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
      */
     public function testMinusDifferentCurrencyThrowsException()
     {
-        Money::of('USD', '12.34')->minus(Money::of('EUR', '1'));
+        Money::of('12.34', 'USD')->minus(Money::of('1', 'EUR'));
     }
 
     public function testMultipliedBy()
     {
-        $money = Money::of('USD', '12.34');
+        $money = Money::of('12.34', 'USD');
 
-        $this->assertMoneyEquals('USD', '24.68', $money->multipliedBy(2));
-        $this->assertMoneyEquals('USD', '18.51', $money->multipliedBy('1.5'));
-        $this->assertMoneyEquals('USD', '14.80', $money->multipliedBy('1.2', RoundingMode::DOWN));
-        $this->assertMoneyEquals('USD', '14.81', $money->multipliedBy(BigDecimal::of('1.2'), RoundingMode::UP));
+        $this->assertMoneyEquals('24.68', 'USD', $money->multipliedBy(2));
+        $this->assertMoneyEquals('18.51', 'USD', $money->multipliedBy('1.5'));
+        $this->assertMoneyEquals('14.80', 'USD', $money->multipliedBy('1.2', RoundingMode::DOWN));
+        $this->assertMoneyEquals('14.81', 'USD', $money->multipliedBy(BigDecimal::of('1.2'), RoundingMode::UP));
     }
 
     /**
@@ -111,16 +111,16 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
      */
     public function testMultipliedByOutOfScaleThrowsException()
     {
-        Money::of('USD', '12.34')->multipliedBy('1.1');
+        Money::of('12.34', 'USD')->multipliedBy('1.1');
     }
 
     public function testDividedBy()
     {
-        $money = Money::of('USD', '12.34');
+        $money = Money::of('12.34', 'USD');
 
-        $this->assertMoneyEquals('USD', '6.17', $money->dividedBy(2));
-        $this->assertMoneyEquals('USD', '10.28', $money->dividedBy('1.2', RoundingMode::DOWN));
-        $this->assertMoneyEquals('USD', '10.29', $money->dividedBy(BigDecimal::of('1.2'), RoundingMode::UP));
+        $this->assertMoneyEquals('6.17', 'USD', $money->dividedBy(2));
+        $this->assertMoneyEquals('10.28', 'USD', $money->dividedBy('1.2', RoundingMode::DOWN));
+        $this->assertMoneyEquals('10.29', 'USD', $money->dividedBy(BigDecimal::of('1.2'), RoundingMode::UP));
     }
 
     /**
@@ -128,42 +128,42 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
      */
     public function testDividedByOutOfScaleThrowsException()
     {
-        Money::of('USD', '12.34')->dividedBy(3);
+        Money::of('12.34', 'USD')->dividedBy(3);
     }
 
     public function testIsZero()
     {
-        $this->assertFalse(Money::of('USD', '-0.01')->isZero());
-        $this->assertTrue(Money::of('USD', '0')->isZero());
-        $this->assertFalse(Money::of('USD', '0.01')->isZero());
+        $this->assertFalse(Money::of('-0.01', 'USD')->isZero());
+        $this->assertTrue(Money::of('0', 'USD')->isZero());
+        $this->assertFalse(Money::of('0.01', 'USD')->isZero());
     }
 
     public function testIsPositive()
     {
-        $this->assertFalse(Money::of('USD', '-0.01')->isPositive());
-        $this->assertFalse(Money::of('USD', '0')->isPositive());
-        $this->assertTrue(Money::of('USD', '0.01')->isPositive());
+        $this->assertFalse(Money::of('-0.01', 'USD')->isPositive());
+        $this->assertFalse(Money::of('0', 'USD')->isPositive());
+        $this->assertTrue(Money::of('0.01', 'USD')->isPositive());
     }
 
     public function testIsPositiveOrZero()
     {
-        $this->assertFalse(Money::of('USD', '-0.01')->isPositiveOrZero());
-        $this->assertTrue(Money::of('USD', '0')->isPositiveOrZero());
-        $this->assertTrue(Money::of('USD', '0.01')->isPositiveOrZero());
+        $this->assertFalse(Money::of('-0.01', 'USD')->isPositiveOrZero());
+        $this->assertTrue(Money::of('0', 'USD')->isPositiveOrZero());
+        $this->assertTrue(Money::of('0.01', 'USD')->isPositiveOrZero());
     }
 
     public function testIsNegative()
     {
-        $this->assertTrue(Money::of('USD', '-0.01')->isNegative());
-        $this->assertFalse(Money::of('USD', '0')->isNegative());
-        $this->assertFalse(Money::of('USD', '0.01')->isNegative());
+        $this->assertTrue(Money::of('-0.01', 'USD')->isNegative());
+        $this->assertFalse(Money::of('0', 'USD')->isNegative());
+        $this->assertFalse(Money::of('0.01', 'USD')->isNegative());
     }
 
     public function testIsNegativeOrZero()
     {
-        $this->assertTrue(Money::of('USD', '-0.01')->isNegativeOrZero());
-        $this->assertTrue(Money::of('USD', '0')->isNegativeOrZero());
-        $this->assertFalse(Money::of('USD', '0.01')->isNegativeOrZero());
+        $this->assertTrue(Money::of('-0.01', 'USD')->isNegativeOrZero());
+        $this->assertTrue(Money::of('0', 'USD')->isNegativeOrZero());
+        $this->assertFalse(Money::of('0.01', 'USD')->isNegativeOrZero());
     }
 
     public function testGetAmountMajor()
@@ -189,7 +189,7 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
             Money::parse('EUR 4.00')
         );
 
-        $this->assertMoneyEquals('EUR', '3.50', $min);
+        $this->assertMoneyEquals('3.50', 'EUR', $min);
     }
 
     /**
@@ -219,7 +219,7 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
             Money::parse('USD 4.90')
         );
 
-        $this->assertMoneyEquals('USD', '5.50', $max);
+        $this->assertMoneyEquals('5.50', 'USD', $max);
     }
 
     /**
