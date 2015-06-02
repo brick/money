@@ -161,13 +161,15 @@ class Currency
     }
 
     /**
-     * @param Currency $currency
+     * @todo rename to is()?
+     *
+     * @param Currency|string $currency The currency or currency code.
      *
      * @return bool
      */
-    public function isEqualTo(Currency $currency)
+    public function isEqualTo($currency)
     {
-        return $this->currencyCode === $currency->currencyCode;
+        return $this->currencyCode === (string) $currency;
     }
 
     /**
