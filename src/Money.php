@@ -278,7 +278,17 @@ class Money
     }
 
     /**
-     * Returns a copy of this Money with the value negated.
+     * Returns a Money whose value is the absolute value of this Money.
+     *
+     * @return Money
+     */
+    public function abs()
+    {
+        return new Money($this->amount->abs(), $this->currency);
+    }
+
+    /**
+     * Returns a Money whose value is the negated value of this Money.
      *
      * @return \Brick\Money\Money
      */
