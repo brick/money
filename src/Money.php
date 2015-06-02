@@ -182,7 +182,7 @@ class Money
      */
     public static function zero($currency)
     {
-        return Money::of(0, $currency);
+        return new Money(BigDecimal::zero(), Currency::of($currency));
     }
 
     /**
