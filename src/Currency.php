@@ -161,13 +161,13 @@ class Currency
     }
 
     /**
-     * @todo rename to is()?
+     * Returns whether this currency is the same as the given currency.
      *
-     * @param Currency|string $currency The currency or currency code.
+     * @param Currency|string $currency A currency instance or currency code.
      *
      * @return bool
      */
-    public function isEqualTo($currency)
+    public function is($currency)
     {
         return $this->currencyCode === (string) $currency;
     }

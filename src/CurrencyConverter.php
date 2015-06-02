@@ -38,7 +38,7 @@ class CurrencyConverter
      */
     public function convert(Money $money, Currency $currency)
     {
-        if ($money->getCurrency()->isEqualTo($currency)) {
+        if ($money->getCurrency()->is($currency)) {
             return $money;
         }
 
@@ -69,7 +69,7 @@ class CurrencyConverter
         $aCurrency = $a->getCurrency();
         $bCurrency = $b->getCurrency();
 
-        if ($aCurrency->isEqualTo($bCurrency)) {
+        if ($aCurrency->is($bCurrency)) {
             return $a->compareTo($b);
         }
 

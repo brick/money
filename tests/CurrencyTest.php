@@ -58,7 +58,7 @@ class CurrencyTest extends \PHPUnit_Framework_TestCase
 
         /** @var $copy Currency */
         $this->assertNotSame($original, $copy);
-        $this->assertTrue($copy->isEqualTo($original));
-        $this->assertTrue($copy->isEqualTo('EUR'));
+        $this->assertTrue($copy->is($original));
+        $this->assertTrue($copy->is('EUR'));
     }
 }

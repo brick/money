@@ -196,7 +196,7 @@ class Money
     {
         $currency = Currency::of($currency);
 
-        if (! $this->currency->isEqualTo($currency)) {
+        if (! $this->currency->is($currency)) {
             throw CurrencyMismatchException::currencyMismatch($this->currency, $currency);
         }
     }
