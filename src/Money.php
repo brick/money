@@ -15,7 +15,7 @@ use Brick\Money\Exception\MoneyParseException;
 class Money
 {
     /**
-     * The amount, with a scale matching the currency's fraction digits.
+     * The amount.
      *
      * @var \Brick\Math\BigDecimal
      */
@@ -31,7 +31,7 @@ class Money
     /**
      * Class constructor.
      *
-     * @param BigDecimal $amount   The amount, with scale matching the currency's fraction digits.
+     * @param BigDecimal $amount   The amount.
      * @param Currency   $currency The currency.
      */
     private function __construct(BigDecimal $amount, Currency $currency)
@@ -95,17 +95,15 @@ class Money
     }
 
     /**
-     * @param Money|BigDecimal|number|string $amount       A Money instance or decimal amount.
-     * @param Currency|string                $currency     A Currency instance or currency code.
-     * @param int                            $roundingMode The rounding mode to use.
+     * @param Money|BigDecimal|number|string $amount   A Money instance or decimal amount.
+     * @param Currency|string                $currency A Currency instance or currency code.
      *
      * @return Money
      *
      * @throws CurrencyMismatchException If a money used as amount does not match the given currency.
      * @throws ArithmeticException       If the scale exceeds the currency scale and no rounding is requested.
-     * @throws \InvalidArgumentException If an invalid rounding mode is given.
      */
-    public static function of($amount, $currency, $roundingMode = RoundingMode::UNNECESSARY)
+    public static function of($amount, $currency)
     {
         $currency = Currency::of($currency);
 
@@ -115,8 +113,7 @@ class Money
             return $amount;
         }
 
-        $scale  = $currency->getDefaultFractionDigits();
-        $amount = BigDecimal::of($amount)->withScale($scale, $roundingMode);
+        $amount = BigDecimal::of($amount);
 
         return new Money($amount, $currency);
     }
@@ -213,7 +210,7 @@ class Money
     }
 
     /**
-     * Returns the amount of this Money, as a Decimal.
+     * Returns the amount of this Money, as a BigDecimal.
      *
      * @return \Brick\Math\BigDecimal
      */
@@ -223,15 +220,43 @@ class Money
     }
 
     /**
+     * Returns a copy of this Money with the given scale.
+     *
+     * @param int $scale        The scale to apply.
+     * @param int $roundingMode The rounding mode to apply, if necessary.
+     *
+     * @return Money
+     */
+    public function withScale($scale, $roundingMode = RoundingMode::UNNECESSARY)
+    {
+        return new Money($this->amount->withScale($scale, $roundingMode), $this->currency);
+    }
+
+    /**
+     * Rounds a copy of this Money with the default scale of the currency in use.
+     *
+     * @param int $roudingMode The rounding mode to apply, if necessary.
+     *
+     * @return Money
+     */
+    public function withDefaultScale($roudingMode = RoundingMode::UNNECESSARY)
+    {
+        return $this->withScale($this->currency->getDefaultFractionDigits(), $roudingMode);
+    }
+
+    /**
      * @param Money|BigDecimal|number|string $that
      *
      * @return Money
      */
     public function plus($that)
     {
-        $that = Money::of($that, $this->currency);
+        if ($that instanceof Money) {
+            $this->checkCurrency($that->currency);
+            $that = $that->amount;
+        }
 
-        return new Money($this->amount->plus($that->amount), $this->currency);
+        return new Money($this->amount->plus($that), $this->currency);
     }
 
     /**
@@ -241,25 +266,22 @@ class Money
      */
     public function minus($that)
     {
-        $that = Money::of($that, $this->currency);
+        if ($that instanceof Money) {
+            $this->checkCurrency($that->currency);
+            $that = $that->amount;
+        }
 
-        return new Money($this->amount->minus($that->amount), $this->currency);
+        return new Money($this->amount->minus($that), $this->currency);
     }
 
     /**
      * @param BigDecimal|number|string $that
-     * @param int                      $roundingMode
      *
      * @return Money
      */
-    public function multipliedBy($that, $roundingMode = RoundingMode::UNNECESSARY)
+    public function multipliedBy($that)
     {
-        $that = BigDecimal::of($that);
-
-        $scale  = $this->currency->getDefaultFractionDigits();
-        $amount = $this->amount->multipliedBy($that)->withScale($scale, $roundingMode);
-
-        return new Money($amount, $this->currency);
+        return new Money($this->amount->multipliedBy($that), $this->currency);
     }
 
     /**
@@ -270,12 +292,7 @@ class Money
      */
     public function dividedBy($that, $roundingMode = RoundingMode::UNNECESSARY)
     {
-        $that = BigDecimal::of($that);
-
-        $scale  = $this->currency->getDefaultFractionDigits();
-        $amount = $this->amount->dividedBy($that, $scale, $roundingMode);
-
-        return new Money($amount, $this->currency);
+        return new Money($this->amount->dividedBy($that, null, $roundingMode), $this->currency);
     }
 
     /**

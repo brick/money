@@ -2,6 +2,7 @@
 
 namespace Brick\Tests\Money;
 
+use Brick\Math\ArithmeticException;
 use Brick\Money\Money;
 use Brick\Math\BigDecimal;
 use Brick\Math\RoundingMode;
@@ -46,21 +47,112 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function testPlus()
+    /**
+     * @dataProvider providerWithScale
+     *
+     * @param string      $money        The base money.
+     * @param string      $scale        The scale to apply.
+     * @param int         $roundingMode The rounding mode to apply.
+     * @param string|null $result       The expected money result, or null if an exception is expected.
+     */
+    public function testWithScale($money, $scale, $roundingMode, $result)
     {
-        $money = Money::of('12.34', 'USD');
+        if ($result === null) {
+            $this->setExpectedException(ArithmeticException::class);
+        }
 
-        $this->assertMoneyEquals('13.34', 'USD', $money->plus(1));
-        $this->assertMoneyEquals('13.57', 'USD', $money->plus('1.23'));
-        $this->assertMoneyEquals('24.68', 'USD', $money->plus($money));
+        $money = Money::parse($money)->withScale($scale, $roundingMode);
+
+        if ($result !== null) {
+            $this->assertInstanceOf(Money::class, $money);
+            $this->assertSame($result, (string) $money);
+        }
     }
 
     /**
-     * @expectedException \RuntimeException
+     * @return array
      */
-    public function testPlusOutOfScaleThrowsException()
+    public function providerWithScale()
     {
-        Money::of('12.34', 'USD')->plus('0.001');
+        return [
+            ['USD 1.0', 0, RoundingMode::UNNECESSARY, 'USD 1'],
+            ['USD 1.0', 2, RoundingMode::UNNECESSARY, 'USD 1.00'],
+            ['USD 1.2345', 0, RoundingMode::DOWN, 'USD 1'],
+            ['USD 1.2345', 1, RoundingMode::UP, 'USD 1.3'],
+            ['USD 1.2345', 2, RoundingMode::CEILING, 'USD 1.24'],
+            ['USD 1.2345', 3, RoundingMode::FLOOR, 'USD 1.234'],
+            ['USD 1.2345', 3, RoundingMode::UNNECESSARY, null],
+        ];
+    }
+
+    /**
+     * @dataProvider providerWithDefaultScale
+     *
+     * @param string      $money        The base money.
+     * @param int         $roundingMode The rounding mode to apply.
+     * @param string|null $result       The expected money result, or null if an exception is expected.
+     */
+    public function testWithDefaultScale($money, $roundingMode, $result)
+    {
+        if ($result === null) {
+            $this->setExpectedException(ArithmeticException::class);
+        }
+
+        $money = Money::parse($money)->withDefaultScale($roundingMode);
+
+        if ($result !== null) {
+            $this->assertInstanceOf(Money::class, $money);
+            $this->assertSame($result, (string) $money);
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function providerWithDefaultScale()
+    {
+        return [
+            ['USD 1', RoundingMode::UNNECESSARY, 'USD 1.00'],
+            ['USD 1.0', RoundingMode::UNNECESSARY, 'USD 1.00'],
+            ['JPY 2.0', RoundingMode::UNNECESSARY, 'JPY 2'],
+            ['JPY 2.5', RoundingMode::DOWN, 'JPY 2'],
+            ['JPY 2.5', RoundingMode::UP, 'JPY 3'],
+            ['JPY 2.5', RoundingMode::UNNECESSARY, null],
+            ['EUR 2.5', RoundingMode::UNNECESSARY, 'EUR 2.50'],
+            ['EUR 2.53', RoundingMode::UNNECESSARY, 'EUR 2.53'],
+            ['EUR 2.534', RoundingMode::FLOOR, 'EUR 2.53'],
+            ['EUR 2.534', RoundingMode::CEILING, 'EUR 2.54'],
+        ];
+    }
+
+    /**
+     * @dataProvider providerPlus
+     *
+     * @param string $base   The base money.
+     * @param string $plus   The amount to add.
+     * @param string $result The expected money result.
+     */
+    public function testPlus($base, $plus, $result)
+    {
+        $money = Money::parse($base)->plus($plus);
+
+        $this->assertInstanceOf(Money::class, $money);
+        $this->assertSame($result, (string) $money);
+    }
+
+    /**
+     * @return array
+     */
+    public function providerPlus()
+    {
+        return [
+            ['USD 12.34', 1, 'USD 13.34'],
+            ['USD 12.34', '1.23', 'USD 13.57'],
+            ['USD 12.34', '12.34', 'USD 24.68'],
+            ['USD 12.34', '0.001', 'USD 12.341'],
+            ['JPY 1', '2', 'JPY 3'],
+            ['JPY 1', '2.5', 'JPY 3.5'],
+        ];
     }
 
     /**
@@ -71,21 +163,34 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
         Money::of('12.34', 'USD')->plus(Money::of('1', 'EUR'));
     }
 
-    public function testMinus()
+    /**
+     * @dataProvider providerMinus
+     *
+     * @param string $base   The base money.
+     * @param string $minus  The amount to subtract.
+     * @param string $result The expected money result.
+     */
+    public function testMinus($base, $minus, $result)
     {
-        $money = Money::of('12.34', 'USD');
+        $money = Money::parse($base)->minus($minus);
 
-        $this->assertMoneyEquals('11.34', 'USD', $money->minus(1));
-        $this->assertMoneyEquals('11.11', 'USD', $money->minus('1.23'));
-        $this->assertMoneyEquals('0.00', 'USD', $money->minus($money));
+        $this->assertInstanceOf(Money::class, $money);
+        $this->assertSame($result, (string) $money);
     }
 
     /**
-     * @expectedException \RuntimeException
+     * @return array
      */
-    public function testMinusOutOfScaleThrowsException()
+    public function providerMinus()
     {
-        Money::of('12.34', 'USD')->minus('0.001');
+        return [
+            ['USD 12.34', 1, 'USD 11.34'],
+            ['USD 12.34', '1.23', 'USD 11.11'],
+            ['USD 12.34', '12.34', 'USD 0.00'],
+            ['USD 12.34', '0.001', 'USD 12.339'],
+            ['EUR 1', '2', 'EUR -1'],
+            ['JPY 2', '1.5', 'JPY 0.5'],
+        ];
     }
 
     /**
@@ -96,39 +201,115 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
         Money::of('12.34', 'USD')->minus(Money::of('1', 'EUR'));
     }
 
-    public function testMultipliedBy()
-    {
-        $money = Money::of('12.34', 'USD');
-
-        $this->assertMoneyEquals('24.68', 'USD', $money->multipliedBy(2));
-        $this->assertMoneyEquals('18.51', 'USD', $money->multipliedBy('1.5'));
-        $this->assertMoneyEquals('14.80', 'USD', $money->multipliedBy('1.2', RoundingMode::DOWN));
-        $this->assertMoneyEquals('14.81', 'USD', $money->multipliedBy(BigDecimal::of('1.2'), RoundingMode::UP));
-    }
-
     /**
-     * @expectedException \RuntimeException
+     * @dataProvider providerMultipliedBy
+     *
+     * @param string $base         The base money.
+     * @param string $multipliedBy The multiplier.
+     * @param string $result       The expected money result.
      */
-    public function testMultipliedByOutOfScaleThrowsException()
+    public function testMultipliedBy($base, $multipliedBy, $result)
     {
-        Money::of('12.34', 'USD')->multipliedBy('1.1');
-    }
+        $money = Money::parse($base)->multipliedBy($multipliedBy);
 
-    public function testDividedBy()
-    {
-        $money = Money::of('12.34', 'USD');
-
-        $this->assertMoneyEquals('6.17', 'USD', $money->dividedBy(2));
-        $this->assertMoneyEquals('10.28', 'USD', $money->dividedBy('1.2', RoundingMode::DOWN));
-        $this->assertMoneyEquals('10.29', 'USD', $money->dividedBy(BigDecimal::of('1.2'), RoundingMode::UP));
+        $this->assertInstanceOf(Money::class, $money);
+        $this->assertSame($result, (string) $money);
     }
 
     /**
+     * @return array
+     */
+    public function providerMultipliedBy()
+    {
+        return [
+            ['USD 12.34', 2, 'USD 24.68'],
+            ['USD 12.34', '1.5', 'USD 18.510'],
+            ['USD 12.34', '1.2', 'USD 14.808'],
+            ['USD 1', '2', 'USD 2'],
+            ['USD 1.0', '2', 'USD 2.0'],
+            ['USD 1', '2.0', 'USD 2.0'],
+            ['USD 1.1', '2.0', 'USD 2.20'],
+        ];
+    }
+
+    /**
+     * @dataProvider providerDividedBy
+     *
+     * @param string $base      The base money.
+     * @param string $dividedBy The divisor.
+     * @param string $result    The expected money result.
+     */
+    public function testDividedBy($base, $dividedBy, $result)
+    {
+        $money = Money::parse($base)->dividedBy($dividedBy);
+
+        $this->assertInstanceOf(Money::class, $money);
+        $this->assertSame($result, (string) $money);
+    }
+
+    /**
+     * @return array
+     */
+    public function providerDividedBy()
+    {
+        return [
+            ['USD 12.34', '2', 'USD 6.17'],
+            ['USD 10.28', '0.5', 'USD 20.56'],
+            ['USD 1.234', '2.0', 'USD 0.617'],
+        ];
+    }
+
+    /**
+     * @dataProvider providerDividedByWithRoundingMode
+     *
+     * @param string $base         The base money.
+     * @param string $dividedBy    The divisor.
+     * @param int    $roundingMode The rounding mode to use.
+     * @param string $result       The expected money result.
+     */
+    public function testDividedByWithRoundingMode($base, $dividedBy, $roundingMode, $result)
+    {
+        $money = Money::parse($base)->dividedBy($dividedBy, $roundingMode);
+
+        $this->assertInstanceOf(Money::class, $money);
+        $this->assertSame($result, (string) $money);
+    }
+
+    /**
+     * @return array
+     */
+    public function providerDividedByWithRoundingMode()
+    {
+        return [
+            ['USD 12.34', '20', RoundingMode::DOWN, 'USD 0.61'],
+            ['USD 12.34', 20, RoundingMode::UP, 'USD 0.62'],
+            ['USD 1.2345', '2', RoundingMode::CEILING, 'USD 0.6173'],
+            ['USD 1.2345', 2, RoundingMode::FLOOR, 'USD 0.6172'],
+        ];
+    }
+
+    /**
+     * @dataProvider providerDividedByOutOfScaleThrowsException
      * @expectedException \Brick\Math\ArithmeticException
+     *
+     * @param string $base      The base money.
+     * @param string $dividedBy The divisor.
      */
-    public function testDividedByOutOfScaleThrowsException()
+    public function testDividedByOutOfScaleThrowsException($base, $dividedBy)
     {
-        Money::of('12.34', 'USD')->dividedBy(3);
+        Money::parse($base)->dividedBy($dividedBy);
+    }
+
+    /**
+     * @return array
+     */
+    public function providerDividedByOutOfScaleThrowsException()
+    {
+        return [
+            ['USD 12.34', 20],
+            ['USD 10.28', '8'],
+            ['USD 1.1', 2],
+        ];
     }
 
     public function testIsZero()
