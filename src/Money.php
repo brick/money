@@ -2,7 +2,6 @@
 
 namespace Brick\Money;
 
-use Brick\Money\Currency;
 use Brick\Math\BigDecimal;
 use Brick\Math\BigInteger;
 use Brick\Math\RoundingMode;

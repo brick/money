@@ -2,8 +2,6 @@
 
 namespace Brick\Money;
 
-use Brick\Money\Currency;
-
 /**
  * Reads exchange rates from a PDO database connection.
  */

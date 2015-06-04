@@ -2,8 +2,6 @@
 
 namespace Brick\Money;
 
-use Brick\Money\Currency;
-
 /**
  * Contains monies in different currencies. This class is mutable.
  */

@@ -2,8 +2,6 @@
 
 namespace Brick\Money;
 
-use Brick\Money\Currency;
-
 /**
  * Exception thrown when a money is not in the expected currency.
  */

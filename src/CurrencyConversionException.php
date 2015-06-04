@@ -2,8 +2,6 @@
 
 namespace Brick\Money;
 
-use Brick\Money\Currency;
-
 /**
  * Exception thrown when an exchange rate is not available.
  */

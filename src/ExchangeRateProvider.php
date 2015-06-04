@@ -3,7 +3,6 @@
 namespace Brick\Money;
 
 use Brick\Math\BigDecimal;
-use Brick\Money\Currency;
 
 /**
  * Interface for exchange rate providers.
