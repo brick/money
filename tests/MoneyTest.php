@@ -312,6 +312,43 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
+    /**
+     * @dataProvider providerDivideAndRemainder
+     *
+     * @param string $base      The base money.
+     * @param string $divisor   The divisor.
+     * @param string $quotient  The expected money quotient.
+     * @param string $remainder The expected money remainder.
+     */
+    public function testDivideAndRemainder($base, $divisor, $quotient, $remainder)
+    {
+        list ($q, $r) = Money::parse($base)->divideAndRemainder($divisor);
+
+        $this->assertInstanceOf(Money::class, $q);
+        $this->assertInstanceOf(Money::class, $r);
+
+        $this->assertSame($quotient, (string) $q);
+        $this->assertSame($remainder, (string) $r);
+    }
+
+    /**
+     * @return array
+     */
+    public function providerDivideAndRemainder()
+    {
+        return [
+            ['USD 1', '123', 'USD 0', 'USD 1'],
+            ['EUR 1', '-123', 'EUR 0', 'EUR 1'],
+            ['GBP -1', '123', 'GBP 0', 'GBP -1'],
+            ['CAD -1', '-123', 'CAD 0', 'CAD -1'],
+
+            ['JPY 10.11', '3.3', 'JPY 3', 'JPY 0.21'],
+            ['AUD 1', '-0.0013', 'AUD -769', 'AUD 0.0003'],
+            ['USD -1000.5', '37.23', 'USD -26', 'USD -32.52'],
+            ['EUR -101323424.35532', '99.999', 'EUR -1013244', 'EUR -37.59932'],
+        ];
+    }
+
     public function testIsZero()
     {
         $this->assertFalse(Money::of('-0.01', 'USD')->isZero());

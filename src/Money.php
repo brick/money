@@ -296,6 +296,26 @@ class Money
     }
 
     /**
+     * Returns the quotient and remainder of the division of this money by the given number.
+     *
+     * The quotient has a scale of 0, and the remainder has the largest of the scales of this money
+     * and the given number.
+     *
+     * @param BigDecimal|number|string $that
+     *
+     * @return \Brick\Money\Money[]
+     */
+    public function divideAndRemainder($that)
+    {
+        list ($q, $r) = $this->amount->divideAndRemainder($that);
+
+        return [
+            new Money($q, $this->currency),
+            new Money($r, $this->currency)
+        ];
+    }
+
+    /**
      * Returns a Money whose value is the absolute value of this Money.
      *
      * @return Money
