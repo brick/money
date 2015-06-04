@@ -285,14 +285,15 @@ class Money
     }
 
     /**
-     * @param BigDecimal|number|string $that
-     * @param int                      $roundingMode
+     * @param BigDecimal|number|string $that         The divisor.
+     * @param int                      $roundingMode The rounding mode to use.
+     * @param int|null                 $scale        The desired scale, or null to use the current scale.
      *
      * @return Money
      */
-    public function dividedBy($that, $roundingMode = RoundingMode::UNNECESSARY)
+    public function dividedBy($that, $roundingMode = RoundingMode::UNNECESSARY, $scale = null)
     {
-        return new Money($this->amount->dividedBy($that, null, $roundingMode), $this->currency);
+        return new Money($this->amount->dividedBy($that, $roundingMode, $scale), $this->currency);
     }
 
     /**
