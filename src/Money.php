@@ -43,7 +43,7 @@ class Money
      *
      * @param Money ...$monies
      *
-     * @return \Brick\Money\Money
+     * @return Money
      *
      * @throws CurrencyMismatchException If all the monies are not in the same currency.
      * @throws \InvalidArgumentException If the money list is empty.
@@ -70,7 +70,7 @@ class Money
      *
      * @param Money ...$monies
      *
-     * @return \Brick\Money\Money
+     * @return Money
      *
      * @throws CurrencyMismatchException If all the monies are not in the same currency.
      * @throws \InvalidArgumentException If the money list is empty.
@@ -140,9 +140,9 @@ class Money
      *
      * @param Money|string $string
      *
-     * @return \Brick\Money\Money
+     * @return Money
      *
-     * @throws \Brick\Money\MoneyParseException If the parsing fails.
+     * @throws MoneyParseException If the parsing fails.
      */
     public static function parse($string)
     {
@@ -177,7 +177,7 @@ class Money
      *
      * @param Currency|string $currency
      *
-     * @return \Brick\Money\Money
+     * @return Money
      */
     public static function zero($currency)
     {
@@ -203,7 +203,7 @@ class Money
     /**
      * Returns the Currency of this Money.
      *
-     * @return \Brick\Money\Currency
+     * @return Currency
      */
     public function getCurrency()
     {
@@ -223,7 +223,7 @@ class Money
     /**
      * @param Money|BigDecimal|number|string $that
      *
-     * @return \Brick\Money\Money
+     * @return Money
      */
     public function plus($that)
     {
@@ -235,7 +235,7 @@ class Money
     /**
      * @param Money|BigDecimal|number|string $that
      *
-     * @return \Brick\Money\Money
+     * @return Money
      */
     public function minus($that)
     {
@@ -248,7 +248,7 @@ class Money
      * @param BigDecimal|number|string $that
      * @param int                      $roundingMode
      *
-     * @return \Brick\Money\Money
+     * @return Money
      */
     public function multipliedBy($that, $roundingMode = RoundingMode::UNNECESSARY)
     {
@@ -264,7 +264,7 @@ class Money
      * @param BigDecimal|number|string $that
      * @param int                      $roundingMode
      *
-     * @return \Brick\Money\Money
+     * @return Money
      */
     public function dividedBy($that, $roundingMode = RoundingMode::UNNECESSARY)
     {
@@ -289,7 +289,7 @@ class Money
     /**
      * Returns a Money whose value is the negated value of this Money.
      *
-     * @return \Brick\Money\Money
+     * @return Money
      */
     public function negated()
     {
