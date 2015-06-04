@@ -1,6 +1,7 @@
 <?php
 
 namespace Brick\Money;
+use Brick\Money\Exception\CurrencyConversionException;
 
 /**
  * Reads exchange rates from a PDO database connection.

@@ -6,6 +6,8 @@ use Brick\Math\BigDecimal;
 use Brick\Math\BigInteger;
 use Brick\Math\RoundingMode;
 use Brick\Math\ArithmeticException;
+use Brick\Money\Exception\CurrencyMismatchException;
+use Brick\Money\Exception\MoneyParseException;
 
 /**
  * Represents a monetary value in a given currency. This class is immutable.

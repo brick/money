@@ -64,7 +64,7 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Brick\Money\CurrencyMismatchException
+     * @expectedException \Brick\Money\Exception\CurrencyMismatchException
      */
     public function testPlusDifferentCurrencyThrowsException()
     {
@@ -89,7 +89,7 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Brick\Money\CurrencyMismatchException
+     * @expectedException \Brick\Money\Exception\CurrencyMismatchException
      */
     public function testMinusDifferentCurrencyThrowsException()
     {
@@ -201,7 +201,7 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Brick\Money\CurrencyMismatchException
+     * @expectedException \Brick\Money\Exception\CurrencyMismatchException
      */
     public function testMinOfDifferentCurrenciesThrowsException()
     {
@@ -231,7 +231,7 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Brick\Money\CurrencyMismatchException
+     * @expectedException \Brick\Money\Exception\CurrencyMismatchException
      */
     public function testMaxOfDifferentCurrenciesThrowsException()
     {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Brick\Money;
+namespace Brick\Money\Exception;
 
 /**
  * Exception thrown when a string cannot be parsed as a Money.

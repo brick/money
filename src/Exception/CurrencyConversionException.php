@@ -1,6 +1,7 @@
 <?php
 
-namespace Brick\Money;
+namespace Brick\Money\Exception;
+use Brick\Money\Currency;
 
 /**
  * Exception thrown when an exchange rate is not available.
