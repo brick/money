@@ -135,7 +135,7 @@ class Money
     }
 
     /**
-     * Parses a string representation of a money, such as USD 23.00.
+     * Parses a string representation of a money as returned by `__toString()`, e.g. "USD 23.00".
      *
      * @param Money|string $string
      *
@@ -552,21 +552,12 @@ class Money
     }
 
     /**
-     * Returns a non-localized string representation of this Money
-     * e.g. "EUR 25.00"
+     * Returns a non-localized string representation of this Money, e.g. "EUR 23.00".
      *
-     * @return string
-     */
-    public function toString()
-    {
-        return $this->currency->getCode() . ' ' . $this->amount;
-    }
-
-    /**
      * @return string
      */
     public function __toString()
     {
-        return $this->toString();
+        return $this->currency->getCode() . ' ' . $this->amount;
     }
 }
