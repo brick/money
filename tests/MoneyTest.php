@@ -458,4 +458,34 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
             Money::parse('USD 1.00')
         );
     }
+
+    public function testTotal()
+    {
+        $total = Money::total(
+            Money::parse('USD 5.50'),
+            Money::parse('USD 3.50'),
+            Money::parse('USD 4.90')
+        );
+
+        $this->assertMoneyEquals('13.90', 'USD', $total);
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testTotalOfZeroMoniesThrowsException()
+    {
+        Money::total();
+    }
+
+    /**
+     * @expectedException \Brick\Money\Exception\CurrencyMismatchException
+     */
+    public function testTotalOfDifferentCurrenciesThrowsException()
+    {
+        Money::total(
+            Money::parse('EUR 1.00'),
+            Money::parse('USD 1.00')
+        );
+    }
 }

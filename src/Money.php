@@ -41,7 +41,7 @@ class Money
     }
 
     /**
-     * Returns the minimum of the given values.
+     * Returns the minimum of the given monies.
      *
      * @param Money ...$monies
      *
@@ -68,7 +68,7 @@ class Money
     }
 
     /**
-     * Returns the maximum of the given values.
+     * Returns the maximum of the given monies.
      *
      * @param Money ...$monies
      *
@@ -92,6 +92,31 @@ class Money
         }
 
         return $max;
+    }
+
+    /**
+     * Returns the total of the given monies.
+     *
+     * @param Money ...$monies
+     *
+     * @return Money
+     *
+     * @throws CurrencyMismatchException If all the monies are not in the same currency.
+     * @throws \InvalidArgumentException If the money list is empty.
+     */
+    public static function total(Money ...$monies)
+    {
+        $total = null;
+
+        foreach ($monies as $money) {
+            $total = ($total === null) ? $money : $total->plus($money);
+        }
+
+        if ($total === null) {
+            throw new \InvalidArgumentException('total() expects at least one Money.');
+        }
+
+        return $total;
     }
 
     /**
