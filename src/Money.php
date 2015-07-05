@@ -244,7 +244,7 @@ class Money
      *
      * @throws CurrencyMismatchException
      */
-    public function checkCurrency($currency)
+    private function checkCurrency($currency)
     {
         $currency = Currency::of($currency);
 
