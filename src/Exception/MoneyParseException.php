@@ -5,7 +5,7 @@ namespace Brick\Money\Exception;
 /**
  * Exception thrown when a string cannot be parsed as a Money.
  */
-class MoneyParseException extends \RuntimeException
+class MoneyParseException extends MoneyException
 {
     /**
      * @param string $string

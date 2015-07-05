@@ -1,12 +1,13 @@
 <?php
 
 namespace Brick\Money\Exception;
+
 use Brick\Money\Currency;
 
 /**
  * Exception thrown when an exchange rate is not available.
  */
-class CurrencyConversionException extends \RuntimeException
+class CurrencyConversionException extends MoneyException
 {
     /**
      * @param Currency $source

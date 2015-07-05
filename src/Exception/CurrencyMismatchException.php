@@ -1,12 +1,13 @@
 <?php
 
 namespace Brick\Money\Exception;
+
 use Brick\Money\Currency;
 
 /**
  * Exception thrown when a money is not in the expected currency.
  */
-class CurrencyMismatchException extends \RuntimeException
+class CurrencyMismatchException extends MoneyException
 {
     /**
      * @param Currency $expected
