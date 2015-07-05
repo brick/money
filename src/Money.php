@@ -6,7 +6,6 @@ use Brick\Math\BigDecimal;
 use Brick\Math\BigInteger;
 use Brick\Math\BigNumber;
 use Brick\Math\RoundingMode;
-use Brick\Math\Exception\ArithmeticException;
 use Brick\Math\Exception\NumberFormatException;
 use Brick\Math\Exception\RoundingNecessaryException;
 use Brick\Money\Exception\CurrencyMismatchException;
@@ -157,17 +156,21 @@ class Money
     }
 
     /**
-     * @todo rename: cents is not appropriate
-     *
-     * @param BigInteger|int|string $cents    The integer amount in cents.
-     * @param Currency|string       $currency The currency.
+     * @param BigNumber|number|string $amountMinor    The integer amount in minor units.
+     * @param Currency|string         $currency       The currency, as a Currency instance of currency code string.
+     * @param int|null                $fractionDigits The number of fraction digits, or null to use the default.
      *
      * @return Money
      */
-    public static function ofCents($cents, $currency)
+    public static function ofMinor($amountMinor, $currency, $fractionDigits = null)
     {
         $currency = Currency::of($currency);
-        $amount   = BigDecimal::ofUnscaledValue($cents, $currency->getDefaultFractionDigits());
+
+        if ($fractionDigits === null) {
+            $fractionDigits = $currency->getDefaultFractionDigits();
+        }
+
+        $amount = BigDecimal::ofUnscaledValue($amountMinor, $fractionDigits);
 
         return new Money($amount, $currency);
     }
@@ -552,37 +555,37 @@ class Money
     }
 
     /**
-     * Returns a string containing the major value of the money.
+     * Returns a string representing the integral part of the amount of this money.
      *
      * Example: 123.45 will return '123'.
      *
      * @return string
      */
-    public function getAmountMajor()
+    public function getIntegral()
     {
-        return $this->amount->withScale(0, RoundingMode::DOWN)->unscaledValue();
+        return $this->amount->integral();
     }
 
     /**
-     * Returns a string containing the minor value of the money.
+     * Returns a string representing the fractional part of the amount of this money.
      *
      * Example: 123.45 will return '45'.
      *
      * @return string
      */
-    public function getAmountMinor()
+    public function getFraction()
     {
-        return substr($this->amount->unscaledValue(), - $this->currency->getDefaultFractionDigits());
+        return $this->amount->fraction();
     }
 
     /**
-     * Returns a string containing the value of this money in cents.
+     * Returns a string containing the value of this money in minor units.
      *
      * Example: 123.45 USD will return '12345'.
      *
      * @return string
      */
-    public function getAmountCents()
+    public function getAmountMinor()
     {
         return $this->amount->unscaledValue();
     }

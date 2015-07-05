@@ -24,26 +24,30 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider providerOfCents
+     * @dataProvider providerOfMinor
      *
-     * @param string  $currency
-     * @param integer $cents
-     * @param string  $expectedAmount
+     * @param string   $currency
+     * @param int      $amountMinor
+     * @param int|null $fractionDigits
+     * @param string   $expectedAmount
      */
-    public function testOfCents($currency, $cents, $expectedAmount)
+    public function testOfMinor($currency, $amountMinor, $fractionDigits, $expectedAmount)
     {
-        $this->assertMoneyEquals($expectedAmount, $currency, Money::ofCents($cents, $currency));
+        $this->assertMoneyEquals($expectedAmount, $currency, Money::ofMinor($amountMinor, $currency, $fractionDigits));
     }
 
     /**
      * @return array
      */
-    public function providerOfCents()
+    public function providerOfMinor()
     {
         return [
-            ['EUR', 1, '0.01'],
-            ['USD', 1545, '15.45'],
-            ['JPY', 600, '600']
+            ['EUR', 1, null, '0.01'],
+            ['EUR', 1, 3, '0.001'],
+            ['USD', 600, null, '6.00'],
+            ['USD', '1234567', 6, '1.234567'],
+            ['JPY', 600, null, '600'],
+            ['JPY', 600, 1, '60.0'],
         ];
     }
 
@@ -371,19 +375,19 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse(Money::of('0.01', 'USD')->isNegativeOrZero());
     }
 
-    public function testGetAmountMajor()
+    public function testGetIngtegral()
     {
-        $this->assertSame('123', Money::parse('USD 123.45')->getAmountMajor());
+        $this->assertSame('123', Money::parse('USD 123.45')->getIntegral());
+    }
+
+    public function testGetFraction()
+    {
+        $this->assertSame('45', Money::parse('USD 123.45')->getFraction());
     }
 
     public function testGetAmountMinor()
     {
-        $this->assertSame('45', Money::parse('USD 123.45')->getAmountMinor());
-    }
-
-    public function testGetAmountCents()
-    {
-        $this->assertSame('12345', Money::parse('USD 123.45')->getAmountCents());
+        $this->assertSame('12345', Money::parse('USD 123.45')->getAmountMinor());
     }
 
     public function testMin()
