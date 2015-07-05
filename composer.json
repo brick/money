@@ -10,7 +10,7 @@
     "license": "MIT",
     "require": {
         "php": ">=5.6",
-        "brick/math": "0.3.*"
+        "brick/math": "~0.5.1"
     },
     "require-dev": {
         "phpunit/phpunit": "*",

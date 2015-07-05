@@ -2,10 +2,11 @@
 
 namespace Brick\Tests\Money;
 
-use Brick\Math\ArithmeticException;
+use Brick\Math\Exception\RoundingNecessaryException;
 use Brick\Money\Money;
-use Brick\Math\BigDecimal;
 use Brick\Math\RoundingMode;
+use Brick\Math\Exception\ArithmeticException;
+use Brick\Money\MoneyContext;
 
 /**
  * Unit tests for class Money.
@@ -128,16 +129,24 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider providerPlus
      *
-     * @param string $base   The base money.
-     * @param string $plus   The amount to add.
-     * @param string $result The expected money result.
+     * @param string      $money  The base money.
+     * @param string      $plus   The amount to add.
+     * @param string|null $result The expected money result, or null an exception is expected.
      */
-    public function testPlus($base, $plus, $result)
+    public function testPlus($money, $plus, $result)
     {
-        $money = Money::parse($base)->plus($plus);
+        $money = Money::parse($money);
 
-        $this->assertInstanceOf(Money::class, $money);
-        $this->assertSame($result, (string) $money);
+        if ($result === null) {
+            $this->setExpectedException(RoundingNecessaryException::class);
+        }
+
+        $money = $money->plus($plus);
+
+        if ($result !== null) {
+            $this->assertInstanceOf(Money::class, $money);
+            $this->assertSame($result, (string) $money);
+        }
     }
 
     /**
@@ -149,9 +158,9 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
             ['USD 12.34', 1, 'USD 13.34'],
             ['USD 12.34', '1.23', 'USD 13.57'],
             ['USD 12.34', '12.34', 'USD 24.68'],
-            ['USD 12.34', '0.001', 'USD 12.341'],
+            ['USD 12.34', '0.001', null],
             ['JPY 1', '2', 'JPY 3'],
-            ['JPY 1', '2.5', 'JPY 3.5'],
+            ['JPY 1', '2.5', null],
         ];
     }
 
@@ -166,16 +175,24 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider providerMinus
      *
-     * @param string $base   The base money.
-     * @param string $minus  The amount to subtract.
-     * @param string $result The expected money result.
+     * @param string      $money  The base money.
+     * @param string      $minus  The amount to subtract.
+     * @param string|null $result The expected money result, or null if an exception is expected.
      */
-    public function testMinus($base, $minus, $result)
+    public function testMinus($money, $minus, $result)
     {
-        $money = Money::parse($base)->minus($minus);
+        $money = Money::parse($money);
 
-        $this->assertInstanceOf(Money::class, $money);
-        $this->assertSame($result, (string) $money);
+        if ($result === null) {
+            $this->setExpectedException(RoundingNecessaryException::class);
+        }
+
+        $money = $money->minus($minus);
+
+        if ($result !== null) {
+            $this->assertInstanceOf(Money::class, $money);
+            $this->assertSame($result, (string) $money);
+        }
     }
 
     /**
@@ -187,9 +204,9 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
             ['USD 12.34', 1, 'USD 11.34'],
             ['USD 12.34', '1.23', 'USD 11.11'],
             ['USD 12.34', '12.34', 'USD 0.00'],
-            ['USD 12.34', '0.001', 'USD 12.339'],
+            ['USD 12.34', '0.001', null],
             ['EUR 1', '2', 'EUR -1'],
-            ['JPY 2', '1.5', 'JPY 0.5'],
+            ['JPY 2', '1.5', null],
         ];
     }
 
@@ -204,16 +221,24 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider providerMultipliedBy
      *
-     * @param string $base         The base money.
-     * @param string $multipliedBy The multiplier.
-     * @param string $result       The expected money result.
+     * @param string      $money        The base money.
+     * @param string      $multipliedBy The multiplier.
+     * @param string|null $result       The expected money result, or null if an exception is expected.
      */
-    public function testMultipliedBy($base, $multipliedBy, $result)
+    public function testMultipliedBy($money, $multipliedBy, $result)
     {
-        $money = Money::parse($base)->multipliedBy($multipliedBy);
+        $money = Money::parse($money);
 
-        $this->assertInstanceOf(Money::class, $money);
-        $this->assertSame($result, (string) $money);
+        if ($result === null) {
+            $this->setExpectedException(RoundingNecessaryException::class);
+        }
+
+        $money = $money->multipliedBy($multipliedBy);
+
+        if ($result !== null) {
+            $this->assertInstanceOf(Money::class, $money);
+            $this->assertSame($result, (string) $money);
+        }
     }
 
     /**
@@ -223,12 +248,12 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
     {
         return [
             ['USD 12.34', 2, 'USD 24.68'],
-            ['USD 12.34', '1.5', 'USD 18.510'],
-            ['USD 12.34', '1.2', 'USD 14.808'],
+            ['USD 12.34', '1.5', 'USD 18.51'],
+            ['USD 12.34', '1.2', null],
             ['USD 1', '2', 'USD 2'],
             ['USD 1.0', '2', 'USD 2.0'],
-            ['USD 1', '2.0', 'USD 2.0'],
-            ['USD 1.1', '2.0', 'USD 2.20'],
+            ['USD 1', '2.0', 'USD 2'],
+            ['USD 1.1', '2.0', 'USD 2.2'],
         ];
     }
 
@@ -269,7 +294,10 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
      */
     public function testDividedByWithRoundingMode($base, $dividedBy, $roundingMode, $result)
     {
-        $money = Money::parse($base)->dividedBy($dividedBy, $roundingMode);
+        $money = Money::parse($base);
+        $context = MoneyContext::scaleOf($money, $roundingMode);
+
+        $money = $money->dividedBy($dividedBy, $context);
 
         $this->assertInstanceOf(Money::class, $money);
         $this->assertSame($result, (string) $money);
@@ -290,7 +318,7 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider providerDividedByOutOfScaleThrowsException
-     * @expectedException \Brick\Math\ArithmeticException
+     * @expectedException \Brick\Math\Exception\ArithmeticException
      *
      * @param string $base      The base money.
      * @param string $dividedBy The divisor.
@@ -309,43 +337,6 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
             ['USD 12.34', 20],
             ['USD 10.28', '8'],
             ['USD 1.1', 2],
-        ];
-    }
-
-    /**
-     * @dataProvider providerDivideAndRemainder
-     *
-     * @param string $base      The base money.
-     * @param string $divisor   The divisor.
-     * @param string $quotient  The expected money quotient.
-     * @param string $remainder The expected money remainder.
-     */
-    public function testDivideAndRemainder($base, $divisor, $quotient, $remainder)
-    {
-        list ($q, $r) = Money::parse($base)->divideAndRemainder($divisor);
-
-        $this->assertInstanceOf(Money::class, $q);
-        $this->assertInstanceOf(Money::class, $r);
-
-        $this->assertSame($quotient, (string) $q);
-        $this->assertSame($remainder, (string) $r);
-    }
-
-    /**
-     * @return array
-     */
-    public function providerDivideAndRemainder()
-    {
-        return [
-            ['USD 1', '123', 'USD 0', 'USD 1'],
-            ['EUR 1', '-123', 'EUR 0', 'EUR 1'],
-            ['GBP -1', '123', 'GBP 0', 'GBP -1'],
-            ['CAD -1', '-123', 'CAD 0', 'CAD -1'],
-
-            ['JPY 10.11', '3.3', 'JPY 3', 'JPY 0.21'],
-            ['AUD 1', '-0.0013', 'AUD -769', 'AUD 0.0003'],
-            ['USD -1000.5', '37.23', 'USD -26', 'USD -32.52'],
-            ['EUR -101323424.35532', '99.999', 'EUR -1013244', 'EUR -37.59932'],
         ];
     }
 
