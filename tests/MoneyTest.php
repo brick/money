@@ -2,10 +2,12 @@
 
 namespace Brick\Tests\Money;
 
-use Brick\Math\Exception\RoundingNecessaryException;
 use Brick\Money\Money;
+
 use Brick\Math\RoundingMode;
-use Brick\Math\Exception\ArithmeticException;
+use Brick\Math\Exception\DivisionByZeroException;
+use Brick\Math\Exception\RoundingNecessaryException;
+use Brick\Money\Exception\CurrencyMismatchException;
 
 /**
  * Unit tests for class Money.
@@ -13,14 +15,35 @@ use Brick\Math\Exception\ArithmeticException;
 class MoneyTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @param string $expectedAmount The expected decimal amount.
+     * @param string $expectedAmount   The expected decimal amount.
      * @param string $expectedCurrency The expected currency code.
-     * @param Money|string $actual The value to test.
+     * @param Money  $actual           The money to test.
      */
-    private function assertMoneyEquals($expectedAmount, $expectedCurrency, Money $actual)
+    private function assertMoneyEquals($expectedAmount, $expectedCurrency, $actual)
     {
-        $this->assertSame($expectedCurrency, $actual->getCurrency()->getCode());
+        $this->assertInstanceOf(Money::class, $actual);
+        $this->assertSame($expectedCurrency, (string) $actual->getCurrency());
         $this->assertSame($expectedAmount, (string) $actual->getAmount());
+    }
+
+    /**
+     * @param string $expected The expected string representation.
+     * @param Money  $actual   The money to test.
+     */
+    private function assertMoneyIs($expected, $actual)
+    {
+        $this->assertInstanceOf(Money::class, $actual);
+        $this->assertSame($expected, (string) $actual);
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return bool
+     */
+    private function isException($name)
+    {
+        return substr($name, -9) === 'Exception';
     }
 
     /**
@@ -62,7 +85,7 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
     public function testWithFractionDigits($money, $fractionDigits, $roundingMode, $result)
     {
         if ($result === null) {
-            $this->setExpectedException(ArithmeticException::class);
+            $this->setExpectedException(RoundingNecessaryException::class);
         }
 
         $money = Money::parse($money)->withFractionDigits($fractionDigits, $roundingMode);
@@ -99,7 +122,7 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
     public function testWithDefaultFractionDigits($money, $roundingMode, $result)
     {
         if ($result === null) {
-            $this->setExpectedException(ArithmeticException::class);
+            $this->setExpectedException(RoundingNecessaryException::class);
         }
 
         $money = Money::parse($money)->withDefaultFractionDigits($roundingMode);
@@ -132,23 +155,23 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider providerPlus
      *
-     * @param string      $money  The base money.
-     * @param string      $plus   The amount to add.
-     * @param string|null $result The expected money result, or null an exception is expected.
+     * @param string              $money        The base money.
+     * @param Money|number|string $plus         The amount to add.
+     * @param int                 $roundingMode The rounding mode to use.
+     * @param string              $expected     The expected money value, or an exception class name.
      */
-    public function testPlus($money, $plus, $result)
+    public function testPlus($money, $plus, $roundingMode, $expected)
     {
         $money = Money::parse($money);
 
-        if ($result === null) {
-            $this->setExpectedException(RoundingNecessaryException::class);
+        if ($this->isException($expected)) {
+            $this->setExpectedException($expected);
         }
 
-        $money = $money->plus($plus);
+        $actual = $money->plus($plus, $roundingMode);
 
-        if ($result !== null) {
-            $this->assertInstanceOf(Money::class, $money);
-            $this->assertSame($result, (string) $money);
+        if (! $this->isException($expected)) {
+            $this->assertMoneyIs($expected, $actual);
         }
     }
 
@@ -158,43 +181,40 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
     public function providerPlus()
     {
         return [
-            ['USD 12.34', 1, 'USD 13.34'],
-            ['USD 12.34', '1.23', 'USD 13.57'],
-            ['USD 12.34', '12.34', 'USD 24.68'],
-            ['USD 12.34', '0.001', null],
-            ['JPY 1', '2', 'JPY 3'],
-            ['JPY 1', '2.5', null],
+            ['USD 12.34', 1, RoundingMode::UNNECESSARY, 'USD 13.34'],
+            ['USD 12.34', '1.23', RoundingMode::UNNECESSARY, 'USD 13.57'],
+            ['USD 12.34', '12.34', RoundingMode::UNNECESSARY, 'USD 24.68'],
+            ['USD 12.34', '0.001', RoundingMode::UNNECESSARY, RoundingNecessaryException::class],
+            ['USD 12.340', '0.001', RoundingMode::UNNECESSARY, 'USD 12.341'],
+            ['USD 12.34', '0.001', RoundingMode::DOWN, 'USD 12.34'],
+            ['USD 12.34', '0.001', RoundingMode::UP, 'USD 12.35'],
+            ['JPY 1', '2', RoundingMode::UNNECESSARY, 'JPY 3'],
+            ['JPY 1', '2.5', RoundingMode::UNNECESSARY, RoundingNecessaryException::class],
+            ['USD 1.20', Money::parse('USD 1.80'), RoundingMode::UNNECESSARY, 'USD 3.00'],
+            ['USD 1.20', Money::parse('EUR 0.80'), RoundingMode::UNNECESSARY, CurrencyMismatchException::class],
         ];
-    }
-
-    /**
-     * @expectedException \Brick\Money\Exception\CurrencyMismatchException
-     */
-    public function testPlusDifferentCurrencyThrowsException()
-    {
-        Money::of('12.34', 'USD')->plus(Money::of('1', 'EUR'));
     }
 
     /**
      * @dataProvider providerMinus
      *
-     * @param string      $money  The base money.
-     * @param string      $minus  The amount to subtract.
-     * @param string|null $result The expected money result, or null if an exception is expected.
+     * @param string              $money        The base money.
+     * @param Money|number|string $minus        The amount to subtract.
+     * @param int                 $roundingMode The rounding mode to use.
+     * @param string              $expected     The expected money value, or an exception class name.
      */
-    public function testMinus($money, $minus, $result)
+    public function testMinus($money, $minus, $roundingMode, $expected)
     {
         $money = Money::parse($money);
 
-        if ($result === null) {
-            $this->setExpectedException(RoundingNecessaryException::class);
+        if ($this->isException($expected)) {
+            $this->setExpectedException($expected);
         }
 
-        $money = $money->minus($minus);
+        $actual = $money->minus($minus, $roundingMode);
 
-        if ($result !== null) {
-            $this->assertInstanceOf(Money::class, $money);
-            $this->assertSame($result, (string) $money);
+        if (! $this->isException($expected)) {
+            $this->assertMoneyIs($expected, $actual);
         }
     }
 
@@ -204,43 +224,40 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
     public function providerMinus()
     {
         return [
-            ['USD 12.34', 1, 'USD 11.34'],
-            ['USD 12.34', '1.23', 'USD 11.11'],
-            ['USD 12.34', '12.34', 'USD 0.00'],
-            ['USD 12.34', '0.001', null],
-            ['EUR 1', '2', 'EUR -1'],
-            ['JPY 2', '1.5', null],
+            ['USD 12.34', 1, RoundingMode::UNNECESSARY, 'USD 11.34'],
+            ['USD 12.34', '1.23', RoundingMode::UNNECESSARY, 'USD 11.11'],
+            ['USD 12.34', '12.34', RoundingMode::UNNECESSARY, 'USD 0.00'],
+            ['USD 12.34', '0.001', RoundingMode::UNNECESSARY, RoundingNecessaryException::class],
+            ['USD 12.340', '0.001', RoundingMode::UNNECESSARY, 'USD 12.339'],
+            ['USD 12.34', '0.001', RoundingMode::DOWN, 'USD 12.33'],
+            ['USD 12.34', '0.001', RoundingMode::UP, 'USD 12.34'],
+            ['EUR 1', '2', RoundingMode::UNNECESSARY, 'EUR -1'],
+            ['JPY 2', '1.5', RoundingMode::UNNECESSARY, RoundingNecessaryException::class],
+            ['JPY 1.50', Money::parse('JPY 0.5'), RoundingMode::UNNECESSARY, 'JPY 1.00'],
+            ['JPY 2', Money::parse('USD 1'), RoundingMode::UNNECESSARY, CurrencyMismatchException::class],
         ];
-    }
-
-    /**
-     * @expectedException \Brick\Money\Exception\CurrencyMismatchException
-     */
-    public function testMinusDifferentCurrencyThrowsException()
-    {
-        Money::of('12.34', 'USD')->minus(Money::of('1', 'EUR'));
     }
 
     /**
      * @dataProvider providerMultipliedBy
      *
-     * @param string      $money        The base money.
-     * @param string      $multipliedBy The multiplier.
-     * @param string|null $result       The expected money result, or null if an exception is expected.
+     * @param string              $money        The base money.
+     * @param Money|number|string $multiplier   The multiplier.
+     * @param int                 $roundingMode The rounding mode to use.
+     * @param string              $expected     The expected money value, or an exception class name.
      */
-    public function testMultipliedBy($money, $multipliedBy, $result)
+    public function testMultipliedBy($money, $multiplier, $roundingMode, $expected)
     {
         $money = Money::parse($money);
 
-        if ($result === null) {
-            $this->setExpectedException(RoundingNecessaryException::class);
+        if ($this->isException($expected)) {
+            $this->setExpectedException($expected);
         }
 
-        $money = $money->multipliedBy($multipliedBy);
+        $actual = $money->multipliedBy($multiplier, $roundingMode);
 
-        if ($result !== null) {
-            $this->assertInstanceOf(Money::class, $money);
-            $this->assertSame($result, (string) $money);
+        if (! $this->isException($expected)) {
+            $this->assertMoneyIs($expected, $actual);
         }
     }
 
@@ -250,29 +267,40 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
     public function providerMultipliedBy()
     {
         return [
-            ['USD 12.34', 2, 'USD 24.68'],
-            ['USD 12.34', '1.5', 'USD 18.51'],
-            ['USD 12.34', '1.2', null],
-            ['USD 1', '2', 'USD 2'],
-            ['USD 1.0', '2', 'USD 2.0'],
-            ['USD 1', '2.0', 'USD 2'],
-            ['USD 1.1', '2.0', 'USD 2.2'],
+            ['USD 12.34', 2,     RoundingMode::UNNECESSARY, 'USD 24.68'],
+            ['USD 12.34', '1.5', RoundingMode::UNNECESSARY, 'USD 18.51'],
+            ['USD 12.34', '1.2', RoundingMode::UNNECESSARY, RoundingNecessaryException::class],
+            ['USD 12.34', '1.2', RoundingMode::DOWN, 'USD 14.80'],
+            ['USD 12.34', '1.2', RoundingMode::UP, 'USD 14.81'],
+            ['USD 12.340', '1.2', RoundingMode::UNNECESSARY, 'USD 14.808'],
+            ['USD 1', '2',   RoundingMode::UNNECESSARY, 'USD 2'],
+            ['USD 1.0', '2',   RoundingMode::UNNECESSARY, 'USD 2.0'],
+            ['USD 1', '2.0', RoundingMode::UNNECESSARY, 'USD 2'],
+            ['USD 1.1', '2.0', RoundingMode::UNNECESSARY, 'USD 2.2'],
         ];
     }
 
     /**
      * @dataProvider providerDividedBy
      *
-     * @param string $base      The base money.
-     * @param string $dividedBy The divisor.
-     * @param string $result    The expected money result.
+     * @param string $money        The base money.
+     * @param string $divisor      The divisor.
+     * @param int    $roundingMode The rounding mode to use.
+     * @param string $expected     The expected money value, or an exception class name.
      */
-    public function testDividedBy($base, $dividedBy, $result)
+    public function testDividedBy($money, $divisor, $roundingMode, $expected)
     {
-        $money = Money::parse($base)->dividedBy($dividedBy);
+        $money = Money::parse($money);
 
-        $this->assertInstanceOf(Money::class, $money);
-        $this->assertSame($result, (string) $money);
+        if ($this->isException($expected)) {
+            $this->setExpectedException($expected);
+        }
+
+        $actual = $money->dividedBy($divisor, $roundingMode);
+
+        if (! $this->isException($expected)) {
+            $this->assertMoneyIs($expected, $actual);
+        }
     }
 
     /**
@@ -281,98 +309,99 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
     public function providerDividedBy()
     {
         return [
-            ['USD 12.34', '2', 'USD 6.17'],
-            ['USD 10.28', '0.5', 'USD 20.56'],
-            ['USD 1.234', '2.0', 'USD 0.617'],
-        ];
-    }
-
-    /**
-     * @dataProvider providerDividedByWithRoundingMode
-     *
-     * @param string $base         The base money.
-     * @param string $dividedBy    The divisor.
-     * @param int    $roundingMode The rounding mode to use.
-     * @param string $result       The expected money result.
-     */
-    public function testDividedByWithRoundingMode($base, $dividedBy, $roundingMode, $result)
-    {
-        $money = Money::parse($base)->dividedBy($dividedBy, $roundingMode);
-
-        $this->assertInstanceOf(Money::class, $money);
-        $this->assertSame($result, (string) $money);
-    }
-
-    /**
-     * @return array
-     */
-    public function providerDividedByWithRoundingMode()
-    {
-        return [
+            ['USD 12.34', 0, RoundingMode::DOWN, DivisionByZeroException::class],
+            ['USD 12.34', '2', RoundingMode::UNNECESSARY, 'USD 6.17'],
+            ['USD 10.28', '0.5', RoundingMode::UNNECESSARY, 'USD 20.56'],
+            ['USD 1.234', '2.0', RoundingMode::UNNECESSARY, 'USD 0.617'],
             ['USD 12.34', '20', RoundingMode::DOWN, 'USD 0.61'],
             ['USD 12.34', 20, RoundingMode::UP, 'USD 0.62'],
             ['USD 1.2345', '2', RoundingMode::CEILING, 'USD 0.6173'],
             ['USD 1.2345', 2, RoundingMode::FLOOR, 'USD 0.6172'],
+            ['USD 12.34', 20, RoundingMode::UNNECESSARY, RoundingNecessaryException::class],
+            ['USD 10.28', '8', RoundingMode::UNNECESSARY, RoundingNecessaryException::class],
+            ['USD 1.1', 2, RoundingMode::UNNECESSARY, RoundingNecessaryException::class],
+            ['USD 1.2', 2, RoundingMode::UNNECESSARY, 'USD 0.6'],
         ];
     }
 
     /**
-     * @dataProvider providerDividedByOutOfScaleThrowsException
-     * @expectedException \Brick\Math\Exception\ArithmeticException
+     * @dataProvider providerSign
      *
-     * @param string $base      The base money.
-     * @param string $dividedBy The divisor.
+     * @param string $money
+     * @param int    $sign
      */
-    public function testDividedByOutOfScaleThrowsException($base, $dividedBy)
+    public function testIsZero($money, $sign)
     {
-        Money::parse($base)->dividedBy($dividedBy);
+        $this->assertSame($sign == 0, Money::parse($money)->isZero());
+    }
+
+    /**
+     * @dataProvider providerSign
+     *
+     * @param string $money
+     * @param int    $sign
+     */
+    public function testIsPositive($money, $sign)
+    {
+        $this->assertSame($sign > 0, Money::parse($money)->isPositive());
+    }
+
+    /**
+     * @dataProvider providerSign
+     *
+     * @param string $money
+     * @param int    $sign
+     */
+    public function testIsPositiveOrZero($money, $sign)
+    {
+        $this->assertSame($sign >= 0, Money::parse($money)->isPositiveOrZero());
+    }
+
+    /**
+     * @dataProvider providerSign
+     *
+     * @param string $money
+     * @param int    $sign
+     */
+    public function testIsNegative($money, $sign)
+    {
+        $this->assertSame($sign < 0, Money::parse($money)->isNegative());
+    }
+
+    /**
+     * @dataProvider providerSign
+     *
+     * @param string $money
+     * @param int    $sign
+     */
+    public function testIsNegativeOrZero($money, $sign)
+    {
+        $this->assertSame($sign <= 0, Money::parse($money)->isNegativeOrZero());
     }
 
     /**
      * @return array
      */
-    public function providerDividedByOutOfScaleThrowsException()
+    public function providerSign()
     {
         return [
-            ['USD 12.34', 20],
-            ['USD 10.28', '8'],
-            ['USD 1.1', 2],
+            ['USD -0.001', -1],
+            ['USD -0.01', -1],
+            ['USD -0.1', -1],
+            ['USD -1', -1],
+            ['USD -1.0', -1],
+            ['USD -0', 0],
+            ['USD -0.0', 0],
+            ['USD 0', 0],
+            ['USD 0.0', 0],
+            ['USD 0.00', 0],
+            ['USD 0.000', 0],
+            ['USD 0.001', 1],
+            ['USD 0.01', 1],
+            ['USD 0.1', 1],
+            ['USD 1', 1],
+            ['USD 1.0', 1],
         ];
-    }
-
-    public function testIsZero()
-    {
-        $this->assertFalse(Money::of('-0.01', 'USD')->isZero());
-        $this->assertTrue(Money::of('0', 'USD')->isZero());
-        $this->assertFalse(Money::of('0.01', 'USD')->isZero());
-    }
-
-    public function testIsPositive()
-    {
-        $this->assertFalse(Money::of('-0.01', 'USD')->isPositive());
-        $this->assertFalse(Money::of('0', 'USD')->isPositive());
-        $this->assertTrue(Money::of('0.01', 'USD')->isPositive());
-    }
-
-    public function testIsPositiveOrZero()
-    {
-        $this->assertFalse(Money::of('-0.01', 'USD')->isPositiveOrZero());
-        $this->assertTrue(Money::of('0', 'USD')->isPositiveOrZero());
-        $this->assertTrue(Money::of('0.01', 'USD')->isPositiveOrZero());
-    }
-
-    public function testIsNegative()
-    {
-        $this->assertTrue(Money::of('-0.01', 'USD')->isNegative());
-        $this->assertFalse(Money::of('0', 'USD')->isNegative());
-        $this->assertFalse(Money::of('0.01', 'USD')->isNegative());
-    }
-
-    public function testIsNegativeOrZero()
-    {
-        $this->assertTrue(Money::of('-0.01', 'USD')->isNegativeOrZero());
-        $this->assertTrue(Money::of('0', 'USD')->isNegativeOrZero());
-        $this->assertFalse(Money::of('0.01', 'USD')->isNegativeOrZero());
     }
 
     public function testGetIngtegral()
