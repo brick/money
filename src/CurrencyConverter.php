@@ -45,7 +45,7 @@ class CurrencyConverter
 
         $amount = $money->getAmount()->multipliedBy($exchangeRate);
 
-        return Money::of($amount, $currency, $this->roundingMode);
+        return Money::of($amount, $currency, $money->getAmount()->scale(), $this->roundingMode);
     }
 
     /**

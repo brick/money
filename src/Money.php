@@ -131,27 +131,27 @@ class Money
      * For example, `Money::of('2.5', 'USD')` will yield `USD 2.50`.
      * If amount cannot be converted to this scale, an exception is thrown.
      *
-     * This behaviour can be overridden by providing a `MoneyContext` instance.
+     * This behaviour can be overridden by providing the `$scale` and `$roundingMode` parameters.
      *
-     * @param BigNumber|number|string  $amount   The monetary amount.
-     * @param Currency|string          $currency The currency, as a `Currency` object or currency code string.
-     * @param MoneyContext|null        $context  An optional scale & rounding context to use.
+     * @param BigNumber|number|string  $amount       The monetary amount.
+     * @param Currency|string          $currency     The currency, as a `Currency` object or currency code string.
+     * @param int|null                 $scale        The scale, or null to use the currency's default fraction digits.
+     * @param int                      $roundingMode The rounding mode to use, if necessary.
      *
      * @return Money
      *
      * @throws NumberFormatException      If the amount is a string in a non-supported format.
      * @throws RoundingNecessaryException If the scale exceeds the currency scale and no rounding is requested.
      */
-    public static function of($amount, $currency, MoneyContext $context = null)
+    public static function of($amount, $currency, $scale = null, $roundingMode = RoundingMode::UNNECESSARY)
     {
         $currency = Currency::of($currency);
 
-        if ($context === null) {
-            $context = MoneyContext::defaultScale($currency);
+        if ($scale === null) {
+            $scale = $currency->getDefaultFractionDigits();
         }
 
-        $amount = BigNumber::of($amount);
-        $amount = $context->applyTo($amount);
+        $amount = BigDecimal::of($amount)->toScale($scale, $roundingMode);
 
         return new Money($amount, $currency);
     }
@@ -290,29 +290,22 @@ class Money
     /**
      * Returns the sum of this Money and the given amount.
      *
-     * By default, the resulting Money has the same scale as this Money.
-     * If the result cannot be represented at the scale of this Money, an exception is thrown.
+     * The resulting Money has the same scale as this Money.
      *
-     * This behaviour can be overridden by providing a `MoneyContext` instance.
-     *
-     * @param Money|BigNumber|number|string $that    The amount to be added.
-     * @param MoneyContext|null             $context An optional context to use.
+     * @param Money|BigNumber|number|string $that         The amount to be added.
+     * @param int                           $roundingMode The rounding mode to use, if necessary.
      *
      * @return Money
      */
-    public function plus($that, MoneyContext $context = null)
+    public function plus($that, $roundingMode = RoundingMode::UNNECESSARY)
     {
         if ($that instanceof Money) {
             $this->checkCurrency($that->currency);
             $that = $that->amount;
         }
 
-        if ($context === null) {
-            $context = MoneyContext::fixedScale($this->amount->scale());
-        }
-
         $amount = $this->amount->plus($that);
-        $amount = $context->applyTo($amount);
+        $amount = $amount->toScale($this->amount->scale(), $roundingMode);
 
         return new Money($amount, $this->currency);
     }
@@ -320,29 +313,22 @@ class Money
     /**
      * Returns the difference of this Money and the given amount.
      *
-     * By default, the resulting Money has the same scale as this Money.
-     * If the result cannot be represented at the scale of this Money, an exception is thrown.
+     * The resulting Money has the same scale as this Money.
      *
-     * This behaviour can be overridden by providing a `MoneyContext` instance.
-     *
-     * @param Money|BigNumber|number|string $that    The amount to be subtracted.
-     * @param MoneyContext|null             $context An optional context to use.
+     * @param Money|BigNumber|number|string $that         The amount to be subtracted.
+     * @param int                           $roundingMode The rounding mode to use, if necessary.
      *
      * @return Money
      */
-    public function minus($that, MoneyContext $context = null)
+    public function minus($that, $roundingMode = RoundingMode::UNNECESSARY)
     {
         if ($that instanceof Money) {
             $this->checkCurrency($that->currency);
             $that = $that->amount;
         }
 
-        if ($context === null) {
-            $context = MoneyContext::fixedScale($this->amount->scale());
-        }
-
         $amount = $this->amount->minus($that);
-        $amount = $context->applyTo($amount);
+        $amount = $amount->toScale($this->amount->scale(), $roundingMode);
 
         return new Money($amount, $this->currency);
     }
@@ -350,24 +336,17 @@ class Money
     /**
      * Returns the product of this Money and the given number.
      *
-     * By default, the resulting Money has the same scale as this Money.
-     * If the result cannot be represented at the scale of this Money, an exception is thrown.
+     * The resulting Money has the same scale as this Money.
      *
-     * This behaviour can be overridden by providing a `MoneyContext` instance.
-     *
-     * @param BigDecimal|number|string $that    The multiplier.
-     * @param MoneyContext|null        $context An optional context to use.
+     * @param Money|BigNumber|number|string $that         The multiplier.
+     * @param int                           $roundingMode The rounding mode to use, if necessary.
      *
      * @return Money
      */
-    public function multipliedBy($that, MoneyContext $context = null)
+    public function multipliedBy($that, $roundingMode = RoundingMode::UNNECESSARY)
     {
-        if ($context === null) {
-            $context = MoneyContext::fixedScale($this->amount->scale());
-        }
-
         $amount = $this->amount->multipliedBy($that);
-        $amount = $context->applyTo($amount);
+        $amount = $amount->toScale($this->amount->scale(), $roundingMode);
 
         return new Money($amount, $this->currency);
     }
@@ -375,24 +354,16 @@ class Money
     /**
      * Returns the result of the division of this Money by the given number.
      *
-     * By default, the resulting Money has the same scale as this Money.
-     * If the result cannot be represented at the scale of this Money, an exception is thrown.
+     * The resulting Money has the same scale as this Money.
      *
-     * This behaviour can be overridden by providing a `MoneyContext` instance.
-     *
-     * @param BigDecimal|number|string $that    The multiplier.
-     * @param MoneyContext|null        $context An optional context to use.
+     * @param Money|BigNumber|number|string $that         The divisor.
+     * @param int                           $roundingMode The rounding mode to use, if necessary.
      *
      * @return Money
      */
-    public function dividedBy($that, MoneyContext $context = null)
+    public function dividedBy($that, $roundingMode = RoundingMode::UNNECESSARY)
     {
-        if ($context === null) {
-            $context = MoneyContext::fixedScale($this->amount->scale());
-        }
-
-        $amount = $this->amount->toBigRational()->dividedBy($that);
-        $amount = $context->applyTo($amount);
+        $amount = $this->amount->dividedBy($that, $this->amount->scale(), $roundingMode);
 
         return new Money($amount, $this->currency);
     }
@@ -470,7 +441,7 @@ class Money
     /**
      * Compares this Money to the given Money.
      *
-     * @param Money|BigDecimal|number|string $that
+     * @param Money|BigNumber|number|string $that
      *
      * @return int -1, 0 or 1.
      *
@@ -489,7 +460,7 @@ class Money
     /**
      * Returns whether this Money is equal to the given Money.
      *
-     * @param Money|BigDecimal|number|string $that
+     * @param Money|BigNumber|number|string $that
      *
      * @return bool
      *
@@ -508,7 +479,7 @@ class Money
     /**
      * Returns whether this Money is less than the given amount.
      *
-     * @param Money|BigDecimal|number|string $that
+     * @param Money|BigNumber|number|string $that
      *
      * @return bool
      *
@@ -527,7 +498,7 @@ class Money
     /**
      * Returns whether this Money is less than or equal to the given amount.
      *
-     * @param Money|BigDecimal|number|string $that
+     * @param Money|BigNumber|number|string $that
      *
      * @return bool
      *
@@ -546,7 +517,7 @@ class Money
     /**
      * Returns whether this Money is greater than the given Money.
      *
-     * @param Money|BigDecimal|number|string $that
+     * @param Money|BigNumber|number|string $that
      *
      * @return bool
      *
@@ -565,7 +536,7 @@ class Money
     /**
      * Returns whether this Money is greater than or equal to the given Money.
      *
-     * @param Money|BigDecimal|number|string $that
+     * @param Money|BigNumber|number|string $that
      *
      * @return bool
      *

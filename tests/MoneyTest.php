@@ -6,7 +6,6 @@ use Brick\Math\Exception\RoundingNecessaryException;
 use Brick\Money\Money;
 use Brick\Math\RoundingMode;
 use Brick\Math\Exception\ArithmeticException;
-use Brick\Money\MoneyContext;
 
 /**
  * Unit tests for class Money.
@@ -294,10 +293,7 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
      */
     public function testDividedByWithRoundingMode($base, $dividedBy, $roundingMode, $result)
     {
-        $money = Money::parse($base);
-        $context = MoneyContext::scaleOf($money, $roundingMode);
-
-        $money = $money->dividedBy($dividedBy, $context);
+        $money = Money::parse($base)->dividedBy($dividedBy, $roundingMode);
 
         $this->assertInstanceOf(Money::class, $money);
         $this->assertSame($result, (string) $money);
