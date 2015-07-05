@@ -207,21 +207,20 @@ class Money
     /**
      * Returns a Money with zero value, in the given Currency.
      *
-     * @param Currency|string   $currency
-     * @param MoneyContext|null $context
+     * @param Currency|string $currency A currency instance or currency code.
+     * @param int|null        $scale    The scale, or null to use the currency's default fraction digits.
      *
      * @return Money
      */
-    public static function zero($currency, MoneyContext $context = null)
+    public static function zero($currency, $scale = null)
     {
         $currency = Currency::of($currency);
 
-        if ($context === null) {
-            $context = MoneyContext::defaultScale($currency);
+        if ($scale === null) {
+            $scale = $currency->getDefaultFractionDigits();
         }
 
-        $amount = BigDecimal::zero();
-        $amount = $context->applyTo($amount);
+        $amount = BigDecimal::zero()->toScale($scale);
 
         return new Money($amount, $currency);
     }
