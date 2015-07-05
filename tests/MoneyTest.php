@@ -52,20 +52,20 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider providerWithScale
+     * @dataProvider providerWithFractionDigits
      *
-     * @param string      $money        The base money.
-     * @param string      $scale        The scale to apply.
-     * @param int         $roundingMode The rounding mode to apply.
-     * @param string|null $result       The expected money result, or null if an exception is expected.
+     * @param string      $money          The base money.
+     * @param string      $fractionDigits The number of fraction digits to apply.
+     * @param int         $roundingMode   The rounding mode to apply.
+     * @param string|null $result         The expected money result, or null if an exception is expected.
      */
-    public function testWithScale($money, $scale, $roundingMode, $result)
+    public function testWithFractionDigits($money, $fractionDigits, $roundingMode, $result)
     {
         if ($result === null) {
             $this->setExpectedException(ArithmeticException::class);
         }
 
-        $money = Money::parse($money)->withScale($scale, $roundingMode);
+        $money = Money::parse($money)->withFractionDigits($fractionDigits, $roundingMode);
 
         if ($result !== null) {
             $this->assertInstanceOf(Money::class, $money);
@@ -76,7 +76,7 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function providerWithScale()
+    public function providerWithFractionDigits()
     {
         return [
             ['USD 1.0', 0, RoundingMode::UNNECESSARY, 'USD 1'],
@@ -90,19 +90,19 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider providerWithDefaultScale
+     * @dataProvider providerWithDefaultFractionDigits
      *
      * @param string      $money        The base money.
      * @param int         $roundingMode The rounding mode to apply.
      * @param string|null $result       The expected money result, or null if an exception is expected.
      */
-    public function testWithDefaultScale($money, $roundingMode, $result)
+    public function testWithDefaultFractionDigits($money, $roundingMode, $result)
     {
         if ($result === null) {
             $this->setExpectedException(ArithmeticException::class);
         }
 
-        $money = Money::parse($money)->withDefaultScale($roundingMode);
+        $money = Money::parse($money)->withDefaultFractionDigits($roundingMode);
 
         if ($result !== null) {
             $this->assertInstanceOf(Money::class, $money);
@@ -113,7 +113,7 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function providerWithDefaultScale()
+    public function providerWithDefaultFractionDigits()
     {
         return [
             ['USD 1', RoundingMode::UNNECESSARY, 'USD 1.00'],
@@ -453,9 +453,9 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
     public function testTotal()
     {
         $total = Money::total(
-            Money::parse('USD 5.50'),
+            Money::parse('USD 5.5'),
             Money::parse('USD 3.50'),
-            Money::parse('USD 4.90')
+            Money::parse('USD 4.9')
         );
 
         $this->assertMoneyEquals('13.90', 'USD', $total);

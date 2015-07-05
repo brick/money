@@ -99,7 +99,8 @@ class Money
     /**
      * Returns the total of the given monies.
      *
-     * The result Money object has the maximum of the scales of all monies given.
+     * The number of fraction digits in the resulting Money is the maximum number of fraction digits
+     * across all the given monies.
      *
      * @param Money ...$monies
      *
@@ -113,7 +114,15 @@ class Money
         $total = null;
 
         foreach ($monies as $money) {
-            $total = ($total === null) ? $money : $total->plus($money);
+            if ($total === null) {
+                $total = $money;
+            } else {
+                if ($total->getAmount()->scale() >= $money->getAmount()->scale()) {
+                    $total = $total->plus($money);
+                } else {
+                    $total = $money->plus($total);
+                }
+            }
         }
 
         if ($total === null) {
@@ -128,29 +137,29 @@ class Money
      *
      * By default, the amount is scaled to match the currency's default fraction digits.
      * For example, `Money::of('2.5', 'USD')` will yield `USD 2.50`.
-     * If amount cannot be converted to this scale, an exception is thrown.
+     * If amount cannot be safely converted to this scale, an exception is thrown.
      *
-     * This behaviour can be overridden by providing the `$scale` and `$roundingMode` parameters.
+     * This behaviour can be overridden by providing the `$fractionDigits` and `$roundingMode` parameters.
      *
-     * @param BigNumber|number|string  $amount       The monetary amount.
-     * @param Currency|string          $currency     The currency, as a `Currency` object or currency code string.
-     * @param int|null                 $scale        The scale, or null to use the currency's default fraction digits.
-     * @param int                      $roundingMode The rounding mode to use, if necessary.
+     * @param BigNumber|number|string  $amount         The monetary amount.
+     * @param Currency|string          $currency       The currency, as a `Currency` object or currency code string.
+     * @param int|null                 $fractionDigits The number of fraction digits, or null to use the default.
+     * @param int                      $roundingMode   The rounding mode to use, if necessary.
      *
      * @return Money
      *
      * @throws NumberFormatException      If the amount is a string in a non-supported format.
-     * @throws RoundingNecessaryException If the scale exceeds the currency scale and no rounding is requested.
+     * @throws RoundingNecessaryException If the rounding was necessary to represent the amount at the requested scale.
      */
-    public static function of($amount, $currency, $scale = null, $roundingMode = RoundingMode::UNNECESSARY)
+    public static function of($amount, $currency, $fractionDigits = null, $roundingMode = RoundingMode::UNNECESSARY)
     {
         $currency = Currency::of($currency);
 
-        if ($scale === null) {
-            $scale = $currency->getDefaultFractionDigits();
+        if ($fractionDigits === null) {
+            $fractionDigits = $currency->getDefaultFractionDigits();
         }
 
-        $amount = BigDecimal::of($amount)->toScale($scale, $roundingMode);
+        $amount = BigDecimal::of($amount)->toScale($fractionDigits, $roundingMode);
 
         return new Money($amount, $currency);
     }
@@ -210,20 +219,20 @@ class Money
     /**
      * Returns a Money with zero value, in the given Currency.
      *
-     * @param Currency|string $currency A currency instance or currency code.
-     * @param int|null        $scale    The scale, or null to use the currency's default fraction digits.
+     * @param Currency|string $currency       A currency instance or currency code.
+     * @param int|null        $fractionDigits The number of fraction digits, or null to use the default.
      *
      * @return Money
      */
-    public static function zero($currency, $scale = null)
+    public static function zero($currency, $fractionDigits = null)
     {
         $currency = Currency::of($currency);
 
-        if ($scale === null) {
-            $scale = $currency->getDefaultFractionDigits();
+        if ($fractionDigits === null) {
+            $fractionDigits = $currency->getDefaultFractionDigits();
         }
 
-        $amount = BigDecimal::zero()->toScale($scale);
+        $amount = BigDecimal::zero()->toScale($fractionDigits);
 
         return new Money($amount, $currency);
     }
@@ -265,34 +274,34 @@ class Money
     }
 
     /**
-     * Returns a copy of this Money with the given scale.
+     * Returns a Money with this value, and a given number of fraction digits.
      *
-     * @param int $scale        The scale to apply.
-     * @param int $roundingMode The rounding mode to apply, if necessary.
+     * @param int $fractionDigits The number of fraction digits.
+     * @param int $roundingMode   The rounding mode to apply, if necessary.
      *
      * @return Money
      */
-    public function withScale($scale, $roundingMode = RoundingMode::UNNECESSARY)
+    public function withFractionDigits($fractionDigits, $roundingMode = RoundingMode::UNNECESSARY)
     {
-        return new Money($this->amount->withScale($scale, $roundingMode), $this->currency);
+        return new Money($this->amount->toScale($fractionDigits, $roundingMode), $this->currency);
     }
 
     /**
-     * Rounds a copy of this Money with the default scale of the currency in use.
+     * Returns a copy of this Money with this value, and the default number of fraction digits of the currency in use.
      *
      * @param int $roudingMode The rounding mode to apply, if necessary.
      *
      * @return Money
      */
-    public function withDefaultScale($roudingMode = RoundingMode::UNNECESSARY)
+    public function withDefaultFractionDigits($roudingMode = RoundingMode::UNNECESSARY)
     {
-        return $this->withScale($this->currency->getDefaultFractionDigits(), $roudingMode);
+        return $this->withFractionDigits($this->currency->getDefaultFractionDigits(), $roudingMode);
     }
 
     /**
      * Returns the sum of this Money and the given amount.
      *
-     * The resulting Money has the same scale as this Money.
+     * The resulting Money has the same number of fraction digits as this Money.
      *
      * @param Money|BigNumber|number|string $that         The amount to be added.
      * @param int                           $roundingMode The rounding mode to use, if necessary.
@@ -315,7 +324,7 @@ class Money
     /**
      * Returns the difference of this Money and the given amount.
      *
-     * The resulting Money has the same scale as this Money.
+     * The resulting Money has the same number of fraction digits as this Money.
      *
      * @param Money|BigNumber|number|string $that         The amount to be subtracted.
      * @param int                           $roundingMode The rounding mode to use, if necessary.
@@ -338,7 +347,7 @@ class Money
     /**
      * Returns the product of this Money and the given number.
      *
-     * The resulting Money has the same scale as this Money.
+     * The resulting Money has the same number of fraction digits as this Money.
      *
      * @param Money|BigNumber|number|string $that         The multiplier.
      * @param int                           $roundingMode The rounding mode to use, if necessary.
@@ -356,7 +365,7 @@ class Money
     /**
      * Returns the result of the division of this Money by the given number.
      *
-     * The resulting Money has the same scale as this Money.
+     * The resulting Money has the same number of fraction digits as this Money.
      *
      * @param Money|BigNumber|number|string $that         The divisor.
      * @param int                           $roundingMode The rounding mode to use, if necessary.
