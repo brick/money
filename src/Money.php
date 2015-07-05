@@ -3,8 +3,8 @@
 namespace Brick\Money;
 
 use Brick\Math\BigDecimal;
-use Brick\Math\BigInteger;
 use Brick\Math\BigNumber;
+use Brick\Math\Exception\ArithmeticException;
 use Brick\Math\RoundingMode;
 use Brick\Math\Exception\NumberFormatException;
 use Brick\Math\Exception\RoundingNecessaryException;
@@ -238,22 +238,6 @@ class Money
     }
 
     /**
-     * @param Currency|string $currency
-     *
-     * @return void
-     *
-     * @throws CurrencyMismatchException
-     */
-    private function checkCurrency($currency)
-    {
-        $currency = Currency::of($currency);
-
-        if (! $this->currency->is($currency)) {
-            throw CurrencyMismatchException::currencyMismatch($this->currency, $currency);
-        }
-    }
-
-    /**
      * Returns the amount of this Money, as a BigDecimal.
      *
      * @return \Brick\Math\BigDecimal
@@ -310,12 +294,7 @@ class Money
      */
     public function plus($that, $roundingMode = RoundingMode::UNNECESSARY)
     {
-        if ($that instanceof Money) {
-            $this->checkCurrency($that->currency);
-            $that = $that->amount;
-        }
-
-        $amount = $this->amount->plus($that);
+        $amount = $this->amount->plus($this->handleMoney($that));
         $amount = $amount->toScale($this->amount->scale(), $roundingMode);
 
         return new Money($amount, $this->currency);
@@ -333,12 +312,7 @@ class Money
      */
     public function minus($that, $roundingMode = RoundingMode::UNNECESSARY)
     {
-        if ($that instanceof Money) {
-            $this->checkCurrency($that->currency);
-            $that = $that->amount;
-        }
-
-        $amount = $this->amount->minus($that);
+        $amount = $this->amount->minus($this->handleMoney($that));
         $amount = $amount->toScale($this->amount->scale(), $roundingMode);
 
         return new Money($amount, $this->currency);
@@ -460,12 +434,7 @@ class Money
      */
     public function compareTo($that)
     {
-        if ($that instanceof Money) {
-            $this->checkCurrency($that->currency);
-            $that = $that->amount;
-        }
-
-        return $this->amount->compareTo($that);
+        return $this->amount->compareTo($this->handleMoney($that));
     }
 
     /**
@@ -479,12 +448,7 @@ class Money
      */
     public function isEqualTo($that)
     {
-        if ($that instanceof Money) {
-            $this->checkCurrency($that->currency);
-            $that = $that->amount;
-        }
-
-        return $this->amount->isEqualTo($that);
+        return $this->amount->isEqualTo($this->handleMoney($that));
     }
 
     /**
@@ -498,12 +462,7 @@ class Money
      */
     public function isLessThan($that)
     {
-        if ($that instanceof Money) {
-            $this->checkCurrency($that->currency);
-            $that = $that->amount;
-        }
-
-        return $this->amount->isLessThan($that);
+        return $this->amount->isLessThan($this->handleMoney($that));
     }
 
     /**
@@ -517,12 +476,7 @@ class Money
      */
     public function isLessThanOrEqualTo($that)
     {
-        if ($that instanceof Money) {
-            $this->checkCurrency($that->currency);
-            $that = $that->amount;
-        }
-
-        return $this->amount->isLessThanOrEqualTo($that);
+        return $this->amount->isLessThanOrEqualTo($this->handleMoney($that));
     }
 
     /**
@@ -536,12 +490,7 @@ class Money
      */
     public function isGreaterThan($that)
     {
-        if ($that instanceof Money) {
-            $this->checkCurrency($that->currency);
-            $that = $that->amount;
-        }
-
-        return $this->amount->isGreaterThan($that);
+        return $this->amount->isGreaterThan($this->handleMoney($that));
     }
 
     /**
@@ -555,12 +504,7 @@ class Money
      */
     public function isGreaterThanOrEqualTo($that)
     {
-        if ($that instanceof Money) {
-            $this->checkCurrency($that->currency);
-            $that = $that->amount;
-        }
-
-        return $this->amount->isGreaterThanOrEqualTo($that);
+        return $this->amount->isGreaterThanOrEqualTo($this->handleMoney($that));
     }
 
     /**
@@ -640,5 +584,27 @@ class Money
     public function __toString()
     {
         return $this->currency->getCode() . ' ' . $this->amount;
+    }
+
+    /**
+     * Handles the special case of monies in methods like `plus()`, `minus()`, etc.
+     *
+     * @param Money|BigNumber|number|string $that
+     *
+     * @return BigNumber|number|string
+     *
+     * @throws CurrencyMismatchException
+     */
+    private function handleMoney($that)
+    {
+        if ($that instanceof Money) {
+            if (! $this->currency->is($that->currency)) {
+                throw CurrencyMismatchException::currencyMismatch($this->currency, $that->currency);
+            }
+
+            return $that->amount;
+        }
+
+        return $that;
     }
 }
