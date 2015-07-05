@@ -216,6 +216,13 @@
     2 => 'Burundi Franc',
     3 => 0,
   ),
+  'CVE' => 
+  array (
+    0 => 'CVE',
+    1 => 132,
+    2 => 'Cabo Verde Escudo',
+    3 => 2,
+  ),
   'KHR' => 
   array (
     0 => 'KHR',
@@ -235,13 +242,6 @@
     0 => 'CAD',
     1 => 124,
     2 => 'Canadian Dollar',
-    3 => 2,
-  ),
-  'CVE' => 
-  array (
-    0 => 'CVE',
-    1 => 132,
-    2 => 'Cabo Verde Escudo',
     3 => 2,
   ),
   'KYD' => 
@@ -318,7 +318,7 @@
   array (
     0 => 'HRK',
     1 => 191,
-    2 => 'Croatian Kuna',
+    2 => 'Kuna',
     3 => 2,
   ),
   'CUC' => 
@@ -864,7 +864,7 @@
   array (
     0 => 'RON',
     1 => 946,
-    2 => 'New Romanian Leu',
+    2 => 'Romanian Leu',
     3 => 2,
   ),
   'RUB' => 
