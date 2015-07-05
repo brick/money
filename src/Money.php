@@ -291,6 +291,9 @@ class Money
      * @param int                           $roundingMode The rounding mode to use, if necessary.
      *
      * @return Money
+     *
+     * @throws ArithmeticException       If the argument is an invalid number.
+     * @throws CurrencyMismatchException If the argument is a money in a different currency.
      */
     public function plus($that, $roundingMode = RoundingMode::UNNECESSARY)
     {
@@ -309,6 +312,9 @@ class Money
      * @param int                           $roundingMode The rounding mode to use, if necessary.
      *
      * @return Money
+     *
+     * @throws ArithmeticException       If the argument is an invalid number.
+     * @throws CurrencyMismatchException If the argument is a money in a different currency.
      */
     public function minus($that, $roundingMode = RoundingMode::UNNECESSARY)
     {
@@ -323,10 +329,12 @@ class Money
      *
      * The resulting Money has the same number of fraction digits as this Money.
      *
-     * @param Money|BigNumber|number|string $that         The multiplier.
-     * @param int                           $roundingMode The rounding mode to use, if necessary.
+     * @param BigNumber|number|string $that         The multiplier.
+     * @param int                     $roundingMode The rounding mode to use, if necessary.
      *
      * @return Money
+     *
+     * @throws ArithmeticException If the argument is an invalid number.
      */
     public function multipliedBy($that, $roundingMode = RoundingMode::UNNECESSARY)
     {
@@ -341,10 +349,12 @@ class Money
      *
      * The resulting Money has the same number of fraction digits as this Money.
      *
-     * @param Money|BigNumber|number|string $that         The divisor.
-     * @param int                           $roundingMode The rounding mode to use, if necessary.
+     * @param BigNumber|number|string $that         The divisor.
+     * @param int                     $roundingMode The rounding mode to use, if necessary.
      *
      * @return Money
+     *
+     * @throws ArithmeticException If the argument is an invalid number or is zero.
      */
     public function dividedBy($that, $roundingMode = RoundingMode::UNNECESSARY)
     {
@@ -428,9 +438,10 @@ class Money
      *
      * @param Money|BigNumber|number|string $that
      *
-     * @return int -1, 0 or 1.
+     * @return int [-1, 0, 1] if `$this` is less than, equal to, or greater than `$that`.
      *
-     * @throws CurrencyMismatchException
+     * @throws ArithmeticException       If the argument is an invalid number.
+     * @throws CurrencyMismatchException If the argument is a money in a different currency.
      */
     public function compareTo($that)
     {
@@ -444,7 +455,8 @@ class Money
      *
      * @return bool
      *
-     * @throws CurrencyMismatchException
+     * @throws ArithmeticException       If the argument is an invalid number.
+     * @throws CurrencyMismatchException If the argument is a money in a different currency.
      */
     public function isEqualTo($that)
     {
@@ -458,7 +470,8 @@ class Money
      *
      * @return bool
      *
-     * @throws CurrencyMismatchException
+     * @throws ArithmeticException       If the argument is an invalid number.
+     * @throws CurrencyMismatchException If the argument is a money in a different currency.
      */
     public function isLessThan($that)
     {
@@ -472,7 +485,8 @@ class Money
      *
      * @return bool
      *
-     * @throws CurrencyMismatchException
+     * @throws ArithmeticException       If the argument is an invalid number.
+     * @throws CurrencyMismatchException If the argument is a money in a different currency.
      */
     public function isLessThanOrEqualTo($that)
     {
@@ -486,7 +500,8 @@ class Money
      *
      * @return bool
      *
-     * @throws CurrencyMismatchException
+     * @throws ArithmeticException       If the argument is an invalid number.
+     * @throws CurrencyMismatchException If the argument is a money in a different currency.
      */
     public function isGreaterThan($that)
     {
@@ -500,7 +515,8 @@ class Money
      *
      * @return bool
      *
-     * @throws CurrencyMismatchException
+     * @throws ArithmeticException       If the argument is an invalid number.
+     * @throws CurrencyMismatchException If the argument is a money in a different currency.
      */
     public function isGreaterThanOrEqualTo($that)
     {
