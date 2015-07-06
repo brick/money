@@ -1,6 +1,6 @@
 <?php
 
-namespace Brick\Tests\Currency;
+namespace Brick\Money\Tests;
 
 use Brick\Money\Currency;
 
@@ -11,15 +11,20 @@ class CurrencyTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider accessorsProvider
+     *
+     * @param string $currencyCode   The currency code.
+     * @param int    $numericCode    The currency's numeric code.
+     * @param int    $fractionDigits The currency's default fraction digits.
+     * @param string $name           The currency's name.
      */
-    public function testAccessors($currencyCode, $numericCode, $digits, $name)
+    public function testAccessors($currencyCode, $numericCode, $fractionDigits, $name)
     {
         $currency = Currency::of($currencyCode);
 
         $this->assertEquals($currencyCode, $currency->getCode());
         $this->assertEquals($numericCode, $currency->getNumericCode());
+        $this->assertEquals($fractionDigits, $currency->getDefaultFractionDigits());
         $this->assertEquals($name, $currency->getName());
-        $this->assertEquals($digits, $currency->getDefaultFractionDigits());
     }
 
     /**
@@ -42,21 +47,22 @@ class CurrencyTest extends \PHPUnit_Framework_TestCase
         $this->assertGreaterThan(1, count($currencies));
 
         foreach ($currencies as $currency) {
-            $this->assertTrue($currency instanceof Currency);
+            $this->assertInstanceOf(Currency::class, $currency);
         }
     }
 
-    public function testGetInstance()
+    public function testOf()
     {
         $this->assertSame(Currency::of('EUR'), Currency::of('EUR'));
     }
 
-    public function testIsEqualTo()
+    public function testIs()
     {
         $original = Currency::of('EUR');
+
+        /** @var Currency $copy */
         $copy = unserialize(serialize($original));
 
-        /** @var $copy Currency */
         $this->assertNotSame($original, $copy);
         $this->assertTrue($copy->is($original));
         $this->assertTrue($copy->is('EUR'));

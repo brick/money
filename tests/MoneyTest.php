@@ -1,13 +1,13 @@
 <?php
 
-namespace Brick\Tests\Money;
+namespace Brick\Money\Tests;
 
 use Brick\Money\Money;
+use Brick\Money\Exception\CurrencyMismatchException;
 
 use Brick\Math\RoundingMode;
 use Brick\Math\Exception\DivisionByZeroException;
 use Brick\Math\Exception\RoundingNecessaryException;
-use Brick\Money\Exception\CurrencyMismatchException;
 
 /**
  * Unit tests for class Money.
