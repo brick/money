@@ -117,11 +117,7 @@ class Money
             if ($total === null) {
                 $total = $money;
             } else {
-                if ($total->getAmount()->scale() >= $money->getAmount()->scale()) {
-                    $total = $total->plus($money);
-                } else {
-                    $total = $money->plus($total);
-                }
+                $total = $total->plusExact($money);
             }
         }
 
@@ -304,6 +300,24 @@ class Money
     }
 
     /**
+     * Returns the sum of this Money and the given amount.
+     *
+     * The number of fraction digits of the resulting Money is adjusted to fit the result.
+     *
+     * @param Money|BigNumber|number|string $that The amount to be added.
+     *
+     * @return Money
+     *
+     * @throws CurrencyMismatchException
+     */
+    public function plusExact($that)
+    {
+        $amount = $this->amount->plus($this->handleMoney($that));
+
+        return new Money($amount, $this->currency);
+    }
+
+    /**
      * Returns the difference of this Money and the given amount.
      *
      * The resulting Money has the same number of fraction digits as this Money.
@@ -320,6 +334,24 @@ class Money
     {
         $amount = $this->amount->minus($this->handleMoney($that));
         $amount = $amount->toScale($this->amount->scale(), $roundingMode);
+
+        return new Money($amount, $this->currency);
+    }
+
+    /**
+     * Returns the difference of this Money and the given amount.
+     *
+     * The number of fraction digits of the resulting Money is adjusted to fit the result.
+     *
+     * @param Money|BigNumber|number|string $that The amount to be subtracted.
+     *
+     * @return Money
+     *
+     * @throws CurrencyMismatchException
+     */
+    public function minusExact($that)
+    {
+        $amount = $this->amount->minus($this->handleMoney($that));
 
         return new Money($amount, $this->currency);
     }
