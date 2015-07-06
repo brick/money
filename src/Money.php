@@ -14,7 +14,7 @@ use Brick\Money\Exception\MoneyParseException;
 /**
  * Represents a monetary value in a given currency. This class is immutable.
  */
-class Money
+class Money implements MoneyContainer
 {
     /**
      * The amount.
@@ -632,6 +632,14 @@ class Money
     public function __toString()
     {
         return $this->currency->getCode() . ' ' . $this->amount;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMonies()
+    {
+        return [$this];
     }
 
     /**

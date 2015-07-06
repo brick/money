@@ -3,9 +3,11 @@
 namespace Brick\Money;
 
 /**
- * Contains monies in different currencies. This class is mutable.
+ * Container for monies in different currencies.
+ *
+ * This class is mutable.
  */
-class MoneyBag
+class MoneyBag implements MoneyContainer
 {
     /**
      * The monies in this bag, indexed by currency code.
@@ -33,7 +35,7 @@ class MoneyBag
     }
 
     /**
-     * Returns the total money contained in the bag, in the given currency.
+     * Returns the total of the monies contained in this bag, in the given currency.
      *
      * @param Currency          $currency  The currency to get the total in.
      * @param CurrencyConverter $converter The currency converter to use.
@@ -53,52 +55,44 @@ class MoneyBag
     }
 
     /**
-     * Returns all the monies inside this bag.
-     *
-     * @return Money[]
+     * {@inheritdoc}
      */
     public function getMonies()
     {
-        return $this->monies;
+        return array_values($this->monies);
     }
 
     /**
-     * Adds the given money to this bag.
+     * Adds monies to this bag.
      *
-     * @param Money $money
+     * @param MoneyContainer $that The `Money` or `MoneyBag` to add.
      *
      * @return MoneyBag This instance.
      */
-    public function add(Money $money)
+    public function add(MoneyContainer $that)
     {
-        $currency = $money->getCurrency();
-        $currencyCode = $currency->getCode();
-        $this->monies[$currencyCode] = $money->plus($this->get($currency));
+        foreach ($that->getMonies() as $money) {
+            $currency = $money->getCurrency();
+            $currencyCode = $currency->getCode();
+            $this->monies[$currencyCode] = $this->get($currency)->plusExact($money);
+        }
 
         return $this;
     }
 
     /**
-     * Subtracts the given money from this bag.
+     * Subtracts monies from this bag.
      *
-     * @param Money $money
-     *
-     * @return MoneyBag This instance.
-     */
-    public function subtract(Money $money)
-    {
-        return $this->add($money->negated());
-    }
-
-    /**
-     * @param MoneyBag $moneyBag
+     * @param MoneyContainer $that The `Money` or `MoneyBag` to subtract.
      *
      * @return MoneyBag This instance.
      */
-    public function addMoneyBag(MoneyBag $moneyBag)
+    public function subtract(MoneyContainer $that)
     {
-        foreach ($moneyBag->getMonies() as $money) {
-            $this->add($money);
+        foreach ($that->getMonies() as $money) {
+            $currency = $money->getCurrency();
+            $currencyCode = $currency->getCode();
+            $this->monies[$currencyCode] = $this->get($currency)->minusExact($money);
         }
 
         return $this;
