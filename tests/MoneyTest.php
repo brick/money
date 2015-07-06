@@ -12,30 +12,8 @@ use Brick\Math\Exception\RoundingNecessaryException;
 /**
  * Unit tests for class Money.
  */
-class MoneyTest extends \PHPUnit_Framework_TestCase
+class MoneyTest extends AbstractTestCase
 {
-    /**
-     * @param string $expectedAmount   The expected decimal amount.
-     * @param string $expectedCurrency The expected currency code.
-     * @param Money  $actual           The money to test.
-     */
-    private function assertMoneyEquals($expectedAmount, $expectedCurrency, $actual)
-    {
-        $this->assertInstanceOf(Money::class, $actual);
-        $this->assertSame($expectedCurrency, (string) $actual->getCurrency());
-        $this->assertSame($expectedAmount, (string) $actual->getAmount());
-    }
-
-    /**
-     * @param string $expected The expected string representation.
-     * @param Money  $actual   The money to test.
-     */
-    private function assertMoneyIs($expected, $actual)
-    {
-        $this->assertInstanceOf(Money::class, $actual);
-        $this->assertSame($expected, (string) $actual);
-    }
-
     /**
      * @param string $name
      *

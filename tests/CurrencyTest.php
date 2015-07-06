@@ -7,7 +7,7 @@ use Brick\Money\Currency;
 /**
  * Unit tests for class Currency.
  */
-class CurrencyTest extends \PHPUnit_Framework_TestCase
+class CurrencyTest extends AbstractTestCase
 {
     /**
      * @dataProvider accessorsProvider

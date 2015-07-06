@@ -9,45 +9,18 @@ use Brick\Money\MoneyBag;
 /**
  * Tests for class MoneyBag.
  */
-class MoneyBagTest extends \PHPUnit_Framework_TestCase
+class MoneyBagTest extends AbstractTestCase
 {
-    /**
-     * @param array    $expectedMonies
-     * @param MoneyBag $moneyBag
-     */
-    private function assertMoneyBagContains(array $expectedMonies, $moneyBag)
-    {
-        $this->assertInstanceOf(MoneyBag::class, $moneyBag);
-
-        // Test get() on each Money
-        foreach ($expectedMonies as $money) {
-            $money = Money::parse($money);
-            $this->assertTrue($moneyBag->get($money->getCurrency())->isEqualTo($money));
-        }
-
-        $actualMonies = $moneyBag->getMonies();
-
-        foreach ($actualMonies as & $money) {
-            $money = (string) $money;
-        }
-
-        sort($expectedMonies);
-        sort($actualMonies);
-
-        // Test getMonies()
-        $this->assertSame($expectedMonies, $actualMonies);
-    }
-
     public function testNewMoneyBagIsEmpty()
     {
         $moneyBag = new MoneyBag();
 
         $this->assertMoneyBagContains([], $moneyBag);
 
-        $this->assertSame('USD 0.00', (string) $moneyBag->get(Currency::of('USD')));
-        $this->assertSame('EUR 0.00', (string) $moneyBag->get(Currency::of('EUR')));
-        $this->assertSame('GBP 0.00', (string) $moneyBag->get(Currency::of('GBP')));
-        $this->assertSame('JPY 0', (string) $moneyBag->get(Currency::of('JPY')));
+        $this->assertMoneyIs('USD 0.00', $moneyBag->get(Currency::of('USD')));
+        $this->assertMoneyIs('EUR 0.00', $moneyBag->get(Currency::of('EUR')));
+        $this->assertMoneyIs('GBP 0.00', $moneyBag->get(Currency::of('GBP')));
+        $this->assertMoneyIs('JPY 0', $moneyBag->get(Currency::of('JPY')));
     }
 
     public function testAddSubtractMoney()
