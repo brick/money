@@ -3,6 +3,7 @@
 namespace Brick\Money;
 
 use Brick\Math\RoundingMode;
+use Brick\Money\Exception\CurrencyConversionException;
 
 /**
  * Converts monies into different currencies, using an exchange rate provider.
@@ -34,6 +35,8 @@ class CurrencyConverter
      * @param Currency $currency
      *
      * @return Money
+     *
+     * @throws CurrencyConversionException If the exchange rate is not available.
      */
     public function convert(Money $money, Currency $currency)
     {
