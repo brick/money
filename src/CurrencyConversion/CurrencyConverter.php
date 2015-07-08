@@ -28,7 +28,7 @@ class CurrencyConverter
      * @param ExchangeRateProvider $exchangeRateProvider The exchange rate provider.
      * @param int                  $roundingMode         The rounding mode to use for conversions.
      */
-    public function __construct(ExchangeRateProvider $exchangeRateProvider, $roundingMode = RoundingMode::FLOOR)
+    public function __construct(ExchangeRateProvider $exchangeRateProvider, $roundingMode = RoundingMode::DOWN)
     {
         $this->exchangeRateProvider = $exchangeRateProvider;
         $this->roundingMode         = $roundingMode;
