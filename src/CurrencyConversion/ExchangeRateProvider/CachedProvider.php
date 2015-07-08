@@ -52,4 +52,16 @@ class CachedProvider implements ExchangeRateProvider
 
         return $exchangeRate;
     }
+
+    /**
+     * Invalidates the cache.
+     *
+     * This forces the exchange rates to be fetched again from the underlying provider.
+     *
+     * @return void
+     */
+    public function invalidate()
+    {
+        $this->exchangeRates = [];
+    }
 }
