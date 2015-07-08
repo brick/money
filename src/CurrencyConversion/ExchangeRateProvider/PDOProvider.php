@@ -1,12 +1,15 @@
 <?php
 
-namespace Brick\Money;
+namespace Brick\Money\CurrencyConversion\ExchangeRateProvider;
+
+use Brick\Money\Currency;
+use Brick\Money\CurrencyConversion\ExchangeRateProvider;
 use Brick\Money\Exception\CurrencyConversionException;
 
 /**
  * Reads exchange rates from a PDO database connection.
  */
-class PDOExchangeRateProvider implements ExchangeRateProvider
+class PDOProvider implements ExchangeRateProvider
 {
     const TABLE_NAME                  = 'TABLE_NAME';
     const EXCHANGE_RATE_COLUMN_NAME   = 'EXCHANGE_RATE_COLUMN_NAME';

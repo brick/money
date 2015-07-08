@@ -2,6 +2,8 @@
 
 namespace Brick\Money;
 
+use Brick\Money\CurrencyConversion\CurrencyConverter;
+
 /**
  * Container for monies in different currencies.
  *

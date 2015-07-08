@@ -1,9 +1,11 @@
 <?php
 
-namespace Brick\Money;
+namespace Brick\Money\CurrencyConversion;
+
+use Brick\Money\Currency;
+use Brick\Money\Exception\CurrencyConversionException;
 
 use Brick\Math\BigNumber;
-use Brick\Money\Exception\CurrencyConversionException;
 
 /**
  * Interface for exchange rate providers.

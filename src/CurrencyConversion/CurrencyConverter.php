@@ -1,9 +1,13 @@
 <?php
 
-namespace Brick\Money;
+namespace Brick\Money\CurrencyConversion;
+
+use Brick\Money\Currency;
+use Brick\Money\Money;
+use Brick\Money\CurrencyConversion\ExchangeRateProvider;
+use Brick\Money\Exception\CurrencyConversionException;
 
 use Brick\Math\RoundingMode;
-use Brick\Money\Exception\CurrencyConversionException;
 
 /**
  * Converts monies into different currencies, using an exchange rate provider.

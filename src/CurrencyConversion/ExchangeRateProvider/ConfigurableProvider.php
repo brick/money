@@ -1,7 +1,9 @@
 <?php
 
-namespace Brick\Money;
+namespace Brick\Money\CurrencyConversion\ExchangeRateProvider;
 
+use Brick\Money\Currency;
+use Brick\Money\CurrencyConversion\ExchangeRateProvider;
 use Brick\Money\Exception\CurrencyConversionException;
 
 use Brick\Math\BigNumber;
@@ -9,7 +11,7 @@ use Brick\Math\BigNumber;
 /**
  * A configurable exchange rate provider.
  */
-class ConfigurableExchangeRateProvider implements ExchangeRateProvider
+class ConfigurableProvider implements ExchangeRateProvider
 {
     /**
      * @var array
@@ -21,7 +23,7 @@ class ConfigurableExchangeRateProvider implements ExchangeRateProvider
      * @param Currency                $target
      * @param BigNumber|number|string $exchangeRate
      *
-     * @return ConfigurableExchangeRateProvider
+     * @return ConfigurableProvider
      */
     public function setExchangeRate(Currency $source, Currency $target, $exchangeRate)
     {

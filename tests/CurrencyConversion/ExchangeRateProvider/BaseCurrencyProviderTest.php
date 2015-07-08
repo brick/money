@@ -1,30 +1,33 @@
 <?php
 
-namespace Brick\Money\Tests;
+namespace Brick\Money\Tests\CurrencyConversion\ExchangeRateProvider;
+
+use Brick\Money\Currency;
+use Brick\Money\CurrencyConversion\ExchangeRateProvider;
+use Brick\Money\CurrencyConversion\ExchangeRateProvider\BaseCurrencyProvider;
+use Brick\Money\CurrencyConversion\ExchangeRateProvider\ConfigurableProvider;
+use Brick\Money\Tests\AbstractTestCase;
 
 use Brick\Math\BigRational;
 use Brick\Math\RoundingMode;
-use Brick\Money\BaseCurrencyExchangeRateProvider;
-use Brick\Money\Currency;
-use Brick\Money\ConfigurableExchangeRateProvider;
 
 /**
  * Tests for class BaseCurrencyExchangeRateProvider.
  */
-class BaseCurrencyExchangeRateProviderTest extends AbstractTestCase
+class BaseCurrencyProviderTest extends AbstractTestCase
 {
     /**
-     * @return ConfigurableExchangeRateProvider
+     * @return ExchangeRateProvider
      */
     private function getExchangeRateProvider()
     {
-        $provider = new ConfigurableExchangeRateProvider();
+        $provider = new ConfigurableProvider();
 
         $provider->setExchangeRate(Currency::of('USD'), Currency::of('EUR'), 0.9);
         $provider->setExchangeRate(Currency::of('USD'), Currency::of('GBP'), 0.8);
         $provider->setExchangeRate(Currency::of('USD'), Currency::of('CAD'), 1.1);
 
-        return new BaseCurrencyExchangeRateProvider($provider, Currency::of('USD'));
+        return new BaseCurrencyProvider($provider, Currency::of('USD'));
     }
 
     /**

@@ -1,11 +1,14 @@
 <?php
 
-namespace Brick\Money;
+namespace Brick\Money\CurrencyConversion\ExchangeRateProvider;
+
+use Brick\Money\Currency;
+use Brick\Money\CurrencyConversion\ExchangeRateProvider;
 
 /**
- * Caches the results of an exchange rate provider.
+ * Caches the results of another exchange rate provider.
  */
-class CachedExchangeRateProvider implements ExchangeRateProvider
+class CachedProvider implements ExchangeRateProvider
 {
     /**
      * The underlying exchange rate provider.
