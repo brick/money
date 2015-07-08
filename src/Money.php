@@ -593,6 +593,25 @@ class Money implements MoneyContainer
     }
 
     /**
+     * Returns a copy of this Money converted into another currency.
+     *
+     * @param Currency|string         $currency     The target currency or currency code.
+     * @param BigNumber|number|string $exchangeRate The exchange rate to multiply by.
+     * @param int                     $roundingMode The rounding mode to use.
+     *
+     * @return Money
+     */
+    public function convertedTo($currency, $exchangeRate, $roundingMode)
+    {
+        $currency = Currency::of($currency);
+
+        $amount = $this->amount->multipliedBy($exchangeRate);
+        $amount = $amount->toScale($this->amount->scale(), $roundingMode);
+
+        return new Money($amount, $currency);
+    }
+
+    /**
      * Formats this Money with the given NumberFormatter.
      *
      * Note that NumberFormatter internally represents values using floating point arithmetic,

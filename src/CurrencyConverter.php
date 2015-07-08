@@ -46,7 +46,7 @@ class CurrencyConverter
 
         $exchangeRate = $this->exchangeRateProvider->getExchangeRate($money->getCurrency(), $currency);
 
-        return $money->multipliedBy($exchangeRate, $this->roundingMode);
+        return $money->convertedTo($currency, $exchangeRate, $this->roundingMode);
     }
 
     /**
