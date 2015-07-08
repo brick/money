@@ -27,7 +27,7 @@ class PDOProvider implements ExchangeRateProvider
      *
      * @throws \InvalidArgumentException
      */
-    private function __construct(\PDO $pdo, array $configuration)
+    public function __construct(\PDO $pdo, array $configuration)
     {
         $keys = [
             self::TABLE_NAME,
