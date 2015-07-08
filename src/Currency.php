@@ -1,6 +1,7 @@
 <?php
 
 namespace Brick\Money;
+use Brick\Money\Exception\UnknownCurrencyException;
 
 /**
  * A currency as defined by ISO 4217.
@@ -78,7 +79,7 @@ class Currency
      *
      * @return Currency
      *
-     * @throws \InvalidArgumentException
+     * @throws UnknownCurrencyException If an unknown currency code is given.
      */
     public static function of($currency)
     {
@@ -92,7 +93,7 @@ class Currency
             self::loadCurrencyData();
 
             if (! isset(self::$currencies[$currency])) {
-                throw new \InvalidArgumentException('Invalid currency code: ' . $currency);
+                throw UnknownCurrencyException::unknownCurrency($currency);
             }
 
             list ($currencyCode, $numericCode, $name, $fractionDigits) = self::$currencies[$currency];
