@@ -605,7 +605,7 @@ class Money implements MoneyContainer
     {
         $currency = Currency::of($currency);
 
-        $amount = $this->amount->multipliedBy($exchangeRate);
+        $amount = $this->amount->toBigRational()->multipliedBy($exchangeRate);
         $amount = $amount->toScale($this->amount->scale(), $roundingMode);
 
         return new Money($amount, $currency);
