@@ -2,14 +2,15 @@
 
 namespace Brick\Money;
 
-use Brick\Math\BigDecimal;
-use Brick\Math\BigNumber;
-use Brick\Math\Exception\ArithmeticException;
-use Brick\Math\RoundingMode;
-use Brick\Math\Exception\NumberFormatException;
-use Brick\Math\Exception\RoundingNecessaryException;
 use Brick\Money\Exception\CurrencyMismatchException;
 use Brick\Money\Exception\MoneyParseException;
+
+use Brick\Math\BigDecimal;
+use Brick\Math\BigNumber;
+use Brick\Math\RoundingMode;
+use Brick\Math\Exception\ArithmeticException;
+use Brick\Math\Exception\NumberFormatException;
+use Brick\Math\Exception\RoundingNecessaryException;
 
 /**
  * Represents a monetary value in a given currency. This class is immutable.
