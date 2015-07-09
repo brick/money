@@ -15,16 +15,6 @@ use Brick\Math\Exception\RoundingNecessaryException;
 class MoneyTest extends AbstractTestCase
 {
     /**
-     * @param string $name
-     *
-     * @return bool
-     */
-    private function isException($name)
-    {
-        return substr($name, -9) === 'Exception';
-    }
-
-    /**
      * @dataProvider providerOfMinor
      *
      * @param string   $currency
@@ -142,13 +132,13 @@ class MoneyTest extends AbstractTestCase
     {
         $money = Money::parse($money);
 
-        if ($this->isException($expected)) {
+        if ($this->isExceptionClass($expected)) {
             $this->setExpectedException($expected);
         }
 
         $actual = $money->plus($plus, $roundingMode);
 
-        if (! $this->isException($expected)) {
+        if (! $this->isExceptionClass($expected)) {
             $this->assertMoneyIs($expected, $actual);
         }
     }
@@ -185,13 +175,13 @@ class MoneyTest extends AbstractTestCase
     {
         $money = Money::parse($money);
 
-        if ($this->isException($expected)) {
+        if ($this->isExceptionClass($expected)) {
             $this->setExpectedException($expected);
         }
 
         $actual = $money->minus($minus, $roundingMode);
 
-        if (! $this->isException($expected)) {
+        if (! $this->isExceptionClass($expected)) {
             $this->assertMoneyIs($expected, $actual);
         }
     }
@@ -228,13 +218,13 @@ class MoneyTest extends AbstractTestCase
     {
         $money = Money::parse($money);
 
-        if ($this->isException($expected)) {
+        if ($this->isExceptionClass($expected)) {
             $this->setExpectedException($expected);
         }
 
         $actual = $money->multipliedBy($multiplier, $roundingMode);
 
-        if (! $this->isException($expected)) {
+        if (! $this->isExceptionClass($expected)) {
             $this->assertMoneyIs($expected, $actual);
         }
     }
@@ -270,13 +260,13 @@ class MoneyTest extends AbstractTestCase
     {
         $money = Money::parse($money);
 
-        if ($this->isException($expected)) {
+        if ($this->isExceptionClass($expected)) {
             $this->setExpectedException($expected);
         }
 
         $actual = $money->dividedBy($divisor, $roundingMode);
 
-        if (! $this->isException($expected)) {
+        if (! $this->isExceptionClass($expected)) {
             $this->assertMoneyIs($expected, $actual);
         }
     }

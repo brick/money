@@ -58,4 +58,14 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         // Test getMonies()
         $this->assertSame($expectedMonies, $actualMonies);
     }
+
+    /**
+     * @param string $value
+     *
+     * @return bool
+     */
+    final protected function isExceptionClass($value)
+    {
+        return is_string($value) && substr($value, -9) === 'Exception';
+    }
 }

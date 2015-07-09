@@ -1,0 +1,85 @@
+<?php
+
+namespace Brick\Money\Tests\CurrencyConversion\ExchangeRateProvider;
+
+use Brick\Money\Currency;
+use Brick\Money\CurrencyConversion\ExchangeRateProvider\PDOProvider;
+use Brick\Money\CurrencyConversion\ExchangeRateProvider\PDOProviderConfiguration;
+use Brick\Money\Exception\CurrencyConversionException;
+use Brick\Money\Tests\AbstractTestCase;
+
+/**
+ * Tests for class BaseCurrencyExchangeRateProvider.
+ */
+class PDOProviderTest extends AbstractTestCase
+{
+    /**
+     * Configures and returns a fresh PDOProvider instance.
+     *
+     * @return PDOProvider
+     */
+    private function getPDOProvider()
+    {
+        $pdo = new \PDO('sqlite::memory:');
+
+        $pdo->query('
+            CREATE TABLE exchange_rate (
+                source_currency TEXT NOT NULL,
+                target_currency TEXT NOT NULL,
+                exchange_rate REAL NOT NULL
+            )
+        ');
+
+        $statement = $pdo->prepare('INSERT INTO exchange_rate VALUES (?, ?, ?)');
+
+        $statement->execute(['EUR', 'USD', 1.1]);
+        $statement->execute(['USD', 'EUR', 0.9]);
+        $statement->execute(['USD', 'CAD', 1.2]);
+
+        $configuration = new PDOProviderConfiguration();
+
+        $configuration->tableName                = 'exchange_rate';
+        $configuration->sourceCurrencyColumnName = 'source_currency';
+        $configuration->targetCurrencyColumnName = 'target_currency';
+        $configuration->exchangeRateColumnName   = 'exchange_rate';
+
+        return new PDOProvider($pdo, $configuration);
+    }
+
+    /**
+     * @dataProvider providerGetExchangeRate
+     *
+     * @param string       $sourceCurrency The currency code of the source.
+     * @param string       $targetCurrency The currency code of the target currency.
+     * @param float|string $expectedResult The expected exchange rate, or an exception class if expected.
+     */
+    public function testGetExchangeRate($sourceCurrency, $targetCurrency, $expectedResult)
+    {
+        $sourceCurrency = Currency::of($sourceCurrency);
+        $targetCurrency = Currency::of($targetCurrency);
+
+        if ($this->isExceptionClass($expectedResult)) {
+            $this->setExpectedException($expectedResult);
+        }
+
+        $actualRate = $this->getPDOProvider()->getExchangeRate($sourceCurrency, $targetCurrency);
+
+        if (! $this->isExceptionClass($expectedResult)) {
+            $this->assertEquals($expectedResult, $actualRate);
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function providerGetExchangeRate()
+    {
+        return [
+            ['USD', 'EUR', 0.9],
+            ['EUR', 'USD', 1.1],
+            ['USD', 'CAD', 1.2],
+            ['CAD', 'USD', CurrencyConversionException::class],
+            ['EUR', 'CAD', CurrencyConversionException::class],
+        ];
+    }
+}
