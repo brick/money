@@ -651,7 +651,7 @@ class Money implements MoneyContainer
      */
     public function __toString()
     {
-        return $this->currency->getCode() . ' ' . $this->amount;
+        return $this->currency . ' ' . $this->amount;
     }
 
     /**
