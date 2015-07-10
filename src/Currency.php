@@ -3,7 +3,6 @@
 namespace Brick\Money;
 
 use Brick\Money\CurrencyProvider\DefaultCurrencyProvider;
-use Brick\Money\CurrencyProvider\ISOCurrencyProvider;
 use Brick\Money\Exception\UnknownCurrencyException;
 
 /**
@@ -12,21 +11,29 @@ use Brick\Money\Exception\UnknownCurrencyException;
 class Currency
 {
     /**
-     * The ISO 4217 alphabetic currency code.
+     * The currency code.
+     *
+     * For ISO currencies, this is the ISO 4217 alphabetic currency code.
+     * Custom currencies can use any string value. The currency code must be unique across all currencies.
      *
      * @var string
      */
     private $currencyCode;
 
     /**
-     * The ISO 4217 numeric currency code.
+     * The numeric currency code.
+     *
+     * For ISO currencies, this is the ISO 4217 numeric currency code.
+     * Custom currencies can use any integer value.
      *
      * @var int
      */
     private $numericCode;
 
     /**
-     * The english name of the currency.
+     * The name of the currency.
+     *
+     * ISO currencies use the English name here.
      *
      * @var string
      */
@@ -42,9 +49,9 @@ class Currency
     /**
      * Private constructor. Use getInstance() to obtain an instance.
      *
-     * @param string  $currencyCode          The ISO 4217 alphabetic currency code.
-     * @param int     $numericCode           The ISO 4217 numeric currency code.
-     * @param string  $name                  The English currency name.
+     * @param string  $currencyCode          The currency code.
+     * @param int     $numericCode           The numeric currency code.
+     * @param string  $name                  The currency name.
      * @param int     $defaultFractionDigits The default number of fraction digits.
      */
     private function __construct($currencyCode, $numericCode, $name, $defaultFractionDigits)
@@ -56,10 +63,12 @@ class Currency
     }
 
     /**
-     * @param string $currencyCode
-     * @param int    $numericCode
-     * @param string $name
-     * @param int    $defaultFractionDigits
+     * Creates a Currency.
+     *
+     * @param string  $currencyCode          The currency code.
+     * @param int     $numericCode           The numeric currency code.
+     * @param string  $name                  The currency name.
+     * @param int     $defaultFractionDigits The default number of fraction digits.
      *
      * @return Currency
      */
@@ -79,6 +88,10 @@ class Currency
 
     /**
      * Returns a Currency instance of the given parameter.
+     *
+     * This method resolves currency codes using the DefaultCurrencyProvider.
+     * By default, only ISO currencies are available; additional currencies can be registered
+     * with the DefaultCurrencyProvider and will be made available here.
      *
      * @param Currency|string $currency
      *
