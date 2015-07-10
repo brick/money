@@ -41,7 +41,7 @@ class ISOCurrencyProvider implements CurrencyProvider
      */
     private function __construct()
     {
-        $this->currencyData = require __DIR__ . '/../../data/currencies.php';
+        $this->currencyData = require __DIR__ . '/../../data/iso-currencies.php';
     }
 
     /**

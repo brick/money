@@ -46,7 +46,7 @@ foreach ($countries as $country) {
     }
 }
 
-exportToFile('data/currencies.php', $result);
+exportToFile('data/iso-currencies.php', $result);
 
 printf('Exported %d currencies.' . PHP_EOL, count($result));
 
