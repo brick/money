@@ -1,9 +1,9 @@
 <?php
 
-namespace Brick\Money\CurrencyConversion\ExchangeRateProvider;
+namespace Brick\Money\ExchangeRateProvider;
 
 use Brick\Money\Currency;
-use Brick\Money\CurrencyConversion\ExchangeRateProvider;
+use Brick\Money\ExchangeRateProvider;
 use Brick\Money\Exception\CurrencyConversionException;
 
 /**
@@ -17,7 +17,7 @@ class PDOExchangeRateProvider implements ExchangeRateProvider
     private $statement;
 
     /**
-     * @param \PDO                     $pdo
+     * @param \PDO                                 $pdo
      * @param PDOExchangeRateProviderConfiguration $configuration
      */
     public function __construct(\PDO $pdo, PDOExchangeRateProviderConfiguration $configuration)

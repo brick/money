@@ -3,8 +3,8 @@
 namespace Brick\Money\Tests\CurrencyConversion\ExchangeRateProvider;
 
 use Brick\Money\Currency;
-use Brick\Money\CurrencyConversion\ExchangeRateProvider\PDOExchangeRateProvider;
-use Brick\Money\CurrencyConversion\ExchangeRateProvider\PDOExchangeRateProviderConfiguration;
+use Brick\Money\ExchangeRateProvider\PDOExchangeRateProvider;
+use Brick\Money\ExchangeRateProvider\PDOExchangeRateProviderConfiguration;
 use Brick\Money\Exception\CurrencyConversionException;
 use Brick\Money\Tests\AbstractTestCase;
 

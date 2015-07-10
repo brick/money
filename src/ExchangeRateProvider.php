@@ -1,8 +1,7 @@
 <?php
 
-namespace Brick\Money\CurrencyConversion;
+namespace Brick\Money;
 
-use Brick\Money\Currency;
 use Brick\Money\Exception\CurrencyConversionException;
 
 use Brick\Math\BigNumber;

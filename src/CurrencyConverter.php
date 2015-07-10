@@ -1,10 +1,8 @@
 <?php
 
-namespace Brick\Money\CurrencyConversion;
+namespace Brick\Money;
 
-use Brick\Money\Currency;
-use Brick\Money\Money;
-use Brick\Money\CurrencyConversion\ExchangeRateProvider;
+use Brick\Money\ExchangeRateProvider;
 use Brick\Money\Exception\CurrencyConversionException;
 
 use Brick\Math\RoundingMode;

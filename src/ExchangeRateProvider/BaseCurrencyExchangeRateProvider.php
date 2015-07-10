@@ -1,10 +1,10 @@
 <?php
 
-namespace Brick\Money\CurrencyConversion\ExchangeRateProvider;
+namespace Brick\Money\ExchangeRateProvider;
 
 use Brick\Math\BigRational;
 use Brick\Money\Currency;
-use Brick\Money\CurrencyConversion\ExchangeRateProvider;
+use Brick\Money\ExchangeRateProvider;
 
 /**
  * Calculates exchange rates relative to a base currency.

@@ -1,6 +1,6 @@
 <?php
 
-namespace Brick\Money\CurrencyConversion\ExchangeRateProvider;
+namespace Brick\Money\ExchangeRateProvider;
 
 /**
  * Configuration for the PDOProvider.

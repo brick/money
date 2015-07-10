@@ -3,9 +3,9 @@
 namespace Brick\Money\Tests\CurrencyConversion\ExchangeRateProvider;
 
 use Brick\Money\Currency;
-use Brick\Money\CurrencyConversion\ExchangeRateProvider;
-use Brick\Money\CurrencyConversion\ExchangeRateProvider\BaseCurrencyExchangeRateProvider;
-use Brick\Money\CurrencyConversion\ExchangeRateProvider\ConfigurableExchangeRateProvider;
+use Brick\Money\ExchangeRateProvider;
+use Brick\Money\ExchangeRateProvider\BaseCurrencyExchangeRateProvider;
+use Brick\Money\ExchangeRateProvider\ConfigurableExchangeRateProvider;
 use Brick\Money\Tests\AbstractTestCase;
 
 use Brick\Math\BigRational;

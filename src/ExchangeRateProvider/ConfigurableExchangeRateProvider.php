@@ -1,9 +1,9 @@
 <?php
 
-namespace Brick\Money\CurrencyConversion\ExchangeRateProvider;
+namespace Brick\Money\ExchangeRateProvider;
 
 use Brick\Money\Currency;
-use Brick\Money\CurrencyConversion\ExchangeRateProvider;
+use Brick\Money\ExchangeRateProvider;
 use Brick\Money\Exception\CurrencyConversionException;
 
 use Brick\Math\BigNumber;
