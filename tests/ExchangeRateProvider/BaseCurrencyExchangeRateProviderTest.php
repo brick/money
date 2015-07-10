@@ -1,6 +1,6 @@
 <?php
 
-namespace Brick\Money\Tests\CurrencyConversion\ExchangeRateProvider;
+namespace Brick\Money\Tests\ExchangeRateProvider;
 
 use Brick\Money\Currency;
 use Brick\Money\ExchangeRateProvider;
