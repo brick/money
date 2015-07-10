@@ -35,20 +35,6 @@ class ConfigurableCurrencyProvider implements CurrencyProvider
     }
 
     /**
-     * Registers all currencies of another currency provider.
-     *
-     * @param CurrencyProvider $provider
-     *
-     * @return ConfigurableCurrencyProvider This instance, for chaining.
-     */
-    public function registerCurrencyProvider(CurrencyProvider $provider)
-    {
-        $this->currencies = $provider->getAvailableCurrencies() + $this->currencies;
-
-        return $this;
-    }
-
-    /**
      * Removes a currency.
      *
      * If no currency with this code is registered, this method does nothing.
