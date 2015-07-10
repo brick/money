@@ -18,7 +18,11 @@ class CurrencyProviderChain implements CurrencyProvider
     private $providers = [];
 
     /**
-     * @param CurrencyProvider $provider
+     * Adds a currency provider to the chain.
+     *
+     * If the provider is already registered, this method does nothing.
+     *
+     * @param CurrencyProvider $provider The currency provider to add.
      *
      * @return CurrencyProviderChain This instance, for chaining.
      */
@@ -31,7 +35,11 @@ class CurrencyProviderChain implements CurrencyProvider
     }
 
     /**
-     * @param CurrencyProvider $provider
+     * Removes a currency provider from the chain.
+     *
+     * If the provider is not registered, this method does nothing.
+     *
+     * @param CurrencyProvider $provider The currency provider to remove.
      *
      * @return CurrencyProviderChain This instance, for chaining.
      */

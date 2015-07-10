@@ -14,11 +14,11 @@ use Brick\Money\Tests\AbstractTestCase;
 class PDOExchangeRateProviderTest extends AbstractTestCase
 {
     /**
-     * Configures and returns a fresh PDOProvider instance.
+     * Configures and returns a fresh PDOExchangeRateProvider instance.
      *
      * @return PDOExchangeRateProvider
      */
-    private function getPDOProvider()
+    private function getPDOExchangeRateProvider()
     {
         $pdo = new \PDO('sqlite::memory:');
 
@@ -62,7 +62,7 @@ class PDOExchangeRateProviderTest extends AbstractTestCase
             $this->setExpectedException($expectedResult);
         }
 
-        $actualRate = $this->getPDOProvider()->getExchangeRate($sourceCurrency, $targetCurrency);
+        $actualRate = $this->getPDOExchangeRateProvider()->getExchangeRate($sourceCurrency, $targetCurrency);
 
         if (! $this->isExceptionClass($expectedResult)) {
             $this->assertEquals($expectedResult, $actualRate);

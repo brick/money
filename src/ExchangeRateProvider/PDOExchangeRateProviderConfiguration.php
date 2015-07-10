@@ -3,7 +3,7 @@
 namespace Brick\Money\ExchangeRateProvider;
 
 /**
- * Configuration for the PDOProvider.
+ * Configuration for the PDOExchangeRateProvider.
  */
 class PDOExchangeRateProviderConfiguration
 {

@@ -19,7 +19,11 @@ class ExchangeRateProviderChain implements ExchangeRateProvider
     private $providers = [];
 
     /**
-     * @param ExchangeRateProvider $provider
+     * Adds an exchange rate provider to the chain.
+     *
+     * If the provider is already registered, this method does nothing.
+     *
+     * @param ExchangeRateProvider $provider The exchange rate provider to add.
      *
      * @return ExchangeRateProviderChain This instance, for chaining.
      */
@@ -32,7 +36,11 @@ class ExchangeRateProviderChain implements ExchangeRateProvider
     }
 
     /**
-     * @param ExchangeRateProvider $provider
+     * Removes an exchange rate provider from the chain.
+     *
+     * If the provider is not registered, this method does nothing.
+     *
+     * @param ExchangeRateProvider $provider The exchange rate provider to remove.
      *
      * @return ExchangeRateProviderChain This instance, for chaining.
      */
