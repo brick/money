@@ -132,6 +132,8 @@ class ConfigurableCurrencyProviderTest extends AbstractTestCase
      * @depends testRemoveCurrency
      *
      * @param ConfigurableCurrencyProvider $provider
+     *
+     * @return ConfigurableCurrencyProvider
      */
     public function testAddCurrencyProvider(ConfigurableCurrencyProvider $provider)
     {
@@ -147,5 +149,18 @@ class ConfigurableCurrencyProviderTest extends AbstractTestCase
             'BAR' => self::$barCurrency,
             'BAZ' => self::$bazCurrency
         ], $provider);
+
+        return $provider;
+    }
+
+    /**
+     * @depends testAddCurrencyProvider
+     * @expectedException \Brick\Money\Exception\UnknownCurrencyException
+     *
+     * @param ConfigurableCurrencyProvider $provider
+     */
+    public function testGetUnknownCurrency(ConfigurableCurrencyProvider $provider)
+    {
+        $provider->getCurrency('XXX');
     }
 }
