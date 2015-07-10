@@ -3,20 +3,20 @@
 namespace Brick\Money\Tests\CurrencyConversion\ExchangeRateProvider;
 
 use Brick\Money\Currency;
-use Brick\Money\CurrencyConversion\ExchangeRateProvider\PDOProvider;
-use Brick\Money\CurrencyConversion\ExchangeRateProvider\PDOProviderConfiguration;
+use Brick\Money\CurrencyConversion\ExchangeRateProvider\PDOExchangeRateProvider;
+use Brick\Money\CurrencyConversion\ExchangeRateProvider\PDOExchangeRateProviderConfiguration;
 use Brick\Money\Exception\CurrencyConversionException;
 use Brick\Money\Tests\AbstractTestCase;
 
 /**
- * Tests for class BaseCurrencyExchangeRateProvider.
+ * Tests for class PDOExchangeRateProvider.
  */
-class PDOProviderTest extends AbstractTestCase
+class PDOExchangeRateProviderTest extends AbstractTestCase
 {
     /**
      * Configures and returns a fresh PDOProvider instance.
      *
-     * @return PDOProvider
+     * @return PDOExchangeRateProvider
      */
     private function getPDOProvider()
     {
@@ -36,14 +36,14 @@ class PDOProviderTest extends AbstractTestCase
         $statement->execute(['USD', 'EUR', 0.9]);
         $statement->execute(['USD', 'CAD', 1.2]);
 
-        $configuration = new PDOProviderConfiguration();
+        $configuration = new PDOExchangeRateProviderConfiguration();
 
         $configuration->tableName                = 'exchange_rate';
         $configuration->sourceCurrencyColumnName = 'source_currency';
         $configuration->targetCurrencyColumnName = 'target_currency';
         $configuration->exchangeRateColumnName   = 'exchange_rate';
 
-        return new PDOProvider($pdo, $configuration);
+        return new PDOExchangeRateProvider($pdo, $configuration);
     }
 
     /**
