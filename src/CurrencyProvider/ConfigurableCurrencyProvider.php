@@ -19,7 +19,7 @@ class ConfigurableCurrencyProvider implements CurrencyProvider
     private $currencies = [];
 
     /**
-     * Registers a currency.
+     * Registers a currency with this currency provider.
      *
      * If a currency with the same code is already registered, it is overridden.
      *
@@ -27,7 +27,7 @@ class ConfigurableCurrencyProvider implements CurrencyProvider
      *
      * @return ConfigurableCurrencyProvider This instance, for chaining.
      */
-    public function registerCurrency(Currency $currency)
+    public function addCurrency(Currency $currency)
     {
         $this->currencies[$currency->getCode()] = $currency;
 
@@ -35,7 +35,7 @@ class ConfigurableCurrencyProvider implements CurrencyProvider
     }
 
     /**
-     * Removes a currency.
+     * Removes a currency from this currency provider.
      *
      * If no currency with this code is registered, this method does nothing.
      *

@@ -24,13 +24,13 @@ class CurrencyProviderChainTest extends AbstractTestCase
         $isoProvider = ISOCurrencyProvider::getInstance();
 
         $provider = new ConfigurableCurrencyProvider();
-        $provider->registerCurrency($isoProvider->getCurrency('EUR'));
-        $provider->registerCurrency($isoProvider->getCurrency('GBP'));
+        $provider->addCurrency($isoProvider->getCurrency('EUR'));
+        $provider->addCurrency($isoProvider->getCurrency('GBP'));
         $providerChain->addCurrencyProvider($provider);
 
         $provider = new ConfigurableCurrencyProvider();
-        $provider->registerCurrency($isoProvider->getCurrency('USD'));
-        $provider->registerCurrency($isoProvider->getCurrency('CAD'));
+        $provider->addCurrency($isoProvider->getCurrency('USD'));
+        $provider->addCurrency($isoProvider->getCurrency('CAD'));
         $providerChain->addCurrencyProvider($provider);
 
         return $providerChain;
@@ -81,7 +81,7 @@ class CurrencyProviderChainTest extends AbstractTestCase
         // Add a different GBP instance, that comes after the first one.
         // The first instance available in the chain takes precedence.
         $provider = new ConfigurableCurrencyProvider();
-        $provider->registerCurrency(Currency::create('GBP', 999, 'A competing GBP instance', 6));
+        $provider->addCurrency(Currency::create('GBP', 999, 'A competing GBP instance', 6));
         $providerChain->addCurrencyProvider($provider);
 
         $this->assertCurrencyProviderContains([

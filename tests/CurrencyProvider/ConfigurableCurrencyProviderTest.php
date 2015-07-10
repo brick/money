@@ -63,7 +63,7 @@ class ConfigurableCurrencyProviderTest extends AbstractTestCase
      */
     public function testRegisterCurrency(ConfigurableCurrencyProvider $provider)
     {
-        $provider->registerCurrency(self::$fooCurrency);
+        $provider->addCurrency(self::$fooCurrency);
 
         $this->assertCurrencyProviderContains([
             'FOO' => self::$fooCurrency
@@ -81,7 +81,7 @@ class ConfigurableCurrencyProviderTest extends AbstractTestCase
      */
     public function testRegisterSecondCurrency(ConfigurableCurrencyProvider $provider)
     {
-        $provider->registerCurrency(self::$barCurrency);
+        $provider->addCurrency(self::$barCurrency);
 
         $this->assertCurrencyProviderContains([
                 'FOO' => self::$fooCurrency,
@@ -100,7 +100,7 @@ class ConfigurableCurrencyProviderTest extends AbstractTestCase
      */
     public function testRegisterCurrencyOverride(ConfigurableCurrencyProvider $provider)
     {
-        $provider->registerCurrency(self::$competingFooCurrency);
+        $provider->addCurrency(self::$competingFooCurrency);
 
         $this->assertCurrencyProviderContains([
             'FOO' => self::$competingFooCurrency,
