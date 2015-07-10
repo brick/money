@@ -19,11 +19,11 @@ class ConfigurableCurrencyProvider implements CurrencyProvider
     private $currencies = [];
 
     /**
-     * Registers a currency with this currency provider.
+     * Adds a currency to this currency provider.
      *
      * If a currency with the same code is already registered, it is overridden.
      *
-     * @param Currency $currency The currency to register.
+     * @param Currency $currency The currency to add.
      *
      * @return ConfigurableCurrencyProvider This instance, for chaining.
      */

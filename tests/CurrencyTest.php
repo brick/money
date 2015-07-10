@@ -40,17 +40,6 @@ class CurrencyTest extends AbstractTestCase
         ];
     }
 
-    public function testGetAvailableCurrencies()
-    {
-        $currencies = Currency::getAvailableCurrencies();
-
-        $this->assertGreaterThan(1, count($currencies));
-
-        foreach ($currencies as $currency) {
-            $this->assertInstanceOf(Currency::class, $currency);
-        }
-    }
-
     public function testOf()
     {
         $this->assertSame(Currency::of('EUR'), Currency::of('EUR'));

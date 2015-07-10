@@ -37,7 +37,7 @@ class ISOCurrencyProvider implements CurrencyProvider
     private $isPartial = true;
 
     /**
-     * Private constructor. Use getInstance() to obtain the singleton instance.
+     * Private constructor. Use `getInstance()` to obtain the singleton instance.
      */
     private function __construct()
     {
@@ -45,6 +45,8 @@ class ISOCurrencyProvider implements CurrencyProvider
     }
 
     /**
+     * Returns the singleton instance of ISOCurrencyProvider.
+     *
      * @return ISOCurrencyProvider
      */
     public static function getInstance()
