@@ -80,7 +80,7 @@ class CurrencyConverter
 
         $exchangeRate = $this->exchangeRateProvider->getExchangeRate($aCurrency, $bCurrency);
 
-        $aAmount = $aAmount->multipliedBy($exchangeRate);
+        $aAmount = $aAmount->toBigRational()->multipliedBy($exchangeRate);
 
         return $aAmount->compareTo($bAmount);
     }
