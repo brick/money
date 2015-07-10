@@ -6,6 +6,7 @@ use Brick\Money\ExchangeRateProvider;
 use Brick\Money\Exception\CurrencyConversionException;
 
 use Brick\Math\RoundingMode;
+use Brick\Math\Exception\RoundingNecessaryException;
 
 /**
  * Converts monies into different currencies, using an exchange rate provider.
@@ -39,6 +40,7 @@ class CurrencyConverter
      * @return Money
      *
      * @throws CurrencyConversionException If the exchange rate is not available.
+     * @throws RoundingNecessaryException  If rounding was necessary but this converter uses RoundingMode::UNNECESSARY.
      */
     public function convert(Money $money, Currency $currency)
     {
@@ -65,6 +67,8 @@ class CurrencyConverter
      * @param Money $b
      *
      * @return int -1, 0 or 1.
+     *
+     * @throws CurrencyConversionException If the exchange rate is not available.
      */
     public function compare(Money $a, Money $b)
     {
