@@ -2,6 +2,8 @@
 
 namespace Brick\Money\Tests;
 
+use Brick\Money\Currency;
+use Brick\Money\CurrencyProvider;
 use Brick\Money\Money;
 use Brick\Money\MoneyBag;
 
@@ -40,7 +42,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     {
         $this->assertInstanceOf(MoneyBag::class, $moneyBag);
 
-        // Test get() on each Money
+        // Test get() on each currency
         foreach ($expectedMonies as $money) {
             $money = Money::parse($money);
             $this->assertMoneyIs($money, $moneyBag->get($money->getCurrency()));
@@ -57,6 +59,28 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
         // Test getMonies()
         $this->assertSame($expectedMonies, $actualMonies);
+    }
+
+    /**
+     * @param Currency[]       $expectedCurrencies
+     * @param CurrencyProvider $currencyProvider
+     */
+    final protected function assertCurrencyProviderContains(array $expectedCurrencies, $currencyProvider)
+    {
+        $this->assertInstanceOf(CurrencyProvider::class, $currencyProvider);
+
+        // Test getAvailableCurrencies()
+        $actualCurrencies = $currencyProvider->getAvailableCurrencies();
+
+        ksort($expectedCurrencies);
+        ksort($actualCurrencies);
+
+        $this->assertSame($expectedCurrencies, $actualCurrencies);
+
+        // Test getCurrency() on each currency code
+        foreach ($expectedCurrencies as $currencyCode => $currency) {
+            $this->assertSame($currency, $currencyProvider->getCurrency($currencyCode));
+        }
     }
 
     /**
