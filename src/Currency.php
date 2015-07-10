@@ -1,6 +1,8 @@
 <?php
 
 namespace Brick\Money;
+
+use Brick\Money\CurrencyProvider\ISOCurrencyProvider;
 use Brick\Money\Exception\UnknownCurrencyException;
 
 /**
@@ -8,16 +10,6 @@ use Brick\Money\Exception\UnknownCurrencyException;
  */
 class Currency
 {
-    /**
-     * @var array|null
-     */
-    private static $currencies = null;
-
-    /**
-     * @var array
-     */
-    private static $instances = [];
-
     /**
      * The ISO 4217 alphabetic currency code.
      *
@@ -49,27 +41,39 @@ class Currency
     /**
      * Private constructor. Use getInstance() to obtain an instance.
      *
-     * @param string  $currencyCode  The ISO 4217 alphabetic currency code.
-     * @param int     $numericCode   The ISO 4217 numeric currency code.
-     * @param string  $name          The English currency name.
-     * @param int     $decimalPlaces The default number of fraction digits.
+     * @param string  $currencyCode          The ISO 4217 alphabetic currency code.
+     * @param int     $numericCode           The ISO 4217 numeric currency code.
+     * @param string  $name                  The English currency name.
+     * @param int     $defaultFractionDigits The default number of fraction digits.
      */
-    private function __construct($currencyCode, $numericCode, $name, $decimalPlaces)
+    private function __construct($currencyCode, $numericCode, $name, $defaultFractionDigits)
     {
         $this->currencyCode          = $currencyCode;
         $this->numericCode           = $numericCode;
         $this->name                  = $name;
-        $this->defaultFractionDigits = $decimalPlaces;
+        $this->defaultFractionDigits = $defaultFractionDigits;
     }
 
     /**
-     * @return void
+     * @param string $currencyCode
+     * @param int    $numericCode
+     * @param string $name
+     * @param int    $defaultFractionDigits
+     *
+     * @return Currency
      */
-    private static function loadCurrencyData()
+    public static function create($currencyCode, $numericCode, $name, $defaultFractionDigits)
     {
-        if (self::$currencies === null) {
-            self::$currencies = require __DIR__ . '/../data/currencies.php';
+        $currencyCode          = (string) $currencyCode;
+        $numericCode           = (int) $numericCode;
+        $name                  = (string) $name;
+        $defaultFractionDigits = (int) $defaultFractionDigits;
+
+        if ($defaultFractionDigits < 0) {
+            throw new \InvalidArgumentException('The default fraction digits cannot be less than zero.');
         }
+
+        return new Currency($currencyCode, $numericCode, $name, $defaultFractionDigits);
     }
 
     /**
@@ -87,21 +91,7 @@ class Currency
             return $currency;
         }
 
-        $currency = (string) $currency;
-
-        if (! isset(self::$instances[$currency])) {
-            self::loadCurrencyData();
-
-            if (! isset(self::$currencies[$currency])) {
-                throw UnknownCurrencyException::unknownCurrency($currency);
-            }
-
-            list ($currencyCode, $numericCode, $name, $fractionDigits) = self::$currencies[$currency];
-
-            self::$instances[$currency] = new self($currencyCode, $numericCode, $name, $fractionDigits);
-        }
-
-        return self::$instances[$currency];
+        return ISOCurrencyProvider::getInstance()->getCurrency($currency);
     }
 
     /**
@@ -111,15 +101,7 @@ class Currency
      */
     public static function getAvailableCurrencies()
     {
-        self::loadCurrencyData();
-
-        $currencies = [];
-
-        foreach (array_keys(self::$currencies) as $currencyCode) {
-            $currencies[] = self::of($currencyCode);
-        }
-
-        return $currencies;
+        return ISOCurrencyProvider::getInstance()->getAvailableCurrencies();
     }
 
     /**
@@ -162,7 +144,9 @@ class Currency
     }
 
     /**
-     * Returns whether this currency is the same as the given currency.
+     * Returns whether this currency is equal to the given currency.
+     *
+     * The currencies are considered equal if their currency codes are equal.
      *
      * @param Currency|string $currency A currency instance or currency code.
      *

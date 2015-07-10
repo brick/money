@@ -517,13 +517,6 @@
     2 => 'Rupiah',
     3 => 2,
   ),
-  'XDR' => 
-  array (
-    0 => 'XDR',
-    1 => 960,
-    2 => 'SDR (Special Drawing Right)',
-    3 => -1,
-  ),
   'IRR' => 
   array (
     0 => 'IRR',
@@ -712,13 +705,6 @@
     1 => 480,
     2 => 'Mauritius Rupee',
     3 => 2,
-  ),
-  'XUA' => 
-  array (
-    0 => 'XUA',
-    1 => 965,
-    2 => 'ADB Unit of Account',
-    3 => -1,
   ),
   'MXN' => 
   array (
@@ -936,13 +922,6 @@
     1 => 702,
     2 => 'Singapore Dollar',
     3 => 2,
-  ),
-  'XSU' => 
-  array (
-    0 => 'XSU',
-    1 => 994,
-    2 => 'Sucre',
-    3 => -1,
   ),
   'SBD' => 
   array (
@@ -1174,75 +1153,5 @@
     1 => 932,
     2 => 'Zimbabwe Dollar',
     3 => 2,
-  ),
-  'XBA' => 
-  array (
-    0 => 'XBA',
-    1 => 955,
-    2 => 'Bond Markets Unit European Composite Unit (EURCO)',
-    3 => -1,
-  ),
-  'XBB' => 
-  array (
-    0 => 'XBB',
-    1 => 956,
-    2 => 'Bond Markets Unit European Monetary Unit (E.M.U.-6)',
-    3 => -1,
-  ),
-  'XBC' => 
-  array (
-    0 => 'XBC',
-    1 => 957,
-    2 => 'Bond Markets Unit European Unit of Account 9 (E.U.A.-9)',
-    3 => -1,
-  ),
-  'XBD' => 
-  array (
-    0 => 'XBD',
-    1 => 958,
-    2 => 'Bond Markets Unit European Unit of Account 17 (E.U.A.-17)',
-    3 => -1,
-  ),
-  'XTS' => 
-  array (
-    0 => 'XTS',
-    1 => 963,
-    2 => 'Codes specifically reserved for testing purposes',
-    3 => -1,
-  ),
-  'XXX' => 
-  array (
-    0 => 'XXX',
-    1 => 999,
-    2 => 'The codes assigned for transactions where no currency is involved',
-    3 => -1,
-  ),
-  'XAU' => 
-  array (
-    0 => 'XAU',
-    1 => 959,
-    2 => 'Gold',
-    3 => -1,
-  ),
-  'XPD' => 
-  array (
-    0 => 'XPD',
-    1 => 964,
-    2 => 'Palladium',
-    3 => -1,
-  ),
-  'XPT' => 
-  array (
-    0 => 'XPT',
-    1 => 962,
-    2 => 'Platinum',
-    3 => -1,
-  ),
-  'XAG' => 
-  array (
-    0 => 'XAG',
-    1 => 961,
-    2 => 'Silver',
-    3 => -1,
   ),
 );

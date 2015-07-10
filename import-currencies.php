@@ -20,18 +20,22 @@ foreach ($countries as $country) {
     $name = getDomElementString($country, 'CcyNm');
     $currencyCode = getDomElementString($country, 'Ccy');
     $numericCode = getDomElementString($country, 'CcyNbr');
-    $minorUnit = getDomElementString($country, 'CcyMnrUnts');
+    $minorUnits = getDomElementString($country, 'CcyMnrUnts');
 
-    if ($name === null || $currencyCode === null && $numericCode === null && $minorUnit == null) {
+    if ($name === null || $currencyCode === null && $numericCode === null && $minorUnits == null) {
+        continue;
+    }
+
+    if ($minorUnits == 'N.A.') {
         continue;
     }
 
     $name = checkName($name);
     $currencyCode = checkCurrencyCode($currencyCode);
     $numericCode = checkNumericCode($numericCode);
-    $minorUnit = checkMinorUnit($minorUnit);
+    $minorUnits = checkMinorUnits($minorUnits);
 
-    $value = [$currencyCode, $numericCode, $name, $minorUnit];
+    $value = [$currencyCode, $numericCode, $name, $minorUnits];
 
     if (isset($result[$currencyCode])) {
         if ($result[$currencyCode] !== $value) {
@@ -126,21 +130,17 @@ function checkNumericCode($numericCode)
 }
 
 /**
- * @param string $minorUnit
+ * @param string $minorUnits
  *
  * @return int
  *
  * @throws RuntimeException
  */
-function checkMinorUnit($minorUnit)
+function checkMinorUnits($minorUnits)
 {
-    if ($minorUnit == 'N.A.') {
-        return -1;
+    if (preg_match('/^[0-9]{1}$/', $minorUnits) == 0) {
+        throw new \RuntimeException('Invalid minor unit: ' . $minorUnits);
     }
 
-    if (preg_match('/^[0-9]{1}$/', $minorUnit) == 0) {
-        throw new \RuntimeException('Invalid minor unit: ' . $minorUnit);
-    }
-
-    return (int) $minorUnit;
+    return (int) $minorUnits;
 }
