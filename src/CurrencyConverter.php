@@ -52,40 +52,4 @@ class CurrencyConverter
 
         return $money->convertedTo($currency, $exchangeRate, $this->roundingMode);
     }
-
-    /**
-     * Compares the given monies.
-     *
-     * The amount is not rounded before comparison, so the results are more relevant than when using
-     * `convert($a, $b->getCurrency())->compareTo($b)`.
-     *
-     * Note that the comparison is performed by converting A into B's currency.
-     * This order is important if the exchange rate provider uses different exchange rates
-     * when converting back and forth two currencies.
-     *
-     * @param Money $a
-     * @param Money $b
-     *
-     * @return int -1, 0 or 1.
-     *
-     * @throws CurrencyConversionException If the exchange rate is not available.
-     */
-    public function compare(Money $a, Money $b)
-    {
-        $aCurrency = $a->getCurrency();
-        $bCurrency = $b->getCurrency();
-
-        if ($aCurrency->is($bCurrency)) {
-            return $a->compareTo($b);
-        }
-
-        $aAmount = $a->getAmount();
-        $bAmount = $b->getAmount();
-
-        $exchangeRate = $this->exchangeRateProvider->getExchangeRate($aCurrency, $bCurrency);
-
-        $aAmount = $aAmount->toBigRational()->multipliedBy($exchangeRate);
-
-        return $aAmount->compareTo($bAmount);
-    }
 }
