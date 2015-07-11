@@ -4,6 +4,7 @@ namespace Brick\Money;
 
 use Brick\Money\Exception\CurrencyMismatchException;
 use Brick\Money\Exception\MoneyParseException;
+use Brick\Money\Exception\UnknownCurrencyException;
 
 use Brick\Math\BigDecimal;
 use Brick\Math\BigNumber;
@@ -167,6 +168,9 @@ class Money implements MoneyContainer
      * @param int|null                $fractionDigits The number of fraction digits, or null to use the default.
      *
      * @return Money
+     *
+     * @throws UnknownCurrencyException If the currency is an unknown currency code.
+     * @throws ArithmeticException      If the amount cannot be converted to a BigInteger.
      */
     public static function ofMinor($amountMinor, $currency, $fractionDigits = null)
     {
@@ -606,6 +610,9 @@ class Money implements MoneyContainer
      * @param int                     $roundingMode The rounding mode to use.
      *
      * @return Money
+     *
+     * @throws UnknownCurrencyException If an unknown currency code is given.
+     * @throws ArithmeticException      If the exchange rate or rounding mode is invalid, or rounding is necessary.
      */
     public function convertedTo($currency, $exchangeRate, $roundingMode)
     {
@@ -696,9 +703,7 @@ class Money implements MoneyContainer
     private function handleMoney($that)
     {
         if ($that instanceof Money) {
-            if (! $this->currency->is($that->currency)) {
-                throw CurrencyMismatchException::currencyMismatch($this->currency, $that->currency);
-            }
+            $this->checkMoney($that);
 
             return $that->amount;
         }
