@@ -157,7 +157,7 @@ class Money implements MoneyContainer
             $fractionDigits = $currency->getDefaultFractionDigits();
         }
 
-        $amount = BigDecimal::of($amount)->toScale($fractionDigits, $roundingMode);
+        $amount = BigNumber::of($amount)->toScale($fractionDigits, $roundingMode);
 
         return new Money($amount, $currency);
     }
