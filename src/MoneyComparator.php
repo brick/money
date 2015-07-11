@@ -137,6 +137,13 @@ class MoneyComparator
     /**
      * Returns the smallest of the given monies.
      *
+     * The monies are compared from left to right. This distinction can be important if the exchange rate provider
+     * does not have bidirectional exchange rates.
+     *
+     * For example, when comparing [A, B, C], this method will first compare A against B, then min(A,B) against C.
+     *
+     * If several monies are equal to the minimum value, the first one is returned.
+     *
      * @param Money ...$monies The monies to compare.
      *
      * @return Money The smallest Money.
@@ -146,7 +153,7 @@ class MoneyComparator
         $min = null;
 
         foreach ($monies as $money) {
-            if ($min === null || $this->isLess($money, $min)) {
+            if ($min === null || $this->isGreater($min, $money)) {
                 $min = $money;
             }
         }
@@ -161,24 +168,31 @@ class MoneyComparator
     /**
      * Returns the larget of the given monies.
      *
+     * The monies are compared from left to right. This distinction can be important if the exchange rate provider
+     * does not have bidirectional exchange rates.
+     *
+     * For example, when comparing [A, B, C], this method will first compare A against B, then max(A,B) against C.
+     *
+     * If several monies are equal to the maximum value, the first one is returned.
+     *
      * @param Money ...$monies The monies to compare.
      *
      * @return Money The largest Money.
      */
     public function max(Money ...$monies)
     {
-        $min = null;
+        $max = null;
 
         foreach ($monies as $money) {
-            if ($min === null || $this->isMore($money, $min)) {
-                $min = $money;
+            if ($max === null || $this->isLess($max, $money)) {
+                $max = $money;
             }
         }
 
-        if ($min === null) {
-            throw new \InvalidArgumentException('min() expects at least one Money.');
+        if ($max === null) {
+            throw new \InvalidArgumentException('max() expects at least one Money.');
         }
 
-        return $min;
+        return $max;
     }
 }
