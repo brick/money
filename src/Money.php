@@ -47,25 +47,21 @@ class Money implements MoneyContainer
     /**
      * Returns the minimum of the given monies.
      *
-     * @param Money ...$monies
+     * @param Money    $money  The first money.
+     * @param Money ...$monies The subsequent monies.
      *
      * @return Money
      *
      * @throws CurrencyMismatchException If all the monies are not in the same currency.
-     * @throws \InvalidArgumentException If the money list is empty.
      */
-    public static function min(Money ...$monies)
+    public static function min(Money $money, Money ...$monies)
     {
-        $min = null;
+        $min = $money;
 
         foreach ($monies as $money) {
-            if ($min === null || $money->isLessThan($min)) {
+            if ($money->isLessThan($min)) {
                 $min = $money;
             }
-        }
-
-        if ($min === null) {
-            throw new \InvalidArgumentException('min() expects at least one Money.');
         }
 
         return $min;
@@ -74,25 +70,21 @@ class Money implements MoneyContainer
     /**
      * Returns the maximum of the given monies.
      *
-     * @param Money ...$monies
+     * @param Money    $money  The first money.
+     * @param Money ...$monies The subsequent monies.
      *
      * @return Money
      *
      * @throws CurrencyMismatchException If all the monies are not in the same currency.
-     * @throws \InvalidArgumentException If the money list is empty.
      */
-    public static function max(Money ...$monies)
+    public static function max(Money $money, Money ...$monies)
     {
-        $max = null;
+        $max = $money;
 
         foreach ($monies as $money) {
-            if ($max === null || $money->isGreaterThan($max)) {
+            if ($money->isGreaterThan($max)) {
                 $max = $money;
             }
-        }
-
-        if ($max === null) {
-            throw new \InvalidArgumentException('max() expects at least one Money.');
         }
 
         return $max;

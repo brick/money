@@ -493,14 +493,6 @@ class MoneyTest extends AbstractTestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testMinOfZeroMoniesThrowsException()
-    {
-        Money::min();
-    }
-
-    /**
      * @expectedException \Brick\Money\Exception\CurrencyMismatchException
      */
     public function testMinOfDifferentCurrenciesThrowsException()
@@ -520,14 +512,6 @@ class MoneyTest extends AbstractTestCase
         );
 
         $this->assertMoneyEquals('5.50', 'USD', $max);
-    }
-
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testMaxOfZeroMoniesThrowsException()
-    {
-        Money::max();
     }
 
     /**

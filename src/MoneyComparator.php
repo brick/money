@@ -137,29 +137,28 @@ class MoneyComparator
     /**
      * Returns the smallest of the given monies.
      *
-     * The monies are compared from left to right. This distinction can be important if the exchange rate provider
-     * does not have bidirectional exchange rates.
+     * The monies are compared from left to right. This distinction can be important if the exchange rate provider does
+     * not have bidirectional exchange rates, or applies different rates depending on the direction of the conversion.
      *
      * For example, when comparing [A, B, C], this method will first compare A against B, then min(A,B) against C.
      *
      * If several monies are equal to the minimum value, the first one is returned.
      *
-     * @param Money ...$monies The monies to compare.
+     * @param Money    $money  The first money.
+     * @param Money ...$monies The subsequent monies.
      *
      * @return Money The smallest Money.
+     *
+     * @throws CurrencyConversionException If an exchange rate is not available.
      */
-    public function min(Money ...$monies)
+    public function min(Money $money, Money ...$monies)
     {
-        $min = null;
+        $min = $money;
 
         foreach ($monies as $money) {
-            if ($min === null || $this->isGreater($min, $money)) {
+            if ($this->isGreater($min, $money)) {
                 $min = $money;
             }
-        }
-
-        if ($min === null) {
-            throw new \InvalidArgumentException('min() expects at least one Money.');
         }
 
         return $min;
@@ -168,29 +167,28 @@ class MoneyComparator
     /**
      * Returns the larget of the given monies.
      *
-     * The monies are compared from left to right. This distinction can be important if the exchange rate provider
-     * does not have bidirectional exchange rates.
+     * The monies are compared from left to right. This distinction can be important if the exchange rate provider does
+     * not have bidirectional exchange rates, or applies different rates depending on the direction of the conversion.
      *
      * For example, when comparing [A, B, C], this method will first compare A against B, then max(A,B) against C.
      *
      * If several monies are equal to the maximum value, the first one is returned.
      *
-     * @param Money ...$monies The monies to compare.
+     * @param Money    $money  The first money.
+     * @param Money ...$monies The subsequent monies.
      *
      * @return Money The largest Money.
+     *
+     * @throws CurrencyConversionException If an exchange rate is not available.
      */
-    public function max(Money ...$monies)
+    public function max(Money $money, Money ...$monies)
     {
-        $max = null;
+        $max = $money;
 
         foreach ($monies as $money) {
-            if ($max === null || $this->isLess($max, $money)) {
+            if ($this->isLess($max, $money)) {
                 $max = $money;
             }
-        }
-
-        if ($max === null) {
-            throw new \InvalidArgumentException('max() expects at least one Money.');
         }
 
         return $max;
