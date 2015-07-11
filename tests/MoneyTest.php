@@ -2,6 +2,13 @@
 
 namespace Brick\Money\Tests;
 
+use Brick\Math\BigNumber;
+use Brick\Math\BigRational;
+use Brick\Math\Exception\NumberFormatException;
+use Brick\Money\Currency;
+use Brick\Money\CurrencyProvider\DefaultCurrencyProvider;
+use Brick\Money\Exception\MoneyParseException;
+use Brick\Money\Exception\UnknownCurrencyException;
 use Brick\Money\Money;
 use Brick\Money\Exception\CurrencyMismatchException;
 
@@ -14,6 +21,43 @@ use Brick\Math\Exception\RoundingNecessaryException;
  */
 class MoneyTest extends AbstractTestCase
 {
+    /**
+     * @dataProvider providerOf
+     *
+     * @param string $expectedResult The resulting money as a string, or an exception class.
+     * @param mixed  ...$args        The arguments to the of() method.
+     */
+    public function testOf($expectedResult, ...$args)
+    {
+        if ($this->isExceptionClass($expectedResult)) {
+            $this->setExpectedException($expectedResult);
+        }
+
+        $money = Money::of(...$args);
+
+        if (! $this->isExceptionClass($expectedResult)) {
+            $this->assertMoneyIs($expectedResult, $money);
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function providerOf()
+    {
+        return [
+            ['USD 1.00', 1, 'USD'],
+            ['JPY 1', 1.0, 'JPY'],
+            ['JPY 1.200', '1.2', 'JPY', 3],
+            ['EUR 0.42', BigRational::of('3/7'), 'EUR', null, RoundingMode::DOWN],
+            ['EUR 0.43', BigRational::of('3/7'), Currency::of('EUR'), null, RoundingMode::UP],
+            ['CUSTOM 0.428', BigRational::of('3/7'), Currency::create('CUSTOM', 0, '', 3), null, RoundingMode::DOWN],
+            ['CUSTOM 0.4286', BigRational::of('3/7'), Currency::create('CUSTOM', 0, '', 3), 4, RoundingMode::UP],
+            [RoundingNecessaryException::class, '1.2', 'JPY'],
+            [NumberFormatException::class, '1.', 'JPY'],
+        ];
+    }
+
     /**
      * @dataProvider providerOfMinor
      *
@@ -40,6 +84,56 @@ class MoneyTest extends AbstractTestCase
             ['JPY', 600, null, '600'],
             ['JPY', 600, 1, '60.0'],
         ];
+    }
+
+    /**
+     * @dataProvider providerParse
+     *
+     * @param string $string         The string to parse.
+     * @param string $expectedResult The expected money as a string, or an exception class.
+     */
+    public function testParse($string, $expectedResult)
+    {
+        if ($this->isExceptionClass($expectedResult)) {
+            $this->setExpectedException($expectedResult);
+        }
+
+        $money = Money::parse($string);
+
+        if (! $this->isExceptionClass($expectedResult)) {
+            $this->assertMoneyIs($expectedResult, $money);
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function providerParse()
+    {
+        return [
+            ['JPY 3', 'JPY 3'],
+            ['JPY 3.2', 'JPY 3.2'],
+            ['EUR 1', 'EUR 1'],
+            ['EUR 1.2345', 'EUR 1.2345'],
+            ['XXX 3.6', UnknownCurrencyException::class],
+            ['EUR 3.', MoneyParseException::class],
+            ['EUR4.30', MoneyParseException::class],
+            ['EUR3/7', MoneyParseException::class],
+        ];
+    }
+
+    public function testParseWithCustomCurrency()
+    {
+        $bitCoin = Currency::create('BTC', 0, 'BitCoin', 8);
+        DefaultCurrencyProvider::getInstance()->addCurrency($bitCoin);
+
+        try {
+            $money = Money::parse('BTC 1.23456789');
+        } finally {
+            DefaultCurrencyProvider::getInstance()->removeCurrency($bitCoin);
+        }
+
+        $this->assertMoneyEquals('1.23456789', 'BTC', $money);
     }
 
     /**
