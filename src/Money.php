@@ -188,29 +188,30 @@ class Money implements MoneyContainer
     /**
      * Parses a string representation of a money as returned by `__toString()`, e.g. "USD 23.00".
      *
-     * @param Money|string $string
+     * @param string $string
      *
      * @return Money
      *
-     * @throws MoneyParseException If the parsing fails.
+     * @throws MoneyParseException      If the parsing fails.
+     * @throws UnknownCurrencyException If the currency code is not known.
      */
     public static function parse($string)
     {
-        if ($string instanceof Money) {
-            return $string;
-        }
+        $pos = strrpos($string, ' ');
 
-        $parts = explode(' ', $string);
-
-        if (count($parts) != 2) {
+        if ($pos === false) {
             throw MoneyParseException::invalidFormat($string);
         }
 
+        $currency = substr($string, 0, $pos);
+        $amount   = substr($string, $pos + 1);
+
+        $currency = Currency::of($currency);
+
         try {
-            $currency = Currency::of($parts[0]);
-            $amount   = BigDecimal::of($parts[1]);
+            $amount = BigDecimal::of($amount);
         }
-        catch (\InvalidArgumentException $e) {
+        catch (ArithmeticException $e) {
             throw MoneyParseException::wrap($e);
         }
 
