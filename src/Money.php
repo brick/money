@@ -47,6 +47,8 @@ class Money implements MoneyContainer
     /**
      * Returns the minimum of the given monies.
      *
+     * If several monies are equal to the minimum value, the first one is returned.
+     *
      * @param Money    $money  The first money.
      * @param Money ...$monies The subsequent monies.
      *
@@ -69,6 +71,8 @@ class Money implements MoneyContainer
 
     /**
      * Returns the maximum of the given monies.
+     *
+     * If several monies are equal to the maximum value, the first one is returned.
      *
      * @param Money    $money  The first money.
      * @param Money ...$monies The subsequent monies.

@@ -481,48 +481,76 @@ class MoneyTest extends AbstractTestCase
         $this->assertSame('12345', Money::parse('USD 123.45')->getAmountMinor());
     }
 
-    public function testMin()
+    /**
+     * @dataProvider providerMin
+     *
+     * @param array  $monies         The monies to compare.
+     * @param string $expectedResult The expected money result, or an exception class.
+     */
+    public function testMin(array $monies, $expectedResult)
     {
-        $min = Money::min(
-            Money::parse('EUR 5.00'),
-            Money::parse('EUR 3.50'),
-            Money::parse('EUR 4.00')
-        );
+        foreach ($monies as & $money) {
+            $money = Money::parse($money);
+        }
 
-        $this->assertMoneyEquals('3.50', 'EUR', $min);
+        if ($this->isExceptionClass($expectedResult)) {
+            $this->setExpectedException($expectedResult);
+        }
+
+        $actualResult = Money::min(...$monies);
+
+        if (! $this->isExceptionClass($expectedResult)) {
+            $this->assertMoneyIs($expectedResult, $actualResult);
+        }
     }
 
     /**
-     * @expectedException \Brick\Money\Exception\CurrencyMismatchException
+     * @return array
      */
-    public function testMinOfDifferentCurrenciesThrowsException()
+    public function providerMin()
     {
-        Money::min(
-            Money::parse('EUR 1.00'),
-            Money::parse('USD 1.00')
-        );
-    }
-
-    public function testMax()
-    {
-        $max = Money::max(
-            Money::parse('USD 5.50'),
-            Money::parse('USD 3.50'),
-            Money::parse('USD 4.90')
-        );
-
-        $this->assertMoneyEquals('5.50', 'USD', $max);
+        return [
+            [['USD 1.0', 'USD 3.50', 'USD 4.00'], 'USD 1.0'],
+            [['USD 5.00', 'USD 3.50', 'USD 4.00'], 'USD 3.50'],
+            [['USD 5.00', 'USD 3.50', 'USD 3.499'], 'USD 3.499'],
+            [['USD 1.00', 'EUR 1.00'], CurrencyMismatchException::class],
+        ];
     }
 
     /**
-     * @expectedException \Brick\Money\Exception\CurrencyMismatchException
+     * @dataProvider providerMax
+     *
+     * @param array  $monies         The monies to compare.
+     * @param string $expectedResult The expected money result, or an exception class.
      */
-    public function testMaxOfDifferentCurrenciesThrowsException()
+    public function testMax(array $monies, $expectedResult)
     {
-        Money::max(
-            Money::parse('EUR 1.00'),
-            Money::parse('USD 1.00')
-        );
+        foreach ($monies as & $money) {
+            $money = Money::parse($money);
+        }
+
+        if ($this->isExceptionClass($expectedResult)) {
+            $this->setExpectedException($expectedResult);
+        }
+
+        $actualResult = Money::max(...$monies);
+
+        if (! $this->isExceptionClass($expectedResult)) {
+            $this->assertMoneyIs($expectedResult, $actualResult);
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function providerMax()
+    {
+        return [
+            [['USD 5.50', 'USD 3.50', 'USD 4.90'], 'USD 5.50'],
+            [['USD 1.3', 'USD 3.50', 'USD 4.90'], 'USD 4.90'],
+            [['USD 1.3', 'USD 7.119', 'USD 4.90'], 'USD 7.119'],
+            [['USD 1.00', 'EUR 1.00'], CurrencyMismatchException::class],
+        ];
     }
 
     public function testTotal()
