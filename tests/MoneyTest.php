@@ -2,7 +2,6 @@
 
 namespace Brick\Money\Tests;
 
-use Brick\Math\BigNumber;
 use Brick\Math\BigRational;
 use Brick\Math\Exception\NumberFormatException;
 use Brick\Money\Currency;
@@ -395,6 +394,50 @@ class MoneyTest extends AbstractTestCase
     }
 
     /**
+     * @dataProvider providerAbs
+     *
+     * @param string $money
+     * @param string $abs
+     */
+    public function testAbs($money, $abs)
+    {
+        $this->assertMoneyIs($abs, Money::parse($money)->abs());
+    }
+
+    /**
+     * @return array
+     */
+    public function providerAbs()
+    {
+        return [
+            ['EUR -1', 'EUR 1'],
+            ['JPY 1.2', 'JPY 1.2'],
+        ];
+    }
+
+    /**
+     * @dataProvider providerNegated
+     *
+     * @param string $money
+     * @param string $negated
+     */
+    public function testNegated($money, $negated)
+    {
+        $this->assertMoneyIs($negated, Money::parse($money)->negated());
+    }
+
+    /**
+     * @return array
+     */
+    public function providerNegated()
+    {
+        return [
+            ['EUR 1.234', 'EUR -1.234'],
+            ['JPY -2', 'JPY 2'],
+        ];
+    }
+
+    /**
      * @dataProvider providerSign
      *
      * @param string $money
@@ -474,7 +517,144 @@ class MoneyTest extends AbstractTestCase
         ];
     }
 
-    public function testGetIngtegral()
+    /**
+     * @dataProvider providerCompare
+     *
+     * @param string $a The first money.
+     * @param string $b The second money.
+     * @param string $c The comparison value.
+     */
+    public function testCompareTo($a, $b, $c)
+    {
+        $this->assertSame($c, Money::parse($a)->compareTo(Money::parse($b)));
+    }
+
+    /**
+     * @expectedException \Brick\Money\Exception\CurrencyMismatchException
+     */
+    public function testCompareToOtherCurrency()
+    {
+        Money::parse('EUR 1.00')->compareTo(Money::parse('USD 1.00'));
+    }
+
+    /**
+     * @dataProvider providerCompare
+     *
+     * @param string $a The first money.
+     * @param string $b The second money.
+     * @param string $c The comparison value.
+     */
+    public function testIsEqualTo($a, $b, $c)
+    {
+        $this->assertSame($c == 0, Money::parse($a)->isEqualTo(Money::parse($b)));
+    }
+
+    /**
+     * @expectedException \Brick\Money\Exception\CurrencyMismatchException
+     */
+    public function testIsEqualToOtherCurrency()
+    {
+        Money::parse('EUR 1.00')->isEqualTo(Money::parse('USD 1.00'));
+    }
+
+    /**
+     * @dataProvider providerCompare
+     *
+     * @param string $a The first money.
+     * @param string $b The second money.
+     * @param string $c The comparison value.
+     */
+    public function testIsLessThan($a, $b, $c)
+    {
+        $this->assertSame($c < 0, Money::parse($a)->isLessThan(Money::parse($b)));
+    }
+
+    /**
+     * @expectedException \Brick\Money\Exception\CurrencyMismatchException
+     */
+    public function testIsLessThanOtherCurrency()
+    {
+        Money::parse('EUR 1.00')->isLessThan(Money::parse('USD 1.00'));
+    }
+
+    /**
+     * @dataProvider providerCompare
+     *
+     * @param string $a The first money.
+     * @param string $b The second money.
+     * @param string $c The comparison value.
+     */
+    public function testIsLessThanOrEqualTo($a, $b, $c)
+    {
+        $this->assertSame($c <= 0, Money::parse($a)->isLessThanOrEqualTo(Money::parse($b)));
+    }
+
+    /**
+     * @expectedException \Brick\Money\Exception\CurrencyMismatchException
+     */
+    public function testIsLessThanOrEqualToOtherCurrency()
+    {
+        Money::parse('EUR 1.00')->isLessThanOrEqualTo(Money::parse('USD 1.00'));
+    }
+
+    /**
+     * @dataProvider providerCompare
+     *
+     * @param string $a The first money.
+     * @param string $b The second money.
+     * @param string $c The comparison value.
+     */
+    public function testIsGreaterThan($a, $b, $c)
+    {
+        $this->assertSame($c > 0, Money::parse($a)->isGreaterThan(Money::parse($b)));
+    }
+
+    /**
+     * @expectedException \Brick\Money\Exception\CurrencyMismatchException
+     */
+    public function testIsGreaterThanOtherCurrency()
+    {
+        Money::parse('EUR 1.00')->isGreaterThan(Money::parse('USD 1.00'));
+    }
+
+    /**
+     * @dataProvider providerCompare
+     *
+     * @param string $a The first money.
+     * @param string $b The second money.
+     * @param string $c The comparison value.
+     */
+    public function testIsGreaterThanOrEqualTo($a, $b, $c)
+    {
+        $this->assertSame($c >= 0, Money::parse($a)->isGreaterThanOrEqualTo(Money::parse($b)));
+    }
+
+    /**
+     * @expectedException \Brick\Money\Exception\CurrencyMismatchException
+     */
+    public function testIsGreaterThanOrEqualToOtherCurrency()
+    {
+        Money::parse('EUR 1.00')->isGreaterThanOrEqualTo(Money::parse('USD 1.00'));
+    }
+
+    /**
+     * @return array
+     */
+    public function providerCompare()
+    {
+        return [
+            ['EUR 1', 'EUR 1.00', 0],
+            ['USD 1', 'USD 0.999999', 1],
+            ['USD 0.999999', 'USD 1', -1],
+            ['USD -0.00000001', 'USD 0', -1],
+            ['USD -0.00000001', 'USD -0.00000002', 1],
+            ['JPY -2', 'JPY -2.000', 0],
+            ['JPY -2', 'JPY 2', -1],
+            ['CAD 2.0', 'CAD -0.01', 1],
+        ];
+    }
+
+    public function testGetIntegral()
     {
         $this->assertSame('123', Money::parse('USD 123.45')->getIntegral());
     }
@@ -487,6 +667,57 @@ class MoneyTest extends AbstractTestCase
     public function testGetAmountMinor()
     {
         $this->assertSame('12345', Money::parse('USD 123.45')->getAmountMinor());
+    }
+
+    /**
+     * @dataProvider providerFormatWith
+     *
+     * @param string $money    The string representation of the money to test.
+     * @param string $locale   The target locale.
+     * @param string $symbol   A decimal symbol to apply to the NumberFormatter.
+     * @param string $expected The expected output.
+     */
+    public function testFormatWith($money, $locale, $symbol, $expected)
+    {
+        $formatter = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
+        $formatter->setSymbol(\NumberFormatter::MONETARY_SEPARATOR_SYMBOL, $symbol);
+
+        $this->assertSame($expected, Money::parse($money)->formatWith($formatter));
+    }
+
+    /**
+     * @return array
+     */
+    public function providerFormatWith()
+    {
+        return [
+            ['USD 1.23', 'en_US', ';', '$1;23'],
+            ['EUR 1.7', 'fr_FR', '~', '1~70 €'],
+        ];
+    }
+
+    /**
+     * @dataProvider providerFormatTo
+     *
+     * @param string $money    The string representation of the money to test.
+     * @param string $locale   The target locale.
+     * @param string $expected The expected output.
+     */
+    public function testFormatTo($money, $locale, $expected)
+    {
+        $this->assertSame($expected, Money::parse($money)->formatTo($locale));
+    }
+
+    /**
+     * @return array
+     */
+    public function providerFormatTo()
+    {
+        return [
+            ['USD 1.23', 'en_US', '$1.23'],
+            ['USD 1.23', 'fr_FR', '1,23 $US'],
+            ['EUR 1.23', 'fr_FR', '1,23 €'],
+        ];
     }
 
     /**
