@@ -72,6 +72,8 @@ class CurrencyConverterTest extends AbstractTestCase
             ['USD 1724657496.87', 'EUR', RoundingMode::UNNECESSARY, 'EUR 1567870451.70'],
             ['BSD 127.367429', 'USD', RoundingMode::UNNECESSARY, 'USD 127.367429'],
             ['USD 1.23', 'BSD', RoundingMode::DOWN, CurrencyConversionException::class],
+            ['EUR 1.23', 'EUR', RoundingMode::UNNECESSARY, 'EUR 1.23'],
+            ['JPY 123456.789', 'JPY', RoundingMode::HALF_EVEN, 'JPY 123456.789'],
         ];
     }
 }
