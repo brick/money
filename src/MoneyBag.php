@@ -48,7 +48,7 @@ class MoneyBag implements MoneyContainer
 
         foreach ($this->monies as $money) {
             $money = $converter->convert($money, $currency);
-            $total = $total->plus($money);
+            $total = $total->plusExact($money);
         }
 
         return $total;

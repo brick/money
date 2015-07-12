@@ -3,14 +3,21 @@
 namespace Brick\Money\Tests;
 
 use Brick\Money\Currency;
+use Brick\Money\CurrencyConverter;
+use Brick\Money\ExchangeRateProvider\ConfigurableExchangeRateProvider;
 use Brick\Money\Money;
 use Brick\Money\MoneyBag;
+
+use Brick\Math\RoundingMode;
 
 /**
  * Tests for class MoneyBag.
  */
 class MoneyBagTest extends AbstractTestCase
 {
+    /**
+     * @return MoneyBag
+     */
     public function testNewMoneyBagIsEmpty()
     {
         $moneyBag = new MoneyBag();
@@ -21,12 +28,19 @@ class MoneyBagTest extends AbstractTestCase
         $this->assertMoneyIs('EUR 0.00', $moneyBag->get(Currency::of('EUR')));
         $this->assertMoneyIs('GBP 0.00', $moneyBag->get(Currency::of('GBP')));
         $this->assertMoneyIs('JPY 0', $moneyBag->get(Currency::of('JPY')));
+
+        return $moneyBag;
     }
 
-    public function testAddSubtractMoney()
+    /**
+     * @depends testNewMoneyBagIsEmpty
+     *
+     * @param MoneyBag $moneyBag
+     *
+     * @return MoneyBag
+     */
+    public function testAddSubtractMoney(MoneyBag $moneyBag)
     {
-        $moneyBag = new MoneyBag();
-
         $moneyBag->add(Money::of('123', 'EUR'));
         $this->assertMoneyBagContains(['EUR 123.00'], $moneyBag);
 
@@ -41,5 +55,25 @@ class MoneyBagTest extends AbstractTestCase
 
         $moneyBag->subtract(Money::parse('EUR 3.589950'));
         $this->assertMoneyBagContains(['EUR 354.400050', 'JPY 4.1234'], $moneyBag);
+
+        return $moneyBag;
+    }
+
+    /**
+     * @depends testAddSubtractMoney
+     *
+     * @param MoneyBag $moneyBag
+     */
+    public function testTotal(MoneyBag $moneyBag)
+    {
+        $exchangeRateProvider = new ConfigurableExchangeRateProvider();
+        $exchangeRateProvider->setExchangeRate(Currency::of('EUR'), Currency::of('USD'), '1.23456789');
+        $exchangeRateProvider->setExchangeRate(Currency::of('JPY'), Currency::of('USD'), '0.00987654321');
+
+        $currencyConverter = new CurrencyConverter($exchangeRateProvider, RoundingMode::DOWN);
+        $this->assertMoneyIs('USD 437.571621',  $moneyBag->getTotal(Currency::of('USD'), $currencyConverter));
+
+        $currencyConverter = new CurrencyConverter($exchangeRateProvider, RoundingMode::UP);
+        $this->assertMoneyIs('USD 437.571722',  $moneyBag->getTotal(Currency::of('USD'), $currencyConverter));
     }
 }
