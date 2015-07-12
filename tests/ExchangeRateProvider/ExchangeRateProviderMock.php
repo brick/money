@@ -22,24 +22,18 @@ class ExchangeRateProviderMock implements ExchangeRateProvider
     ];
 
     /**
-     * @var bool
+     * The number of calls to getExchangeRate().
+     *
+     * @var int
      */
-    private $locked = false;
+    private $calls = 0;
 
     /**
-     * @return void
+     * @return int
      */
-    public function lock()
+    public function getCalls()
     {
-        $this->locked = true;
-    }
-
-    /**
-     * @return void
-     */
-    public function unlock()
-    {
-        $this->locked = false;
+        return $this->calls;
     }
 
     /**
@@ -47,9 +41,7 @@ class ExchangeRateProviderMock implements ExchangeRateProvider
      */
     public function getExchangeRate(Currency $source, Currency $target)
     {
-        if ($this->locked) {
-            throw new \LogicException('getExchangeRate() unexpectedly called.');
-        }
+        $this->calls++;
 
         $sourceCode = $source->getCode();
         $targetCode = $target->getCode();

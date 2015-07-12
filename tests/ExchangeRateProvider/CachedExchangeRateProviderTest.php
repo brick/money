@@ -12,21 +12,27 @@ use Brick\Money\Tests\AbstractTestCase;
  */
 class CachedExchangeRateProviderTest extends AbstractTestCase
 {
-    public function testGetExchangeRate()
+    public function testGetExchangeRateAndInvalidate()
     {
         $mock = new ExchangeRateProviderMock();
         $provider = new CachedExchangeRateProvider($mock);
 
         $this->assertSame(1.1, $provider->getExchangeRate(Currency::of('EUR'), Currency::of('USD')));
+        $this->assertEquals(1, $mock->getCalls());
 
-        $mock->lock();
         $this->assertSame(1.1, $provider->getExchangeRate(Currency::of('EUR'), Currency::of('USD')));
+        $this->assertEquals(1, $mock->getCalls());
 
-        $mock->unlock();
         $this->assertSame(0.9, $provider->getExchangeRate(Currency::of('EUR'), Currency::of('GBP')));
+        $this->assertEquals(2, $mock->getCalls());
 
-        $mock->lock();
         $this->assertSame(0.9, $provider->getExchangeRate(Currency::of('EUR'), Currency::of('GBP')));
+        $this->assertEquals(2, $mock->getCalls());
+
+        $provider->invalidate();
+
+        $this->assertSame(0.9, $provider->getExchangeRate(Currency::of('EUR'), Currency::of('GBP')));
+        $this->assertEquals(3, $mock->getCalls());
     }
 
     public function testGetExchangeRateOfUnknownCurrencyPair()
