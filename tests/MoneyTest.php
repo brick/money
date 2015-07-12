@@ -50,7 +50,7 @@ class MoneyTest extends AbstractTestCase
             ['JPY 1', 1.0, 'JPY'],
             ['JPY 1.200', '1.2', 'JPY', 3],
             ['EUR 0.42', BigRational::of('3/7'), 'EUR', null, RoundingMode::DOWN],
-            ['EUR 0.43', BigRational::of('3/7'), Currency::of('EUR'), null, RoundingMode::UP],
+            ['EUR 0.43', BigRational::of('3/7'), 'EUR', null, RoundingMode::UP],
             ['CUSTOM 0.428', BigRational::of('3/7'), Currency::create('CUSTOM', 0, '', 3), null, RoundingMode::DOWN],
             ['CUSTOM 0.4286', BigRational::of('3/7'), Currency::create('CUSTOM', 0, '', 3), 4, RoundingMode::UP],
             [RoundingNecessaryException::class, '1.2', 'JPY'],
@@ -226,6 +226,10 @@ class MoneyTest extends AbstractTestCase
     {
         $money = Money::parse($money);
 
+        if (strpos($plus, ' ') !== false) {
+            $plus = Money::parse($plus);
+        }
+
         if ($this->isExceptionClass($expected)) {
             $this->setExpectedException($expected);
         }
@@ -252,8 +256,8 @@ class MoneyTest extends AbstractTestCase
             ['USD 12.34', '0.001', RoundingMode::UP, 'USD 12.35'],
             ['JPY 1', '2', RoundingMode::UNNECESSARY, 'JPY 3'],
             ['JPY 1', '2.5', RoundingMode::UNNECESSARY, RoundingNecessaryException::class],
-            ['USD 1.20', Money::parse('USD 1.80'), RoundingMode::UNNECESSARY, 'USD 3.00'],
-            ['USD 1.20', Money::parse('EUR 0.80'), RoundingMode::UNNECESSARY, CurrencyMismatchException::class],
+            ['USD 1.20', 'USD 1.80', RoundingMode::UNNECESSARY, 'USD 3.00'],
+            ['USD 1.20', 'EUR 0.80', RoundingMode::UNNECESSARY, CurrencyMismatchException::class],
         ];
     }
 
@@ -268,6 +272,10 @@ class MoneyTest extends AbstractTestCase
     public function testMinus($money, $minus, $roundingMode, $expected)
     {
         $money = Money::parse($money);
+
+        if (strpos($minus, ' ') !== false) {
+            $minus = Money::parse($minus);
+        }
 
         if ($this->isExceptionClass($expected)) {
             $this->setExpectedException($expected);
@@ -295,8 +303,8 @@ class MoneyTest extends AbstractTestCase
             ['USD 12.34', '0.001', RoundingMode::UP, 'USD 12.34'],
             ['EUR 1', '2', RoundingMode::UNNECESSARY, 'EUR -1'],
             ['JPY 2', '1.5', RoundingMode::UNNECESSARY, RoundingNecessaryException::class],
-            ['JPY 1.50', Money::parse('JPY 0.5'), RoundingMode::UNNECESSARY, 'JPY 1.00'],
-            ['JPY 2', Money::parse('USD 1'), RoundingMode::UNNECESSARY, CurrencyMismatchException::class],
+            ['JPY 1.50', 'JPY 0.5', RoundingMode::UNNECESSARY, 'JPY 1.00'],
+            ['JPY 2', 'USD 1', RoundingMode::UNNECESSARY, CurrencyMismatchException::class],
         ];
     }
 
