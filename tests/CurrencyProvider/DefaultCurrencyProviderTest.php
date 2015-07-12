@@ -18,6 +18,16 @@ class DefaultCurrencyProviderTest extends AbstractTestCase
         $this->assertSame(DefaultCurrencyProvider::getInstance(), DefaultCurrencyProvider::getInstance());
     }
 
+    public function testReset()
+    {
+        $previousInstance = DefaultCurrencyProvider::getInstance();
+        DefaultCurrencyProvider::reset();
+
+        $this->assertInstanceOf(DefaultCurrencyProvider::class, DefaultCurrencyProvider::getInstance());
+        $this->assertSame(DefaultCurrencyProvider::getInstance(), DefaultCurrencyProvider::getInstance());
+        $this->assertNotSame($previousInstance, DefaultCurrencyProvider::getInstance());
+    }
+
     /**
      * @depends testGetInstance
      */

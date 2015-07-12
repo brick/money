@@ -24,6 +24,11 @@ class DefaultCurrencyProvider implements CurrencyProvider
     private $currencyProviderChain;
 
     /**
+     * @var DefaultCurrencyProvider|null
+     */
+    private static $instance;
+
+    /**
      * Private constructor. Use `getInstance()` to obtain the singleton instance.
      */
     private function __construct()
@@ -42,13 +47,23 @@ class DefaultCurrencyProvider implements CurrencyProvider
      */
     public static function getInstance()
     {
-        static $instance;
-
-        if ($instance === null) {
-            $instance = new DefaultCurrencyProvider();
+        if (self::$instance === null) {
+            self::$instance = new DefaultCurrencyProvider();
         }
 
-        return $instance;
+        return self::$instance;
+    }
+
+    /**
+     * Resets the singleton instance of DefaultCurrencyProvider.
+     *
+     * This will cause custom currencies to be lost.
+     *
+     * @return void
+     */
+    public static function reset()
+    {
+        self::$instance = null;
     }
 
     /**
