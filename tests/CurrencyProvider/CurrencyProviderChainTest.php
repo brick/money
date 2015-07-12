@@ -14,10 +14,29 @@ use Brick\Money\Tests\AbstractTestCase;
  */
 class CurrencyProviderChainTest extends AbstractTestCase
 {
+    public function testAddRemoveCurrencyProvider()
+    {
+        $bitCoin = Currency::create('BTC', 0, 'BitCoin', 8);
+
+        $configurableProvider = new ConfigurableCurrencyProvider();
+        $configurableProvider->addCurrency($bitCoin);
+
+        $providerChain = new CurrencyProviderChain();
+        $providerChain->addCurrencyProvider($configurableProvider);
+
+        $this->assertCurrencyProviderContains([
+            'BTC' => $bitCoin
+        ], $providerChain);
+
+        $providerChain->removeCurrencyProvider($configurableProvider);
+
+        $this->assertCurrencyProviderContains([], $providerChain);
+    }
+
     /**
      * @return CurrencyProviderChain
      */
-    private function getCurrencyProviderChain()
+    private function createCurrencyProviderChain()
     {
         $providerChain = new CurrencyProviderChain();
 
@@ -44,7 +63,7 @@ class CurrencyProviderChainTest extends AbstractTestCase
      */
     public function testGetCurrency($currencyCode, $expectsException)
     {
-        $provider = $this->getCurrencyProviderChain();
+        $provider = $this->createCurrencyProviderChain();
 
         if ($expectsException) {
             $this->setExpectedException(UnknownCurrencyException::class);
@@ -76,7 +95,7 @@ class CurrencyProviderChainTest extends AbstractTestCase
 
     public function testGetAvailableCurrencies()
     {
-        $providerChain = $this->getCurrencyProviderChain();
+        $providerChain = $this->createCurrencyProviderChain();
 
         // Add a different GBP instance, that comes after the first one.
         // The first instance available in the chain takes precedence.
@@ -84,11 +103,13 @@ class CurrencyProviderChainTest extends AbstractTestCase
         $provider->addCurrency(Currency::create('GBP', 999, 'A competing GBP instance', 6));
         $providerChain->addCurrencyProvider($provider);
 
+        $isoCurrencyProvider = ISOCurrencyProvider::getInstance();
+
         $this->assertCurrencyProviderContains([
-            'EUR' => ISOCurrencyProvider::getInstance()->getCurrency('EUR'),
-            'GBP' => ISOCurrencyProvider::getInstance()->getCurrency('GBP'),
-            'USD' => ISOCurrencyProvider::getInstance()->getCurrency('USD'),
-            'CAD' => ISOCurrencyProvider::getInstance()->getCurrency('CAD'),
+            'EUR' => $isoCurrencyProvider->getCurrency('EUR'),
+            'GBP' => $isoCurrencyProvider->getCurrency('GBP'),
+            'USD' => $isoCurrencyProvider->getCurrency('USD'),
+            'CAD' => $isoCurrencyProvider->getCurrency('CAD'),
         ], $providerChain);
     }
 }
