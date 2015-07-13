@@ -804,14 +804,6 @@ class MoneyTest extends AbstractTestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testTotalOfZeroMoniesThrowsException()
-    {
-        Money::total();
-    }
-
-    /**
      * @expectedException \Brick\Money\Exception\CurrencyMismatchException
      */
     public function testTotalOfDifferentCurrenciesThrowsException()

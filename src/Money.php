@@ -100,27 +100,19 @@ class Money implements MoneyContainer
      * The number of fraction digits in the resulting Money is the maximum number of fraction digits
      * across all the given monies.
      *
-     * @param Money ...$monies
+     * @param Money    $money  The first money.
+     * @param Money ...$monies The subsequent monies.
      *
      * @return Money
      *
      * @throws CurrencyMismatchException If all the monies are not in the same currency.
-     * @throws \InvalidArgumentException If the money list is empty.
      */
-    public static function total(Money ...$monies)
+    public static function total(Money $money, Money ...$monies)
     {
-        $total = null;
+        $total = $money;
 
         foreach ($monies as $money) {
-            if ($total === null) {
-                $total = $money;
-            } else {
-                $total = $total->plusExact($money);
-            }
-        }
-
-        if ($total === null) {
-            throw new \InvalidArgumentException('total() expects at least one Money.');
+            $total = $total->plusExact($money);
         }
 
         return $total;
