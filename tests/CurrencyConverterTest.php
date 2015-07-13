@@ -23,9 +23,9 @@ class CurrencyConverterTest extends AbstractTestCase
     private function createCurrencyConverter($roundingMode)
     {
         $exchangeRateProvider = new ConfigurableExchangeRateProvider();
-        $exchangeRateProvider->setExchangeRate(Currency::of('EUR'), Currency::of('USD'), '1.1');
-        $exchangeRateProvider->setExchangeRate(Currency::of('USD'), Currency::of('EUR'), '10/11');
-        $exchangeRateProvider->setExchangeRate(Currency::of('BSD'), Currency::of('USD'), 1);
+        $exchangeRateProvider->setExchangeRate('EUR', 'USD', '1.1');
+        $exchangeRateProvider->setExchangeRate('USD', 'EUR', '10/11');
+        $exchangeRateProvider->setExchangeRate('BSD', 'USD', 1);
 
         return new CurrencyConverter($exchangeRateProvider, $roundingMode);
     }

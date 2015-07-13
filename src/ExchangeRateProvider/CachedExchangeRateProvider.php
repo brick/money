@@ -2,7 +2,6 @@
 
 namespace Brick\Money\ExchangeRateProvider;
 
-use Brick\Money\Currency;
 use Brick\Money\ExchangeRateProvider;
 
 /**
@@ -37,18 +36,15 @@ class CachedExchangeRateProvider implements ExchangeRateProvider
     /**
      * {@inheritdoc}
      */
-    public function getExchangeRate(Currency $source, Currency $target)
+    public function getExchangeRate($sourceCurrencyCode, $targetCurrencyCode)
     {
-        $sourceCode = $source->getCode();
-        $targetCode = $target->getCode();
-
-        if (isset($this->exchangeRates[$sourceCode][$targetCode])) {
-            return $this->exchangeRates[$sourceCode][$targetCode];
+        if (isset($this->exchangeRates[$sourceCurrencyCode][$targetCurrencyCode])) {
+            return $this->exchangeRates[$sourceCurrencyCode][$targetCurrencyCode];
         }
 
-        $exchangeRate = $this->provider->getExchangeRate($source, $target);
+        $exchangeRate = $this->provider->getExchangeRate($sourceCurrencyCode, $targetCurrencyCode);
 
-        $this->exchangeRates[$sourceCode][$targetCode] = $exchangeRate;
+        $this->exchangeRates[$sourceCurrencyCode][$targetCurrencyCode] = $exchangeRate;
 
         return $exchangeRate;
     }

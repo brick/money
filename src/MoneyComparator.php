@@ -52,17 +52,17 @@ class MoneyComparator
      */
     public function compare(Money $a, Money $b)
     {
-        $aCurrency = $a->getCurrency();
-        $bCurrency = $b->getCurrency();
+        $aCurrencyCode = $a->getCurrency()->getCode();
+        $bCurrencyCode = $b->getCurrency()->getCode();
 
-        if ($aCurrency->is($bCurrency)) {
+        if ($aCurrencyCode === $bCurrencyCode) {
             return $a->compareTo($b);
         }
 
         $aAmount = $a->getAmount();
         $bAmount = $b->getAmount();
 
-        $exchangeRate = $this->exchangeRateProvider->getExchangeRate($aCurrency, $bCurrency);
+        $exchangeRate = $this->exchangeRateProvider->getExchangeRate($aCurrencyCode, $bCurrencyCode);
 
         $aAmount = $aAmount->toBigRational()->multipliedBy($exchangeRate);
 

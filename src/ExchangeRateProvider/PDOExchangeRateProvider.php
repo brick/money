@@ -2,7 +2,6 @@
 
 namespace Brick\Money\ExchangeRateProvider;
 
-use Brick\Money\Currency;
 use Brick\Money\ExchangeRateProvider;
 use Brick\Money\Exception\CurrencyConversionException;
 
@@ -34,17 +33,17 @@ class PDOExchangeRateProvider implements ExchangeRateProvider
     /**
      * {@inheritdoc}
      */
-    public function getExchangeRate(Currency $source, Currency $target)
+    public function getExchangeRate($sourceCurrencyCode, $targetCurrencyCode)
     {
         $this->statement->execute([
-            $source->getCode(),
-            $target->getCode()
+            $sourceCurrencyCode,
+            $targetCurrencyCode
         ]);
 
         $exchangeRate = $this->statement->fetchColumn();
 
         if ($exchangeRate === false) {
-            throw CurrencyConversionException::exchangeRateNotAvailable($source, $target);
+            throw CurrencyConversionException::exchangeRateNotAvailable($sourceCurrencyCode, $targetCurrencyCode);
         }
 
         return $exchangeRate;

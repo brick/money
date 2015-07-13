@@ -2,7 +2,6 @@
 
 namespace Brick\Money\Tests;
 
-use Brick\Money\Currency;
 use Brick\Money\Exception\CurrencyConversionException;
 use Brick\Money\ExchangeRateProvider\ConfigurableExchangeRateProvider;
 use Brick\Money\Money;
@@ -20,14 +19,14 @@ class MoneyComparatorTest extends AbstractTestCase
     {
         $provider = new ConfigurableExchangeRateProvider();
 
-        $provider->setExchangeRate(Currency::of('EUR'), Currency::of('USD'), 1.1);
-        $provider->setExchangeRate(Currency::of('USD'), Currency::of('EUR'), 0.9);
+        $provider->setExchangeRate('EUR', 'USD', 1.1);
+        $provider->setExchangeRate('USD', 'EUR', 0.9);
 
-        $provider->setExchangeRate(Currency::of('USD'), Currency::of('BSD'), 1);
-        $provider->setExchangeRate(Currency::of('BSD'), Currency::of('USD'), 1);
+        $provider->setExchangeRate('USD', 'BSD', 1);
+        $provider->setExchangeRate('BSD', 'USD', 1);
 
-        $provider->setExchangeRate(Currency::of('EUR'), Currency::of('GBP'), 0.8);
-        $provider->setExchangeRate(Currency::of('GBP'), Currency::of('EUR'), 1.2);
+        $provider->setExchangeRate('EUR', 'GBP', 0.8);
+        $provider->setExchangeRate('GBP', 'EUR', 1.2);
 
         return $provider;
     }

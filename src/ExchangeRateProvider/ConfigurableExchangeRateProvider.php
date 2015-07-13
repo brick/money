@@ -2,7 +2,6 @@
 
 namespace Brick\Money\ExchangeRateProvider;
 
-use Brick\Money\Currency;
 use Brick\Money\ExchangeRateProvider;
 use Brick\Money\Exception\CurrencyConversionException;
 
@@ -19,29 +18,26 @@ class ConfigurableExchangeRateProvider implements ExchangeRateProvider
     private $exchangeRates = [];
 
     /**
-     * @param Currency                $source
-     * @param Currency                $target
+     * @param string                  $sourceCurrencyCode
+     * @param string                  $targetCurrencyCode
      * @param BigNumber|number|string $exchangeRate
      *
      * @return ConfigurableExchangeRateProvider
      */
-    public function setExchangeRate(Currency $source, Currency $target, $exchangeRate)
+    public function setExchangeRate($sourceCurrencyCode, $targetCurrencyCode, $exchangeRate)
     {
-        $this->exchangeRates[$source->getCode()][$target->getCode()] = $exchangeRate;
+        $this->exchangeRates[$sourceCurrencyCode][$targetCurrencyCode] = $exchangeRate;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getExchangeRate(Currency $source, Currency $target)
+    public function getExchangeRate($sourceCurrencyCode, $targetCurrencyCode)
     {
-        $sourceCode = $source->getCode();
-        $targetCode = $target->getCode();
-
-        if (isset($this->exchangeRates[$sourceCode][$targetCode])) {
-            return $this->exchangeRates[$sourceCode][$targetCode];
+        if (isset($this->exchangeRates[$sourceCurrencyCode][$targetCurrencyCode])) {
+            return $this->exchangeRates[$sourceCurrencyCode][$targetCurrencyCode];
         }
 
-        throw CurrencyConversionException::exchangeRateNotAvailable($source, $target);
+        throw CurrencyConversionException::exchangeRateNotAvailable($sourceCurrencyCode, $targetCurrencyCode);
     }
 }

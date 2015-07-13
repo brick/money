@@ -12,12 +12,12 @@ use Brick\Math\BigNumber;
 interface ExchangeRateProvider
 {
     /**
-     * @param Currency $source The source currency.
-     * @param Currency $target The target currency.
+     * @param string $sourceCurrencyCode The source currency code.
+     * @param string $targetCurrencyCode The target currency code.
      *
      * @return BigNumber|number|string The exchange rate.
      *
      * @throws CurrencyConversionException If the exchange rate is not available.
      */
-    public function getExchangeRate(Currency $source, Currency $target);
+    public function getExchangeRate($sourceCurrencyCode, $targetCurrencyCode);
 }

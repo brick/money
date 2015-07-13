@@ -2,7 +2,6 @@
 
 namespace Brick\Money\ExchangeRateProvider;
 
-use Brick\Money\Currency;
 use Brick\Money\Exception\CurrencyConversionException;
 use Brick\Money\ExchangeRateProvider;
 
@@ -55,16 +54,16 @@ class ExchangeRateProviderChain implements ExchangeRateProvider
     /**
      * {@inheritdoc}
      */
-    public function getExchangeRate(Currency $source, Currency $target)
+    public function getExchangeRate($sourceCurrencyCode, $targetCurrencyCode)
     {
         foreach ($this->providers as $provider) {
             try {
-                return $provider->getExchangeRate($source, $target);
+                return $provider->getExchangeRate($sourceCurrencyCode, $targetCurrencyCode);
             } catch (CurrencyConversionException $e) {
                 continue;
             }
         }
 
-        throw CurrencyConversionException::exchangeRateNotAvailable($source, $target);
+        throw CurrencyConversionException::exchangeRateNotAvailable($sourceCurrencyCode, $targetCurrencyCode);
     }
 }

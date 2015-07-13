@@ -2,7 +2,6 @@
 
 namespace Brick\Money\Tests\ExchangeRateProvider;
 
-use Brick\Money\Currency;
 use Brick\Money\ExchangeRateProvider;
 use Brick\Money\ExchangeRateProvider\BaseCurrencyExchangeRateProvider;
 use Brick\Money\ExchangeRateProvider\ConfigurableExchangeRateProvider;
@@ -23,26 +22,23 @@ class BaseCurrencyExchangeRateProviderTest extends AbstractTestCase
     {
         $provider = new ConfigurableExchangeRateProvider();
 
-        $provider->setExchangeRate(Currency::of('USD'), Currency::of('EUR'), 0.9);
-        $provider->setExchangeRate(Currency::of('USD'), Currency::of('GBP'), 0.8);
-        $provider->setExchangeRate(Currency::of('USD'), Currency::of('CAD'), 1.1);
+        $provider->setExchangeRate('USD', 'EUR', 0.9);
+        $provider->setExchangeRate('USD', 'GBP', 0.8);
+        $provider->setExchangeRate('USD', 'CAD', 1.1);
 
-        return new BaseCurrencyExchangeRateProvider($provider, Currency::of('USD'));
+        return new BaseCurrencyExchangeRateProvider($provider, 'USD');
     }
 
     /**
      * @dataProvider providerGetExchangeRate
      *
-     * @param string $sourceCurrency The currency code of the source.
-     * @param string $targetCurrency The currency code of the target currency.
-     * @param string $exchangeRate The expected exchange rate, rounded down to 6 decimals.
+     * @param string $sourceCurrencyCode The code of the source currency.
+     * @param string $targetCurrencyCode The code of the target currency.
+     * @param string $exchangeRate       The expected exchange rate, rounded DOWN to 6 decimals.
      */
-    public function testGetExchangeRate($sourceCurrency, $targetCurrency, $exchangeRate)
+    public function testGetExchangeRate($sourceCurrencyCode, $targetCurrencyCode, $exchangeRate)
     {
-        $sourceCurrency = Currency::of($sourceCurrency);
-        $targetCurrency = Currency::of($targetCurrency);
-
-        $rate = $this->getExchangeRateProvider()->getExchangeRate($sourceCurrency, $targetCurrency);
+        $rate = $this->getExchangeRateProvider()->getExchangeRate($sourceCurrencyCode, $targetCurrencyCode);
         $this->assertSame($exchangeRate, (string) BigRational::of($rate)->toScale(6, RoundingMode::DOWN));
     }
 

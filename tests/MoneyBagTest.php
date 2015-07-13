@@ -67,13 +67,13 @@ class MoneyBagTest extends AbstractTestCase
     public function testTotal(MoneyBag $moneyBag)
     {
         $exchangeRateProvider = new ConfigurableExchangeRateProvider();
-        $exchangeRateProvider->setExchangeRate(Currency::of('EUR'), Currency::of('USD'), '1.23456789');
-        $exchangeRateProvider->setExchangeRate(Currency::of('JPY'), Currency::of('USD'), '0.00987654321');
+        $exchangeRateProvider->setExchangeRate('EUR', 'USD', '1.23456789');
+        $exchangeRateProvider->setExchangeRate('JPY', 'USD', '0.00987654321');
 
         $currencyConverter = new CurrencyConverter($exchangeRateProvider, RoundingMode::DOWN);
-        $this->assertMoneyIs('USD 437.571621',  $moneyBag->getTotal(Currency::of('USD'), $currencyConverter));
+        $this->assertMoneyIs('USD 437.571621', $moneyBag->getTotal(Currency::of('USD'), $currencyConverter));
 
         $currencyConverter = new CurrencyConverter($exchangeRateProvider, RoundingMode::UP);
-        $this->assertMoneyIs('USD 437.571722',  $moneyBag->getTotal(Currency::of('USD'), $currencyConverter));
+        $this->assertMoneyIs('USD 437.571722', $moneyBag->getTotal(Currency::of('USD'), $currencyConverter));
     }
 }

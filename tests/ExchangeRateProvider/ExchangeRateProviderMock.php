@@ -2,7 +2,6 @@
 
 namespace Brick\Money\Tests\ExchangeRateProvider;
 
-use Brick\Money\Currency;
 use Brick\Money\Exception\CurrencyConversionException;
 use Brick\Money\ExchangeRateProvider;
 
@@ -39,17 +38,14 @@ class ExchangeRateProviderMock implements ExchangeRateProvider
     /**
      * {@inheritdoc}
      */
-    public function getExchangeRate(Currency $source, Currency $target)
+    public function getExchangeRate($sourceCurrencyCode, $targetCurrencyCode)
     {
         $this->calls++;
 
-        $sourceCode = $source->getCode();
-        $targetCode = $target->getCode();
-
-        if (isset($this->exchangeRates[$sourceCode][$targetCode])) {
-            return $this->exchangeRates[$sourceCode][$targetCode];
+        if (isset($this->exchangeRates[$sourceCurrencyCode][$targetCurrencyCode])) {
+            return $this->exchangeRates[$sourceCurrencyCode][$targetCurrencyCode];
         }
 
-        throw CurrencyConversionException::exchangeRateNotAvailable($source, $target);
+        throw CurrencyConversionException::exchangeRateNotAvailable($sourceCurrencyCode, $targetCurrencyCode);
     }
 }

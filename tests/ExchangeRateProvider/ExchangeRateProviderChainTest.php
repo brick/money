@@ -2,7 +2,6 @@
 
 namespace Brick\Money\Tests;
 
-use Brick\Money\Currency;
 use Brick\Money\ExchangeRateProvider;
 use Brick\Money\ExchangeRateProvider\ConfigurableExchangeRateProvider;
 use Brick\Money\ExchangeRateProvider\ExchangeRateProviderChain;
@@ -25,14 +24,14 @@ class ExchangeRateProviderChainTest extends AbstractTestCase
     public static function setUpBeforeClass()
     {
         $provider = new ConfigurableExchangeRateProvider();
-        $provider->setExchangeRate(Currency::of('USD'), Currency::of('GBP'), 0.7);
-        $provider->setExchangeRate(Currency::of('USD'), Currency::of('EUR'), 0.9);
+        $provider->setExchangeRate('USD', 'GBP', 0.7);
+        $provider->setExchangeRate('USD', 'EUR', 0.9);
 
         self::$provider1 = $provider;
 
         $provider = new ConfigurableExchangeRateProvider();
-        $provider->setExchangeRate(Currency::of('USD'), Currency::of('EUR'), 0.8);
-        $provider->setExchangeRate(Currency::of('EUR'), Currency::of('USD'), 1.2);
+        $provider->setExchangeRate('USD', 'EUR', 0.8);
+        $provider->setExchangeRate('EUR', 'USD', 1.2);
 
         self::$provider2 = $provider;
     }
@@ -43,7 +42,7 @@ class ExchangeRateProviderChainTest extends AbstractTestCase
     public function testUnknownExchangeRate()
     {
         $providerChain = new ExchangeRateProviderChain();
-        $providerChain->getExchangeRate(Currency::of('USD'), Currency::of('GBP'));
+        $providerChain->getExchangeRate('USD', 'GBP');
     }
 
     /**
@@ -54,8 +53,8 @@ class ExchangeRateProviderChainTest extends AbstractTestCase
         $provider = new ExchangeRateProviderChain();
         $provider->addExchangeRateProvider(self::$provider1);
 
-        $this->assertSame(0.7, $provider->getExchangeRate(Currency::of('USD'), Currency::of('GBP')));
-        $this->assertSame(0.9, $provider->getExchangeRate(Currency::of('USD'), Currency::of('EUR')));
+        $this->assertSame(0.7, $provider->getExchangeRate('USD', 'GBP'));
+        $this->assertSame(0.9, $provider->getExchangeRate('USD', 'EUR'));
 
         return $provider;
     }
@@ -71,9 +70,9 @@ class ExchangeRateProviderChainTest extends AbstractTestCase
     {
         $provider->addExchangeRateProvider(self::$provider2);
 
-        $this->assertSame(0.7, $provider->getExchangeRate(Currency::of('USD'), Currency::of('GBP')));
-        $this->assertSame(0.9, $provider->getExchangeRate(Currency::of('USD'), Currency::of('EUR')));
-        $this->assertSame(1.2, $provider->getExchangeRate(Currency::of('EUR'), Currency::of('USD')));
+        $this->assertSame(0.7, $provider->getExchangeRate('USD', 'GBP'));
+        $this->assertSame(0.9, $provider->getExchangeRate('USD', 'EUR'));
+        $this->assertSame(1.2, $provider->getExchangeRate('EUR', 'USD'));
 
         return $provider;
     }
@@ -87,7 +86,7 @@ class ExchangeRateProviderChainTest extends AbstractTestCase
     {
         $provider->removeExchangeRateProvider(self::$provider1);
 
-        $this->assertSame(0.8, $provider->getExchangeRate(Currency::of('USD'), Currency::of('EUR')));
-        $this->assertSame(1.2, $provider->getExchangeRate(Currency::of('EUR'), Currency::of('USD')));
+        $this->assertSame(0.8, $provider->getExchangeRate('USD', 'EUR'));
+        $this->assertSame(1.2, $provider->getExchangeRate('EUR', 'USD'));
     }
 }

@@ -2,9 +2,9 @@
 
 namespace Brick\Money\ExchangeRateProvider;
 
-use Brick\Math\BigRational;
-use Brick\Money\Currency;
 use Brick\Money\ExchangeRateProvider;
+
+use Brick\Math\BigRational;
 
 /**
  * Calculates exchange rates relative to a base currency.
@@ -25,37 +25,39 @@ class BaseCurrencyExchangeRateProvider implements ExchangeRateProvider
     private $provider;
 
     /**
-     * The currency all the exchanges rates are based on.
+     * The code of the currency all the exchanges rates are based on.
      *
-     * @var Currency
+     * @var string
      */
-    private $baseCurrency;
+    private $baseCurrencyCode;
 
     /**
-     * @param ExchangeRateProvider $provider     The provider for rates relative to the base currency.
-     * @param Currency             $baseCurrency The currency all the exchanges rates are based on.
+     * @param ExchangeRateProvider $provider         The provider for rates relative to the base currency.
+     * @param string               $baseCurrencyCode The code of the currency all the exchanges rates are based on.
      */
-    public function __construct(ExchangeRateProvider $provider, Currency $baseCurrency)
+    public function __construct(ExchangeRateProvider $provider, $baseCurrencyCode)
     {
-        $this->provider     = $provider;
-        $this->baseCurrency = $baseCurrency;
+        $this->provider         = $provider;
+        $this->baseCurrencyCode = $baseCurrencyCode;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getExchangeRate(Currency $source, Currency $target)
+    public function getExchangeRate($sourceCurrencyCode, $targetCurrencyCode)
     {
-        if ($source->is($this->baseCurrency)) {
-            return $this->provider->getExchangeRate($source, $target);
+        if ($sourceCurrencyCode == $this->baseCurrencyCode) {
+            return $this->provider->getExchangeRate($sourceCurrencyCode, $targetCurrencyCode);
         }
 
-        if ($target->is($this->baseCurrency)) {
-            return BigRational::of($this->provider->getExchangeRate($target, $source))->reciprocal();
+        if ($targetCurrencyCode == $this->baseCurrencyCode) {
+            $exchangeRate = $this->provider->getExchangeRate($targetCurrencyCode, $sourceCurrencyCode);
+
+            return BigRational::of($exchangeRate)->reciprocal();
         }
 
-        $baseToSource = $this->provider->getExchangeRate($this->baseCurrency, $source);
-        $baseToTarget = $this->provider->getExchangeRate($this->baseCurrency, $target);
+        $baseToSource = $this->provider->getExchangeRate($this->baseCurrencyCode, $sourceCurrencyCode);
+        $baseToTarget = $this->provider->getExchangeRate($this->baseCurrencyCode, $targetCurrencyCode);
 
         return BigRational::of($baseToTarget)->dividedBy($baseToSource);
     }

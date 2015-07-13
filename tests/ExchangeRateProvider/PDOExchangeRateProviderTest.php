@@ -2,7 +2,6 @@
 
 namespace Brick\Money\Tests\ExchangeRateProvider;
 
-use Brick\Money\Currency;
 use Brick\Money\ExchangeRateProvider\PDOExchangeRateProvider;
 use Brick\Money\ExchangeRateProvider\PDOExchangeRateProviderConfiguration;
 use Brick\Money\Exception\CurrencyConversionException;
@@ -49,20 +48,17 @@ class PDOExchangeRateProviderTest extends AbstractTestCase
     /**
      * @dataProvider providerGetExchangeRate
      *
-     * @param string       $sourceCurrency The currency code of the source.
-     * @param string       $targetCurrency The currency code of the target currency.
-     * @param float|string $expectedResult The expected exchange rate, or an exception class if expected.
+     * @param string       $sourceCurrencyCode The code of the source currency.
+     * @param string       $targetCurrencyCode The code of the target currency.
+     * @param float|string $expectedResult     The expected exchange rate, or an exception class if expected.
      */
-    public function testGetExchangeRate($sourceCurrency, $targetCurrency, $expectedResult)
+    public function testGetExchangeRate($sourceCurrencyCode, $targetCurrencyCode, $expectedResult)
     {
-        $sourceCurrency = Currency::of($sourceCurrency);
-        $targetCurrency = Currency::of($targetCurrency);
-
         if ($this->isExceptionClass($expectedResult)) {
             $this->setExpectedException($expectedResult);
         }
 
-        $actualRate = $this->getPDOExchangeRateProvider()->getExchangeRate($sourceCurrency, $targetCurrency);
+        $actualRate = $this->getPDOExchangeRateProvider()->getExchangeRate($sourceCurrencyCode, $targetCurrencyCode);
 
         if (! $this->isExceptionClass($expectedResult)) {
             $this->assertEquals($expectedResult, $actualRate);
