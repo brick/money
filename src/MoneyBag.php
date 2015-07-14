@@ -48,7 +48,7 @@ class MoneyBag implements MoneyContainer
 
         foreach ($this->monies as $money) {
             $money = $converter->convert($money, $currency);
-            $total = $total->plusExact($money);
+            $total = $total->plusAdjustScale($money);
         }
 
         return $total;
@@ -74,7 +74,7 @@ class MoneyBag implements MoneyContainer
         foreach ($that->getMonies() as $money) {
             $currency = $money->getCurrency();
             $currencyCode = $currency->getCode();
-            $this->monies[$currencyCode] = $this->get($currency)->plusExact($money);
+            $this->monies[$currencyCode] = $this->get($currency)->plusAdjustScale($money);
         }
 
         return $this;
@@ -92,7 +92,7 @@ class MoneyBag implements MoneyContainer
         foreach ($that->getMonies() as $money) {
             $currency = $money->getCurrency();
             $currencyCode = $currency->getCode();
-            $this->monies[$currencyCode] = $this->get($currency)->minusExact($money);
+            $this->monies[$currencyCode] = $this->get($currency)->minusAdjustScale($money);
         }
 
         return $this;

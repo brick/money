@@ -112,7 +112,7 @@ class Money implements MoneyContainer
         $total = $money;
 
         foreach ($monies as $money) {
-            $total = $total->plusExact($money);
+            $total = $total->plusAdjustScale($money);
         }
 
         return $total;
@@ -296,7 +296,7 @@ class Money implements MoneyContainer
     /**
      * Returns the sum of this Money and the given amount.
      *
-     * The number of fraction digits of the resulting Money is adjusted to fit the result.
+     * The scale of the resulting Money is adjusted to the maximum scale of the two monies.
      *
      * @param Money|BigNumber|number|string $that The amount to be added.
      *
@@ -304,7 +304,7 @@ class Money implements MoneyContainer
      *
      * @throws CurrencyMismatchException
      */
-    public function plusExact($that)
+    public function plusAdjustScale($that)
     {
         $amount = $this->amount->plus($this->handleMoney($that));
 
@@ -335,7 +335,7 @@ class Money implements MoneyContainer
     /**
      * Returns the difference of this Money and the given amount.
      *
-     * The number of fraction digits of the resulting Money is adjusted to fit the result.
+     * The scale of the resulting Money is adjusted to the maximum scale of the two monies.
      *
      * @param Money|BigNumber|number|string $that The amount to be subtracted.
      *
@@ -343,7 +343,7 @@ class Money implements MoneyContainer
      *
      * @throws CurrencyMismatchException
      */
-    public function minusExact($that)
+    public function minusAdjustScale($that)
     {
         $amount = $this->amount->minus($this->handleMoney($that));
 
