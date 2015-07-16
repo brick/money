@@ -19,7 +19,8 @@ class MoneyBag implements MoneyContainer
     /**
      * Returns the money in the given currency contained in the bag.
      *
-     * If no money is present for the given currency, a zero-value money will be returned.
+     * If no money is present for the given currency, a zero-value money with the default scale
+     * for the given currency will be returned.
      *
      * @param Currency $currency
      *

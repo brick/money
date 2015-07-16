@@ -71,9 +71,9 @@ class MoneyBagTest extends AbstractTestCase
         $exchangeRateProvider->setExchangeRate('JPY', 'USD', '0.00987654321');
 
         $currencyConverter = new CurrencyConverter($exchangeRateProvider, RoundingMode::DOWN);
-        $this->assertMoneyIs('USD 437.571621', $moneyBag->getTotal(Currency::of('USD'), $currencyConverter));
+        $this->assertMoneyIs('USD 437.57', $moneyBag->getTotal(Currency::of('USD'), $currencyConverter));
 
         $currencyConverter = new CurrencyConverter($exchangeRateProvider, RoundingMode::UP);
-        $this->assertMoneyIs('USD 437.571722', $moneyBag->getTotal(Currency::of('USD'), $currencyConverter));
+        $this->assertMoneyIs('USD 437.59', $moneyBag->getTotal(Currency::of('USD'), $currencyConverter));
     }
 }

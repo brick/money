@@ -594,21 +594,26 @@ class Money implements MoneyContainer
     /**
      * Returns a copy of this Money converted into another currency.
      *
-     * @param Currency|string         $currency     The target currency or currency code.
-     * @param BigNumber|number|string $exchangeRate The exchange rate to multiply by.
-     * @param int                     $roundingMode The rounding mode to use.
+     * @param Currency|string         $currency       The target currency or currency code.
+     * @param BigNumber|number|string $exchangeRate   The exchange rate to multiply by.
+     * @param int                     $roundingMode   The rounding mode to use.
+     * @param int|null                $fractionDigits The requested scale, or null to use the currency's default.
      *
      * @return Money
      *
      * @throws UnknownCurrencyException If an unknown currency code is given.
      * @throws ArithmeticException      If the exchange rate or rounding mode is invalid, or rounding is necessary.
      */
-    public function convertedTo($currency, $exchangeRate, $roundingMode)
+    public function convertedTo($currency, $exchangeRate, $roundingMode, $fractionDigits = null)
     {
         $currency = Currency::of($currency);
 
+        if ($fractionDigits === null) {
+            $fractionDigits = $currency->getDefaultFractionDigits();
+        }
+
         $amount = $this->amount->toBigRational()->multipliedBy($exchangeRate);
-        $amount = $amount->toScale($this->amount->scale(), $roundingMode);
+        $amount = $amount->toScale($fractionDigits, $roundingMode);
 
         return new Money($amount, $currency);
     }

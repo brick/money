@@ -45,11 +45,13 @@ class CurrencyConverter
     public function convert(Money $money, Currency $currency)
     {
         if ($money->getCurrency()->is($currency)) {
-            return $money;
+            $exchangeRate = 1;
+        } else {
+            $exchangeRate = $this->exchangeRateProvider->getExchangeRate($money->getCurrency()->getCode(), $currency->getCode());
         }
 
-        $exchangeRate = $this->exchangeRateProvider->getExchangeRate($money->getCurrency()->getCode(), $currency->getCode());
+        $fractionDigits = $currency->getDefaultFractionDigits();
 
-        return $money->convertedTo($currency, $exchangeRate, $this->roundingMode);
+        return $money->convertedTo($currency, $exchangeRate, $this->roundingMode, $fractionDigits);
     }
 }

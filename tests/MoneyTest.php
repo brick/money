@@ -670,6 +670,34 @@ class MoneyTest extends AbstractTestCase
     }
 
     /**
+     * @dataProvider providerConvertedTo
+     *
+     * @param string   $money
+     * @param string   $currency
+     * @param string   $exchangeRate
+     * @param int|null $roundingMode
+     * @param int      $scale
+     * @param string   $expected
+     */
+    public function testConvertedTo($money, $currency, $exchangeRate, $roundingMode, $scale, $expected)
+    {
+        $actual = Money::parse($money)->convertedTo($currency, $exchangeRate, $roundingMode, $scale);
+        $this->assertMoneyIs($expected, $actual);
+    }
+
+    /**
+     * @return array
+     */
+    public function providerConvertedTo()
+    {
+        return [
+            ['USD 1.23', 'JPY', '125', RoundingMode::UNNECESSARY, 2, 'JPY 153.75'],
+            ['USD 1.23', 'JPY', '125', RoundingMode::DOWN, null, 'JPY 153'],
+            ['USD 1.23', 'JPY', '125', RoundingMode::UP, null, 'JPY 154'],
+        ];
+    }
+
+    /**
      * @dataProvider providerFormatWith
      *
      * @param string $money    The string representation of the money to test.
