@@ -15,7 +15,7 @@ class ExactContext implements MoneyContext
     /**
      * {@inheritdoc}
      */
-    public function applyTo(BigNumber $amount, Currency $currency)
+    public function applyTo(BigNumber $amount, Currency $currency, $currentScale)
     {
         return $amount->toBigDecimal();
     }

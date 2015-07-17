@@ -2,19 +2,20 @@
 
 namespace Brick\Money\Tests;
 
-use Brick\Math\BigRational;
-use Brick\Math\Exception\NumberFormatException;
-use Brick\Money\MoneyContext\DefaultContext;
-use Brick\Money\MoneyContext\FixedContext;
 use Brick\Money\Currency;
 use Brick\Money\CurrencyProvider\DefaultCurrencyProvider;
 use Brick\Money\Exception\MoneyParseException;
 use Brick\Money\Exception\UnknownCurrencyException;
-use Brick\Money\Money;
 use Brick\Money\Exception\CurrencyMismatchException;
+use Brick\Money\Money;
+use Brick\Money\MoneyContext\DefaultContext;
+use Brick\Money\MoneyContext\FixedContext;
+use Brick\Money\MoneyContext\RetainContext;
 
+use Brick\Math\BigRational;
 use Brick\Math\RoundingMode;
 use Brick\Math\Exception\DivisionByZeroException;
+use Brick\Math\Exception\NumberFormatException;
 use Brick\Math\Exception\RoundingNecessaryException;
 
 /**
@@ -235,7 +236,7 @@ class MoneyTest extends AbstractTestCase
             $this->setExpectedException($expected);
         }
 
-        $context = new FixedContext($money->getAmount()->scale(), $roundingMode);
+        $context = new RetainContext($roundingMode);
         $actual = $money->plus($plus, $context);
 
         if (! $this->isExceptionClass($expected)) {
@@ -283,7 +284,7 @@ class MoneyTest extends AbstractTestCase
             $this->setExpectedException($expected);
         }
 
-        $context = new FixedContext($money->getAmount()->scale(), $roundingMode);
+        $context = new RetainContext($roundingMode);
         $actual = $money->minus($minus, $context);
 
         if (! $this->isExceptionClass($expected)) {
@@ -327,7 +328,7 @@ class MoneyTest extends AbstractTestCase
             $this->setExpectedException($expected);
         }
 
-        $context = new FixedContext($money->getAmount()->scale(), $roundingMode);
+        $context = new RetainContext($roundingMode);
         $actual = $money->multipliedBy($multiplier, $context);
 
         if (! $this->isExceptionClass($expected)) {
@@ -370,7 +371,7 @@ class MoneyTest extends AbstractTestCase
             $this->setExpectedException($expected);
         }
 
-        $context = new FixedContext($money->getAmount()->scale(), $roundingMode);
+        $context = new RetainContext($roundingMode);
         $actual = $money->dividedBy($divisor, $context);
 
         if (! $this->isExceptionClass($expected)) {

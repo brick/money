@@ -9,9 +9,9 @@ use Brick\Math\BigNumber;
 use Brick\Math\RoundingMode;
 
 /**
- * Adjusts the scale of the result to the default scale for the currency in use.
+ * Applies the scale of the current Money to the result.
  */
-class DefaultContext implements MoneyContext
+class RetainContext implements MoneyContext
 {
     /**
      * @var int
@@ -31,6 +31,6 @@ class DefaultContext implements MoneyContext
      */
     public function applyTo(BigNumber $amount, Currency $currency, $currentScale)
     {
-        return $amount->toScale($currency->getDefaultFractionDigits(), $this->roundingMode);
+        return $amount->toScale($currentScale, $this->roundingMode);
     }
 }
