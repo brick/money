@@ -5,7 +5,6 @@ namespace Brick\Money;
 use Brick\Money\ExchangeRateProvider;
 use Brick\Money\Exception\CurrencyConversionException;
 
-use Brick\Math\RoundingMode;
 use Brick\Math\Exception\RoundingNecessaryException;
 
 /**
@@ -19,18 +18,18 @@ class CurrencyConverter
     private $exchangeRateProvider;
 
     /**
-     * @var int
+     * @var MoneyContext
      */
-    private $roundingMode = RoundingMode::FLOOR;
+    private $context;
 
     /**
      * @param ExchangeRateProvider $exchangeRateProvider The exchange rate provider.
-     * @param int                  $roundingMode         The rounding mode to use for conversions.
+     * @param MoneyContext         $context              The scale & rounding context to use.
      */
-    public function __construct(ExchangeRateProvider $exchangeRateProvider, $roundingMode = RoundingMode::DOWN)
+    public function __construct(ExchangeRateProvider $exchangeRateProvider, MoneyContext $context)
     {
         $this->exchangeRateProvider = $exchangeRateProvider;
-        $this->roundingMode         = $roundingMode;
+        $this->context              = $context;
     }
 
     /**
@@ -50,8 +49,6 @@ class CurrencyConverter
             $exchangeRate = $this->exchangeRateProvider->getExchangeRate($money->getCurrency()->getCode(), $currency->getCode());
         }
 
-        $fractionDigits = $currency->getDefaultFractionDigits();
-
-        return $money->convertedTo($currency, $exchangeRate, $this->roundingMode, $fractionDigits);
+        return $money->convertedTo($currency, $exchangeRate, $this->context);
     }
 }

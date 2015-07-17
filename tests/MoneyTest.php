@@ -4,6 +4,8 @@ namespace Brick\Money\Tests;
 
 use Brick\Math\BigRational;
 use Brick\Math\Exception\NumberFormatException;
+use Brick\Money\MoneyContext\DefaultContext;
+use Brick\Money\MoneyContext\FixedContext;
 use Brick\Money\Currency;
 use Brick\Money\CurrencyProvider\DefaultCurrencyProvider;
 use Brick\Money\Exception\MoneyParseException;
@@ -233,7 +235,8 @@ class MoneyTest extends AbstractTestCase
             $this->setExpectedException($expected);
         }
 
-        $actual = $money->plus($plus, $roundingMode);
+        $context = new FixedContext($money->getAmount()->scale(), $roundingMode);
+        $actual = $money->plus($plus, $context);
 
         if (! $this->isExceptionClass($expected)) {
             $this->assertMoneyIs($expected, $actual);
@@ -280,7 +283,8 @@ class MoneyTest extends AbstractTestCase
             $this->setExpectedException($expected);
         }
 
-        $actual = $money->minus($minus, $roundingMode);
+        $context = new FixedContext($money->getAmount()->scale(), $roundingMode);
+        $actual = $money->minus($minus, $context);
 
         if (! $this->isExceptionClass($expected)) {
             $this->assertMoneyIs($expected, $actual);
@@ -323,7 +327,8 @@ class MoneyTest extends AbstractTestCase
             $this->setExpectedException($expected);
         }
 
-        $actual = $money->multipliedBy($multiplier, $roundingMode);
+        $context = new FixedContext($money->getAmount()->scale(), $roundingMode);
+        $actual = $money->multipliedBy($multiplier, $context);
 
         if (! $this->isExceptionClass($expected)) {
             $this->assertMoneyIs($expected, $actual);
@@ -365,7 +370,8 @@ class MoneyTest extends AbstractTestCase
             $this->setExpectedException($expected);
         }
 
-        $actual = $money->dividedBy($divisor, $roundingMode);
+        $context = new FixedContext($money->getAmount()->scale(), $roundingMode);
+        $actual = $money->dividedBy($divisor, $context);
 
         if (! $this->isExceptionClass($expected)) {
             $this->assertMoneyIs($expected, $actual);
@@ -681,7 +687,13 @@ class MoneyTest extends AbstractTestCase
      */
     public function testConvertedTo($money, $currency, $exchangeRate, $roundingMode, $scale, $expected)
     {
-        $actual = Money::parse($money)->convertedTo($currency, $exchangeRate, $roundingMode, $scale);
+        if ($scale === null) {
+            $context = new DefaultContext($roundingMode);
+        } else {
+            $context = new FixedContext($scale, $roundingMode);
+        }
+
+        $actual = Money::parse($money)->convertedTo($currency, $exchangeRate, $context);
         $this->assertMoneyIs($expected, $actual);
     }
 

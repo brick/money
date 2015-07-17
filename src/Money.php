@@ -2,6 +2,8 @@
 
 namespace Brick\Money;
 
+use Brick\Money\MoneyContext\ExactContext;
+use Brick\Money\MoneyContext\FixedContext;
 use Brick\Money\Exception\CurrencyMismatchException;
 use Brick\Money\Exception\MoneyParseException;
 use Brick\Money\Exception\UnknownCurrencyException;
@@ -110,9 +112,10 @@ class Money implements MoneyContainer
     public static function total(Money $money, Money ...$monies)
     {
         $total = $money;
+        $context = new ExactContext();
 
         foreach ($monies as $money) {
-            $total = $total->plusAdjustScale($money);
+            $total = $total->plus($money, $context);
         }
 
         return $total;
@@ -275,38 +278,27 @@ class Money implements MoneyContainer
     /**
      * Returns the sum of this Money and the given amount.
      *
-     * The resulting Money has the same number of fraction digits as this Money.
+     * By default, the resulting Money has the same number of fraction digits as this Money. If the result
+     * cannot be represented at this scale without rounding, an exception is thrown.
      *
-     * @param Money|BigNumber|number|string $that         The amount to be added.
-     * @param int                           $roundingMode The rounding mode to use, if necessary.
+     * This behaviour can be overridden by providing a MoneyContext instance.
+     *
+     * @param Money|BigNumber|number|string $that    The amount to be added.
+     * @param MoneyContext|null             $context An optional scale & rounding context.
      *
      * @return Money
      *
      * @throws ArithmeticException       If the argument is an invalid number.
      * @throws CurrencyMismatchException If the argument is a money in a different currency.
      */
-    public function plus($that, $roundingMode = RoundingMode::UNNECESSARY)
+    public function plus($that, MoneyContext $context = null)
     {
-        $amount = $this->amount->plus($this->handleMoney($that));
-        $amount = $amount->toScale($this->amount->scale(), $roundingMode);
+        if ($context === null) {
+            $context = new FixedContext($this->amount->scale(), RoundingMode::UNNECESSARY);
+        }
 
-        return new Money($amount, $this->currency);
-    }
-
-    /**
-     * Returns the sum of this Money and the given amount.
-     *
-     * The scale of the resulting Money is adjusted to the maximum scale of the two monies.
-     *
-     * @param Money|BigNumber|number|string $that The amount to be added.
-     *
-     * @return Money
-     *
-     * @throws CurrencyMismatchException
-     */
-    public function plusAdjustScale($that)
-    {
         $amount = $this->amount->plus($this->handleMoney($that));
+        $amount = $context->applyTo($amount, $this->currency);
 
         return new Money($amount, $this->currency);
     }
@@ -316,36 +308,22 @@ class Money implements MoneyContainer
      *
      * The resulting Money has the same number of fraction digits as this Money.
      *
-     * @param Money|BigNumber|number|string $that         The amount to be subtracted.
-     * @param int                           $roundingMode The rounding mode to use, if necessary.
+     * @param Money|BigNumber|number|string $that    The amount to be subtracted.
+     * @param MoneyContext|null             $context An optional scale & rounding context.
      *
      * @return Money
      *
      * @throws ArithmeticException       If the argument is an invalid number.
      * @throws CurrencyMismatchException If the argument is a money in a different currency.
      */
-    public function minus($that, $roundingMode = RoundingMode::UNNECESSARY)
+    public function minus($that, MoneyContext $context = null)
     {
-        $amount = $this->amount->minus($this->handleMoney($that));
-        $amount = $amount->toScale($this->amount->scale(), $roundingMode);
+        if ($context === null) {
+            $context = new FixedContext($this->amount->scale(), RoundingMode::UNNECESSARY);
+        }
 
-        return new Money($amount, $this->currency);
-    }
-
-    /**
-     * Returns the difference of this Money and the given amount.
-     *
-     * The scale of the resulting Money is adjusted to the maximum scale of the two monies.
-     *
-     * @param Money|BigNumber|number|string $that The amount to be subtracted.
-     *
-     * @return Money
-     *
-     * @throws CurrencyMismatchException
-     */
-    public function minusAdjustScale($that)
-    {
         $amount = $this->amount->minus($this->handleMoney($that));
+        $amount = $context->applyTo($amount, $this->currency);
 
         return new Money($amount, $this->currency);
     }
@@ -355,17 +333,21 @@ class Money implements MoneyContainer
      *
      * The resulting Money has the same number of fraction digits as this Money.
      *
-     * @param BigNumber|number|string $that         The multiplier.
-     * @param int                     $roundingMode The rounding mode to use, if necessary.
+     * @param BigNumber|number|string $that    The multiplier.
+     * @param MoneyContext|null       $context An optional scale & rounding context.
      *
      * @return Money
      *
      * @throws ArithmeticException If the argument is an invalid number.
      */
-    public function multipliedBy($that, $roundingMode = RoundingMode::UNNECESSARY)
+    public function multipliedBy($that, MoneyContext $context = null)
     {
+        if ($context === null) {
+            $context = new FixedContext($this->amount->scale(), RoundingMode::UNNECESSARY);
+        }
+
         $amount = $this->amount->multipliedBy($that);
-        $amount = $amount->toScale($this->amount->scale(), $roundingMode);
+        $amount = $context->applyTo($amount, $this->currency);
 
         return new Money($amount, $this->currency);
     }
@@ -375,16 +357,21 @@ class Money implements MoneyContainer
      *
      * The resulting Money has the same number of fraction digits as this Money.
      *
-     * @param BigNumber|number|string $that         The divisor.
-     * @param int                     $roundingMode The rounding mode to use, if necessary.
+     * @param BigNumber|number|string $that    The divisor.
+     * @param MoneyContext|null       $context An optional scale & rounding context.
      *
      * @return Money
      *
      * @throws ArithmeticException If the argument is an invalid number or is zero.
      */
-    public function dividedBy($that, $roundingMode = RoundingMode::UNNECESSARY)
+    public function dividedBy($that, MoneyContext $context = null)
     {
-        $amount = $this->amount->dividedBy($that, $this->amount->scale(), $roundingMode);
+        if ($context === null) {
+            $context = new FixedContext($this->amount->scale(), RoundingMode::UNNECESSARY);
+        }
+
+        $amount = $this->amount->toBigRational()->dividedBy($that);
+        $amount = $context->applyTo($amount, $this->currency);
 
         return new Money($amount, $this->currency);
     }
@@ -596,24 +583,23 @@ class Money implements MoneyContainer
      *
      * @param Currency|string         $currency       The target currency or currency code.
      * @param BigNumber|number|string $exchangeRate   The exchange rate to multiply by.
-     * @param int                     $roundingMode   The rounding mode to use.
-     * @param int|null                $fractionDigits The requested scale, or null to use the currency's default.
+     * @param MoneyContext|null       $context        An optional context for scale & rounding.
      *
      * @return Money
      *
      * @throws UnknownCurrencyException If an unknown currency code is given.
      * @throws ArithmeticException      If the exchange rate or rounding mode is invalid, or rounding is necessary.
      */
-    public function convertedTo($currency, $exchangeRate, $roundingMode, $fractionDigits = null)
+    public function convertedTo($currency, $exchangeRate, MoneyContext $context = null)
     {
         $currency = Currency::of($currency);
 
-        if ($fractionDigits === null) {
-            $fractionDigits = $currency->getDefaultFractionDigits();
+        if ($context === null) {
+            $context = new ExactContext();
         }
 
         $amount = $this->amount->toBigRational()->multipliedBy($exchangeRate);
-        $amount = $amount->toScale($fractionDigits, $roundingMode);
+        $amount = $context->applyTo($amount, $currency);
 
         return new Money($amount, $currency);
     }

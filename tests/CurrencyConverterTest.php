@@ -4,6 +4,7 @@ namespace Brick\Money\Tests;
 
 use Brick\Math\Exception\RoundingNecessaryException;
 use Brick\Math\RoundingMode;
+use Brick\Money\MoneyContext\DefaultContext;
 use Brick\Money\Currency;
 use Brick\Money\CurrencyConverter;
 use Brick\Money\Exception\CurrencyConversionException;
@@ -27,7 +28,7 @@ class CurrencyConverterTest extends AbstractTestCase
         $exchangeRateProvider->setExchangeRate('USD', 'EUR', '10/11');
         $exchangeRateProvider->setExchangeRate('BSD', 'USD', 1);
 
-        return new CurrencyConverter($exchangeRateProvider, $roundingMode);
+        return new CurrencyConverter($exchangeRateProvider, new DefaultContext($roundingMode));
     }
 
     /**
@@ -70,7 +71,7 @@ class CurrencyConverterTest extends AbstractTestCase
             ['USD 123.57', 'EUR', RoundingMode::UP, 'EUR 112.34'],
             ['USD 123.57', 'EUR', RoundingMode::UNNECESSARY, RoundingNecessaryException::class],
             ['USD 1724657496.87', 'EUR', RoundingMode::UNNECESSARY, 'EUR 1567870451.70'],
-            ['BSD 127.367429', 'USD', RoundingMode::HALF_DOWN, 'USD 127.37'],
+            ['BSD 127.367429', 'USD', RoundingMode::UP, 'USD 127.37'],
             ['USD 1.23', 'BSD', RoundingMode::DOWN, CurrencyConversionException::class],
             ['EUR 1.23', 'EUR', RoundingMode::UNNECESSARY, 'EUR 1.23'],
             ['JPY 123456.789', 'JPY', RoundingMode::HALF_EVEN, 'JPY 123457'],

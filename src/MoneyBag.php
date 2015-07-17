@@ -1,6 +1,7 @@
 <?php
 
 namespace Brick\Money;
+use Brick\Money\MoneyContext\ExactContext;
 
 /**
  * Container for monies in different currencies.
@@ -46,10 +47,11 @@ class MoneyBag implements MoneyContainer
     public function getTotal(Currency $currency, CurrencyConverter $converter)
     {
         $total = Money::zero($currency);
+        $context = new ExactContext();
 
         foreach ($this->monies as $money) {
             $money = $converter->convert($money, $currency);
-            $total = $total->plusAdjustScale($money);
+            $total = $total->plus($money, $context);
         }
 
         return $total;
@@ -72,10 +74,12 @@ class MoneyBag implements MoneyContainer
      */
     public function add(MoneyContainer $that)
     {
+        $context = new ExactContext();
+
         foreach ($that->getMonies() as $money) {
             $currency = $money->getCurrency();
             $currencyCode = $currency->getCode();
-            $this->monies[$currencyCode] = $this->get($currency)->plusAdjustScale($money);
+            $this->monies[$currencyCode] = $this->get($currency)->plus($money, $context);
         }
 
         return $this;
@@ -90,10 +94,12 @@ class MoneyBag implements MoneyContainer
      */
     public function subtract(MoneyContainer $that)
     {
+        $context = new ExactContext();
+
         foreach ($that->getMonies() as $money) {
             $currency = $money->getCurrency();
             $currencyCode = $currency->getCode();
-            $this->monies[$currencyCode] = $this->get($currency)->minusAdjustScale($money);
+            $this->monies[$currencyCode] = $this->get($currency)->minus($money, $context);
         }
 
         return $this;
