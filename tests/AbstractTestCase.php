@@ -63,7 +63,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
     /**
      * @param string   $currencyCode
-     * @param int      $numericCode
+     * @param string   $numericCode
      * @param string   $name
      * @param int      $defaultFractionDigits
      * @param Currency $currency

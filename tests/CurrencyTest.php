@@ -13,7 +13,7 @@ class CurrencyTest extends AbstractTestCase
      * @dataProvider accessorsProvider
      *
      * @param string $currencyCode   The currency code.
-     * @param int    $numericCode    The currency's numeric code.
+     * @param string $numericCode    The currency's numeric code.
      * @param int    $fractionDigits The currency's default fraction digits.
      * @param string $name           The currency's name.
      */
@@ -47,8 +47,8 @@ class CurrencyTest extends AbstractTestCase
 
     public function testCreate()
     {
-        $bitCoin = Currency::create('BTC', 123456789, 'BitCoin', 8);
-        $this->assertCurrencyEquals('BTC', 123456789, 'BitCoin', 8, $bitCoin);
+        $bitCoin = Currency::create('BTC', '123456789', 'BitCoin', 8);
+        $this->assertCurrencyEquals('BTC', '123456789', 'BitCoin', 8, $bitCoin);
     }
 
     /**

@@ -24,9 +24,9 @@ class Currency
      * The numeric currency code.
      *
      * For ISO currencies, this is the ISO 4217 numeric currency code.
-     * Custom currencies can use any integer value.
+     * Custom currencies can use any string of digits value.
      *
-     * @var int
+     * @var string
      */
     private $numericCode;
 
@@ -50,7 +50,7 @@ class Currency
      * Private constructor. Use getInstance() to obtain an instance.
      *
      * @param string  $currencyCode          The currency code.
-     * @param int     $numericCode           The numeric currency code.
+     * @param string  $numericCode           The numeric currency code.
      * @param string  $name                  The currency name.
      * @param int     $defaultFractionDigits The default number of fraction digits.
      */
@@ -66,7 +66,7 @@ class Currency
      * Creates a Currency.
      *
      * @param string  $currencyCode          The currency code.
-     * @param int     $numericCode           The numeric currency code.
+     * @param string  $numericCode           The numeric currency code.
      * @param string  $name                  The currency name.
      * @param int     $defaultFractionDigits The default number of fraction digits.
      *
@@ -75,9 +75,13 @@ class Currency
     public static function create($currencyCode, $numericCode, $name, $defaultFractionDigits)
     {
         $currencyCode          = (string) $currencyCode;
-        $numericCode           = (int) $numericCode;
+        $numericCode           = (string) $numericCode;
         $name                  = (string) $name;
         $defaultFractionDigits = (int) $defaultFractionDigits;
+
+        if (! ctype_digit($numericCode)) {
+            throw new \InvalidArgumentException('The numeric code must consist of digits only.');
+        }
 
         if ($defaultFractionDigits < 0) {
             throw new \InvalidArgumentException('The default fraction digits cannot be less than zero.');
@@ -109,7 +113,7 @@ class Currency
     }
 
     /**
-     * Returns the ISO 4217 currency code of this currency.
+     * Returns the currency code of this currency.
      *
      * @return string
      */
@@ -119,7 +123,9 @@ class Currency
     }
 
     /**
-     * @return int
+     * Returns the numeric code of this currency.
+     *
+     * @return string
      */
     public function getNumericCode()
     {

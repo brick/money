@@ -15,7 +15,7 @@ class ISOCurrencyProviderTest extends AbstractTestCase
      * @dataProvider providerGetCurrency
      *
      * @param string $currencyCode
-     * @param int    $numericCode
+     * @param string $numericCode
      * @param string $name
      * @param int    $defaultFractionDigits
      */
@@ -33,14 +33,14 @@ class ISOCurrencyProviderTest extends AbstractTestCase
     public function providerGetCurrency()
     {
         return [
-            ['EUR', 978, 'Euro', 2],
-            ['GBP', 826, 'Pound Sterling', 2],
-            ['USD', 840, 'US Dollar', 2],
-            ['CAD', 124, 'Canadian Dollar', 2],
-            ['AUD', 36, 'Australian Dollar', 2],
-            ['NZD', 554, 'New Zealand Dollar', 2],
-            ['JPY', 392, 'Yen', 0],
-            ['TND', 788, 'Tunisian Dinar', 3],
+            ['EUR', '978', 'Euro', 2],
+            ['GBP', '826', 'Pound Sterling', 2],
+            ['USD', '840', 'US Dollar', 2],
+            ['CAD', '124', 'Canadian Dollar', 2],
+            ['AUD', '036', 'Australian Dollar', 2],
+            ['NZD', '554', 'New Zealand Dollar', 2],
+            ['JPY', '392', 'Yen', 0],
+            ['TND', '788', 'Tunisian Dinar', 3],
         ];
     }
 
