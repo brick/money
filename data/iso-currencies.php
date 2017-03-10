@@ -111,12 +111,12 @@
     2 => 'Barbados Dollar',
     3 => 2,
   ),
-  'BYR' => 
+  'BYN' => 
   array (
-    0 => 'BYR',
-    1 => '974',
-    2 => 'Belarussian Ruble',
-    3 => 0,
+    0 => 'BYN',
+    1 => '933',
+    2 => 'Belarusian Ruble',
+    3 => 2,
   ),
   'BZD' => 
   array (
@@ -139,18 +139,18 @@
     2 => 'Bermudian Dollar',
     3 => 2,
   ),
-  'BTN' => 
-  array (
-    0 => 'BTN',
-    1 => '064',
-    2 => 'Ngultrum',
-    3 => 2,
-  ),
   'INR' => 
   array (
     0 => 'INR',
     1 => '356',
     2 => 'Indian Rupee',
+    3 => 2,
+  ),
+  'BTN' => 
+  array (
+    0 => 'BTN',
+    1 => '064',
+    2 => 'Ngultrum',
     3 => 2,
   ),
   'BOB' => 
@@ -251,19 +251,19 @@
     2 => 'Cayman Islands Dollar',
     3 => 2,
   ),
-  'CLF' => 
-  array (
-    0 => 'CLF',
-    1 => '990',
-    2 => 'Unidad de Fomento',
-    3 => 4,
-  ),
   'CLP' => 
   array (
     0 => 'CLP',
     1 => '152',
     2 => 'Chilean Peso',
     3 => 0,
+  ),
+  'CLF' => 
+  array (
+    0 => 'CLF',
+    1 => '990',
+    2 => 'Unidad de Fomento',
+    3 => 4,
   ),
   'CNY' => 
   array (
@@ -321,18 +321,18 @@
     2 => 'Kuna',
     3 => 2,
   ),
-  'CUC' => 
-  array (
-    0 => 'CUC',
-    1 => '931',
-    2 => 'Peso Convertible',
-    3 => 2,
-  ),
   'CUP' => 
   array (
     0 => 'CUP',
     1 => '192',
     2 => 'Cuban Peso',
+    3 => 2,
+  ),
+  'CUC' => 
+  array (
+    0 => 'CUC',
+    1 => '931',
+    2 => 'Peso Convertible',
     3 => 2,
   ),
   'ANG' => 
@@ -675,7 +675,7 @@
   array (
     0 => 'MWK',
     1 => '454',
-    2 => 'Kwacha',
+    2 => 'Malawi Kwacha',
     3 => 2,
   ),
   'MYR' => 
@@ -822,7 +822,7 @@
   array (
     0 => 'PEN',
     1 => '604',
-    2 => 'Nuevo Sol',
+    2 => 'Sol',
     3 => 2,
   ),
   'PHP' => 
@@ -1091,19 +1091,19 @@
     2 => 'US Dollar (Next day)',
     3 => 2,
   ),
-  'UYI' => 
-  array (
-    0 => 'UYI',
-    1 => '940',
-    2 => 'Uruguay Peso en Unidades Indexadas (URUIURUI)',
-    3 => 0,
-  ),
   'UYU' => 
   array (
     0 => 'UYU',
     1 => '858',
     2 => 'Peso Uruguayo',
     3 => 2,
+  ),
+  'UYI' => 
+  array (
+    0 => 'UYI',
+    1 => '940',
+    2 => 'Uruguay Peso en Unidades Indexadas (URUIURUI)',
+    3 => 0,
   ),
   'UZS' => 
   array (
@@ -1123,7 +1123,7 @@
   array (
     0 => 'VEF',
     1 => '937',
-    2 => 'Bolivar',
+    2 => 'Bolívar',
     3 => 2,
   ),
   'VND' => 

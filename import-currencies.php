@@ -7,7 +7,7 @@
  * This script is meant to be run by project maintainers, on a regular basis.
  */
 
-$data = file_get_contents('http://www.currency-iso.org/dam/downloads/table_a1.xml');
+$data = file_get_contents('https://www.currency-iso.org/dam/downloads/lists/list_one.xml');
 
 $document = new DOMDocument();
 $document->loadXML($data);
@@ -126,7 +126,7 @@ function checkNumericCode($numericCode)
         throw new \RuntimeException('Invalid numeric code: ' . $numericCode);
     }
 
-    return (int) $numericCode;
+    return $numericCode;
 }
 
 /**
