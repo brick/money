@@ -26,7 +26,7 @@ foreach ($countries as $country) {
         continue;
     }
 
-    if ($minorUnits == 'N.A.') {
+    if ($minorUnits === 'N.A.') {
         continue;
     }
 
@@ -46,7 +46,7 @@ foreach ($countries as $country) {
     }
 }
 
-exportToFile('data/iso-currencies.php', $result);
+exportToFile(__DIR__ . '/data/iso-currencies.php', $result);
 
 printf('Exported %d currencies.' . PHP_EOL, count($result));
 
@@ -86,7 +86,7 @@ function getDomElementString(DOMElement $element, $name)
  */
 function checkName($name)
 {
-    if ($name == '' || ! mb_check_encoding($name, 'UTF-8')) {
+    if ($name === '' || ! mb_check_encoding($name, 'UTF-8')) {
         throw new \RuntimeException('Invalid currency name: ' . $name);
     }
 
@@ -102,7 +102,7 @@ function checkName($name)
  */
 function checkCurrencyCode($currencyCode)
 {
-    if (preg_match('/^[A-Z]{3}$/', $currencyCode) == 0) {
+    if (preg_match('/^[A-Z]{3}$/', $currencyCode) !== 1) {
         throw new \RuntimeException('Invalid currency code: ' . $currencyCode);
     }
 
@@ -118,7 +118,7 @@ function checkCurrencyCode($currencyCode)
  */
 function checkNumericCode($numericCode)
 {
-    if (preg_match('/^[0-9]{3}$/', $numericCode) == 0) {
+    if (preg_match('/^[0-9]{3}$/', $numericCode) !== 1) {
         throw new \RuntimeException('Invalid numeric code: ' . $numericCode);
     }
 
@@ -134,7 +134,7 @@ function checkNumericCode($numericCode)
  */
 function checkMinorUnits($minorUnits)
 {
-    if (preg_match('/^[0-9]{1}$/', $minorUnits) == 0) {
+    if (preg_match('/^[0-9]{1}$/', $minorUnits) !== 1) {
         throw new \RuntimeException('Invalid minor unit: ' . $minorUnits);
     }
 
