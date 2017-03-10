@@ -118,10 +118,6 @@ function checkCurrencyCode($currencyCode)
  */
 function checkNumericCode($numericCode)
 {
-    if ($numericCode == 'Nil') {
-        return 0;
-    }
-
     if (preg_match('/^[0-9]{3}$/', $numericCode) == 0) {
         throw new \RuntimeException('Invalid numeric code: ' . $numericCode);
     }
