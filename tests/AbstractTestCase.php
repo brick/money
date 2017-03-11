@@ -71,7 +71,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     final protected function assertCurrencyEquals($currencyCode, $numericCode, $name, $defaultFractionDigits, $currency)
     {
         $this->assertInstanceOf(Currency::class, $currency);
-        $this->assertSame($currencyCode, $currency->getCode());
+        $this->assertSame($currencyCode, $currency->getCurrencyCode());
         $this->assertSame($numericCode, $currency->getNumericCode());
         $this->assertSame($name, $currency->getName());
         $this->assertSame($defaultFractionDigits, $currency->getDefaultFractionDigits());

@@ -46,7 +46,7 @@ class CurrencyConverter
         if ($money->getCurrency()->is($currency)) {
             $exchangeRate = 1;
         } else {
-            $exchangeRate = $this->exchangeRateProvider->getExchangeRate($money->getCurrency()->getCode(), $currency->getCode());
+            $exchangeRate = $this->exchangeRateProvider->getExchangeRate($money->getCurrency()->getCurrencyCode(), $currency->getCurrencyCode());
         }
 
         return $money->convertedTo($currency, $exchangeRate, $this->context);

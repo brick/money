@@ -19,8 +19,8 @@ class CurrencyMismatchException extends MoneyException
     {
         return new self(sprintf(
             'Currency mismatch: expected %s, got %s',
-            $expected->getCode(),
-            $actual->getCode()
+            $expected->getCurrencyCode(),
+            $actual->getCurrencyCode()
         ));
     }
 }

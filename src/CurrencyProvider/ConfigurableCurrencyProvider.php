@@ -29,7 +29,7 @@ class ConfigurableCurrencyProvider implements CurrencyProvider
      */
     public function addCurrency(Currency $currency)
     {
-        $this->currencies[$currency->getCode()] = $currency;
+        $this->currencies[$currency->getCurrencyCode()] = $currency;
 
         return $this;
     }
@@ -45,7 +45,7 @@ class ConfigurableCurrencyProvider implements CurrencyProvider
      */
     public function removeCurrency(Currency $currency)
     {
-        unset($this->currencies[$currency->getCode()]);
+        unset($this->currencies[$currency->getCurrencyCode()]);
 
         return $this;
     }

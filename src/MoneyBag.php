@@ -29,7 +29,7 @@ class MoneyBag implements MoneyContainer
      */
     public function get(Currency $currency)
     {
-        $currencyCode = $currency->getCode();
+        $currencyCode = $currency->getCurrencyCode();
 
         return isset($this->monies[$currencyCode])
             ? $this->monies[$currencyCode]
@@ -78,7 +78,7 @@ class MoneyBag implements MoneyContainer
 
         foreach ($that->getMonies() as $money) {
             $currency = $money->getCurrency();
-            $currencyCode = $currency->getCode();
+            $currencyCode = $currency->getCurrencyCode();
             $this->monies[$currencyCode] = $this->get($currency)->plus($money, $context);
         }
 
@@ -98,7 +98,7 @@ class MoneyBag implements MoneyContainer
 
         foreach ($that->getMonies() as $money) {
             $currency = $money->getCurrency();
-            $currencyCode = $currency->getCode();
+            $currencyCode = $currency->getCurrencyCode();
             $this->monies[$currencyCode] = $this->get($currency)->minus($money, $context);
         }
 

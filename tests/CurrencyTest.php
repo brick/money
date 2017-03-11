@@ -21,7 +21,7 @@ class CurrencyTest extends AbstractTestCase
     {
         $currency = Currency::of($currencyCode);
 
-        $this->assertEquals($currencyCode, $currency->getCode());
+        $this->assertEquals($currencyCode, $currency->getCurrencyCode());
         $this->assertEquals($numericCode, $currency->getNumericCode());
         $this->assertEquals($fractionDigits, $currency->getDefaultFractionDigits());
         $this->assertEquals($name, $currency->getName());
