@@ -6,15 +6,15 @@ use Brick\Money\CurrencyProvider\DefaultCurrencyProvider;
 use Brick\Money\Exception\UnknownCurrencyException;
 
 /**
- * A currency as defined by ISO 4217.
+ * A currency. This class is immutable.
  */
 class Currency
 {
     /**
      * The currency code.
      *
-     * For ISO currencies, this is the ISO 4217 alphabetic currency code.
-     * Custom currencies can use any string value. The currency code must be unique across all currencies.
+     * For ISO currencies this will be the 3-letter uppercase ISO 4217 currency code.
+     * For non ISO currencies this can be any non-empty string of ASCII letters and digits.
      *
      * @var string
      */
@@ -23,8 +23,8 @@ class Currency
     /**
      * The numeric currency code.
      *
-     * For ISO currencies, this is the ISO 4217 numeric currency code.
-     * Custom currencies can use any string of digits value.
+     * For ISO currencies this will be the 3-digit ISO 4217 numeric currency code.
+     * For non ISO currencies this can be any non-empty string of digits, typically '0' if unused.
      *
      * @var string
      */
@@ -33,14 +33,18 @@ class Currency
     /**
      * The name of the currency.
      *
-     * ISO currencies use the English name here.
+     * For ISO currencies this will be the official English name of the currency.
+     * For non ISO currencies no constraints are defined.
      *
      * @var string
      */
     private $name;
 
     /**
-     * The default number of fraction digits used with this currency.
+     * The default number of fraction digits (typical scale) used with this currency.
+     *
+     * For example, the default number of fraction digits for the Euro is 2, while for the Japanese Yen it is 0.
+     * This cannot be a negative number.
      *
      * @var int
      */
@@ -79,6 +83,10 @@ class Currency
         $name                  = (string) $name;
         $defaultFractionDigits = (int) $defaultFractionDigits;
 
+        if (preg_match('/^[a-zA-Z0-9]+$/', $currencyCode) !== 1) {
+            throw new \InvalidArgumentException('The currency code must be alphanumeric and non empty.');
+        }
+
         if (! ctype_digit($numericCode)) {
             throw new \InvalidArgumentException('The numeric code must consist of digits only.');
         }
@@ -113,7 +121,10 @@ class Currency
     }
 
     /**
-     * Returns the currency code of this currency.
+     * Returns the currency code.
+     *
+     * For ISO currencies this will be the 3-letter uppercase ISO 4217 currency code.
+     * For non ISO currencies this can be any non-empty string of ASCII letters and digits.
      *
      * @return string
      */
@@ -123,7 +134,10 @@ class Currency
     }
 
     /**
-     * Returns the numeric code of this currency.
+     * Returns the numeric currency code.
+     *
+     * For ISO currencies this will be the 3-digit ISO 4217 numeric currency code.
+     * For non ISO currencies this can be any non-empty string of digits, typically '0' if unused.
      *
      * @return string
      */
@@ -133,7 +147,12 @@ class Currency
     }
 
     /**
-     * Returns the english name of this currency.
+     * Returns the name of the currency.
+     *
+     * For ISO currencies this will be the official English name of the currency.
+     * For non ISO currencies no constraints are defined.
+     *
+     * @return string
      */
     public function getName()
     {
@@ -141,10 +160,9 @@ class Currency
     }
 
     /**
-     * Gets the default number of fraction digits used with this currency.
+     * Returns the default number of fraction digits (typical scale) used with this currency.
      *
-     * For example, the default number of fraction digits for the Euro is 2, while for the Japanese Yen it's 0.
-     * In the case of pseudo-currencies, such as IMF Special Drawing Rights, -1 is returned.
+     * For example, the default number of fraction digits for the Euro is 2, while for the Japanese Yen it is 0.
      *
      * @return int
      */
@@ -168,7 +186,7 @@ class Currency
     }
 
     /**
-     * Returns the ISO 4217 currency code of this currency.
+     * Returns the currency code.
      *
      * @return string
      */

@@ -16,7 +16,7 @@ use Brick\Math\Exception\NumberFormatException;
 use Brick\Math\Exception\RoundingNecessaryException;
 
 /**
- * Represents a monetary value in a given currency. This class is immutable.
+ * A monetary value in a given currency. This class is immutable.
  */
 class Money implements MoneyContainer
 {
