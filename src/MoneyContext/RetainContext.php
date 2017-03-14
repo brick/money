@@ -7,7 +7,6 @@ use Brick\Money\MoneyContext;
 use Brick\Money\MoneyRounding;
 
 use Brick\Math\BigNumber;
-use Brick\Math\RoundingMode;
 
 /**
  * Applies the scale of the current Money to the result.
