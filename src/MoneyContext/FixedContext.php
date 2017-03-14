@@ -4,9 +4,9 @@ namespace Brick\Money\MoneyContext;
 
 use Brick\Money\Currency;
 use Brick\Money\MoneyContext;
+use Brick\Money\MoneyRounding;
 
 use Brick\Math\BigNumber;
-use Brick\Math\RoundingMode;
 
 /**
  * Adjusts the scale of the result to a fixed value.
@@ -19,18 +19,18 @@ class FixedContext implements MoneyContext
     private $scale;
 
     /**
-     * @var int
+     * @var MoneyRounding
      */
-    private $roundingMode;
+    private $rounding;
 
     /**
-     * @param int $scale
-     * @param int $roundingMode
+     * @param int           $scale
+     * @param MoneyRounding $rounding
      */
-    public function __construct($scale, $roundingMode = RoundingMode::UNNECESSARY)
+    public function __construct($scale, MoneyRounding $rounding)
     {
-        $this->scale        = (int) $scale;
-        $this->roundingMode = (int) $roundingMode;
+        $this->scale    = (int) $scale;
+        $this->rounding = $rounding;
     }
 
     /**
@@ -38,6 +38,6 @@ class FixedContext implements MoneyContext
      */
     public function applyTo(BigNumber $amount, Currency $currency, $currentScale)
     {
-        return $amount->toScale($this->scale, $this->roundingMode);
+        return $this->rounding->round($amount, $this->scale);
     }
 }

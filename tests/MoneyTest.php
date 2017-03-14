@@ -11,6 +11,7 @@ use Brick\Money\Money;
 use Brick\Money\MoneyContext\DefaultContext;
 use Brick\Money\MoneyContext\FixedContext;
 use Brick\Money\MoneyContext\RetainContext;
+use Brick\Money\MoneyRounding\MathRounding;
 
 use Brick\Math\BigRational;
 use Brick\Math\RoundingMode;
@@ -236,7 +237,7 @@ class MoneyTest extends AbstractTestCase
             $this->setExpectedException($expected);
         }
 
-        $context = new RetainContext($roundingMode);
+        $context = new RetainContext(new MathRounding($roundingMode));
         $actual = $money->plus($plus, $context);
 
         if (! $this->isExceptionClass($expected)) {
@@ -284,7 +285,7 @@ class MoneyTest extends AbstractTestCase
             $this->setExpectedException($expected);
         }
 
-        $context = new RetainContext($roundingMode);
+        $context = new RetainContext(new MathRounding($roundingMode));
         $actual = $money->minus($minus, $context);
 
         if (! $this->isExceptionClass($expected)) {
@@ -328,7 +329,7 @@ class MoneyTest extends AbstractTestCase
             $this->setExpectedException($expected);
         }
 
-        $context = new RetainContext($roundingMode);
+        $context = new RetainContext(new MathRounding($roundingMode));
         $actual = $money->multipliedBy($multiplier, $context);
 
         if (! $this->isExceptionClass($expected)) {
@@ -371,7 +372,7 @@ class MoneyTest extends AbstractTestCase
             $this->setExpectedException($expected);
         }
 
-        $context = new RetainContext($roundingMode);
+        $context = new RetainContext(new MathRounding($roundingMode));
         $actual = $money->dividedBy($divisor, $context);
 
         if (! $this->isExceptionClass($expected)) {
@@ -689,9 +690,9 @@ class MoneyTest extends AbstractTestCase
     public function testConvertedTo($money, $currency, $exchangeRate, $roundingMode, $scale, $expected)
     {
         if ($scale === null) {
-            $context = new DefaultContext($roundingMode);
+            $context = new DefaultContext(new MathRounding($roundingMode));
         } else {
-            $context = new FixedContext($scale, $roundingMode);
+            $context = new FixedContext($scale, new MathRounding($roundingMode));
         }
 
         $actual = Money::parse($money)->convertedTo($currency, $exchangeRate, $context);

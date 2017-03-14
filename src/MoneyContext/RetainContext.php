@@ -4,6 +4,7 @@ namespace Brick\Money\MoneyContext;
 
 use Brick\Money\Currency;
 use Brick\Money\MoneyContext;
+use Brick\Money\MoneyRounding;
 
 use Brick\Math\BigNumber;
 use Brick\Math\RoundingMode;
@@ -14,16 +15,16 @@ use Brick\Math\RoundingMode;
 class RetainContext implements MoneyContext
 {
     /**
-     * @var int
+     * @var MoneyRounding
      */
-    private $roundingMode;
+    private $rounding;
 
     /**
-     * @param int $roundingMode
+     * @param MoneyRounding $rounding
      */
-    public function __construct($roundingMode = RoundingMode::UNNECESSARY)
+    public function __construct(MoneyRounding $rounding)
     {
-        $this->roundingMode = (int) $roundingMode;
+        $this->rounding = $rounding;
     }
 
     /**
@@ -31,6 +32,6 @@ class RetainContext implements MoneyContext
      */
     public function applyTo(BigNumber $amount, Currency $currency, $currentScale)
     {
-        return $amount->toScale($currentScale, $this->roundingMode);
+        return $this->rounding->round($amount, $currentScale);
     }
 }

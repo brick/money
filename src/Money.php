@@ -7,6 +7,7 @@ use Brick\Money\Exception\MoneyParseException;
 use Brick\Money\Exception\UnknownCurrencyException;
 use Brick\Money\MoneyContext\ExactContext;
 use Brick\Money\MoneyContext\RetainContext;
+use Brick\Money\MoneyRounding\MathRounding;
 
 use Brick\Math\BigDecimal;
 use Brick\Math\BigNumber;
@@ -294,7 +295,7 @@ class Money implements MoneyContainer
     public function plus($that, MoneyContext $context = null)
     {
         if ($context === null) {
-            $context = new RetainContext(RoundingMode::UNNECESSARY);
+            $context = new RetainContext(new MathRounding(RoundingMode::UNNECESSARY));
         }
 
         $amount = $this->amount->plus($this->handleMoney($that));
@@ -322,7 +323,7 @@ class Money implements MoneyContainer
     public function minus($that, MoneyContext $context = null)
     {
         if ($context === null) {
-            $context = new RetainContext(RoundingMode::UNNECESSARY);
+            $context = new RetainContext(new MathRounding(RoundingMode::UNNECESSARY));
         }
 
         $amount = $this->amount->minus($this->handleMoney($that));
@@ -349,7 +350,7 @@ class Money implements MoneyContainer
     public function multipliedBy($that, MoneyContext $context = null)
     {
         if ($context === null) {
-            $context = new RetainContext(RoundingMode::UNNECESSARY);
+            $context = new RetainContext(new MathRounding(RoundingMode::UNNECESSARY));
         }
 
         $amount = $this->amount->multipliedBy($that);
@@ -376,7 +377,7 @@ class Money implements MoneyContainer
     public function dividedBy($that, MoneyContext $context = null)
     {
         if ($context === null) {
-            $context = new RetainContext(RoundingMode::UNNECESSARY);
+            $context = new RetainContext(new MathRounding(RoundingMode::UNNECESSARY));
         }
 
         $amount = $this->amount->toBigRational()->dividedBy($that);
