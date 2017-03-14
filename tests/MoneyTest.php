@@ -8,9 +8,12 @@ use Brick\Money\Exception\MoneyParseException;
 use Brick\Money\Exception\UnknownCurrencyException;
 use Brick\Money\Exception\CurrencyMismatchException;
 use Brick\Money\Money;
+use Brick\Money\MoneyContext;
 use Brick\Money\MoneyContext\DefaultContext;
+use Brick\Money\MoneyContext\ExactContext;
 use Brick\Money\MoneyContext\FixedContext;
 use Brick\Money\MoneyContext\RetainContext;
+use Brick\Money\MoneyRounding\CashRounding;
 use Brick\Money\MoneyRounding\MathRounding;
 
 use Brick\Math\BigRational;
@@ -137,6 +140,38 @@ class MoneyTest extends AbstractTestCase
         }
 
         $this->assertMoneyEquals('1.23456789', 'BTC', $money);
+    }
+
+    /**
+     * @dataProvider providerWith
+     */
+    public function testWith($money, MoneyContext $context, $expected)
+    {
+        if ($this->isExceptionClass($expected)) {
+            $this->expectException($expected);
+        }
+
+        $result = Money::parse($money)->with($context);
+        $this->assertMoneyIs($expected, $result);
+    }
+
+    /**
+     * @return array
+     */
+    public function providerWith()
+    {
+        return [
+            ['USD 1.234', new DefaultContext(new MathRounding(RoundingMode::DOWN)), 'USD 1.23'],
+            ['USD 1.234', new DefaultContext(new MathRounding(RoundingMode::UP)), 'USD 1.24'],
+            ['USD 1.234', new DefaultContext(new MathRounding(RoundingMode::UNNECESSARY)), RoundingNecessaryException::class],
+            ['USD 1.234', new DefaultContext(new CashRounding(5, RoundingMode::DOWN)), 'USD 1.20'],
+            ['USD 1.234', new DefaultContext(new CashRounding(5, RoundingMode::UP)), 'USD 1.25'],
+            ['USD 1.234', new ExactContext(), 'USD 1.234'],
+            ['USD 1.234', new FixedContext(1, new MathRounding(RoundingMode::DOWN)), 'USD 1.2'],
+            ['USD 1.234', new FixedContext(1, new MathRounding(RoundingMode::UP)), 'USD 1.3'],
+            ['USD 1.234', new FixedContext(1, new CashRounding(2, RoundingMode::DOWN)), 'USD 1.2'],
+            ['USD 1.234', new FixedContext(1, new CashRounding(2, RoundingMode::UP)), 'USD 1.4'],
+        ];
     }
 
     /**

@@ -234,7 +234,7 @@ class Money implements MoneyContainer
     /**
      * Returns the amount of this Money, as a BigDecimal.
      *
-     * @return \Brick\Math\BigDecimal
+     * @return BigDecimal
      */
     public function getAmount()
     {
@@ -249,6 +249,20 @@ class Money implements MoneyContainer
     public function getCurrency()
     {
         return $this->currency;
+    }
+
+    /**
+     * Applies the given context to this money, and returns the result.
+     *
+     * @param MoneyContext $context
+     *
+     * @return Money
+     */
+    public function with(MoneyContext $context)
+    {
+        $amount = $context->applyTo($this->amount, $this->currency, $this->amount->scale());
+
+        return new Money($amount, $this->currency);
     }
 
     /**
