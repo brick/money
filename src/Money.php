@@ -295,7 +295,7 @@ class Money implements MoneyContainer
     public function plus($that, MoneyContext $context = null)
     {
         if ($context === null) {
-            $context = new RetainContext(new MathRounding(RoundingMode::UNNECESSARY));
+            $context = self::getDefaultContext();
         }
 
         $amount = $this->amount->plus($this->handleMoney($that));
@@ -323,7 +323,7 @@ class Money implements MoneyContainer
     public function minus($that, MoneyContext $context = null)
     {
         if ($context === null) {
-            $context = new RetainContext(new MathRounding(RoundingMode::UNNECESSARY));
+            $context = self::getDefaultContext();
         }
 
         $amount = $this->amount->minus($this->handleMoney($that));
@@ -350,7 +350,7 @@ class Money implements MoneyContainer
     public function multipliedBy($that, MoneyContext $context = null)
     {
         if ($context === null) {
-            $context = new RetainContext(new MathRounding(RoundingMode::UNNECESSARY));
+            $context = self::getDefaultContext();
         }
 
         $amount = $this->amount->multipliedBy($that);
@@ -377,7 +377,7 @@ class Money implements MoneyContainer
     public function dividedBy($that, MoneyContext $context = null)
     {
         if ($context === null) {
-            $context = new RetainContext(new MathRounding(RoundingMode::UNNECESSARY));
+            $context = self::getDefaultContext();
         }
 
         $amount = $this->amount->toBigRational()->dividedBy($that);
@@ -703,5 +703,23 @@ class Money implements MoneyContainer
         }
 
         return $that;
+    }
+
+    /**
+     * Returns a static instance of the default context for money operators.
+     *
+     * The default context always retains the scale of the left operand, and assumes that rounding is not necessary.
+     *
+     * @return MoneyContext
+     */
+    private static function getDefaultContext()
+    {
+        static $defaultContext;
+
+        if ($defaultContext === null) {
+            $defaultContext = new RetainContext(new MathRounding(RoundingMode::UNNECESSARY));
+        }
+
+        return $defaultContext;
     }
 }
