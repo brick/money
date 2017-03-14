@@ -33,7 +33,7 @@ class MoneyTest extends AbstractTestCase
     public function testOf($expectedResult, ...$args)
     {
         if ($this->isExceptionClass($expectedResult)) {
-            $this->setExpectedException($expectedResult);
+            $this->expectException($expectedResult);
         }
 
         $money = Money::of(...$args);
@@ -98,7 +98,7 @@ class MoneyTest extends AbstractTestCase
     public function testParse($string, $expectedResult)
     {
         if ($this->isExceptionClass($expectedResult)) {
-            $this->setExpectedException($expectedResult);
+            $this->expectException($expectedResult);
         }
 
         $money = Money::parse($string);
@@ -150,7 +150,7 @@ class MoneyTest extends AbstractTestCase
     public function testWithFractionDigits($money, $fractionDigits, $roundingMode, $result)
     {
         if ($result === null) {
-            $this->setExpectedException(RoundingNecessaryException::class);
+            $this->expectException(RoundingNecessaryException::class);
         }
 
         $money = Money::parse($money)->withFractionDigits($fractionDigits, $roundingMode);
@@ -187,7 +187,7 @@ class MoneyTest extends AbstractTestCase
     public function testWithDefaultFractionDigits($money, $roundingMode, $result)
     {
         if ($result === null) {
-            $this->setExpectedException(RoundingNecessaryException::class);
+            $this->expectException(RoundingNecessaryException::class);
         }
 
         $money = Money::parse($money)->withDefaultFractionDigits($roundingMode);
@@ -234,7 +234,7 @@ class MoneyTest extends AbstractTestCase
         }
 
         if ($this->isExceptionClass($expected)) {
-            $this->setExpectedException($expected);
+            $this->expectException($expected);
         }
 
         $context = new RetainContext(new MathRounding($roundingMode));
@@ -282,7 +282,7 @@ class MoneyTest extends AbstractTestCase
         }
 
         if ($this->isExceptionClass($expected)) {
-            $this->setExpectedException($expected);
+            $this->expectException($expected);
         }
 
         $context = new RetainContext(new MathRounding($roundingMode));
@@ -326,7 +326,7 @@ class MoneyTest extends AbstractTestCase
         $money = Money::parse($money);
 
         if ($this->isExceptionClass($expected)) {
-            $this->setExpectedException($expected);
+            $this->expectException($expected);
         }
 
         $context = new RetainContext(new MathRounding($roundingMode));
@@ -369,7 +369,7 @@ class MoneyTest extends AbstractTestCase
         $money = Money::parse($money);
 
         if ($this->isExceptionClass($expected)) {
-            $this->setExpectedException($expected);
+            $this->expectException($expected);
         }
 
         $context = new RetainContext(new MathRounding($roundingMode));
@@ -775,7 +775,7 @@ class MoneyTest extends AbstractTestCase
         }
 
         if ($this->isExceptionClass($expectedResult)) {
-            $this->setExpectedException($expectedResult);
+            $this->expectException($expectedResult);
         }
 
         $actualResult = Money::min(...$monies);
@@ -811,7 +811,7 @@ class MoneyTest extends AbstractTestCase
         }
 
         if ($this->isExceptionClass($expectedResult)) {
-            $this->setExpectedException($expectedResult);
+            $this->expectException($expectedResult);
         }
 
         $actualResult = Money::max(...$monies);

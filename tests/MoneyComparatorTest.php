@@ -46,7 +46,7 @@ class MoneyComparatorTest extends AbstractTestCase
         $b = Money::parse($b);
 
         if ($this->isExceptionClass($cmp)) {
-            $this->setExpectedException($cmp);
+            $this->expectException($cmp);
         }
 
         $this->assertSame($cmp, $comparator->compare($a, $b));
@@ -103,7 +103,7 @@ class MoneyComparatorTest extends AbstractTestCase
         }
 
         if ($this->isExceptionClass($expectedMin)) {
-            $this->setExpectedException($expectedMin);
+            $this->expectException($expectedMin);
         }
 
         $actualMin = $comparator->min(...$monies);
@@ -143,7 +143,7 @@ class MoneyComparatorTest extends AbstractTestCase
         }
 
         if ($this->isExceptionClass($expectedMin)) {
-            $this->setExpectedException($expectedMin);
+            $this->expectException($expectedMin);
         }
 
         $actualMin = $comparator->max(...$monies);

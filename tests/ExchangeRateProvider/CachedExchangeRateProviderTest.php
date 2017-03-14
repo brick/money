@@ -39,7 +39,7 @@ class CachedExchangeRateProviderTest extends AbstractTestCase
         $mock = new ExchangeRateProviderMock();
         $provider = new CachedExchangeRateProvider($mock);
 
-        $this->setExpectedException(CurrencyConversionException::class);
+        $this->expectException(CurrencyConversionException::class);
         $provider->getExchangeRate('USD', 'EUR');
     }
 }

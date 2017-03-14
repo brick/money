@@ -49,7 +49,7 @@ class CurrencyConverterTest extends AbstractTestCase
         $currencyConverter = $this->createCurrencyConverter($roundingMode);
 
         if ($this->isExceptionClass($expectedResult)) {
-            $this->setExpectedException($expectedResult);
+            $this->expectException($expectedResult);
         }
 
         $actualResult = $currencyConverter->convert($money, $currency);

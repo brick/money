@@ -55,7 +55,7 @@ class PDOExchangeRateProviderTest extends AbstractTestCase
     public function testGetExchangeRate($sourceCurrencyCode, $targetCurrencyCode, $expectedResult)
     {
         if ($this->isExceptionClass($expectedResult)) {
-            $this->setExpectedException($expectedResult);
+            $this->expectException($expectedResult);
         }
 
         $actualRate = $this->getPDOExchangeRateProvider()->getExchangeRate($sourceCurrencyCode, $targetCurrencyCode);

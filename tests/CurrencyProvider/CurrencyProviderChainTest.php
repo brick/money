@@ -66,7 +66,7 @@ class CurrencyProviderChainTest extends AbstractTestCase
         $provider = $this->createCurrencyProviderChain();
 
         if ($expectsException) {
-            $this->setExpectedException(UnknownCurrencyException::class);
+            $this->expectException(UnknownCurrencyException::class);
         }
 
         $actualCurrency = $provider->getCurrency($currencyCode);
