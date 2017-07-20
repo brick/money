@@ -471,99 +471,105 @@ class Money implements MoneyContainer
     }
 
     /**
-     * Compares this Money to the given Money.
+     * Compares this Money to the given amount.
      *
-     * @param Money $that
+     * @param Money|BigNumber|number|string $that
      *
      * @return int [-1, 0, 1] if `$this` is less than, equal to, or greater than `$that`.
      *
-     * @throws CurrencyMismatchException If the given Money is in a different currency.
+     * @throws ArithmeticException       If the argument is an invalid number.
+     * @throws CurrencyMismatchException If the argument is a money in a different currency.
      */
-    public function compareTo(Money $that)
+    public function compareTo($that)
     {
-        $this->checkMoney($that);
+        $that = $this->handleMoney($that);
 
-        return $this->amount->compareTo($that->amount);
+        return $this->amount->compareTo($that);
     }
 
     /**
-     * Returns whether this Money is equal to the given Money.
+     * Returns whether this Money is equal to the given amount.
      *
-     * @param Money $that
+     * @param Money|BigNumber|number|string $that
      *
      * @return bool
      *
-     * @throws CurrencyMismatchException If the given Money is in a different currency.
+     * @throws ArithmeticException       If the argument is an invalid number.
+     * @throws CurrencyMismatchException If the argument is a money in a different currency.
      */
-    public function isEqualTo(Money $that)
+    public function isEqualTo($that)
     {
-        $this->checkMoney($that);
+        $that = $this->handleMoney($that);
 
-        return $this->amount->isEqualTo($that->amount);
+        return $this->amount->isEqualTo($that);
     }
 
     /**
-     * Returns whether this Money is less than the given Money
+     * Returns whether this Money is less than the given amount
      *
-     * @param Money $that
+     * @param Money|BigNumber|number|string $that
      *
      * @return bool
      *
-     * @throws CurrencyMismatchException If the given Money is in a different currency.
+     * @throws ArithmeticException       If the argument is an invalid number.
+     * @throws CurrencyMismatchException If the argument is a money in a different currency.
      */
-    public function isLessThan(Money $that)
+    public function isLessThan($that)
     {
-        $this->checkMoney($that);
+        $that = $this->handleMoney($that);
 
-        return $this->amount->isLessThan($that->amount);
+        return $this->amount->isLessThan($that);
     }
 
     /**
-     * Returns whether this Money is less than or equal to the given Money.
+     * Returns whether this Money is less than or equal to the given amount.
      *
-     * @param Money $that
+     * @param Money|BigNumber|number|string $that
      *
      * @return bool
      *
-     * @throws CurrencyMismatchException If the given Money is in a different currency.
+     * @throws ArithmeticException       If the argument is an invalid number.
+     * @throws CurrencyMismatchException If the argument is a money in a different currency.
      */
-    public function isLessThanOrEqualTo(Money $that)
+    public function isLessThanOrEqualTo($that)
     {
-        $this->checkMoney($that);
+        $that = $this->handleMoney($that);
 
-        return $this->amount->isLessThanOrEqualTo($that->amount);
+        return $this->amount->isLessThanOrEqualTo($that);
     }
 
     /**
-     * Returns whether this Money is greater than the given Money.
+     * Returns whether this Money is greater than the given amount.
      *
-     * @param Money $that
+     * @param Money|BigNumber|number|string $that
      *
      * @return bool
      *
-     * @throws CurrencyMismatchException If the given Money is in a different currency.
+     * @throws ArithmeticException       If the argument is an invalid number.
+     * @throws CurrencyMismatchException If the argument is a money in a different currency.
      */
-    public function isGreaterThan(Money $that)
+    public function isGreaterThan($that)
     {
-        $this->checkMoney($that);
+        $that = $this->handleMoney($that);
 
-        return $this->amount->isGreaterThan($that->amount);
+        return $this->amount->isGreaterThan($that);
     }
 
     /**
-     * Returns whether this Money is greater than or equal to the given Money.
+     * Returns whether this Money is greater than or equal to the given amount.
      *
-     * @param Money $that
+     * @param Money|BigNumber|number|string $that
      *
      * @return bool
      *
-     * @throws CurrencyMismatchException If the given Money is in a different currency.
+     * @throws ArithmeticException       If the argument is an invalid number.
+     * @throws CurrencyMismatchException If the argument is a money in a different currency.
      */
-    public function isGreaterThanOrEqualTo(Money $that)
+    public function isGreaterThanOrEqualTo($that)
     {
-        $this->checkMoney($that);
+        $that = $this->handleMoney($that);
 
-        return $this->amount->isGreaterThanOrEqualTo($that->amount);
+        return $this->amount->isGreaterThanOrEqualTo($that);
     }
 
     /**
@@ -684,34 +690,20 @@ class Money implements MoneyContainer
     }
 
     /**
-     * Checks that the given Money is in the same currency as this money.
-     *
-     * @param Money $that
-     *
-     * @return void
-     *
-     * @throws CurrencyMismatchException
-     */
-    private function checkMoney(Money $that)
-    {
-        if (! $that->currency->is($this->currency)) {
-            throw CurrencyMismatchException::currencyMismatch($this->currency, $that->currency);
-        }
-    }
-
-    /**
      * Handles the special case of monies in methods like `plus()`, `minus()`, etc.
      *
      * @param Money|BigNumber|number|string $that
      *
      * @return BigNumber|number|string
      *
-     * @throws CurrencyMismatchException
+     * @throws CurrencyMismatchException If the argument is a money in a different currency.
      */
     private function handleMoney($that)
     {
         if ($that instanceof Money) {
-            $this->checkMoney($that);
+            if (! $that->currency->is($this->currency)) {
+                throw CurrencyMismatchException::currencyMismatch($this->currency, $that->currency);
+            }
 
             return $that->amount;
         }
