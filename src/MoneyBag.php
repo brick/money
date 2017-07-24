@@ -1,6 +1,7 @@
 <?php
 
 namespace Brick\Money;
+
 use Brick\Money\MoneyContext\ExactContext;
 
 /**
@@ -23,12 +24,13 @@ class MoneyBag implements MoneyContainer
      * If no money is present for the given currency, a zero-value money with the default scale
      * for the given currency will be returned.
      *
-     * @param Currency $currency
+     * @param Currency|string $currency
      *
      * @return Money
      */
-    public function get(Currency $currency)
+    public function get($currency)
     {
+        $currency = Currency::of($currency);
         $currencyCode = $currency->getCurrencyCode();
 
         return isset($this->monies[$currencyCode])
@@ -39,13 +41,14 @@ class MoneyBag implements MoneyContainer
     /**
      * Returns the total of the monies contained in this bag, in the given currency.
      *
-     * @param Currency          $currency  The currency to get the total in.
+     * @param Currency|string   $currency  The currency to get the total in.
      * @param CurrencyConverter $converter The currency converter to use.
      *
      * @return Money The total in the given currency.
      */
-    public function getTotal(Currency $currency, CurrencyConverter $converter)
+    public function getTotal($currency, CurrencyConverter $converter)
     {
+        $currency = Currency::of($currency);
         $total = Money::zero($currency);
         $context = new ExactContext();
 
