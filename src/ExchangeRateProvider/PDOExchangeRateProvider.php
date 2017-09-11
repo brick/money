@@ -18,6 +18,20 @@ class PDOExchangeRateProvider implements ExchangeRateProvider
     private $statement;
 
     /**
+     * The source currency code if fixed, or null if dynamic.
+     *
+     * @var string|null
+     */
+    private $sourceCurrency;
+
+    /**
+     * The target currency code if fixed, or null if dynamic.
+     *
+     * @var string|null
+     */
+    private $targetCurrency;
+
+    /**
      * Extra parameters set dynamically to resolve the query placeholders.
      *
      * @var array
@@ -30,17 +44,32 @@ class PDOExchangeRateProvider implements ExchangeRateProvider
      */
     public function __construct(\PDO $pdo, PDOExchangeRateProviderConfiguration $configuration)
     {
-        $query = sprintf(
-            'SELECT %s FROM %s WHERE %s = ? AND %s = ?',
-            $configuration->exchangeRateColumnName,
-            $configuration->tableName,
-            $configuration->sourceCurrencyColumnName,
-            $configuration->targetCurrencyColumnName
-        );
+        $conditions = [];
 
         if ($configuration->whereConditions !== null) {
-            $query .= ' AND (' . $configuration->whereConditions . ')';
+            $conditions[] = '(' . $configuration->whereConditions . ')';
         }
+
+        if ($configuration->sourceCurrencyFixed) {
+            $this->sourceCurrency = $configuration->sourceCurrency;
+        } else {
+            $conditions[] = $configuration->sourceCurrency . ' = ?';
+        }
+
+        if ($configuration->targetCurrencyFixed) {
+            $this->targetCurrency = $configuration->targetCurrency;
+        } else {
+            $conditions[] = $configuration->targetCurrency . ' = ?';
+        }
+
+        $conditions = implode(' AND ' , $conditions);
+
+        $query = sprintf(
+            'SELECT %s FROM %s WHERE %s',
+            $configuration->exchangeRateColumnName,
+            $configuration->tableName,
+            $conditions
+        );
 
         $this->statement = $pdo->prepare($query);
     }
@@ -65,12 +94,20 @@ class PDOExchangeRateProvider implements ExchangeRateProvider
      */
     public function getExchangeRate($sourceCurrencyCode, $targetCurrencyCode)
     {
-        $parameters = [
-            $sourceCurrencyCode,
-            $targetCurrencyCode
-        ];
+        $parameters = $this->parameters;
 
-        $parameters = array_merge($parameters, $this->parameters);
+        if ($this->sourceCurrency === null) {
+            $parameters[] = $sourceCurrencyCode;
+        } elseif ($this->sourceCurrency !== $sourceCurrencyCode) {
+            throw CurrencyConversionException::exchangeRateNotAvailable($sourceCurrencyCode, $targetCurrencyCode);
+        }
+
+        if ($this->targetCurrency === null) {
+            $parameters[] = $targetCurrencyCode;
+        } elseif ($this->targetCurrency !== $targetCurrencyCode) {
+            throw CurrencyConversionException::exchangeRateNotAvailable($sourceCurrencyCode, $targetCurrencyCode);
+        }
+
         $this->statement->execute($parameters);
 
         $exchangeRate = $this->statement->fetchColumn();

@@ -19,14 +19,34 @@ class PDOExchangeRateProviderConfiguration
      *
      * @var string
      */
-    public $sourceCurrencyColumnName;
+    public $sourceCurrency;
+
+    /**
+     * Whether the source currency is fixed. Optional, defaults to false.
+     *
+     * When false, the source currency is dynamic and $sourceCurrency must contain the name of the database column.
+     * When true, the source currency is fixed and $sourceCurrency must contain the source currency code.
+     *
+     * @var bool
+     */
+    public $sourceCurrencyFixed = false;
 
     /**
      * The name of the column that holds the target currency code. Required.
      *
      * @var string
      */
-    public $targetCurrencyColumnName;
+    public $targetCurrency;
+
+    /**
+     * Whether the target currency is fixed. Optional, defaults to false.
+     *
+     * When false, the target currency is dynamic and $targetCurrency must contain the name of the database column.
+     * When true, the target currency is fixed and $targetCurrency must contain the target currency code.
+     *
+     * @var bool
+     */
+    public $targetCurrencyFixed = false;
 
     /**
      * The name of the column that holds the exchange rate for the currency pair. Required.
