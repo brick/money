@@ -8,17 +8,24 @@ namespace Brick\Money\Exception;
 class CurrencyConversionException extends MoneyException
 {
     /**
-     * @param string $sourceCurrencyCode
-     * @param string $targetCurrencyCode
+     * @param string      $sourceCurrencyCode
+     * @param string      $targetCurrencyCode
+     * @param string|null $info
      *
      * @return CurrencyConversionException
      */
-    public static function exchangeRateNotAvailable($sourceCurrencyCode, $targetCurrencyCode)
+    public static function exchangeRateNotAvailable($sourceCurrencyCode, $targetCurrencyCode, $info = null)
     {
-        return new self(sprintf(
-            'No exchange rate available to convert %s to %s.',
+        $message = sprintf(
+            'No exchange rate available to convert %s to %s',
             $sourceCurrencyCode,
             $targetCurrencyCode
-        ));
+        );
+
+        if ($info !== null) {
+            $message .= ' (' . $info . ')';
+        }
+
+        return new self($message);
     }
 }

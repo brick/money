@@ -105,13 +105,17 @@ class PDOExchangeRateProvider implements ExchangeRateProvider
         if ($this->sourceCurrencyCode === null) {
             $parameters[] = $sourceCurrencyCode;
         } elseif ($this->sourceCurrencyCode !== $sourceCurrencyCode) {
-            throw CurrencyConversionException::exchangeRateNotAvailable($sourceCurrencyCode, $targetCurrencyCode);
+            $info = 'source currency must be ' . $this->sourceCurrencyCode;
+
+            throw CurrencyConversionException::exchangeRateNotAvailable($sourceCurrencyCode, $targetCurrencyCode, $info);
         }
 
         if ($this->targetCurrencyCode === null) {
             $parameters[] = $targetCurrencyCode;
         } elseif ($this->targetCurrencyCode !== $targetCurrencyCode) {
-            throw CurrencyConversionException::exchangeRateNotAvailable($sourceCurrencyCode, $targetCurrencyCode);
+            $info = 'target currency must be ' . $this->targetCurrencyCode;
+
+            throw CurrencyConversionException::exchangeRateNotAvailable($sourceCurrencyCode, $targetCurrencyCode, $info);
         }
 
         $this->statement->execute($parameters);
@@ -119,7 +123,17 @@ class PDOExchangeRateProvider implements ExchangeRateProvider
         $exchangeRate = $this->statement->fetchColumn();
 
         if ($exchangeRate === false) {
-            throw CurrencyConversionException::exchangeRateNotAvailable($sourceCurrencyCode, $targetCurrencyCode);
+            if ($this->parameters !== []) {
+                $info = [];
+                foreach ($this->parameters as $parameter) {
+                    $info[] = var_export($parameter, true);
+                }
+                $info = implode(', ', $info);
+            } else {
+                $info = null;
+            }
+
+            throw CurrencyConversionException::exchangeRateNotAvailable($sourceCurrencyCode, $targetCurrencyCode, $info);
         }
 
         return $exchangeRate;
