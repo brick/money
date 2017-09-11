@@ -37,10 +37,10 @@ class PDOExchangeRateProviderTest extends AbstractTestCase
 
         $configuration = new PDOExchangeRateProviderConfiguration();
 
-        $configuration->tableName              = 'exchange_rate';
-        $configuration->sourceCurrency         = 'source_currency';
-        $configuration->targetCurrency         = 'target_currency';
-        $configuration->exchangeRateColumnName = 'exchange_rate';
+        $configuration->tableName                = 'exchange_rate';
+        $configuration->sourceCurrencyColumnName = 'source_currency';
+        $configuration->targetCurrencyColumnName = 'target_currency';
+        $configuration->exchangeRateColumnName   = 'exchange_rate';
 
         return new PDOExchangeRateProvider($pdo, $configuration);
     }

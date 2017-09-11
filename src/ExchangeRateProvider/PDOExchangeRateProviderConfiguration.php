@@ -15,38 +15,40 @@ class PDOExchangeRateProviderConfiguration
     public $tableName;
 
     /**
-     * The name of the column that holds the source currency code. Required.
+     * The name of the column that holds the source currency code. Optional.
      *
-     * @var string
+     * If not set, $sourceCurrencyCode must be set.
+     *
+     * @var string|null
      */
-    public $sourceCurrency;
+    public $sourceCurrencyColumnName;
 
     /**
-     * Whether the source currency is fixed. Optional, defaults to false.
+     * The source currency code, if it is fixed. Optional.
      *
-     * When false, the source currency is dynamic and $sourceCurrency must contain the name of the database column.
-     * When true, the source currency is fixed and $sourceCurrency must contain the source currency code.
+     * If not set, $sourceCurrencyColumnName must be set.
      *
-     * @var bool
+     * @var string|null
      */
-    public $sourceCurrencyFixed = false;
+    public $sourceCurrencyCode;
 
     /**
-     * The name of the column that holds the target currency code. Required.
+     * The name of the column that holds the target currency code. Optional.
      *
-     * @var string
+     * If not set, $targetCurrencyCode must be set.
+     *
+     * @var string|null
      */
-    public $targetCurrency;
+    public $targetCurrencyColumnName;
 
     /**
-     * Whether the target currency is fixed. Optional, defaults to false.
+     * The target currency code, if it is fixed. Optional.
      *
-     * When false, the target currency is dynamic and $targetCurrency must contain the name of the database column.
-     * When true, the target currency is fixed and $targetCurrency must contain the target currency code.
+     * If not set, $targetCurrencyColumnName must be set.
      *
-     * @var bool
+     * @var string|null
      */
-    public $targetCurrencyFixed = false;
+    public $targetCurrencyCode;
 
     /**
      * The name of the column that holds the exchange rate for the currency pair. Required.
