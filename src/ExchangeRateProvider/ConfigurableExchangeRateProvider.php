@@ -22,11 +22,13 @@ class ConfigurableExchangeRateProvider implements ExchangeRateProvider
      * @param string                  $targetCurrencyCode
      * @param BigNumber|number|string $exchangeRate
      *
-     * @return ConfigurableExchangeRateProvider
+     * @return ConfigurableExchangeRateProvider This instance, for chaining.
      */
     public function setExchangeRate($sourceCurrencyCode, $targetCurrencyCode, $exchangeRate)
     {
         $this->exchangeRates[$sourceCurrencyCode][$targetCurrencyCode] = $exchangeRate;
+
+        return $this;
     }
 
     /**
