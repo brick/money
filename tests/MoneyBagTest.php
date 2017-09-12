@@ -66,7 +66,7 @@ class MoneyBagTest extends AbstractTestCase
      *
      * @param MoneyBag $moneyBag
      */
-    public function testTotal(MoneyBag $moneyBag)
+    public function testValue(MoneyBag $moneyBag)
     {
         $exchangeRateProvider = new ConfigurableExchangeRateProvider();
         $exchangeRateProvider->setExchangeRate('EUR', 'USD', '1.23456789');
@@ -74,10 +74,10 @@ class MoneyBagTest extends AbstractTestCase
 
         $context = new DefaultContext(new MathRounding(RoundingMode::DOWN));
         $currencyConverter = new CurrencyConverter($exchangeRateProvider, $context);
-        $this->assertMoneyIs('USD 437.57', $moneyBag->getTotal(Currency::of('USD'), $currencyConverter));
+        $this->assertMoneyIs('USD 437.57', $moneyBag->getValue(Currency::of('USD'), $currencyConverter));
 
         $context = new DefaultContext(new MathRounding(RoundingMode::UP));
         $currencyConverter = new CurrencyConverter($exchangeRateProvider, $context);
-        $this->assertMoneyIs('USD 437.59', $moneyBag->getTotal(Currency::of('USD'), $currencyConverter));
+        $this->assertMoneyIs('USD 437.59', $moneyBag->getValue(Currency::of('USD'), $currencyConverter));
     }
 }
