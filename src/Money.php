@@ -690,6 +690,14 @@ class Money implements MoneyContainer
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getValue($currency, CurrencyConverter $converter)
+    {
+        return $converter->convert($this, $currency);
+    }
+
+    /**
      * Handles the special case of monies in methods like `plus()`, `minus()`, etc.
      *
      * @param Money|BigNumber|number|string $that

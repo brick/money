@@ -39,14 +39,17 @@ class MoneyBag implements MoneyContainer
     }
 
     /**
-     * Returns the total of the monies contained in this bag, in the given currency.
-     *
-     * @param Currency|string   $currency  The currency to get the total in.
-     * @param CurrencyConverter $converter The currency converter to use.
-     *
-     * @return Money The total in the given currency.
+     * {@inheritdoc}
      */
-    public function getTotal($currency, CurrencyConverter $converter)
+    public function getMonies()
+    {
+        return array_values($this->monies);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getValue($currency, CurrencyConverter $converter)
     {
         $currency = Currency::of($currency);
         $total = Money::zero($currency);
@@ -58,14 +61,6 @@ class MoneyBag implements MoneyContainer
         }
 
         return $total;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getMonies()
-    {
-        return array_values($this->monies);
     }
 
     /**
