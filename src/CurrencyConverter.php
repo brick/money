@@ -33,16 +33,18 @@ class CurrencyConverter
     }
 
     /**
-     * @param Money    $money
-     * @param Currency $currency
+     * @param Money           $money
+     * @param Currency|string $currency
      *
      * @return Money
      *
      * @throws CurrencyConversionException If the exchange rate is not available.
      * @throws RoundingNecessaryException  If rounding was necessary but this converter uses RoundingMode::UNNECESSARY.
      */
-    public function convert(Money $money, Currency $currency)
+    public function convert(Money $money, $currency)
     {
+        $currency = Currency::of($currency);
+
         if ($money->getCurrency()->is($currency)) {
             $exchangeRate = 1;
         } else {
