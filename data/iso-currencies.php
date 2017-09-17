@@ -80,7 +80,7 @@
   array (
     0 => 'AZN',
     1 => '944',
-    2 => 'Azerbaijanian Manat',
+    2 => 'Azerbaijan Manat',
     3 => 2,
   ),
   'BSD' => 
@@ -290,7 +290,7 @@
   array (
     0 => 'KMF',
     1 => '174',
-    2 => 'Comoro Franc',
+    2 => 'Comorian Franc ',
     3 => 0,
   ),
   'CDF' => 
@@ -465,7 +465,7 @@
   array (
     0 => 'GNF',
     1 => '324',
-    2 => 'Guinea Franc',
+    2 => 'Guinean Franc',
     3 => 0,
   ),
   'GYD' => 
@@ -605,7 +605,7 @@
   array (
     0 => 'LAK',
     1 => '418',
-    2 => 'Kip',
+    2 => 'Lao Kip',
     3 => 2,
   ),
   'LBP' => 
