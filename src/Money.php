@@ -156,7 +156,7 @@ class Money implements MoneyContainer
 
     /**
      * @param BigNumber|number|string $amountMinor    The integer amount in minor units.
-     * @param Currency|string         $currency       The currency, as a Currency instance of currency code string.
+     * @param Currency|string         $currency       The currency, as a Currency instance or currency code string.
      * @param int|null                $fractionDigits The number of fraction digits, or null to use the default.
      *
      * @return Money
