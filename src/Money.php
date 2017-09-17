@@ -36,15 +36,22 @@ class Money implements MoneyContainer
     private $currency;
 
     /**
+     * @var int
+     */
+    private $step;
+
+    /**
      * Private constructor. Use a factory method to obtain an instance.
      *
      * @param BigDecimal $amount   The amount.
      * @param Currency   $currency The currency.
+     * @param int        $step     The minimum step in minor units. Must be 1, or a multiple or 2 and 5.
      */
-    private function __construct(BigDecimal $amount, Currency $currency)
+    private function __construct(BigDecimal $amount, Currency $currency, $step = 1)
     {
         $this->amount   = $amount;
         $this->currency = $currency;
+        $this->step     = $step;
     }
 
     /**
@@ -133,7 +140,8 @@ class Money implements MoneyContainer
      *
      * @param BigNumber|number|string  $amount         The monetary amount.
      * @param Currency|string          $currency       The currency, as a `Currency` object or currency code string.
-     * @param int|null                 $fractionDigits The number of fraction digits, or null to use the default.
+     * @param int|null                 $scale The number of fraction digits, or null to use the default.
+     * @param int                      $step           The step.
      * @param int                      $roundingMode   The rounding mode to use, if necessary.
      *
      * @return Money
@@ -141,38 +149,38 @@ class Money implements MoneyContainer
      * @throws NumberFormatException      If the amount is a string in a non-supported format.
      * @throws RoundingNecessaryException If the rounding was necessary to represent the amount at the requested scale.
      */
-    public static function of($amount, $currency, $fractionDigits = null, $roundingMode = RoundingMode::UNNECESSARY)
+    public static function of($amount, $currency, $scale = null, $step = 1, $roundingMode = RoundingMode::UNNECESSARY)
     {
         $currency = Currency::of($currency);
 
-        if ($fractionDigits === null) {
-            $fractionDigits = $currency->getDefaultFractionDigits();
+        if ($scale === null) {
+            $scale = $currency->getDefaultFractionDigits();
         }
 
-        $amount = BigNumber::of($amount)->toScale($fractionDigits, $roundingMode);
+        $amount = BigNumber::of($amount);
+        $amount = self::doApplyScale($amount, $scale, $step, $roundingMode);
 
-        return new Money($amount, $currency);
+        return new Money($amount, $currency, $step);
     }
 
     /**
-     * @param BigNumber|number|string $amountMinor    The integer amount in minor units.
-     * @param Currency|string         $currency       The currency, as a Currency instance of currency code string.
-     * @param int|null                $fractionDigits The number of fraction digits, or null to use the default.
+     * Returns a Money from a number of minor units.
+     *
+     * The result Money has the default scale for the currency.
+     *
+     * @param BigNumber|number|string $amountMinor The amount in minor units. Must be convertible to a BigInteger.
+     * @param Currency|string         $currency    The currency, as a Currency instance or currency code string.
      *
      * @return Money
      *
      * @throws UnknownCurrencyException If the currency is an unknown currency code.
      * @throws ArithmeticException      If the amount cannot be converted to a BigInteger.
      */
-    public static function ofMinor($amountMinor, $currency, $fractionDigits = null)
+    public static function ofMinor($amountMinor, $currency)
     {
         $currency = Currency::of($currency);
 
-        if ($fractionDigits === null) {
-            $fractionDigits = $currency->getDefaultFractionDigits();
-        }
-
-        $amount = BigDecimal::ofUnscaledValue($amountMinor, $fractionDigits);
+        $amount = BigDecimal::ofUnscaledValue($amountMinor, $currency->getDefaultFractionDigits());
 
         return new Money($amount, $currency);
     }
@@ -293,111 +301,87 @@ class Money implements MoneyContainer
     /**
      * Returns the sum of this Money and the given amount.
      *
-     * By default, the resulting Money has the same number of fraction digits as this Money. If the result
-     * cannot be represented at this scale without rounding, an exception is thrown.
+     * The resulting Money has the same scale as this Money. If the result needs rounding to fit this scale, a rounding
+     * mode can be provided. If a rounding mode is not provided and rounding is necessary, an exception is thrown.
      *
-     * This behaviour can be overridden by providing a MoneyContext instance.
-     *
-     * @param Money|BigNumber|number|string $that    The amount to be added.
-     * @param MoneyContext|null             $context An optional scale & rounding context.
+     * @param Money|BigNumber|number|string $that         The amount to be added.
+     * @param int                           $roundingMode The rounding mode to use.
      *
      * @return Money
      *
-     * @throws ArithmeticException       If the argument is an invalid number.
+     * @throws ArithmeticException       If the argument is an invalid number or rounding is necessary.
      * @throws CurrencyMismatchException If the argument is a money in a different currency.
      */
-    public function plus($that, MoneyContext $context = null)
+    public function plus($that, $roundingMode = RoundingMode::UNNECESSARY)
     {
-        if ($context === null) {
-            $context = self::getDefaultContext();
-        }
-
         $amount = $this->amount->plus($this->handleMoney($that));
-        $amount = $context->applyTo($amount, $this->currency, $this->amount->scale());
+        $amount = $this->applyScale($amount, $roundingMode);
 
-        return new Money($amount, $this->currency);
+        return new Money($amount, $this->currency, $this->step);
     }
 
     /**
      * Returns the difference of this Money and the given amount.
      *
-     * By default, the resulting Money has the same number of fraction digits as this Money. If the result
-     * cannot be represented at this scale without rounding, an exception is thrown.
+     * The resulting Money has the same scale as this Money. If the result needs rounding to fit this scale, a rounding
+     * mode can be provided. If a rounding mode is not provided and rounding is necessary, an exception is thrown.
      *
-     * This behaviour can be overridden by providing a MoneyContext instance.
-     *
-     * @param Money|BigNumber|number|string $that    The amount to be subtracted.
-     * @param MoneyContext|null             $context An optional scale & rounding context.
+     * @param Money|BigNumber|number|string $that         The amount to be subtracted.
+     * @param int                           $roundingMode The rounding mode to use.
      *
      * @return Money
      *
-     * @throws ArithmeticException       If the argument is an invalid number.
+     * @throws ArithmeticException       If the argument is an invalid number or rounding is necessary.
      * @throws CurrencyMismatchException If the argument is a money in a different currency.
      */
-    public function minus($that, MoneyContext $context = null)
+    public function minus($that, $roundingMode = RoundingMode::UNNECESSARY)
     {
-        if ($context === null) {
-            $context = self::getDefaultContext();
-        }
-
         $amount = $this->amount->minus($this->handleMoney($that));
-        $amount = $context->applyTo($amount, $this->currency, $this->amount->scale());
+        $amount = $this->applyScale($amount, $roundingMode);
 
-        return new Money($amount, $this->currency);
+        return new Money($amount, $this->currency, $this->step);
     }
 
     /**
      * Returns the product of this Money and the given number.
      *
-     * By default, the resulting Money has the same number of fraction digits as this Money. If the result
-     * cannot be represented at this scale without rounding, an exception is thrown.
+     * The resulting Money has the same scale as this Money. If the result needs rounding to fit this scale, a rounding
+     * mode can be provided. If a rounding mode is not provided and rounding is necessary, an exception is thrown.
      *
-     * This behaviour can be overridden by providing a MoneyContext instance.
-     *
-     * @param BigNumber|number|string $that    The multiplier.
-     * @param MoneyContext|null       $context An optional scale & rounding context.
+     * @param BigNumber|number|string $that         The multiplier.
+     * @param int                     $roundingMode The rounding mode to use.
      *
      * @return Money
      *
-     * @throws ArithmeticException If the argument is an invalid number.
+     * @throws ArithmeticException If the argument is an invalid number or rounding is necessary.
      */
-    public function multipliedBy($that, MoneyContext $context = null)
+    public function multipliedBy($that, $roundingMode = RoundingMode::UNNECESSARY)
     {
-        if ($context === null) {
-            $context = self::getDefaultContext();
-        }
-
         $amount = $this->amount->multipliedBy($that);
-        $amount = $context->applyTo($amount, $this->currency, $this->amount->scale());
+        $amount = $this->applyScale($amount, $roundingMode);
 
-        return new Money($amount, $this->currency);
+        return new Money($amount, $this->currency, $this->step);
     }
 
     /**
      * Returns the result of the division of this Money by the given number.
      *
-     * By default, the resulting Money has the same number of fraction digits as this Money. If the result
-     * cannot be represented at this scale without rounding, an exception is thrown.
+     * The resulting Money has the same scale as this Money. If the result needs rounding to fit this scale, a rounding
+     * mode can be provided. If a rounding mode is not provided and rounding is necessary, an exception is thrown.
      *
-     * This behaviour can be overridden by providing a MoneyContext instance.
-     *
-     * @param BigNumber|number|string $that    The divisor.
-     * @param MoneyContext|null       $context An optional scale & rounding context.
+     * @param BigNumber|number|string $that         The divisor.
+     * @param int                     $roundingMode The rounding mode to use.
      *
      * @return Money
      *
-     * @throws ArithmeticException If the argument is an invalid number or is zero.
+     * @throws ArithmeticException If the argument is an invalid number or is zero, or rounding is necessary.
      */
-    public function dividedBy($that, MoneyContext $context = null)
+    public function dividedBy($that, $roundingMode = RoundingMode::UNNECESSARY)
     {
-        if ($context === null) {
-            $context = self::getDefaultContext();
-        }
-
         $amount = $this->amount->toBigRational()->dividedBy($that);
-        $amount = $context->applyTo($amount, $this->currency, $this->amount->scale());
+        $amount = $this->applyScale($amount, $roundingMode);
 
-        return new Money($amount, $this->currency);
+        return new Money($amount, $this->currency, $this->step);
     }
 
     /**
@@ -407,7 +391,7 @@ class Money implements MoneyContainer
      */
     public function abs()
     {
-        return new Money($this->amount->abs(), $this->currency);
+        return new Money($this->amount->abs(), $this->currency, $this->step);
     }
 
     /**
@@ -417,7 +401,7 @@ class Money implements MoneyContainer
      */
     public function negated()
     {
-        return new Money($this->amount->negated(), $this->currency);
+        return new Money($this->amount->negated(), $this->currency, $this->step);
     }
 
     /**
@@ -717,6 +701,38 @@ class Money implements MoneyContainer
         }
 
         return $that;
+    }
+
+    /**
+     * @param BigNumber $amount
+     * @param int        $roundingMode
+     *
+     * @return BigDecimal
+     */
+    private function applyScale(BigNumber $amount, $roundingMode)
+    {
+        return self::doApplyScale($amount, $this->amount->scale(), $this->step, $roundingMode);
+    }
+
+    /**
+     * @param BigNumber $amount
+     * @param int       $scale
+     * @param int       $step
+     * @param int       $roundingMode
+     *
+     * @return BigDecimal
+     */
+    private static function doApplyScale(BigNumber $amount, $scale, $step, $roundingMode)
+    {
+        if ($step === 1) {
+            return $amount->toScale($scale, $roundingMode);
+        }
+
+        return $amount
+            ->toBigRational()
+            ->dividedBy($step)
+            ->toScale($scale, $roundingMode)
+            ->multipliedBy($step);
     }
 
     /**
