@@ -144,15 +144,15 @@ class Money implements MoneyContainer
      * @param BigNumber|number|string  $amount         The monetary amount.
      * @param Currency|string          $currency       The currency, as a `Currency` object or currency code string.
      * @param int|null                 $scale The number of fraction digits, or null to use the default.
-     * @param int                      $step           The step.
      * @param int                      $roundingMode   The rounding mode to use, if necessary.
+     * @param int                      $step           The step.
      *
      * @return Money
      *
      * @throws NumberFormatException      If the amount is a string in a non-supported format.
      * @throws RoundingNecessaryException If the rounding was necessary to represent the amount at the requested scale.
      */
-    public static function of($amount, $currency, $scale = null, $step = 1, $roundingMode = RoundingMode::UNNECESSARY)
+    public static function of($amount, $currency, $scale = null, $roundingMode = RoundingMode::UNNECESSARY, $step = 1)
     {
         $currency = Currency::of($currency);
 
