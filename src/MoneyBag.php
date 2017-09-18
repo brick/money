@@ -72,12 +72,17 @@ class MoneyBag implements MoneyContainer
      */
     public function add(MoneyContainer $that)
     {
-        $context = new ExactContext();
-
         foreach ($that->getMonies() as $money) {
             $currency = $money->getCurrency();
             $currencyCode = $currency->getCurrencyCode();
-            $this->monies[$currencyCode] = $this->get($currency)->plus($money, $context);
+
+            $currentValue = $this->get($currency);
+
+            if ($money->getAmount()->scale() > $currentValue->getAmount()->scale()) {
+                $this->monies[$currencyCode] = $money->plus($this->get($currency));
+            } else {
+                $this->monies[$currencyCode] = $this->get($currency)->plus($money);
+            }
         }
 
         return $this;
@@ -92,12 +97,17 @@ class MoneyBag implements MoneyContainer
      */
     public function subtract(MoneyContainer $that)
     {
-        $context = new ExactContext();
-
         foreach ($that->getMonies() as $money) {
             $currency = $money->getCurrency();
             $currencyCode = $currency->getCurrencyCode();
-            $this->monies[$currencyCode] = $this->get($currency)->minus($money, $context);
+
+            $currentValue = $this->get($currency);
+
+            if ($money->getAmount()->scale() > $currentValue->getAmount()->scale()) {
+                $this->monies[$currencyCode] = $money->negated()->plus($this->get($currency));
+            } else {
+                $this->monies[$currencyCode] = $this->get($currency)->minus($money);
+            }
         }
 
         return $this;

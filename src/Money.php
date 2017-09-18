@@ -120,10 +120,13 @@ class Money implements MoneyContainer
     public static function total(Money $money, Money ...$monies)
     {
         $total = $money;
-        $context = new ExactContext();
 
         foreach ($monies as $money) {
-            $total = $total->plus($money, $context);
+            if ($money->getAmount()->scale() > $total->getAmount()->scale()) {
+                $total = $money->plus($total);
+            } else {
+                $total = $total->plus($money);
+            }
         }
 
         return $total;
