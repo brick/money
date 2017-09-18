@@ -67,14 +67,13 @@ class MoneyTest extends AbstractTestCase
     /**
      * @dataProvider providerOfMinor
      *
-     * @param string   $currency
-     * @param int      $amountMinor
-     * @param int|null $fractionDigits
-     * @param string   $expectedAmount
+     * @param string $currency
+     * @param int    $amountMinor
+     * @param string $expectedAmount
      */
-    public function testOfMinor($currency, $amountMinor, $fractionDigits, $expectedAmount)
+    public function testOfMinor($currency, $amountMinor, $expectedAmount)
     {
-        $this->assertMoneyEquals($expectedAmount, $currency, Money::ofMinor($amountMinor, $currency, $fractionDigits));
+        $this->assertMoneyEquals($expectedAmount, $currency, Money::ofMinor($amountMinor, $currency));
     }
 
     /**
@@ -83,12 +82,9 @@ class MoneyTest extends AbstractTestCase
     public function providerOfMinor()
     {
         return [
-            ['EUR', 1, null, '0.01'],
-            ['EUR', 1, 3, '0.001'],
-            ['USD', 600, null, '6.00'],
-            ['USD', '1234567', 6, '1.234567'],
-            ['JPY', 600, null, '600'],
-            ['JPY', 600, 1, '60.0'],
+            ['EUR', 1, '0.01'],
+            ['USD', 600, '6.00'],
+            ['JPY', 600, '600'],
         ];
     }
 
@@ -272,8 +268,7 @@ class MoneyTest extends AbstractTestCase
             $this->expectException($expected);
         }
 
-        $context = new RetainContext(new MathRounding($roundingMode));
-        $actual = $money->plus($plus, $context);
+        $actual = $money->plus($plus, $roundingMode);
 
         if (! $this->isExceptionClass($expected)) {
             $this->assertMoneyIs($expected, $actual);
@@ -320,8 +315,7 @@ class MoneyTest extends AbstractTestCase
             $this->expectException($expected);
         }
 
-        $context = new RetainContext(new MathRounding($roundingMode));
-        $actual = $money->minus($minus, $context);
+        $actual = $money->minus($minus, $roundingMode);
 
         if (! $this->isExceptionClass($expected)) {
             $this->assertMoneyIs($expected, $actual);
@@ -364,8 +358,7 @@ class MoneyTest extends AbstractTestCase
             $this->expectException($expected);
         }
 
-        $context = new RetainContext(new MathRounding($roundingMode));
-        $actual = $money->multipliedBy($multiplier, $context);
+        $actual = $money->multipliedBy($multiplier, $roundingMode);
 
         if (! $this->isExceptionClass($expected)) {
             $this->assertMoneyIs($expected, $actual);
@@ -407,8 +400,7 @@ class MoneyTest extends AbstractTestCase
             $this->expectException($expected);
         }
 
-        $context = new RetainContext(new MathRounding($roundingMode));
-        $actual = $money->dividedBy($divisor, $context);
+        $actual = $money->dividedBy($divisor, $roundingMode);
 
         if (! $this->isExceptionClass($expected)) {
             $this->assertMoneyIs($expected, $actual);
