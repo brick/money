@@ -6,8 +6,6 @@ use Brick\Money\Exception\CurrencyMismatchException;
 use Brick\Money\Exception\MoneyParseException;
 use Brick\Money\Exception\UnknownCurrencyException;
 use Brick\Money\MoneyContext\ExactContext;
-use Brick\Money\MoneyContext\RetainContext;
-use Brick\Money\MoneyRounding\MathRounding;
 
 use Brick\Math\BigDecimal;
 use Brick\Math\BigNumber;
@@ -736,23 +734,5 @@ class Money implements MoneyContainer
             ->dividedBy($step)
             ->toScale($scale, $roundingMode)
             ->multipliedBy($step);
-    }
-
-    /**
-     * Returns a static instance of the default context for money operators.
-     *
-     * The default context always retains the scale of the left operand, and assumes that rounding is not necessary.
-     *
-     * @return MoneyContext
-     */
-    private static function getDefaultContext()
-    {
-        static $defaultContext;
-
-        if ($defaultContext === null) {
-            $defaultContext = new RetainContext(new MathRounding(RoundingMode::UNNECESSARY));
-        }
-
-        return $defaultContext;
     }
 }
