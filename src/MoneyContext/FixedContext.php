@@ -2,14 +2,15 @@
 
 namespace Brick\Money\MoneyContext;
 
+use Brick\Math\RoundingMode;
 use Brick\Money\Currency;
+use Brick\Money\Money;
 use Brick\Money\MoneyContext;
-use Brick\Money\MoneyRounding;
 
 use Brick\Math\BigNumber;
 
 /**
- * Adjusts the scale of the result to a fixed value.
+ * Adjusts the scale & step of the result to fixed values.
  */
 class FixedContext implements MoneyContext
 {
@@ -19,25 +20,42 @@ class FixedContext implements MoneyContext
     private $scale;
 
     /**
-     * @var MoneyRounding
+     * @var int
      */
-    private $rounding;
+    private $step;
 
     /**
-     * @param int           $scale
-     * @param MoneyRounding $rounding
+     * @var int
      */
-    public function __construct($scale, MoneyRounding $rounding)
+    private $roundingMode;
+
+    /**
+     * @param int $scale
+     * @param int $step
+     * @param int $roundingMode
+     */
+    public function __construct($scale, $step = 1, $roundingMode = RoundingMode::UNNECESSARY)
     {
-        $this->scale    = (int) $scale;
-        $this->rounding = $rounding;
+        $this->scale        = (int) $scale;
+        $this->step         = (int) $step;
+        $this->roundingMode = (int) $roundingMode;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function applyTo(BigNumber $amount, Currency $currency, $currentScale)
+    public function applyTo(BigNumber $amount, Currency $currency)
     {
-        return $this->rounding->round($amount, $this->scale);
+        if ($this->step === 1) {
+            $amount = $amount->toScale($this->scale, $this->roundingMode);
+        } else {
+            $amount = $amount
+                ->toBigRational()
+                ->dividedBy($this->step)
+                ->toScale($this->scale, $this->roundingMode)
+                ->multipliedBy($this->step);
+        }
+
+        return new Money($amount, $currency, $this->step);
     }
 }

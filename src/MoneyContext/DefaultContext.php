@@ -2,9 +2,10 @@
 
 namespace Brick\Money\MoneyContext;
 
+use Brick\Math\RoundingMode;
 use Brick\Money\Currency;
+use Brick\Money\Money;
 use Brick\Money\MoneyContext;
-use Brick\Money\MoneyRounding;
 
 use Brick\Math\BigNumber;
 
@@ -14,23 +15,25 @@ use Brick\Math\BigNumber;
 class DefaultContext implements MoneyContext
 {
     /**
-     * @var MoneyRounding
+     * @var int
      */
-    private $rounding;
+    private $roundingMode;
 
     /**
-     * @param MoneyRounding $rounding
+     * @param int $roundingMode
      */
-    public function __construct(MoneyRounding $rounding)
+    public function __construct($roundingMode = RoundingMode::UNNECESSARY)
     {
-        $this->rounding = $rounding;
+        $this->roundingMode = $roundingMode;
     }
 
     /**
      * @inheritdoc
      */
-    public function applyTo(BigNumber $amount, Currency $currency, $currentScale)
+    public function applyTo(BigNumber $amount, Currency $currency)
     {
-        return $this->rounding->round($amount, $currency->getDefaultFractionDigits());
+        $amount = $amount->toScale($currency->getDefaultFractionDigits(), $this->roundingMode);
+
+        return new Money($amount, $currency);
     }
 }

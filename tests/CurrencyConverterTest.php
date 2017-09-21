@@ -3,7 +3,6 @@
 namespace Brick\Money\Tests;
 
 use Brick\Money\MoneyContext\DefaultContext;
-use Brick\Money\MoneyRounding\MathRounding;
 use Brick\Money\Currency;
 use Brick\Money\CurrencyConverter;
 use Brick\Money\Exception\CurrencyConversionException;
@@ -30,7 +29,7 @@ class CurrencyConverterTest extends AbstractTestCase
         $exchangeRateProvider->setExchangeRate('USD', 'EUR', '10/11');
         $exchangeRateProvider->setExchangeRate('BSD', 'USD', 1);
 
-        return new CurrencyConverter($exchangeRateProvider, new DefaultContext(new MathRounding($roundingMode)));
+        return new CurrencyConverter($exchangeRateProvider, new DefaultContext($roundingMode));
     }
 
     /**
