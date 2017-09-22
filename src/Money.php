@@ -19,6 +19,12 @@ use Brick\Math\Exception\RoundingNecessaryException;
 
 /**
  * A monetary value in a given currency. This class is immutable.
+ *
+ * A Money has an amount, a currency, and a fixed capability: scale and step. The step is useful for cash roundings.
+ * For example, CHF has no coins below 5 cents, so a cash CHF money can be represented with step 5.
+ *
+ * A Money with scale 2 and step 1 can contain amounts of -0.01, 0.00, 0.01, etc.
+ * A Money with scale 2 and step 5 can contain amounts of -0.05, 0.00, 0.05, etc.
  */
 class Money implements MoneyContainer
 {
@@ -143,7 +149,7 @@ class Money implements MoneyContainer
      * If the amount cannot be safely converted to this scale, an exception is thrown; this behaviour can be overridden
      * by providing a rounding mode.
      *
-     * To create a Money with a custom scale and/or cash rounding step, an Adjustment instance can be provided.
+     * To create a Money with a custom capability (scale and step), an Adjustment instance can be provided.
      *
      * @param BigNumber|number|string $amount     The monetary amount.
      * @param Currency|string         $currency   The currency, as a `Currency` object or currency code string.
@@ -310,11 +316,11 @@ class Money implements MoneyContainer
     /**
      * Returns the sum of this Money and the given amount.
      *
-     * By default, the resulting Money has the same scale and cash rounding step as this Money. If the result needs
+     * By default, the resulting Money has the same capability (scale and step) as this Money. If the result needs
      * rounding to fit this scale, a rounding mode can be provided. If a rounding mode is not provided and rounding is
      * necessary, an exception is thrown.
      *
-     * If another scale and/or cash rounding step is required as a result, an Adjustment instance can be provided.
+     * If another capability is required as a result, an Adjustment instance can be provided.
      *
      * @param Money|BigNumber|number|string $that       The amount to be added.
      * @param Adjustment|int                $adjustment A RoundingMode constant or Adjustment instance.
@@ -339,11 +345,11 @@ class Money implements MoneyContainer
     /**
      * Returns the difference of this Money and the given amount.
      *
-     * By default, the resulting Money has the same scale and cash rounding step as this Money. If the result needs
+     * By default, the resulting Money has the same capability (scale and step) as this Money. If the result needs
      * rounding to fit this scale, a rounding mode can be provided. If a rounding mode is not provided and rounding is
      * necessary, an exception is thrown.
      *
-     * If another scale and/or cash rounding step is required as a result, an Adjustment instance can be provided.
+     * If another capability is required as a result, an Adjustment instance can be provided.
      *
      * @param Money|BigNumber|number|string $that       The amount to be subtracted.
      * @param Adjustment|int                $adjustment A RoundingMode constant or Adjustment instance.
@@ -368,11 +374,11 @@ class Money implements MoneyContainer
     /**
      * Returns the product of this Money and the given number.
      *
-     * By default, the resulting Money has the same scale and cash rounding step as this Money. If the result needs
+     * By default, the resulting Money has the same capability (scale and step) as this Money. If the result needs
      * rounding to fit this scale, a rounding mode can be provided. If a rounding mode is not provided and rounding is
      * necessary, an exception is thrown.
      *
-     * If another scale and/or cash rounding step is required as a result, an Adjustment instance can be provided.
+     * If another capability is required as a result, an Adjustment instance can be provided.
      *
      * @param BigNumber|number|string $that       The multiplier.
      * @param Adjustment|int          $adjustment A RoundingMode constant or Adjustment instance.
@@ -395,11 +401,11 @@ class Money implements MoneyContainer
     /**
      * Returns the result of the division of this Money by the given number.
      *
-     * By default, the resulting Money has the same scale and cash rounding step as this Money. If the result needs
+     * By default, the resulting Money has the same capability (scale and step) as this Money. If the result needs
      * rounding to fit this scale, a rounding mode can be provided. If a rounding mode is not provided and rounding is
      * necessary, an exception is thrown.
      *
-     * If another scale and/or cash rounding step is required as a result, an Adjustment instance can be provided.
+     * If another capability is required as a result, an Adjustment instance can be provided.
      *
      * @param BigNumber|number|string $that       The divisor.
      * @param Adjustment|int          $adjustment A RoundingMode constant or Adjustment instance.
@@ -422,7 +428,7 @@ class Money implements MoneyContainer
     /**
      * Returns the quotient and the remainder of the division of this money by the given number.
      *
-     * The resulting Money has the same scale and cash rounding step as this Money.
+     * The resulting Money has the same capability (scale and step) as this Money.
      *
      * The given number must be an integer value. Note that support for decimal divisors is not provided,
      * as this would yield a remainder whose scale might be incompatible with this Money.
@@ -439,10 +445,8 @@ class Money implements MoneyContainer
     {
         $that = BigInteger::of($that);
 
-        $scale = $this->amount->scale();
-
-        $amount = $this->amount->withPointMovedRight($scale);
-        $amount = $amount->dividedBy($this->step);
+        $scale  = $this->amount->scale();
+        $amount = $this->amount->withPointMovedRight($scale)->dividedBy($this->step);
 
         list ($q, $r) = $amount->quotientAndRemainder($that);
 

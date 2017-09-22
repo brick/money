@@ -7,7 +7,7 @@ use Brick\Math\BigNumber;
 use Brick\Math\Exception\RoundingNecessaryException;
 
 /**
- * Adjusts a money operation result to a given scale & step.
+ * Adjusts an operation result to a Money with fixed capability.
  */
 interface Adjustment
 {
