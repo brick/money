@@ -9,7 +9,7 @@ use Brick\Money\Money;
 use Brick\Math\BigNumber;
 
 /**
- * Returns an exact result, adjusting the scale as required. The resulting step is 1.
+ * Returns an exact result, adjusting the scale to the minimum required. The resulting step is 1.
  */
 class ExactResult implements Adjustment
 {
@@ -18,6 +18,6 @@ class ExactResult implements Adjustment
      */
     public function applyTo(BigNumber $amount, Currency $currency)
     {
-        return new Money($amount->toBigDecimal(), $currency);
+        return new Money($amount->toBigDecimal()->stripTrailingZeros(), $currency);
     }
 }
