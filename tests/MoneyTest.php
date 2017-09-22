@@ -460,6 +460,7 @@ class MoneyTest extends AbstractTestCase
     {
         return [
             [Money::of('10', 'USD'), 3, 'USD 3.33', 'USD 0.01'],
+            [Money::of('100', 'USD'), 9, 'USD 11.11', 'USD 0.01'],
             [Money::of('20', 'CHF', new CustomScale(2, 5)), 3, 'CHF 6.65', 'CHF 0.05'],
             [Money::of('50','CZK', new CustomScale(2, 100)), 3, 'CZK 16.00', 'CZK 2.00']
         ];
@@ -472,6 +473,31 @@ class MoneyTest extends AbstractTestCase
     {
         $money = Money::of(50, 'USD');
         $money->quotientAndRemainder('1.1');
+    }
+
+    /**
+     * @dataProvider providerAllocate
+     *
+     * @param Money $money
+     * @param array $ratios
+     * @param array $expected
+     */
+    public function testAllocate(Money $money, array $ratios, array $expected)
+    {
+        $monies = $money->allocate($ratios);
+        $this->assertMoniesAre($expected, $monies);
+    }
+
+    /**
+     * @return array
+     */
+    public function providerAllocate()
+    {
+        return [
+            [Money::of(100, 'USD'), [30, 20, 40], ['USD 33.34', 'USD 22.22', 'USD 44.44']],
+            [Money::of(100, 'USD'), [30, 20, 40, 40], ['USD 23.08', 'USD 15.39', 'USD 30.77', 'USD 30.76']],
+            [Money::of(100, 'CHF', new CustomScale(2, 5)), [1, 2, 3, 7], ['CHF 7.70', 'CHF 15.40', 'CHF 23.10', 'CHF 53.80']]
+        ];
     }
 
     /**

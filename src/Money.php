@@ -426,7 +426,35 @@ class Money implements MoneyContainer
     }
 
     /**
-     * Returns the quotient and the remainder of the division of this money by the given number.
+     * Returns the quotient and the remainder of the division of this Money by the given number.
+     *
+     * The resulting Money has the same capability (scale and step) as this Money.
+     *
+     * The given number must be an integer value.
+     *
+     * This method can serve as a basis for a money allocation algorithm.
+     *
+     * @param BigNumber|number|string $that The divisor. Must be convertible to a BigInteger.
+     *
+     * @return Money
+     *
+     * @throws ArithmeticException If the divisor cannot be converted to a BigInteger.
+     */
+    public function quotient($that)
+    {
+        $that = BigInteger::of($that);
+
+        $scale  = $this->amount->scale();
+        $amount = $this->amount->withPointMovedRight($scale)->dividedBy($this->step);
+
+        $q = $amount->quotient($that);
+        $q = $q->multipliedBy($this->step)->withPointMovedLeft($scale);
+
+        return new Money($q, $this->currency, $this->step);
+    }
+
+    /**
+     * Returns the quotient and the remainder of the division of this Money by the given number.
      *
      * The resulting Money has the same capability (scale and step) as this Money.
      *
@@ -457,6 +485,44 @@ class Money implements MoneyContainer
         $remainder = new Money($r, $this->currency, $this->step);
 
         return [$quotient, $remainder];
+    }
+
+    /**
+     * Allocates this Money according to a list of ratios.
+     *
+     * The resulting monies have the same capability (scale and step) as this Money.
+     *
+     * @param int[] $ratios
+     *
+     * @return Money[]
+     */
+    public function allocate(array $ratios)
+    {
+        $total = array_sum($ratios);
+
+        $monies = [];
+
+        $unit = BigDecimal::ofUnscaledValue($this->step, $this->amount->scale());
+        $unit = new Money($unit, $this->currency, $this->step);
+
+        $remainder = $this;
+
+        foreach ($ratios as $ratio) {
+            $money = $this->multipliedBy($ratio)->quotient($total);
+            $remainder = $remainder->minus($money);
+            $monies[] = $money;
+        }
+
+        foreach ($monies as $key => $money) {
+            if ($remainder->isZero()) {
+                break;
+            }
+
+            $monies[$key] = $money->plus($unit);
+            $remainder = $remainder->minus($unit);
+        }
+
+        return $monies;
     }
 
     /**

@@ -35,6 +35,20 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param string[] $expected
+     * @param Money[]  $actual
+     */
+    final protected function assertMoniesAre(array $expected, array $actual)
+    {
+        foreach ($actual as $key => $money) {
+            $this->assertInstanceOf(Money::class, $money);
+            $actual[$key] = (string) $money;
+        }
+
+        $this->assertSame($expected, $actual);
+    }
+
+    /**
      * @param array    $expectedMonies
      * @param MoneyBag $moneyBag
      */
