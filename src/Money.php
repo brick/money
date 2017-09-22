@@ -10,6 +10,7 @@ use Brick\Money\Exception\MoneyParseException;
 use Brick\Money\Exception\UnknownCurrencyException;
 
 use Brick\Math\BigDecimal;
+use Brick\Math\BigInteger;
 use Brick\Math\BigNumber;
 use Brick\Math\RoundingMode;
 use Brick\Math\Exception\ArithmeticException;
@@ -416,6 +417,42 @@ class Money implements MoneyContainer
         $amount = $this->amount->toBigRational()->dividedBy($that);
 
         return $adjustment->applyTo($amount, $this->currency);
+    }
+
+    /**
+     * Returns the quotient and the remainder of the division of this money by the given number.
+     *
+     * The resulting Money has the same scale and cash rounding step as this Money.
+     *
+     * The given number must be an integer value. Note that support for decimal divisors is not provided,
+     * as this would yield a remainder whose scale might be incompatible with this Money.
+     *
+     * This method can serve as a basis for a money allocation algorithm.
+     *
+     * @param BigNumber|number|string $that The divisor. Must be convertible to a BigInteger.
+     *
+     * @return Money[] The quotient and the remainder.
+     *
+     * @throws ArithmeticException If the divisor cannot be converted to a BigInteger.
+     */
+    public function quotientAndRemainder($that)
+    {
+        $that = BigInteger::of($that);
+
+        $scale = $this->amount->scale();
+
+        $amount = $this->amount->withPointMovedRight($scale);
+        $amount = $amount->dividedBy($this->step);
+
+        list ($q, $r) = $amount->quotientAndRemainder($that);
+
+        $q = $q->multipliedBy($this->step)->withPointMovedLeft($scale);
+        $r = $r->multipliedBy($this->step)->withPointMovedLeft($scale);
+
+        $quotient  = new Money($q, $this->currency, $this->step);
+        $remainder = new Money($r, $this->currency, $this->step);
+
+        return [$quotient, $remainder];
     }
 
     /**

@@ -438,6 +438,43 @@ class MoneyTest extends AbstractTestCase
     }
 
     /**
+     * @dataProvider providerQuotientAndRemainder
+     *
+     * @param Money  $money
+     * @param int    $divisor
+     * @param string $expectedQuotient
+     * @param string $expectedRemainder
+     */
+    public function testQuotientAndRemainder(Money $money, $divisor, $expectedQuotient, $expectedRemainder)
+    {
+        list ($quotient, $remainder) = $money->quotientAndRemainder($divisor);
+
+        $this->assertMoneyIs($expectedQuotient, $quotient);
+        $this->assertMoneyIs($expectedRemainder, $remainder);
+    }
+
+    /**
+     * @return array
+     */
+    public function providerQuotientAndRemainder()
+    {
+        return [
+            [Money::of('10', 'USD'), 3, 'USD 3.33', 'USD 0.01'],
+            [Money::of('20', 'CHF', new CustomScale(2, 5)), 3, 'CHF 6.65', 'CHF 0.05'],
+            [Money::of('50','CZK', new CustomScale(2, 100)), 3, 'CZK 16.00', 'CZK 2.00']
+        ];
+    }
+
+    /**
+     * @expectedException \Brick\Math\Exception\RoundingNecessaryException
+     */
+    public function testQuotientAndRemainderThrowExceptionOnDecimal()
+    {
+        $money = Money::of(50, 'USD');
+        $money->quotientAndRemainder('1.1');
+    }
+
+    /**
      * @dataProvider providerAbs
      *
      * @param string $money
