@@ -329,7 +329,8 @@ class Money implements MoneyContainer
             $adjustment = $this->getDefaultAdjustment($adjustment);
         }
 
-        $amount = $this->amount->plus($this->handleMoney($that));
+        $that = $this->handleMoney($that);
+        $amount = $this->amount->plus($that);
 
         return $adjustment->applyTo($amount, $this->currency);
     }
@@ -357,7 +358,8 @@ class Money implements MoneyContainer
             $adjustment = $this->getDefaultAdjustment($adjustment);
         }
 
-        $amount = $this->amount->minus($this->handleMoney($that));
+        $that = $this->handleMoney($that);
+        $amount = $this->amount->minus($that);
 
         return $adjustment->applyTo($amount, $this->currency);
     }
