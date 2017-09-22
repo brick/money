@@ -7,15 +7,15 @@ use Brick\Math\BigNumber;
 use Brick\Math\Exception\RoundingNecessaryException;
 
 /**
- * A context that defines the scale, step and rounding of a Money.
+ * Adjusts a money operation result to a given scale & step.
  */
-interface MoneyContext
+interface Adjustment
 {
     /**
      * @param BigNumber $amount   The amount to scale.
      * @param Currency  $currency The target currency.
      *
-     * @return Money A Money with the context applied.
+     * @return Money A Money with the adjustment applied.
      *
      * @throws RoundingNecessaryException If the result cannot be represented at the required scale without rounding.
      */

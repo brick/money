@@ -1,18 +1,18 @@
 <?php
 
-namespace Brick\Money\MoneyContext;
+namespace Brick\Money\Adjustment;
 
-use Brick\Math\RoundingMode;
+use Brick\Money\Adjustment;
 use Brick\Money\Currency;
 use Brick\Money\Money;
-use Brick\Money\MoneyContext;
 
 use Brick\Math\BigNumber;
+use Brick\Math\RoundingMode;
 
 /**
- * Adjusts the scale of the result to the default scale for the currency in use.
+ * Adjusts the scale of the result to the default scale for the currency in use. The resulting step is 1.
  */
-class DefaultContext implements MoneyContext
+class DefaultScale implements Adjustment
 {
     /**
      * @var int

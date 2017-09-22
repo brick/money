@@ -1,17 +1,17 @@
 <?php
 
-namespace Brick\Money\MoneyContext;
+namespace Brick\Money\Adjustment;
 
+use Brick\Money\Adjustment;
 use Brick\Money\Currency;
 use Brick\Money\Money;
-use Brick\Money\MoneyContext;
 
 use Brick\Math\BigNumber;
 
 /**
  * Returns an exact result, adjusting the scale as required. The resulting step is 1.
  */
-class ExactContext implements MoneyContext
+class ExactResult implements Adjustment
 {
     /**
      * {@inheritdoc}

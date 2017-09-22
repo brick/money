@@ -7,7 +7,7 @@ use Brick\Money\CurrencyConverter;
 use Brick\Money\ExchangeRateProvider\ConfigurableExchangeRateProvider;
 use Brick\Money\Money;
 use Brick\Money\MoneyBag;
-use Brick\Money\MoneyContext\DefaultContext;
+use Brick\Money\Adjustment\DefaultScale;
 
 use Brick\Math\RoundingMode;
 
@@ -71,12 +71,12 @@ class MoneyBagTest extends AbstractTestCase
         $exchangeRateProvider->setExchangeRate('EUR', 'USD', '1.23456789');
         $exchangeRateProvider->setExchangeRate('JPY', 'USD', '0.00987654321');
 
-        $context = new DefaultContext(RoundingMode::DOWN);
-        $currencyConverter = new CurrencyConverter($exchangeRateProvider, $context);
+        $adjustment = new DefaultScale(RoundingMode::DOWN);
+        $currencyConverter = new CurrencyConverter($exchangeRateProvider, $adjustment);
         $this->assertMoneyIs('USD 437.57', $moneyBag->getValue(Currency::of('USD'), $currencyConverter));
 
-        $context = new DefaultContext(RoundingMode::UP);
-        $currencyConverter = new CurrencyConverter($exchangeRateProvider, $context);
+        $adjustment = new DefaultScale(RoundingMode::UP);
+        $currencyConverter = new CurrencyConverter($exchangeRateProvider, $adjustment);
         $this->assertMoneyIs('USD 437.59', $moneyBag->getValue(Currency::of('USD'), $currencyConverter));
     }
 }

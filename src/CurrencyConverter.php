@@ -18,18 +18,18 @@ class CurrencyConverter
     private $exchangeRateProvider;
 
     /**
-     * @var MoneyContext
+     * @var Adjustment|null
      */
-    private $context;
+    private $adjustment;
 
     /**
      * @param ExchangeRateProvider $exchangeRateProvider The exchange rate provider.
-     * @param MoneyContext         $context              The scale & rounding context to use.
+     * @param Adjustment|null      $adjustment           An optional adjustment.
      */
-    public function __construct(ExchangeRateProvider $exchangeRateProvider, MoneyContext $context)
+    public function __construct(ExchangeRateProvider $exchangeRateProvider, Adjustment $adjustment = null)
     {
         $this->exchangeRateProvider = $exchangeRateProvider;
-        $this->context              = $context;
+        $this->adjustment           = $adjustment;
     }
 
     /**
@@ -51,6 +51,6 @@ class CurrencyConverter
             $exchangeRate = $this->exchangeRateProvider->getExchangeRate($money->getCurrency()->getCurrencyCode(), $currency->getCurrencyCode());
         }
 
-        return $money->convertedTo($currency, $exchangeRate, $this->context);
+        return $money->convertedTo($currency, $exchangeRate, $this->adjustment);
     }
 }

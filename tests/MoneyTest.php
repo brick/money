@@ -8,10 +8,10 @@ use Brick\Money\Exception\MoneyParseException;
 use Brick\Money\Exception\UnknownCurrencyException;
 use Brick\Money\Exception\CurrencyMismatchException;
 use Brick\Money\Money;
-use Brick\Money\MoneyContext;
-use Brick\Money\MoneyContext\DefaultContext;
-use Brick\Money\MoneyContext\ExactContext;
-use Brick\Money\MoneyContext\FixedContext;
+use Brick\Money\Adjustment;
+use Brick\Money\Adjustment\DefaultScale;
+use Brick\Money\Adjustment\ExactResult;
+use Brick\Money\Adjustment\CustomScale;
 
 use Brick\Math\BigRational;
 use Brick\Math\RoundingMode;
@@ -51,11 +51,11 @@ class MoneyTest extends AbstractTestCase
         return [
             ['USD 1.00', 1, 'USD'],
             ['JPY 1', 1.0, 'JPY'],
-            ['JPY 1.200', '1.2', 'JPY', new FixedContext(3)],
+            ['JPY 1.200', '1.2', 'JPY', new CustomScale(3)],
             ['EUR 0.42', BigRational::of('3/7'), 'EUR', RoundingMode::DOWN],
             ['EUR 0.43', BigRational::of('3/7'), 'EUR', RoundingMode::UP],
             ['CUSTOM 0.428', BigRational::of('3/7'), Currency::create('CUSTOM', 0, '', 3), RoundingMode::DOWN],
-            ['CUSTOM 0.4286', BigRational::of('3/7'), Currency::create('CUSTOM', 0, '', 3), new FixedContext(4, 1, RoundingMode::UP)],
+            ['CUSTOM 0.4286', BigRational::of('3/7'), Currency::create('CUSTOM', 0, '', 3), new CustomScale(4, 1, RoundingMode::UP)],
             [RoundingNecessaryException::class, '1.2', 'JPY'],
             [NumberFormatException::class, '1.', 'JPY'],
         ];
@@ -137,14 +137,18 @@ class MoneyTest extends AbstractTestCase
 
     /**
      * @dataProvider providerWith
+     *
+     * @param string     $money
+     * @param Adjustment $adjustment
+     * @param string     $expected
      */
-    public function testWith($money, MoneyContext $context, $expected)
+    public function testWith($money, Adjustment $adjustment, $expected)
     {
         if ($this->isExceptionClass($expected)) {
             $this->expectException($expected);
         }
 
-        $result = Money::parse($money)->with($context);
+        $result = Money::parse($money)->with($adjustment);
         $this->assertMoneyIs($expected, $result);
     }
 
@@ -154,16 +158,16 @@ class MoneyTest extends AbstractTestCase
     public function providerWith()
     {
         return [
-            ['USD 1.234', new DefaultContext(RoundingMode::DOWN), 'USD 1.23'],
-            ['USD 1.234', new DefaultContext(RoundingMode::UP), 'USD 1.24'],
-            ['USD 1.234', new DefaultContext(RoundingMode::UNNECESSARY), RoundingNecessaryException::class],
-            ['USD 1.234', new FixedContext(2, 5, RoundingMode::DOWN), 'USD 1.20'],
-            ['USD 1.234', new FixedContext(2, 5, RoundingMode::UP), 'USD 1.25'],
-            ['USD 1.234', new ExactContext(), 'USD 1.234'],
-            ['USD 1.234', new FixedContext(1, 1, RoundingMode::DOWN), 'USD 1.2'],
-            ['USD 1.234', new FixedContext(1, 1, RoundingMode::UP), 'USD 1.3'],
-            ['USD 1.234', new FixedContext(1, 2, RoundingMode::DOWN), 'USD 1.2'],
-            ['USD 1.234', new FixedContext(1, 2, RoundingMode::UP), 'USD 1.4'],
+            ['USD 1.234', new DefaultScale(RoundingMode::DOWN), 'USD 1.23'],
+            ['USD 1.234', new DefaultScale(RoundingMode::UP), 'USD 1.24'],
+            ['USD 1.234', new DefaultScale(RoundingMode::UNNECESSARY), RoundingNecessaryException::class],
+            ['USD 1.234', new CustomScale(2, 5, RoundingMode::DOWN), 'USD 1.20'],
+            ['USD 1.234', new CustomScale(2, 5, RoundingMode::UP), 'USD 1.25'],
+            ['USD 1.234', new ExactResult(), 'USD 1.234'],
+            ['USD 1.234', new CustomScale(1, 1, RoundingMode::DOWN), 'USD 1.2'],
+            ['USD 1.234', new CustomScale(1, 1, RoundingMode::UP), 'USD 1.3'],
+            ['USD 1.234', new CustomScale(1, 2, RoundingMode::DOWN), 'USD 1.2'],
+            ['USD 1.234', new CustomScale(1, 2, RoundingMode::UP), 'USD 1.4'],
         ];
     }
 
@@ -722,12 +726,12 @@ class MoneyTest extends AbstractTestCase
     public function testConvertedTo($money, $currency, $exchangeRate, $roundingMode, $scale, $expected)
     {
         if ($scale === null) {
-            $context = new DefaultContext($roundingMode);
+            $adjustment = new DefaultScale($roundingMode);
         } else {
-            $context = new FixedContext($scale, 1, $roundingMode);
+            $adjustment = new CustomScale($scale, 1, $roundingMode);
         }
 
-        $actual = Money::parse($money)->convertedTo($currency, $exchangeRate, $context);
+        $actual = Money::parse($money)->convertedTo($currency, $exchangeRate, $adjustment);
         $this->assertMoneyIs($expected, $actual);
     }
 

@@ -2,7 +2,7 @@
 
 namespace Brick\Money;
 
-use Brick\Money\MoneyContext\ExactContext;
+use Brick\Money\Adjustment\ExactResult;
 
 /**
  * Container for monies in different currencies.
@@ -53,11 +53,11 @@ class MoneyBag implements MoneyContainer
     {
         $currency = Currency::of($currency);
         $total = Money::zero($currency);
-        $context = new ExactContext();
+        $adjustment = new ExactResult();
 
         foreach ($this->monies as $money) {
             $money = $converter->convert($money, $currency);
-            $total = $total->plus($money, $context);
+            $total = $total->plus($money, $adjustment);
         }
 
         return $total;
