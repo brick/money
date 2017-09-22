@@ -4,7 +4,6 @@ namespace Brick\Money\Adjustment;
 
 use Brick\Money\Adjustment;
 use Brick\Money\Currency;
-use Brick\Money\Money;
 
 use Brick\Math\BigNumber;
 use Brick\Math\RoundingMode;
@@ -47,15 +46,21 @@ class CustomScale implements Adjustment
     public function applyTo(BigNumber $amount, Currency $currency)
     {
         if ($this->step === 1) {
-            $amount = $amount->toScale($this->scale, $this->roundingMode);
-        } else {
-            $amount = $amount
-                ->toBigRational()
-                ->dividedBy($this->step)
-                ->toScale($this->scale, $this->roundingMode)
-                ->multipliedBy($this->step);
+            return $amount->toScale($this->scale, $this->roundingMode);
         }
 
-        return new Money($amount, $currency, $this->step);
+        return $amount
+            ->toBigRational()
+            ->dividedBy($this->step)
+            ->toScale($this->scale, $this->roundingMode)
+            ->multipliedBy($this->step);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getStep()
+    {
+        return $this->step;
     }
 }

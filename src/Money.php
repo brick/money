@@ -56,11 +56,11 @@ class Money implements MoneyContainer
      * @param Currency   $currency
      * @param int        $step
      */
-    public function __construct(BigDecimal $amount, Currency $currency, $step = 1)
+    private function __construct(BigDecimal $amount, Currency $currency, $step = 1)
     {
         $this->amount   = $amount;
         $this->currency = $currency;
-        $this->step     = (int) $step;
+        $this->step     = $step;
     }
 
     /**
@@ -170,7 +170,7 @@ class Money implements MoneyContainer
 
         $amount = BigNumber::of($amount);
 
-        return $adjustment->applyTo($amount, $currency);
+        return self::adjust($amount, $currency, $adjustment);
     }
 
     /**
@@ -249,7 +249,7 @@ class Money implements MoneyContainer
 
         $amount = BigDecimal::zero();
 
-        return $adjustment->applyTo($amount, $currency);
+        return self::adjust($amount, $currency, $adjustment);
     }
 
     /**
@@ -281,7 +281,7 @@ class Money implements MoneyContainer
      */
     public function with(Adjustment $adjustment)
     {
-        return $adjustment->applyTo($this->amount, $this->currency);
+        return self::adjust($this->amount, $this->currency, $adjustment);
     }
 
     /**
@@ -339,7 +339,7 @@ class Money implements MoneyContainer
         $that = $this->handleMoney($that);
         $amount = $this->amount->plus($that);
 
-        return $adjustment->applyTo($amount, $this->currency);
+        return self::adjust($amount, $this->currency, $adjustment);
     }
 
     /**
@@ -368,7 +368,7 @@ class Money implements MoneyContainer
         $that = $this->handleMoney($that);
         $amount = $this->amount->minus($that);
 
-        return $adjustment->applyTo($amount, $this->currency);
+        return self::adjust($amount, $this->currency, $adjustment);
     }
 
     /**
@@ -395,7 +395,7 @@ class Money implements MoneyContainer
 
         $amount = $this->amount->multipliedBy($that);
 
-        return $adjustment->applyTo($amount, $this->currency);
+        return self::adjust($amount, $this->currency, $adjustment);
     }
 
     /**
@@ -422,7 +422,7 @@ class Money implements MoneyContainer
 
         $amount = $this->amount->toBigRational()->dividedBy($that);
 
-        return $adjustment->applyTo($amount, $this->currency);
+        return self::adjust($amount, $this->currency, $adjustment);
     }
 
     /**
@@ -694,7 +694,7 @@ class Money implements MoneyContainer
 
         $amount = $this->amount->toBigRational()->multipliedBy($exchangeRate);
 
-        return $adjustment->applyTo($amount, $currency, $this->amount->scale());
+        return self::adjust($amount, $currency, $adjustment);
     }
 
     /**
@@ -786,5 +786,17 @@ class Money implements MoneyContainer
     private function getDefaultAdjustment($roundingMode)
     {
         return new CustomScale($this->amount->scale(), $this->step, $roundingMode);
+    }
+
+    /**
+     * @param BigNumber  $amount
+     * @param Currency   $currency
+     * @param Adjustment $adjustment
+     *
+     * @return Money
+     */
+    private static function adjust(BigNumber $amount, Currency $currency, Adjustment $adjustment)
+    {
+        return new Money($adjustment->applyTo($amount, $currency), $currency, $adjustment->getStep());
     }
 }

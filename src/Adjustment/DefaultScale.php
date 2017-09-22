@@ -4,13 +4,13 @@ namespace Brick\Money\Adjustment;
 
 use Brick\Money\Adjustment;
 use Brick\Money\Currency;
-use Brick\Money\Money;
 
 use Brick\Math\BigNumber;
 use Brick\Math\RoundingMode;
 
 /**
- * Adjusts the scale of the result to the default scale for the currency in use. The resulting step is 1.
+ * Adjusts the scale of the result to the default scale for the currency in use.
+ * Adjustments are performed in step 1.
  */
 class DefaultScale implements Adjustment
 {
@@ -32,8 +32,14 @@ class DefaultScale implements Adjustment
      */
     public function applyTo(BigNumber $amount, Currency $currency)
     {
-        $amount = $amount->toScale($currency->getDefaultFractionDigits(), $this->roundingMode);
+        return $amount->toScale($currency->getDefaultFractionDigits(), $this->roundingMode);
+    }
 
-        return new Money($amount, $currency);
+    /**
+     * {@inheritdoc}
+     */
+    public function getStep()
+    {
+        return 1;
     }
 }

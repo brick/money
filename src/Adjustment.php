@@ -7,17 +7,26 @@ use Brick\Math\BigNumber;
 use Brick\Math\Exception\RoundingNecessaryException;
 
 /**
- * Adjusts an operation result to a Money with fixed capability.
+ * Adjusts an operation result to a decimal amount.
  */
 interface Adjustment
 {
     /**
-     * @param BigNumber $amount   The amount to scale.
+     * Adjusts the given rational amount to a decimal number.
+     *
+     * @param BigNumber $amount   The amount to adjust.
      * @param Currency  $currency The target currency.
      *
-     * @return Money A Money with the adjustment applied.
+     * @return BigDecimal
      *
      * @throws RoundingNecessaryException If the result cannot be represented at the required scale without rounding.
      */
     public function applyTo(BigNumber $amount, Currency $currency);
+
+    /**
+     * Returns the step used by this adjustment.
+     *
+     * @return int
+     */
+    public function getStep();
 }
