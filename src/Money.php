@@ -196,6 +196,17 @@ class Money implements MoneyContainer
     }
 
     /**
+     * @param RationalMoney $money
+     * @param Adjustment    $adjustment
+     *
+     * @return Money
+     */
+    public static function ofRational(RationalMoney $money, Adjustment $adjustment)
+    {
+        return self::adjust($money->getAmount(), $money->getCurrency(), $adjustment);
+    }
+
+    /**
      * Parses a string representation of a money as returned by `__toString()`, e.g. "USD 23.00".
      *
      * @param string $string
@@ -794,6 +805,14 @@ class Money implements MoneyContainer
     public function formatTo($locale)
     {
         return $this->formatWith(new \NumberFormatter($locale, \NumberFormatter::CURRENCY));
+    }
+
+    /**
+     * @return RationalMoney
+     */
+    public function toRational()
+    {
+        return new RationalMoney($this->amount->toBigRational(), $this->currency);
     }
 
     /**
