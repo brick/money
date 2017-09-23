@@ -327,28 +327,23 @@ class Money implements MoneyContainer
     /**
      * Returns the sum of this Money and the given amount.
      *
-     * By default, the resulting Money has the same capability (scale and step) as this Money. If the result needs
-     * rounding to fit this scale, a rounding mode can be provided. If a rounding mode is not provided and rounding is
-     * necessary, an exception is thrown.
+     * The resulting Money has the same capability (scale and step) as this Money. If the result needs rounding to fit
+     * this capability, a rounding mode can be provided. If a rounding mode is not provided and rounding is necessary,
+     * an exception is thrown.
      *
-     * If another capability is required as a result, an Adjustment instance can be provided.
-     *
-     * @param Money|BigNumber|number|string $that       The amount to be added.
-     * @param Adjustment|int                $adjustment A RoundingMode constant or Adjustment instance.
+     * @param Money|BigNumber|number|string $that         The amount to add.
+     * @param int                           $roundingMode An optional RoundingMode constant.
      *
      * @return Money
      *
      * @throws ArithmeticException       If the argument is an invalid number or rounding is necessary.
      * @throws CurrencyMismatchException If the argument is a money in a different currency.
      */
-    public function plus($that, $adjustment = RoundingMode::UNNECESSARY)
+    public function plus($that, $roundingMode = RoundingMode::UNNECESSARY)
     {
-        if (! $adjustment instanceof Adjustment) {
-            $adjustment = $this->getDefaultAdjustment($adjustment);
-        }
-
         $that = $this->handleMoney($that);
         $amount = $this->amount->plus($that);
+        $adjustment = $this->getDefaultAdjustment($roundingMode);
 
         return self::adjust($amount, $this->currency, $adjustment);
     }
@@ -356,28 +351,23 @@ class Money implements MoneyContainer
     /**
      * Returns the difference of this Money and the given amount.
      *
-     * By default, the resulting Money has the same capability (scale and step) as this Money. If the result needs
-     * rounding to fit this scale, a rounding mode can be provided. If a rounding mode is not provided and rounding is
-     * necessary, an exception is thrown.
+     * The resulting Money has the same capability (scale and step) as this Money. If the result needs rounding to fit
+     * this capability, a rounding mode can be provided. If a rounding mode is not provided and rounding is necessary,
+     * an exception is thrown.
      *
-     * If another capability is required as a result, an Adjustment instance can be provided.
-     *
-     * @param Money|BigNumber|number|string $that       The amount to be subtracted.
-     * @param Adjustment|int                $adjustment A RoundingMode constant or Adjustment instance.
+     * @param Money|BigNumber|number|string $that         The amount to subtract.
+     * @param int                           $roundingMode An optional RoundingMode constant.
      *
      * @return Money
      *
      * @throws ArithmeticException       If the argument is an invalid number or rounding is necessary.
      * @throws CurrencyMismatchException If the argument is a money in a different currency.
      */
-    public function minus($that, $adjustment = RoundingMode::UNNECESSARY)
+    public function minus($that, $roundingMode = RoundingMode::UNNECESSARY)
     {
-        if (! $adjustment instanceof Adjustment) {
-            $adjustment = $this->getDefaultAdjustment($adjustment);
-        }
-
         $that = $this->handleMoney($that);
         $amount = $this->amount->minus($that);
+        $adjustment = $this->getDefaultAdjustment($roundingMode);
 
         return self::adjust($amount, $this->currency, $adjustment);
     }
@@ -385,26 +375,21 @@ class Money implements MoneyContainer
     /**
      * Returns the product of this Money and the given number.
      *
-     * By default, the resulting Money has the same capability (scale and step) as this Money. If the result needs
-     * rounding to fit this scale, a rounding mode can be provided. If a rounding mode is not provided and rounding is
-     * necessary, an exception is thrown.
+     * The resulting Money has the same capability (scale and step) as this Money. If the result needs rounding to fit
+     * this capability, a rounding mode can be provided. If a rounding mode is not provided and rounding is necessary,
+     * an exception is thrown.
      *
-     * If another capability is required as a result, an Adjustment instance can be provided.
-     *
-     * @param BigNumber|number|string $that       The multiplier.
-     * @param Adjustment|int          $adjustment A RoundingMode constant or Adjustment instance.
+     * @param BigNumber|number|string $that         The multiplier.
+     * @param int                     $roundingMode An optional RoundingMode constant.
      *
      * @return Money
      *
      * @throws ArithmeticException If the argument is an invalid number or rounding is necessary.
      */
-    public function multipliedBy($that, $adjustment = RoundingMode::UNNECESSARY)
+    public function multipliedBy($that, $roundingMode = RoundingMode::UNNECESSARY)
     {
-        if (! $adjustment instanceof Adjustment) {
-            $adjustment = $this->getDefaultAdjustment($adjustment);
-        }
-
         $amount = $this->amount->multipliedBy($that);
+        $adjustment = $this->getDefaultAdjustment($roundingMode);
 
         return self::adjust($amount, $this->currency, $adjustment);
     }
@@ -412,26 +397,21 @@ class Money implements MoneyContainer
     /**
      * Returns the result of the division of this Money by the given number.
      *
-     * By default, the resulting Money has the same capability (scale and step) as this Money. If the result needs
-     * rounding to fit this scale, a rounding mode can be provided. If a rounding mode is not provided and rounding is
-     * necessary, an exception is thrown.
+     * The resulting Money has the same capability (scale and step) as this Money. If the result needs rounding to fit
+     * this capability, a rounding mode can be provided. If a rounding mode is not provided and rounding is necessary,
+     * an exception is thrown.
      *
-     * If another capability is required as a result, an Adjustment instance can be provided.
-     *
-     * @param BigNumber|number|string $that       The divisor.
-     * @param Adjustment|int          $adjustment A RoundingMode constant or Adjustment instance.
+     * @param BigNumber|number|string $that         The divisor.
+     * @param int                     $roundingMode An optional RoundingMode constant.
      *
      * @return Money
      *
      * @throws ArithmeticException If the argument is an invalid number or is zero, or rounding is necessary.
      */
-    public function dividedBy($that, $adjustment = RoundingMode::UNNECESSARY)
+    public function dividedBy($that, $roundingMode = RoundingMode::UNNECESSARY)
     {
-        if (! $adjustment instanceof Adjustment) {
-            $adjustment = $this->getDefaultAdjustment($adjustment);
-        }
-
         $amount = $this->amount->toBigRational()->dividedBy($that);
+        $adjustment = $this->getDefaultAdjustment($roundingMode);
 
         return self::adjust($amount, $this->currency, $adjustment);
     }

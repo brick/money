@@ -55,6 +55,38 @@ class RationalMoney
     }
 
     /**
+     * @todo allow Money and RationalMoney
+     *
+     * Returns the sum of this money and the given amount.
+     *
+     * @param BigNumber|number|string $that The amount to add.
+     *
+     * @return RationalMoney
+     *
+     * @throws ArithmeticException
+     */
+    public function plus($amount)
+    {
+        return new self($this->amount->plus($amount), $this->currency);
+    }
+
+    /**
+     * @todo allow Money and RationalMoney
+     *
+     * Returns the difference of this money and the given amount.
+     *
+     * @param BigNumber|number|string $that The amount to subtract.
+     *
+     * @return RationalMoney
+     *
+     * @throws ArithmeticException
+     */
+    public function minus($amount)
+    {
+        return new self($this->amount->minus($amount), $this->currency);
+    }
+
+    /**
      * Returns the product of this money and the given number.
      *
      * @param BigNumber|number|string $that The multiplier.

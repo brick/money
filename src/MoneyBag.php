@@ -8,6 +8,8 @@ use Brick\Money\Adjustment\ExactResult;
  * Container for monies in different currencies.
  *
  * This class is mutable.
+ *
+ * @todo use BigDecimal internally.
  */
 class MoneyBag implements MoneyContainer
 {
@@ -53,11 +55,10 @@ class MoneyBag implements MoneyContainer
     {
         $currency = Currency::of($currency);
         $total = Money::zero($currency);
-        $adjustment = new ExactResult();
 
         foreach ($this->monies as $money) {
             $money = $converter->convert($money, $currency);
-            $total = $total->plus($money, $adjustment);
+            $total = $total->toRational()->plus($money->getAmount())->toExactResult();
         }
 
         return $total;
