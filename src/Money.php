@@ -290,6 +290,16 @@ class Money implements MoneyContainer
     }
 
     /**
+     * Returns the Context of this Money.
+     *
+     * @return Context
+     */
+    public function getContext()
+    {
+        return $this->context;
+    }
+
+    /**
      * Converts this Money to a Money with the given Context.
      *
      * @param Context $context
