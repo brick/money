@@ -5,7 +5,7 @@ namespace Brick\Money;
 use Brick\Money\Context\PrecisionContext;
 use Brick\Money\Context\DefaultContext;
 use Brick\Money\Context\ExactContext;
-use Brick\Money\Exception\CurrencyMismatchException;
+use Brick\Money\Exception\MoneyMismatchException;
 use Brick\Money\Exception\MoneyParseException;
 use Brick\Money\Exception\UnknownCurrencyException;
 
@@ -75,7 +75,7 @@ class Money implements MoneyContainer
      *
      * @return Money
      *
-     * @throws CurrencyMismatchException If all the monies are not in the same currency.
+     * @throws MoneyMismatchException If all the monies are not in the same currency.
      */
     public static function min(Money $money, Money ...$monies)
     {
@@ -100,7 +100,7 @@ class Money implements MoneyContainer
      *
      * @return Money
      *
-     * @throws CurrencyMismatchException If all the monies are not in the same currency.
+     * @throws MoneyMismatchException If all the monies are not in the same currency.
      */
     public static function max(Money $money, Money ...$monies)
     {
@@ -126,7 +126,7 @@ class Money implements MoneyContainer
      *
      * @return Money
      *
-     * @throws CurrencyMismatchException If all the monies are not in the same currency.
+     * @throws MoneyMismatchException If all the monies are not in the same currency.
      */
     public static function total(Money $money, Money ...$monies)
     {
@@ -341,12 +341,12 @@ class Money implements MoneyContainer
      *
      * @return Money
      *
-     * @throws ArithmeticException       If the argument is an invalid number or rounding is necessary.
-     * @throws CurrencyMismatchException If the argument is a money in a different currency.
+     * @throws ArithmeticException    If the argument is an invalid number or rounding is necessary.
+     * @throws MoneyMismatchException If the argument is a money in a different currency or in a different context.
      */
     public function plus($that, $roundingMode = RoundingMode::UNNECESSARY)
     {
-        $that = $this->handleMoney($that);
+        $that = $this->handleMoney($that, __FUNCTION__);
         $amount = $this->amount->plus($that);
 
         return self::create($amount, $this->currency, $this->context, $roundingMode);
@@ -364,12 +364,12 @@ class Money implements MoneyContainer
      *
      * @return Money
      *
-     * @throws ArithmeticException       If the argument is an invalid number or rounding is necessary.
-     * @throws CurrencyMismatchException If the argument is a money in a different currency.
+     * @throws ArithmeticException    If the argument is an invalid number or rounding is necessary.
+     * @throws MoneyMismatchException If the argument is a money in a different currency or in a different context.
      */
     public function minus($that, $roundingMode = RoundingMode::UNNECESSARY)
     {
-        $that = $this->handleMoney($that);
+        $that = $this->handleMoney($that, __FUNCTION__);
         $amount = $this->amount->minus($that);
 
         return self::create($amount, $this->currency, $this->context, $roundingMode);
@@ -599,8 +599,8 @@ class Money implements MoneyContainer
      *
      * @return int [-1, 0, 1] if `$this` is less than, equal to, or greater than `$that`.
      *
-     * @throws ArithmeticException       If the argument is an invalid number.
-     * @throws CurrencyMismatchException If the argument is a money in a different currency.
+     * @throws ArithmeticException    If the argument is an invalid number.
+     * @throws MoneyMismatchException If the argument is a money in a different currency.
      */
     public function compareTo($that)
     {
@@ -616,8 +616,8 @@ class Money implements MoneyContainer
      *
      * @return bool
      *
-     * @throws ArithmeticException       If the argument is an invalid number.
-     * @throws CurrencyMismatchException If the argument is a money in a different currency.
+     * @throws ArithmeticException    If the argument is an invalid number.
+     * @throws MoneyMismatchException If the argument is a money in a different currency.
      */
     public function isEqualTo($that)
     {
@@ -634,7 +634,7 @@ class Money implements MoneyContainer
      * @return bool
      *
      * @throws ArithmeticException       If the argument is an invalid number.
-     * @throws CurrencyMismatchException If the argument is a money in a different currency.
+     * @throws MoneyMismatchException If the argument is a money in a different currency.
      */
     public function isLessThan($that)
     {
@@ -650,8 +650,8 @@ class Money implements MoneyContainer
      *
      * @return bool
      *
-     * @throws ArithmeticException       If the argument is an invalid number.
-     * @throws CurrencyMismatchException If the argument is a money in a different currency.
+     * @throws ArithmeticException    If the argument is an invalid number.
+     * @throws MoneyMismatchException If the argument is a money in a different currency.
      */
     public function isLessThanOrEqualTo($that)
     {
@@ -667,8 +667,8 @@ class Money implements MoneyContainer
      *
      * @return bool
      *
-     * @throws ArithmeticException       If the argument is an invalid number.
-     * @throws CurrencyMismatchException If the argument is a money in a different currency.
+     * @throws ArithmeticException    If the argument is an invalid number.
+     * @throws MoneyMismatchException If the argument is a money in a different currency.
      */
     public function isGreaterThan($that)
     {
@@ -684,8 +684,8 @@ class Money implements MoneyContainer
      *
      * @return bool
      *
-     * @throws ArithmeticException       If the argument is an invalid number.
-     * @throws CurrencyMismatchException If the argument is a money in a different currency.
+     * @throws ArithmeticException    If the argument is an invalid number.
+     * @throws MoneyMismatchException If the argument is a money in a different currency.
      */
     public function isGreaterThanOrEqualTo($that)
     {
@@ -833,17 +833,22 @@ class Money implements MoneyContainer
     /**
      * Handles the special case of monies in methods like `plus()`, `minus()`, etc.
      *
-     * @param Money|BigNumber|number|string $that
+     * @param Money|BigNumber|number|string $that   The Money instance or amount.
+     * @param string|null                   $method The method name. If provided, checks that the contexts match.
      *
      * @return BigNumber|number|string
      *
-     * @throws CurrencyMismatchException If the argument is a money in a different currency.
+     * @throws MoneyMismatchException If monies don't match.
      */
-    private function handleMoney($that)
+    private function handleMoney($that, $method = null)
     {
         if ($that instanceof Money) {
             if (! $that->currency->is($this->currency)) {
-                throw CurrencyMismatchException::currencyMismatch($this->currency, $that->currency);
+                throw MoneyMismatchException::currencyMismatch($this->currency, $that->currency);
+            }
+
+            if ($method !== null && $this->context != $that->context) { // non-strict equality on purpose
+                throw MoneyMismatchException::contextMismatch($method);
             }
 
             return $that->amount;

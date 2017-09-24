@@ -6,7 +6,7 @@ use Brick\Money\Currency;
 use Brick\Money\CurrencyProvider\DefaultCurrencyProvider;
 use Brick\Money\Exception\MoneyParseException;
 use Brick\Money\Exception\UnknownCurrencyException;
-use Brick\Money\Exception\CurrencyMismatchException;
+use Brick\Money\Exception\MoneyMismatchException;
 use Brick\Money\Money;
 use Brick\Money\Context;
 use Brick\Money\Context\DefaultContext;
@@ -215,8 +215,19 @@ class MoneyTest extends AbstractTestCase
             ['JPY 1', '2', RoundingMode::UNNECESSARY, 'JPY 3'],
             ['JPY 1', '2.5', RoundingMode::UNNECESSARY, RoundingNecessaryException::class],
             ['USD 1.20', 'USD 1.80', RoundingMode::UNNECESSARY, 'USD 3.00'],
-            ['USD 1.20', 'EUR 0.80', RoundingMode::UNNECESSARY, CurrencyMismatchException::class],
+            ['USD 1.20', 'EUR 0.80', RoundingMode::UNNECESSARY, MoneyMismatchException::class],
         ];
+    }
+
+    /**
+     * @expectedException \Brick\Money\Exception\MoneyMismatchException
+     */
+    public function testPlusDifferentContextThrowsException()
+    {
+        $a = Money::of(50, 'CHF', new Context\CashContext(5));
+        $b = Money::of(20, 'CHF');
+
+        $a->plus($b);
     }
 
     /**
@@ -262,7 +273,7 @@ class MoneyTest extends AbstractTestCase
             ['EUR 1', '2', RoundingMode::UNNECESSARY, 'EUR -1'],
             ['JPY 2', '1.5', RoundingMode::UNNECESSARY, RoundingNecessaryException::class],
             ['JPY 1.50', 'JPY 0.5', RoundingMode::UNNECESSARY, 'JPY 1.00'],
-            ['JPY 2', 'USD 1', RoundingMode::UNNECESSARY, CurrencyMismatchException::class],
+            ['JPY 2', 'USD 1', RoundingMode::UNNECESSARY, MoneyMismatchException::class],
         ];
     }
 
@@ -553,7 +564,7 @@ class MoneyTest extends AbstractTestCase
     }
 
     /**
-     * @expectedException \Brick\Money\Exception\CurrencyMismatchException
+     * @expectedException \Brick\Money\Exception\MoneyMismatchException
      */
     public function testCompareToOtherCurrency()
     {
@@ -573,7 +584,7 @@ class MoneyTest extends AbstractTestCase
     }
 
     /**
-     * @expectedException \Brick\Money\Exception\CurrencyMismatchException
+     * @expectedException \Brick\Money\Exception\MoneyMismatchException
      */
     public function testIsEqualToOtherCurrency()
     {
@@ -593,7 +604,7 @@ class MoneyTest extends AbstractTestCase
     }
 
     /**
-     * @expectedException \Brick\Money\Exception\CurrencyMismatchException
+     * @expectedException \Brick\Money\Exception\MoneyMismatchException
      */
     public function testIsLessThanOtherCurrency()
     {
@@ -613,7 +624,7 @@ class MoneyTest extends AbstractTestCase
     }
 
     /**
-     * @expectedException \Brick\Money\Exception\CurrencyMismatchException
+     * @expectedException \Brick\Money\Exception\MoneyMismatchException
      */
     public function testIsLessThanOrEqualToOtherCurrency()
     {
@@ -633,7 +644,7 @@ class MoneyTest extends AbstractTestCase
     }
 
     /**
-     * @expectedException \Brick\Money\Exception\CurrencyMismatchException
+     * @expectedException \Brick\Money\Exception\MoneyMismatchException
      */
     public function testIsGreaterThanOtherCurrency()
     {
@@ -653,7 +664,7 @@ class MoneyTest extends AbstractTestCase
     }
 
     /**
-     * @expectedException \Brick\Money\Exception\CurrencyMismatchException
+     * @expectedException \Brick\Money\Exception\MoneyMismatchException
      */
     public function testIsGreaterThanOrEqualToOtherCurrency()
     {
@@ -809,7 +820,7 @@ class MoneyTest extends AbstractTestCase
             [['USD 1.0', 'USD 3.50', 'USD 4.00'], 'USD 1.0'],
             [['USD 5.00', 'USD 3.50', 'USD 4.00'], 'USD 3.50'],
             [['USD 5.00', 'USD 3.50', 'USD 3.499'], 'USD 3.499'],
-            [['USD 1.00', 'EUR 1.00'], CurrencyMismatchException::class],
+            [['USD 1.00', 'EUR 1.00'], MoneyMismatchException::class],
         ];
     }
 
@@ -845,7 +856,7 @@ class MoneyTest extends AbstractTestCase
             [['USD 5.50', 'USD 3.50', 'USD 4.90'], 'USD 5.50'],
             [['USD 1.3', 'USD 3.50', 'USD 4.90'], 'USD 4.90'],
             [['USD 1.3', 'USD 7.119', 'USD 4.90'], 'USD 7.119'],
-            [['USD 1.00', 'EUR 1.00'], CurrencyMismatchException::class],
+            [['USD 1.00', 'EUR 1.00'], MoneyMismatchException::class],
         ];
     }
 
@@ -861,7 +872,7 @@ class MoneyTest extends AbstractTestCase
     }
 
     /**
-     * @expectedException \Brick\Money\Exception\CurrencyMismatchException
+     * @expectedException \Brick\Money\Exception\MoneyMismatchException
      */
     public function testTotalOfDifferentCurrenciesThrowsException()
     {
