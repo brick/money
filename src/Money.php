@@ -20,11 +20,15 @@ use Brick\Math\Exception\RoundingNecessaryException;
 /**
  * A monetary value in a given currency. This class is immutable.
  *
- * A Money has an amount, a currency, and a fixed capability: scale and step. The step is useful for cash roundings.
- * For example, CHF has no coins below 5 cents, so a cash CHF money can be represented with step 5.
+ * A Money has an amount, a currency, and a context. The context defines the scale of the amount, and an optional cash
+ * rounding step, for monies that do not have coins or notes for their smallest units.
  *
- * A Money with scale 2 and step 1 can contain amounts of -0.01, 0.00, 0.01, etc.
- * A Money with scale 2 and step 5 can contain amounts of -0.05, 0.00, 0.05, etc.
+ * All operations on a Money return another Money with the same context. The available contexts are:
+ *
+ * - DefaultContext handles monies with the default scale for the currency.
+ * - CashContext is similar to DefaultContext, but supports a cash rounding step.
+ * - PrecisionContext handles monies with a custom scale, and optionally step.
+ * - ExactContext always returns an exact result, adjusting the scale as required by the operation.
  */
 class Money implements MoneyContainer
 {
@@ -142,17 +146,17 @@ class Money implements MoneyContainer
     /**
      * Returns a Money of the given amount and currency.
      *
-     * By default, the amount is scaled to match the currency's default fraction digits.
-     * For example, `Money::of('2.5', 'USD')` will yield `USD 2.50`.
-     * If the amount cannot be safely converted to this scale, an exception is thrown; this behaviour can be overridden
-     * by providing a rounding mode.
+     * By default, the money is created with a DefaultContext. This means that the amount is scaled to match the
+     * currency's default fraction digits. For example, `Money::of('2.5', 'USD')` will yield `USD 2.50`.
+     * If the amount cannot be safely converted to this scale, an exception is thrown.
      *
-     * To create a Money with a custom capability (scale and step), a Context instance can be provided.
+     * To override this behaviour, a Context instance can be provided.
+     * Operations on this Money return a Money with the same context.
      *
      * @param BigNumber|number|string $amount       The monetary amount.
      * @param Currency|string         $currency     The currency, as a `Currency` object or currency code string.
      * @param Context|null            $context      An optional Context.
-     * @param int                     $roundingMode An optional rounding mode.
+     * @param int                     $roundingMode An optional RoundingMode, if the amount does not fit the context.
      *
      * @return Money
      *
@@ -175,7 +179,7 @@ class Money implements MoneyContainer
     /**
      * Returns a Money from a number of minor units.
      *
-     * The result Money has the default scale for the currency.
+     * The result is a Money with a DefaultContext: this Money has the default scale for the currency.
      *
      * @param BigNumber|number|string $amountMinor The amount in minor units. Must be convertible to a BigInteger.
      * @param Currency|string         $currency    The currency, as a Currency instance or currency code string.
@@ -195,6 +199,8 @@ class Money implements MoneyContainer
     }
 
     /**
+     * Creates a Money from a RationalMoney and a Context.
+     *
      * @param RationalMoney $money
      * @param Context       $context
      * @param int           $roundingMode
@@ -240,10 +246,10 @@ class Money implements MoneyContainer
     }
 
     /**
-     * Returns a Money with zero value, in the given Currency.
+     * Returns a Money with zero value, in the given currency.
      *
-     * By default, the resulting Money has the default scale for the currency.
-     * This behaviour can be overridden by providing a Context instance.
+     * By default, the money is created with a DefaultContext: it has the default scale for the currency.
+     * A Context instance can be provided to override the default.
      *
      * @param Currency|string $currency A currency instance or currency code.
      * @param Context|null    $context  An optional context.
@@ -284,7 +290,7 @@ class Money implements MoneyContainer
     }
 
     /**
-     * Applies the given context to this Money, and returns the result.
+     * Converts this Money to a Money with the given Context.
      *
      * @param Context $context
      * @param int     $roundingMode
@@ -330,9 +336,9 @@ class Money implements MoneyContainer
     /**
      * Returns the sum of this Money and the given amount.
      *
-     * The resulting Money has the same capability (scale and step) as this Money. If the result needs rounding to fit
-     * this capability, a rounding mode can be provided. If a rounding mode is not provided and rounding is necessary,
-     * an exception is thrown.
+     * The resulting Money has the same context as this Money. If the result needs rounding to fit this context, a
+     * rounding mode can be provided. If a rounding mode is not provided and rounding is necessary, an exception is
+     * thrown.
      *
      * @param Money|BigNumber|number|string $that         The amount to add.
      * @param int                           $roundingMode An optional RoundingMode constant.
@@ -353,9 +359,9 @@ class Money implements MoneyContainer
     /**
      * Returns the difference of this Money and the given amount.
      *
-     * The resulting Money has the same capability (scale and step) as this Money. If the result needs rounding to fit
-     * this capability, a rounding mode can be provided. If a rounding mode is not provided and rounding is necessary,
-     * an exception is thrown.
+     * The resulting Money has the same context as this Money. If the result needs rounding to fit this context, a
+     * rounding mode can be provided. If a rounding mode is not provided and rounding is necessary, an exception is
+     * thrown.
      *
      * @param Money|BigNumber|number|string $that         The amount to subtract.
      * @param int                           $roundingMode An optional RoundingMode constant.
@@ -376,9 +382,9 @@ class Money implements MoneyContainer
     /**
      * Returns the product of this Money and the given number.
      *
-     * The resulting Money has the same capability (scale and step) as this Money. If the result needs rounding to fit
-     * this capability, a rounding mode can be provided. If a rounding mode is not provided and rounding is necessary,
-     * an exception is thrown.
+     * The resulting Money has the same context as this Money. If the result needs rounding to fit this context, a
+     * rounding mode can be provided. If a rounding mode is not provided and rounding is necessary, an exception is
+     * thrown.
      *
      * @param BigNumber|number|string $that         The multiplier.
      * @param int                     $roundingMode An optional RoundingMode constant.
@@ -397,9 +403,9 @@ class Money implements MoneyContainer
     /**
      * Returns the result of the division of this Money by the given number.
      *
-     * The resulting Money has the same capability (scale and step) as this Money. If the result needs rounding to fit
-     * this capability, a rounding mode can be provided. If a rounding mode is not provided and rounding is necessary,
-     * an exception is thrown.
+     * The resulting Money has the same context as this Money. If the result needs rounding to fit this context, a
+     * rounding mode can be provided. If a rounding mode is not provided and rounding is necessary, an exception is
+     * thrown.
      *
      * @param BigNumber|number|string $that         The divisor.
      * @param int                     $roundingMode An optional RoundingMode constant.
@@ -416,12 +422,9 @@ class Money implements MoneyContainer
     }
 
     /**
-     * Returns the quotient and the remainder of the division of this Money by the given number.
+     * Returns the quotient of the division of this Money by the given number.
      *
-     * The resulting Money has the same capability (scale and step) as this Money.
-     *
-     * The given number must be an integer value.
-     *
+     * The given number must be a integer value. The resulting Money has the same context as this Money.
      * This method can serve as a basis for a money allocation algorithm.
      *
      * @param BigNumber|number|string $that The divisor. Must be convertible to a BigInteger.
@@ -447,11 +450,7 @@ class Money implements MoneyContainer
     /**
      * Returns the quotient and the remainder of the division of this Money by the given number.
      *
-     * The resulting Money has the same capability (scale and step) as this Money.
-     *
-     * The given number must be an integer value. Note that support for decimal divisors is not provided,
-     * as this would yield a remainder whose scale might be incompatible with this Money.
-     *
+     * The given number must be an integer value. The resulting Money has the same context as this Money.
      * This method can serve as a basis for a money allocation algorithm.
      *
      * @param BigNumber|number|string $that The divisor. Must be convertible to a BigInteger.
@@ -482,7 +481,12 @@ class Money implements MoneyContainer
     /**
      * Allocates this Money according to a list of ratios.
      *
-     * The resulting monies have the same capability (scale and step) as this Money.
+     * For example, `USD 50.00` allocated to [1, 2, 3, 4] would return:
+     * [`USD 5.00`, `USD 10.00`, `USD 15.00`, `USD 20.00`].
+     *
+     * If the allocation yields a remainder, its amount is split evenly over the first monies in the list.
+     *
+     * The resulting monies have the same context as this Money.
      *
      * @param int[] $ratios
      *
@@ -521,6 +525,8 @@ class Money implements MoneyContainer
     /**
      * Returns a Money whose value is the absolute value of this Money.
      *
+     * The resulting Money has the same context as this Money.
+     *
      * @return Money
      */
     public function abs()
@@ -530,6 +536,8 @@ class Money implements MoneyContainer
 
     /**
      * Returns a Money whose value is the negated value of this Money.
+     *
+     * The resulting Money has the same context as this Money.
      *
      * @return Money
      */
@@ -727,9 +735,11 @@ class Money implements MoneyContainer
     }
 
     /**
-     * Returns a copy of this Money converted into another currency.
+     * Converts this Money to another currency, using an exchange rate.
      *
-     * By default, the scale of the result is adjusted to represent the exact converted value.
+     * By default, the resulting Money is created with an ExactContext: the scale of the result is adjusted to represent
+     * the exact converted value.
+     *
      * For example, converting `USD 1.23` to `EUR` with an exchange rate of `0.91` will yield `USD 1.1193`.
      *
      * The scale can be adjusted by providing a Context instance.
