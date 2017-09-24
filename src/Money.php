@@ -2,9 +2,9 @@
 
 namespace Brick\Money;
 
-use Brick\Money\Adjustment\CustomScale;
-use Brick\Money\Adjustment\DefaultScale;
-use Brick\Money\Adjustment\ExactResult;
+use Brick\Money\Context\PrecisionContext;
+use Brick\Money\Context\DefaultContext;
+use Brick\Money\Context\ExactContext;
 use Brick\Money\Exception\CurrencyMismatchException;
 use Brick\Money\Exception\MoneyParseException;
 use Brick\Money\Exception\UnknownCurrencyException;
@@ -149,28 +149,28 @@ class Money implements MoneyContainer
      * If the amount cannot be safely converted to this scale, an exception is thrown; this behaviour can be overridden
      * by providing a rounding mode.
      *
-     * To create a Money with a custom capability (scale and step), an Adjustment instance can be provided.
+     * To create a Money with a custom capability (scale and step), a Context instance can be provided.
      *
-     * @param BigNumber|number|string $amount     The monetary amount.
-     * @param Currency|string         $currency   The currency, as a `Currency` object or currency code string.
-     * @param Adjustment|int          $adjustment A RoundingMode constant or Adjustment instance.
+     * @param BigNumber|number|string $amount   The monetary amount.
+     * @param Currency|string         $currency The currency, as a `Currency` object or currency code string.
+     * @param Context|int             $context  A RoundingMode constant or Context instance.
      *
      * @return Money
      *
      * @throws NumberFormatException      If the amount is a string in a non-supported format.
      * @throws RoundingNecessaryException If the rounding was necessary to represent the amount at the requested scale.
      */
-    public static function of($amount, $currency, $adjustment = RoundingMode::UNNECESSARY)
+    public static function of($amount, $currency, $context = RoundingMode::UNNECESSARY)
     {
         $currency = Currency::of($currency);
 
-        if (! $adjustment instanceof Adjustment) {
-            $adjustment = new DefaultScale($adjustment);
+        if (! $context instanceof Context) {
+            $context = new DefaultContext($context);
         }
 
         $amount = BigNumber::of($amount);
 
-        return self::adjust($amount, $currency, $adjustment);
+        return self::applyContext($amount, $currency, $context);
     }
 
     /**
@@ -197,13 +197,13 @@ class Money implements MoneyContainer
 
     /**
      * @param RationalMoney $money
-     * @param Adjustment    $adjustment
+     * @param Context       $context
      *
      * @return Money
      */
-    public static function ofRational(RationalMoney $money, Adjustment $adjustment)
+    public static function ofRational(RationalMoney $money, Context $context)
     {
-        return self::adjust($money->getAmount(), $money->getCurrency(), $adjustment);
+        return self::applyContext($money->getAmount(), $money->getCurrency(), $context);
     }
 
     /**
@@ -243,24 +243,24 @@ class Money implements MoneyContainer
      * Returns a Money with zero value, in the given Currency.
      *
      * By default, the resulting Money has the default scale for the currency.
-     * This behaviour can be overridden by providing an Adjustment instance.
+     * This behaviour can be overridden by providing a Context instance.
      *
-     * @param Currency|string $currency   A currency instance or currency code.
-     * @param Adjustment|null $adjustment An optional adjustment.
+     * @param Currency|string $currency A currency instance or currency code.
+     * @param Context|null    $context  An optional context.
      *
      * @return Money
      */
-    public static function zero($currency, Adjustment $adjustment = null)
+    public static function zero($currency, Context $context = null)
     {
         $currency = Currency::of($currency);
 
-        if ($adjustment === null) {
-            $adjustment = new DefaultScale();
+        if ($context === null) {
+            $context = new DefaultContext();
         }
 
         $amount = BigDecimal::zero();
 
-        return self::adjust($amount, $currency, $adjustment);
+        return self::applyContext($amount, $currency, $context);
     }
 
     /**
@@ -284,15 +284,15 @@ class Money implements MoneyContainer
     }
 
     /**
-     * Applies the given adjustment to this money, and returns the result.
+     * Applies the given context to this Money, and returns the result.
      *
-     * @param Adjustment $adjustment
+     * @param Context $context
      *
      * @return Money
      */
-    public function with(Adjustment $adjustment)
+    public function with(Context $context)
     {
-        return self::adjust($this->amount, $this->currency, $adjustment);
+        return self::applyContext($this->amount, $this->currency, $context);
     }
 
     /**
@@ -343,9 +343,9 @@ class Money implements MoneyContainer
     {
         $that = $this->handleMoney($that);
         $amount = $this->amount->plus($that);
-        $adjustment = $this->getDefaultAdjustment($roundingMode);
+        $context = $this->getDefaultContext($roundingMode);
 
-        return self::adjust($amount, $this->currency, $adjustment);
+        return self::applyContext($amount, $this->currency, $context);
     }
 
     /**
@@ -367,9 +367,9 @@ class Money implements MoneyContainer
     {
         $that = $this->handleMoney($that);
         $amount = $this->amount->minus($that);
-        $adjustment = $this->getDefaultAdjustment($roundingMode);
+        $context = $this->getDefaultContext($roundingMode);
 
-        return self::adjust($amount, $this->currency, $adjustment);
+        return self::applyContext($amount, $this->currency, $context);
     }
 
     /**
@@ -389,9 +389,9 @@ class Money implements MoneyContainer
     public function multipliedBy($that, $roundingMode = RoundingMode::UNNECESSARY)
     {
         $amount = $this->amount->multipliedBy($that);
-        $adjustment = $this->getDefaultAdjustment($roundingMode);
+        $context = $this->getDefaultContext($roundingMode);
 
-        return self::adjust($amount, $this->currency, $adjustment);
+        return self::applyContext($amount, $this->currency, $context);
     }
 
     /**
@@ -411,9 +411,9 @@ class Money implements MoneyContainer
     public function dividedBy($that, $roundingMode = RoundingMode::UNNECESSARY)
     {
         $amount = $this->amount->toBigRational()->dividedBy($that);
-        $adjustment = $this->getDefaultAdjustment($roundingMode);
+        $context = $this->getDefaultContext($roundingMode);
 
-        return self::adjust($amount, $this->currency, $adjustment);
+        return self::applyContext($amount, $this->currency, $context);
     }
 
     /**
@@ -730,28 +730,28 @@ class Money implements MoneyContainer
      * By default, the scale of the result is adjusted to represent the exact converted value.
      * For example, converting `USD 1.23` to `EUR` with an exchange rate of `0.91` will yield `USD 1.1193`.
      *
-     * The scale can be adjusted by providing an Adjustment instance.
+     * The scale can be adjusted by providing a Context instance.
      *
      * @param Currency|string         $currency     The target currency or currency code.
      * @param BigNumber|number|string $exchangeRate The exchange rate to multiply by.
-     * @param Adjustment|null         $adjustment   An optional adjustment.
+     * @param Context|null            $context      An optional context.
      *
      * @return Money
      *
      * @throws UnknownCurrencyException If an unknown currency code is given.
      * @throws ArithmeticException      If the exchange rate or rounding mode is invalid, or rounding is necessary.
      */
-    public function convertedTo($currency, $exchangeRate, Adjustment $adjustment = null)
+    public function convertedTo($currency, $exchangeRate, Context $context = null)
     {
         $currency = Currency::of($currency);
 
-        if ($adjustment === null) {
-            $adjustment = new ExactResult();
+        if ($context === null) {
+            $context = new ExactContext();
         }
 
         $amount = $this->amount->toBigRational()->multipliedBy($exchangeRate);
 
-        return self::adjust($amount, $currency, $adjustment);
+        return self::applyContext($amount, $currency, $context);
     }
 
     /**
@@ -846,22 +846,22 @@ class Money implements MoneyContainer
     /**
      * @param int $roundingMode
      *
-     * @return CustomScale
+     * @return PrecisionContext
      */
-    private function getDefaultAdjustment($roundingMode)
+    private function getDefaultContext($roundingMode)
     {
-        return new CustomScale($this->amount->scale(), $this->step, $roundingMode);
+        return new PrecisionContext($this->amount->scale(), $this->step, $roundingMode);
     }
 
     /**
-     * @param BigNumber  $amount
-     * @param Currency   $currency
-     * @param Adjustment $adjustment
+     * @param BigNumber $amount
+     * @param Currency  $currency
+     * @param Context   $context
      *
      * @return Money
      */
-    private static function adjust(BigNumber $amount, Currency $currency, Adjustment $adjustment)
+    private static function applyContext(BigNumber $amount, Currency $currency, Context $context)
     {
-        return new Money($adjustment->applyTo($amount, $currency), $currency, $adjustment->getStep());
+        return new Money($context->applyTo($amount, $currency), $currency, $context->getStep());
     }
 }

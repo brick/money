@@ -2,7 +2,7 @@
 
 namespace Brick\Money;
 
-use Brick\Money\Adjustment\ExactResult;
+use Brick\Money\Context\ExactContext;
 
 /**
  * Container for monies in different currencies.

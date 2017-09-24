@@ -1,8 +1,8 @@
 <?php
 
-namespace Brick\Money\Adjustment;
+namespace Brick\Money\Context;
 
-use Brick\Money\Adjustment;
+use Brick\Money\Context;
 use Brick\Money\Currency;
 
 use Brick\Math\BigNumber;
@@ -11,7 +11,7 @@ use Brick\Math\BigNumber;
  * Returns an exact result, adjusting the scale to the minimum required.
  * Adjustments are performed in step 1.
  */
-class ExactResult implements Adjustment
+class ExactContext implements Context
 {
     /**
      * {@inheritdoc}

@@ -2,8 +2,8 @@
 
 namespace Brick\Money;
 
-use Brick\Money\Adjustment\DefaultScale;
-use Brick\Money\Adjustment\ExactResult;
+use Brick\Money\Context\DefaultContext;
+use Brick\Money\Context\ExactContext;
 
 use Brick\Math\BigNumber;
 use Brick\Math\BigRational;
@@ -116,13 +116,13 @@ class RationalMoney
     }
 
     /**
-     * @param Adjustment $adjustment
+     * @param Context $context
      *
      * @return Money
      */
-    public function to(Adjustment $adjustment)
+    public function to(Context $context)
     {
-        return Money::ofRational($this, $adjustment);
+        return Money::ofRational($this, $context);
     }
 
     /**
@@ -132,7 +132,7 @@ class RationalMoney
      */
     public function toDefaultScale($roundingMode = RoundingMode::UNNECESSARY)
     {
-        return $this->to(new DefaultScale($roundingMode));
+        return $this->to(new DefaultContext($roundingMode));
     }
 
     /**
@@ -140,7 +140,7 @@ class RationalMoney
      */
     public function toExactResult()
     {
-        return $this->to(new ExactResult());
+        return $this->to(new ExactContext());
     }
 
     /**

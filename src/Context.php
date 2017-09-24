@@ -9,12 +9,12 @@ use Brick\Math\Exception\RoundingNecessaryException;
 /**
  * Adjusts an operation result to a decimal amount.
  */
-interface Adjustment
+interface Context
 {
     /**
-     * Adjusts the given rational amount to a decimal number.
+     * Applies this context to a rational amount, and returns a decimal number.
      *
-     * @param BigNumber $amount   The amount to adjust.
+     * @param BigNumber $amount   The amount.
      * @param Currency  $currency The target currency.
      *
      * @return BigDecimal
@@ -24,7 +24,7 @@ interface Adjustment
     public function applyTo(BigNumber $amount, Currency $currency);
 
     /**
-     * Returns the step used by this adjustment.
+     * Returns the step used by this context.
      *
      * @return int
      */

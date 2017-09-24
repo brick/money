@@ -1,8 +1,8 @@
 <?php
 
-namespace Brick\Money\Adjustment;
+namespace Brick\Money\Context;
 
-use Brick\Money\Adjustment;
+use Brick\Money\Context;
 use Brick\Money\Currency;
 
 use Brick\Math\BigNumber;
@@ -11,7 +11,7 @@ use Brick\Math\RoundingMode;
 /**
  * Adjusts the scale & step of the result to custom values.
  */
-class CustomScale implements Adjustment
+class PrecisionContext implements Context
 {
     /**
      * @var int
