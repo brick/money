@@ -272,7 +272,7 @@ class MoneyTest extends AbstractTestCase
             ['USD 12.34', '0.001', RoundingMode::UP, 'USD 12.34'],
             ['EUR 1', '2', RoundingMode::UNNECESSARY, 'EUR -1'],
             ['JPY 2', '1.5', RoundingMode::UNNECESSARY, RoundingNecessaryException::class],
-            ['JPY 1.50', 'JPY 0.5', RoundingMode::UNNECESSARY, 'JPY 1.00'],
+            ['JPY 1.50', 'JPY 0.50', RoundingMode::UNNECESSARY, 'JPY 1.00'],
             ['JPY 2', 'USD 1', RoundingMode::UNNECESSARY, MoneyMismatchException::class],
         ];
     }
@@ -863,9 +863,9 @@ class MoneyTest extends AbstractTestCase
     public function testTotal()
     {
         $total = Money::total(
-            Money::parse('USD 5.5'),
+            Money::parse('USD 5.50'),
             Money::parse('USD 3.50'),
-            Money::parse('USD 4.9')
+            Money::parse('USD 4.90')
         );
 
         $this->assertMoneyEquals('13.90', 'USD', $total);
