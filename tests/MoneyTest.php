@@ -497,7 +497,8 @@ class MoneyTest extends AbstractTestCase
         return [
             [Money::of(100, 'USD'), [30, 20, 40], ['USD 33.34', 'USD 22.22', 'USD 44.44']],
             [Money::of(100, 'USD'), [30, 20, 40, 40], ['USD 23.08', 'USD 15.39', 'USD 30.77', 'USD 30.76']],
-            [Money::of(100, 'CHF', new PrecisionContext(2, 5)), [1, 2, 3, 7], ['CHF 7.70', 'CHF 15.40', 'CHF 23.10', 'CHF 53.80']]
+            [Money::of(100, 'CHF', new PrecisionContext(2, 5)), [1, 2, 3, 7], ['CHF 7.70', 'CHF 15.40', 'CHF 23.10', 'CHF 53.80']],
+            [Money::of(100.123, 'EUR', new ExactContext()), [2, 3, 1, 1], ['EUR 28.607', 'EUR 42.910', 'EUR 14.303', 'EUR 14.303']]
         ];
     }
 
