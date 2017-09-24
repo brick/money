@@ -144,6 +144,23 @@ class Money implements MoneyContainer
     }
 
     /**
+     * Creates a Money from a rational amount, a currency, and a context.
+     *
+     * @param BigNumber $amount
+     * @param Currency  $currency
+     * @param Context   $context
+     * @param int       $roundingMode
+     *
+     * @return Money
+     */
+    public static function create(BigNumber $amount, Currency $currency, Context $context, $roundingMode)
+    {
+        $amount = $context->applyTo($amount, $currency, $roundingMode);
+
+        return new Money($amount, $currency, $context);
+    }
+
+    /**
      * Returns a Money of the given amount and currency.
      *
      * By default, the money is created with a DefaultContext. This means that the amount is scaled to match the
@@ -173,7 +190,7 @@ class Money implements MoneyContainer
 
         $amount = BigNumber::of($amount);
 
-        return self::applyContext($amount, $currency, $context, $roundingMode);
+        return self::create($amount, $currency, $context, $roundingMode);
     }
 
     /**
@@ -209,7 +226,7 @@ class Money implements MoneyContainer
      */
     public static function ofRational(RationalMoney $money, Context $context, $roundingMode = RoundingMode::UNNECESSARY)
     {
-        return self::applyContext($money->getAmount(), $money->getCurrency(), $context, $roundingMode);
+        return self::create($money->getAmount(), $money->getCurrency(), $context, $roundingMode);
     }
 
     /**
@@ -266,7 +283,7 @@ class Money implements MoneyContainer
 
         $amount = BigDecimal::zero();
 
-        return self::applyContext($amount, $currency, $context, RoundingMode::UNNECESSARY);
+        return self::create($amount, $currency, $context, RoundingMode::UNNECESSARY);
     }
 
     /**
@@ -309,7 +326,7 @@ class Money implements MoneyContainer
      */
     public function with(Context $context, $roundingMode = RoundingMode::UNNECESSARY)
     {
-        return self::applyContext($this->amount, $this->currency, $context, $roundingMode);
+        return self::create($this->amount, $this->currency, $context, $roundingMode);
     }
 
     /**
@@ -332,7 +349,7 @@ class Money implements MoneyContainer
         $that = $this->handleMoney($that);
         $amount = $this->amount->plus($that);
 
-        return self::applyContext($amount, $this->currency, $this->context, $roundingMode);
+        return self::create($amount, $this->currency, $this->context, $roundingMode);
     }
 
     /**
@@ -355,7 +372,7 @@ class Money implements MoneyContainer
         $that = $this->handleMoney($that);
         $amount = $this->amount->minus($that);
 
-        return self::applyContext($amount, $this->currency, $this->context, $roundingMode);
+        return self::create($amount, $this->currency, $this->context, $roundingMode);
     }
 
     /**
@@ -376,7 +393,7 @@ class Money implements MoneyContainer
     {
         $amount = $this->amount->multipliedBy($that);
 
-        return self::applyContext($amount, $this->currency, $this->context, $roundingMode);
+        return self::create($amount, $this->currency, $this->context, $roundingMode);
     }
 
     /**
@@ -397,7 +414,7 @@ class Money implements MoneyContainer
     {
         $amount = $this->amount->toBigRational()->dividedBy($that);
 
-        return self::applyContext($amount, $this->currency, $this->context, $roundingMode);
+        return self::create($amount, $this->currency, $this->context, $roundingMode);
     }
 
     /**
@@ -743,7 +760,7 @@ class Money implements MoneyContainer
 
         $amount = $this->amount->toBigRational()->multipliedBy($exchangeRate);
 
-        return self::applyContext($amount, $currency, $context, $roundingMode);
+        return self::create($amount, $currency, $context, $roundingMode);
     }
 
     /**
@@ -833,20 +850,5 @@ class Money implements MoneyContainer
         }
 
         return $that;
-    }
-
-    /**
-     * @param BigNumber $amount
-     * @param Currency  $currency
-     * @param Context   $context
-     * @param int       $roundingMode
-     *
-     * @return Money
-     */
-    private static function applyContext(BigNumber $amount, Currency $currency, Context $context, $roundingMode)
-    {
-        $amount = $context->applyTo($amount, $currency, $roundingMode);
-
-        return new Money($amount, $currency, $context);
     }
 }
