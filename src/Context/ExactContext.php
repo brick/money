@@ -9,8 +9,7 @@ use Brick\Math\BigNumber;
 use Brick\Math\RoundingMode;
 
 /**
- * Returns an exact result, adjusting the scale to the minimum required.
- * Adjustments are performed in step 1.
+ * Adjust the scale of an operation result to return an exact result.
  */
 class ExactContext implements Context
 {
@@ -23,7 +22,7 @@ class ExactContext implements Context
             throw new \InvalidArgumentException('ExactContext only supports RoundingMode::UNNECESSARY');
         }
 
-        return $amount->toBigDecimal()->stripTrailingZeros();
+        return $amount->toBigDecimal();
     }
 
     /**
