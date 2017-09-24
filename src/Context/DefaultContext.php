@@ -6,7 +6,6 @@ use Brick\Money\Context;
 use Brick\Money\Currency;
 
 use Brick\Math\BigNumber;
-use Brick\Math\RoundingMode;
 
 /**
  * Adjusts the scale of the result to the default scale for the currency in use.
@@ -15,24 +14,11 @@ use Brick\Math\RoundingMode;
 class DefaultContext implements Context
 {
     /**
-     * @var int
-     */
-    private $roundingMode;
-
-    /**
-     * @param int $roundingMode
-     */
-    public function __construct($roundingMode = RoundingMode::UNNECESSARY)
-    {
-        $this->roundingMode = $roundingMode;
-    }
-
-    /**
      * @inheritdoc
      */
-    public function applyTo(BigNumber $amount, Currency $currency)
+    public function applyTo(BigNumber $amount, Currency $currency, $roundingMode)
     {
-        return $amount->toScale($currency->getDefaultFractionDigits(), $this->roundingMode);
+        return $amount->toScale($currency->getDefaultFractionDigits(), $roundingMode);
     }
 
     /**

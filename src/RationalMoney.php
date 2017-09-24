@@ -117,12 +117,13 @@ class RationalMoney
 
     /**
      * @param Context $context
+     * @param int     $roundingMode
      *
      * @return Money
      */
-    public function to(Context $context)
+    public function to(Context $context, $roundingMode = RoundingMode::UNNECESSARY)
     {
-        return Money::ofRational($this, $context);
+        return Money::ofRational($this, $context, $roundingMode);
     }
 
     /**
@@ -132,7 +133,7 @@ class RationalMoney
      */
     public function toDefaultScale($roundingMode = RoundingMode::UNNECESSARY)
     {
-        return $this->to(new DefaultContext($roundingMode));
+        return $this->to(new DefaultContext(), $roundingMode);
     }
 
     /**

@@ -6,7 +6,6 @@ use Brick\Money\Context;
 use Brick\Money\Currency;
 
 use Brick\Math\BigNumber;
-use Brick\Math\RoundingMode;
 
 /**
  * Adjusts the scale & step of the result to custom values.
@@ -24,35 +23,29 @@ class PrecisionContext implements Context
     private $step;
 
     /**
-     * @var int
-     */
-    private $roundingMode;
-
-    /**
      * @param int $scale
      * @param int $step
      * @param int $roundingMode
      */
-    public function __construct($scale, $step = 1, $roundingMode = RoundingMode::UNNECESSARY)
+    public function __construct($scale, $step = 1)
     {
-        $this->scale        = (int) $scale;
-        $this->step         = (int) $step;
-        $this->roundingMode = (int) $roundingMode;
+        $this->scale = (int) $scale;
+        $this->step  = (int) $step;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function applyTo(BigNumber $amount, Currency $currency)
+    public function applyTo(BigNumber $amount, Currency $currency, $roundingMode)
     {
         if ($this->step === 1) {
-            return $amount->toScale($this->scale, $this->roundingMode);
+            return $amount->toScale($this->scale, $roundingMode);
         }
 
         return $amount
             ->toBigRational()
             ->dividedBy($this->step)
-            ->toScale($this->scale, $this->roundingMode)
+            ->toScale($this->scale, $roundingMode)
             ->multipliedBy($this->step);
     }
 

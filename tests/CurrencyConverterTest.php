@@ -29,7 +29,7 @@ class CurrencyConverterTest extends AbstractTestCase
         $exchangeRateProvider->setExchangeRate('USD', 'EUR', '10/11');
         $exchangeRateProvider->setExchangeRate('BSD', 'USD', 1);
 
-        return new CurrencyConverter($exchangeRateProvider, new DefaultContext($roundingMode));
+        return new CurrencyConverter($exchangeRateProvider, new DefaultContext(), $roundingMode);
     }
 
     /**

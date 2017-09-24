@@ -6,7 +6,6 @@ use Brick\Money\Context;
 use Brick\Money\Currency;
 
 use Brick\Math\BigNumber;
-use Brick\Math\RoundingMode;
 
 /**
  * Adjusts the result to the currency's default scale, applying a cash rounding.
@@ -19,35 +18,28 @@ class CashContext implements Context
     private $step;
 
     /**
-     * @var int
-     */
-    private $roundingMode;
-
-    /**
      * @param int $step
-     * @param int $roundingMode
      */
-    public function __construct($step = 1, $roundingMode = RoundingMode::UNNECESSARY)
+    public function __construct($step = 1)
     {
-        $this->step         = (int) $step;
-        $this->roundingMode = (int) $roundingMode;
+        $this->step = (int) $step;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function applyTo(BigNumber $amount, Currency $currency)
+    public function applyTo(BigNumber $amount, Currency $currency, $roundingMode)
     {
         $scale = $currency->getDefaultFractionDigits();
 
         if ($this->step === 1) {
-            return $amount->toScale($scale, $this->roundingMode);
+            return $amount->toScale($scale, $roundingMode);
         }
 
         return $amount
             ->toBigRational()
             ->dividedBy($this->step)
-            ->toScale($scale, $this->roundingMode)
+            ->toScale($scale, $roundingMode)
             ->multipliedBy($this->step);
     }
 
