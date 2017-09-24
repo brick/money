@@ -4,51 +4,52 @@ namespace Brick\Money;
 
 use Brick\Money\Context\ExactContext;
 
+use Brick\Math\BigDecimal;
+
 /**
  * Container for monies in different currencies.
  *
  * This class is mutable.
- *
- * @todo use BigDecimal internally.
  */
 class MoneyBag
 {
     /**
-     * The monies in this bag, indexed by currency code.
+     * The amounts in this bag, indexed by currency code.
      *
-     * @var Money[]
+     * @var BigDecimal[]
      */
-    private $monies = [];
+    private $amounts = [];
 
     /**
-     * Returns the money in the given currency contained in the bag.
-     *
-     * If no money is present for the given currency, a zero-value money with the default scale
-     * for the given currency will be returned.
+     * Returns the amount in the given currency contained in the bag.
      *
      * @param Currency|string $currency
      *
-     * @return Money
+     * @return BigDecimal
      */
     public function get($currency)
     {
         $currency = Currency::of($currency);
         $currencyCode = $currency->getCurrencyCode();
 
-        return isset($this->monies[$currencyCode])
-            ? $this->monies[$currencyCode]
-            : Money::zero($currency);
+        return isset($this->amounts[$currencyCode])
+            ? $this->amounts[$currencyCode]
+            : BigDecimal::zero();
     }
 
     /**
-     * @return Money[]
+     * Returns the amounts contained in this bag, indexed by currency code.
+     *
+     * @return BigDecimal[]
      */
-    public function getMonies()
+    public function getAmounts()
     {
-        return array_values($this->monies);
+        return array_values($this->amounts);
     }
 
     /**
+     * Returns the total of the monies in this bag, in the given currency.
+     *
      * @param Currency|string   $currency
      * @param CurrencyConverter $converter
      *
@@ -59,7 +60,10 @@ class MoneyBag
         $currency = Currency::of($currency);
         $total = Money::zero($currency);
 
-        foreach ($this->monies as $money) {
+        $context = new ExactContext();
+
+        foreach ($this->amounts as $currencyCode => $amount) {
+            $money = Money::of($amount, $currencyCode, $context);
             $money = $converter->convert($money, $currency);
             $total = $total->toRational()->plus($money->getAmount())->toExactResult();
         }
@@ -79,13 +83,7 @@ class MoneyBag
         $currency = $money->getCurrency();
         $currencyCode = $currency->getCurrencyCode();
 
-        $currentValue = $this->get($currency);
-
-        if ($money->getAmount()->scale() > $currentValue->getAmount()->scale()) {
-            $this->monies[$currencyCode] = $money->plus($this->get($currency));
-        } else {
-            $this->monies[$currencyCode] = $this->get($currency)->plus($money);
-        }
+        $this->amounts[$currencyCode] = $this->get($currency)->plus($money->getAmount());
 
         return $this;
     }
@@ -102,13 +100,7 @@ class MoneyBag
         $currency = $money->getCurrency();
         $currencyCode = $currency->getCurrencyCode();
 
-        $currentValue = $this->get($currency);
-
-        if ($money->getAmount()->scale() > $currentValue->getAmount()->scale()) {
-            $this->monies[$currencyCode] = $money->negated()->plus($this->get($currency));
-        } else {
-            $this->monies[$currencyCode] = $this->get($currency)->minus($money);
-        }
+        $this->amounts[$currencyCode] = $this->get($currency)->minus($money->getAmount());
 
         return $this;
     }

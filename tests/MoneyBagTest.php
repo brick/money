@@ -43,19 +43,19 @@ class MoneyBagTest extends AbstractTestCase
     public function testAddSubtractMoney(MoneyBag $moneyBag)
     {
         $moneyBag->add(Money::of('123', 'EUR'));
-        $this->assertMoneyBagContains(['EUR 123.00'], $moneyBag);
+        $this->assertMoneyBagContains(['EUR' => '123.00'], $moneyBag);
 
         $moneyBag->add(Money::of('234.99', 'EUR'));
-        $this->assertMoneyBagContains(['EUR 357.99'], $moneyBag);
+        $this->assertMoneyBagContains(['EUR' => '357.99'], $moneyBag);
 
         $moneyBag->add(Money::of(3, 'JPY'));
-        $this->assertMoneyBagContains(['EUR 357.99', 'JPY 3'], $moneyBag);
+        $this->assertMoneyBagContains(['EUR' => '357.99', 'JPY' => '3'], $moneyBag);
 
         $moneyBag->add(Money::parse('JPY 1.1234'));
-        $this->assertMoneyBagContains(['EUR 357.99', 'JPY 4.1234'], $moneyBag);
+        $this->assertMoneyBagContains(['EUR' => '357.99', 'JPY' => '4.1234'], $moneyBag);
 
         $moneyBag->subtract(Money::parse('EUR 3.589950'));
-        $this->assertMoneyBagContains(['EUR 354.400050', 'JPY 4.1234'], $moneyBag);
+        $this->assertMoneyBagContains(['EUR' => '354.400050', 'JPY' => '4.1234'], $moneyBag);
 
         return $moneyBag;
     }

@@ -7,6 +7,8 @@ use Brick\Money\CurrencyProvider;
 use Brick\Money\Money;
 use Brick\Money\MoneyBag;
 
+use Brick\Math\BigDecimal;
+
 /**
  * Base class for money tests.
  */
@@ -49,30 +51,32 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param array    $expectedMonies
+     * @param array    $expectedAmounts
      * @param MoneyBag $moneyBag
      */
-    final protected function assertMoneyBagContains(array $expectedMonies, $moneyBag)
+    final protected function assertMoneyBagContains(array $expectedAmounts, $moneyBag)
     {
         $this->assertInstanceOf(MoneyBag::class, $moneyBag);
 
         // Test get() on each currency
-        foreach ($expectedMonies as $money) {
-            $money = Money::parse($money);
-            $this->assertMoneyIs($money, $moneyBag->get($money->getCurrency()));
+        foreach ($expectedAmounts as $currencyCode => $expectedAmount) {
+            $actualAmount = $moneyBag->get($currencyCode);
+
+            $this->assertInstanceOf(BigDecimal::class, $actualAmount);
+            $this->assertSame($expectedAmount, (string) $actualAmount);
         }
 
-        $actualMonies = $moneyBag->getMonies();
+        // Test getAmounts()
+        $actualAmounts = $moneyBag->getAmounts();
 
-        foreach ($actualMonies as & $money) {
-            $money = (string) $money;
+        foreach ($actualAmounts as $currencyCode => $amount) {
+            $actualAmounts[$currencyCode] = (string) $amount;
         }
 
-        sort($expectedMonies);
-        sort($actualMonies);
+        sort($expectedAmounts);
+        sort($actualAmounts);
 
-        // Test getMonies()
-        $this->assertSame($expectedMonies, $actualMonies);
+        $this->assertSame($expectedAmounts, $actualAmounts);
     }
 
     /**
