@@ -11,7 +11,7 @@ use Brick\Money\Context\ExactContext;
  *
  * @todo use BigDecimal internally.
  */
-class MoneyBag implements MoneyContainer
+class MoneyBag
 {
     /**
      * The monies in this bag, indexed by currency code.
@@ -41,7 +41,7 @@ class MoneyBag implements MoneyContainer
     }
 
     /**
-     * {@inheritdoc}
+     * @return Money[]
      */
     public function getMonies()
     {
@@ -49,7 +49,10 @@ class MoneyBag implements MoneyContainer
     }
 
     /**
-     * {@inheritdoc}
+     * @param Currency|string   $currency
+     * @param CurrencyConverter $converter
+     *
+     * @return Money
      */
     public function getValue($currency, CurrencyConverter $converter)
     {
@@ -65,50 +68,46 @@ class MoneyBag implements MoneyContainer
     }
 
     /**
-     * Adds monies to this bag.
+     * Adds a Money to this bag.
      *
-     * @param MoneyContainer $that The `Money` or `MoneyBag` to add.
+     * @param Money $money
      *
      * @return MoneyBag This instance.
      */
-    public function add(MoneyContainer $that)
+    public function add(Money $money)
     {
-        foreach ($that->getMonies() as $money) {
-            $currency = $money->getCurrency();
-            $currencyCode = $currency->getCurrencyCode();
+        $currency = $money->getCurrency();
+        $currencyCode = $currency->getCurrencyCode();
 
-            $currentValue = $this->get($currency);
+        $currentValue = $this->get($currency);
 
-            if ($money->getAmount()->scale() > $currentValue->getAmount()->scale()) {
-                $this->monies[$currencyCode] = $money->plus($this->get($currency));
-            } else {
-                $this->monies[$currencyCode] = $this->get($currency)->plus($money);
-            }
+        if ($money->getAmount()->scale() > $currentValue->getAmount()->scale()) {
+            $this->monies[$currencyCode] = $money->plus($this->get($currency));
+        } else {
+            $this->monies[$currencyCode] = $this->get($currency)->plus($money);
         }
 
         return $this;
     }
 
     /**
-     * Subtracts monies from this bag.
+     * Subtracts a Money from this bag.
      *
-     * @param MoneyContainer $that The `Money` or `MoneyBag` to subtract.
+     * @param Money $money
      *
      * @return MoneyBag This instance.
      */
-    public function subtract(MoneyContainer $that)
+    public function subtract(Money $money)
     {
-        foreach ($that->getMonies() as $money) {
-            $currency = $money->getCurrency();
-            $currencyCode = $currency->getCurrencyCode();
+        $currency = $money->getCurrency();
+        $currencyCode = $currency->getCurrencyCode();
 
-            $currentValue = $this->get($currency);
+        $currentValue = $this->get($currency);
 
-            if ($money->getAmount()->scale() > $currentValue->getAmount()->scale()) {
-                $this->monies[$currencyCode] = $money->negated()->plus($this->get($currency));
-            } else {
-                $this->monies[$currencyCode] = $this->get($currency)->minus($money);
-            }
+        if ($money->getAmount()->scale() > $currentValue->getAmount()->scale()) {
+            $this->monies[$currencyCode] = $money->negated()->plus($this->get($currency));
+        } else {
+            $this->monies[$currencyCode] = $this->get($currency)->minus($money);
         }
 
         return $this;

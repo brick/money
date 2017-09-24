@@ -30,7 +30,7 @@ use Brick\Math\Exception\RoundingNecessaryException;
  * - PrecisionContext handles monies with a custom scale, and optionally step.
  * - ExactContext always returns an exact result, adjusting the scale as required by the operation.
  */
-class Money implements MoneyContainer
+class Money
 {
     /**
      * The amount.
@@ -812,22 +812,6 @@ class Money implements MoneyContainer
     public function __toString()
     {
         return $this->currency . ' ' . $this->amount;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getMonies()
-    {
-        return [$this];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getValue($currency, CurrencyConverter $converter)
-    {
-        return $converter->convert($this, $currency);
     }
 
     /**
