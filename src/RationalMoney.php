@@ -8,6 +8,7 @@ use Brick\Money\Adjustment\ExactResult;
 use Brick\Math\BigNumber;
 use Brick\Math\BigRational;
 use Brick\Math\Exception\ArithmeticException;
+use Brick\Math\Exception\RoundingNecessaryException;
 use Brick\Math\RoundingMode;
 
 /**
@@ -140,5 +141,19 @@ class RationalMoney
     public function toExactResult()
     {
         return $this->to(new ExactResult());
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        try {
+            $amount = $this->amount->toBigDecimal();
+        } catch (RoundingNecessaryException $e) {
+            $amount = $this->amount->simplified();
+        }
+
+        return $this->currency . ' ' . $amount;
     }
 }
