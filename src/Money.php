@@ -303,37 +303,6 @@ class Money implements MoneyContainer
     }
 
     /**
-     * @todo keep? what about step?
-     *
-     * Returns a Money with this value, and a given number of fraction digits.
-     *
-     * @param int $fractionDigits The number of fraction digits.
-     * @param int $roundingMode   The rounding mode to apply, if necessary.
-     *
-     * @return Money
-     */
-    public function withFractionDigits($fractionDigits, $roundingMode = RoundingMode::UNNECESSARY)
-    {
-        $context = new PrecisionContext($fractionDigits);
-
-        return new Money($this->amount->toScale($fractionDigits, $roundingMode), $this->currency, $context);
-    }
-
-    /**
-     * @todo keep? what about step?
-     *
-     * Returns a copy of this Money with this value, and the default number of fraction digits of the currency in use.
-     *
-     * @param int $roundingMode The rounding mode to apply, if necessary.
-     *
-     * @return Money
-     */
-    public function withDefaultFractionDigits($roundingMode = RoundingMode::UNNECESSARY)
-    {
-        return $this->withFractionDigits($this->currency->getDefaultFractionDigits(), $roundingMode);
-    }
-
-    /**
      * Returns the sum of this Money and the given amount.
      *
      * The resulting Money has the same context as this Money. If the result needs rounding to fit this context, a
