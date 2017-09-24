@@ -43,24 +43,22 @@ class Money implements MoneyContainer
     private $currency;
 
     /**
-     * The step by which the last digits of the amount can increment.
+     * The context that defines the capability of this Money.
      *
-     * Defaults to 1. Can be set to any multiple of 2 and 5.
-     *
-     * @var int
+     * @var Context
      */
-    private $step;
+    private $context;
 
     /**
      * @param BigDecimal $amount
      * @param Currency   $currency
-     * @param int        $step
+     * @param Context    $context
      */
-    private function __construct(BigDecimal $amount, Currency $currency, $step = 1)
+    private function __construct(BigDecimal $amount, Currency $currency, Context $context)
     {
         $this->amount   = $amount;
         $this->currency = $currency;
-        $this->step     = $step;
+        $this->context  = $context;
     }
 
     /**
@@ -193,7 +191,7 @@ class Money implements MoneyContainer
 
         $amount = BigDecimal::ofUnscaledValue($amountMinor, $currency->getDefaultFractionDigits());
 
-        return new Money($amount, $currency);
+        return new Money($amount, $currency, new DefaultContext());
     }
 
     /**
@@ -238,7 +236,7 @@ class Money implements MoneyContainer
             throw MoneyParseException::wrap($e);
         }
 
-        return new Money($amount, $currency);
+        return new Money($amount, $currency, new PrecisionContext($amount->scale()));
     }
 
     /**
@@ -310,7 +308,9 @@ class Money implements MoneyContainer
      */
     public function withFractionDigits($fractionDigits, $roundingMode = RoundingMode::UNNECESSARY)
     {
-        return new Money($this->amount->toScale($fractionDigits, $roundingMode), $this->currency);
+        $context = new PrecisionContext($fractionDigits);
+
+        return new Money($this->amount->toScale($fractionDigits, $roundingMode), $this->currency, $context);
     }
 
     /**
@@ -346,9 +346,8 @@ class Money implements MoneyContainer
     {
         $that = $this->handleMoney($that);
         $amount = $this->amount->plus($that);
-        $context = $this->getDefaultContext();
 
-        return self::applyContext($amount, $this->currency, $context, $roundingMode);
+        return self::applyContext($amount, $this->currency, $this->context, $roundingMode);
     }
 
     /**
@@ -370,9 +369,8 @@ class Money implements MoneyContainer
     {
         $that = $this->handleMoney($that);
         $amount = $this->amount->minus($that);
-        $context = $this->getDefaultContext();
 
-        return self::applyContext($amount, $this->currency, $context, $roundingMode);
+        return self::applyContext($amount, $this->currency, $this->context, $roundingMode);
     }
 
     /**
@@ -392,9 +390,8 @@ class Money implements MoneyContainer
     public function multipliedBy($that, $roundingMode = RoundingMode::UNNECESSARY)
     {
         $amount = $this->amount->multipliedBy($that);
-        $context = $this->getDefaultContext();
 
-        return self::applyContext($amount, $this->currency, $context, $roundingMode);
+        return self::applyContext($amount, $this->currency, $this->context, $roundingMode);
     }
 
     /**
@@ -414,9 +411,8 @@ class Money implements MoneyContainer
     public function dividedBy($that, $roundingMode = RoundingMode::UNNECESSARY)
     {
         $amount = $this->amount->toBigRational()->dividedBy($that);
-        $context = $this->getDefaultContext();
 
-        return self::applyContext($amount, $this->currency, $context, $roundingMode);
+        return self::applyContext($amount, $this->currency, $this->context, $roundingMode);
     }
 
     /**
@@ -437,14 +433,15 @@ class Money implements MoneyContainer
     public function quotient($that)
     {
         $that = BigInteger::of($that);
+        $step = $this->context->getStep();
 
         $scale  = $this->amount->scale();
-        $amount = $this->amount->withPointMovedRight($scale)->dividedBy($this->step);
+        $amount = $this->amount->withPointMovedRight($scale)->dividedBy($step);
 
         $q = $amount->quotient($that);
-        $q = $q->multipliedBy($this->step)->withPointMovedLeft($scale);
+        $q = $q->multipliedBy($step)->withPointMovedLeft($scale);
 
-        return new Money($q, $this->currency, $this->step);
+        return new Money($q, $this->currency, $this->context);
     }
 
     /**
@@ -466,17 +463,18 @@ class Money implements MoneyContainer
     public function quotientAndRemainder($that)
     {
         $that = BigInteger::of($that);
+        $step = $this->context->getStep();
 
         $scale  = $this->amount->scale();
-        $amount = $this->amount->withPointMovedRight($scale)->dividedBy($this->step);
+        $amount = $this->amount->withPointMovedRight($scale)->dividedBy($step);
 
         list ($q, $r) = $amount->quotientAndRemainder($that);
 
-        $q = $q->multipliedBy($this->step)->withPointMovedLeft($scale);
-        $r = $r->multipliedBy($this->step)->withPointMovedLeft($scale);
+        $q = $q->multipliedBy($step)->withPointMovedLeft($scale);
+        $r = $r->multipliedBy($step)->withPointMovedLeft($scale);
 
-        $quotient  = new Money($q, $this->currency, $this->step);
-        $remainder = new Money($r, $this->currency, $this->step);
+        $quotient  = new Money($q, $this->currency, $this->context);
+        $remainder = new Money($r, $this->currency, $this->context);
 
         return [$quotient, $remainder];
     }
@@ -493,11 +491,12 @@ class Money implements MoneyContainer
     public function allocate(array $ratios)
     {
         $total = array_sum($ratios);
+        $step = $this->context->getStep();
 
         $monies = [];
 
-        $unit = BigDecimal::ofUnscaledValue($this->step, $this->amount->scale());
-        $unit = new Money($unit, $this->currency, $this->step);
+        $unit = BigDecimal::ofUnscaledValue($step, $this->amount->scale());
+        $unit = new Money($unit, $this->currency, $this->context);
 
         $remainder = $this;
 
@@ -526,7 +525,7 @@ class Money implements MoneyContainer
      */
     public function abs()
     {
-        return new Money($this->amount->abs(), $this->currency, $this->step);
+        return new Money($this->amount->abs(), $this->currency, $this->context);
     }
 
     /**
@@ -536,7 +535,7 @@ class Money implements MoneyContainer
      */
     public function negated()
     {
-        return new Money($this->amount->negated(), $this->currency, $this->step);
+        return new Money($this->amount->negated(), $this->currency, $this->context);
     }
 
     /**
@@ -848,14 +847,6 @@ class Money implements MoneyContainer
     }
 
     /**
-     * @return PrecisionContext
-     */
-    private function getDefaultContext()
-    {
-        return new PrecisionContext($this->amount->scale(), $this->step);
-    }
-
-    /**
      * @param BigNumber $amount
      * @param Currency  $currency
      * @param Context   $context
@@ -865,6 +856,8 @@ class Money implements MoneyContainer
      */
     private static function applyContext(BigNumber $amount, Currency $currency, Context $context, $roundingMode)
     {
-        return new Money($context->applyTo($amount, $currency, $roundingMode), $currency, $context->getStep());
+        $amount = $context->applyTo($amount, $currency, $roundingMode);
+
+        return new Money($amount, $currency, $context);
     }
 }
