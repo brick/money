@@ -29,8 +29,7 @@ class MoneyBag
      */
     public function get($currency)
     {
-        $currency = Currency::of($currency);
-        $currencyCode = $currency->getCurrencyCode();
+        $currencyCode = (string) $currency;
 
         return isset($this->amounts[$currencyCode])
             ? $this->amounts[$currencyCode]
@@ -44,7 +43,7 @@ class MoneyBag
      */
     public function getAmounts()
     {
-        return array_values($this->amounts);
+        return $this->amounts;
     }
 
     /**
