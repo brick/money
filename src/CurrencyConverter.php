@@ -3,7 +3,6 @@
 namespace Brick\Money;
 
 use Brick\Math\RoundingMode;
-use Brick\Money\ExchangeRateProvider;
 use Brick\Money\Exception\CurrencyConversionException;
 
 use Brick\Math\Exception\RoundingNecessaryException;

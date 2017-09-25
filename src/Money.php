@@ -2,11 +2,8 @@
 
 namespace Brick\Money;
 
-use Brick\Money\Context\PrecisionContext;
 use Brick\Money\Context\DefaultContext;
-use Brick\Money\Context\ExactContext;
 use Brick\Money\Exception\MoneyMismatchException;
-use Brick\Money\Exception\MoneyParseException;
 use Brick\Money\Exception\UnknownCurrencyException;
 
 use Brick\Math\BigDecimal;

@@ -3,9 +3,6 @@
 namespace Brick\Money\Tests;
 
 use Brick\Money\Currency;
-use Brick\Money\CurrencyProvider\DefaultCurrencyProvider;
-use Brick\Money\Exception\MoneyParseException;
-use Brick\Money\Exception\UnknownCurrencyException;
 use Brick\Money\Exception\MoneyMismatchException;
 use Brick\Money\Money;
 use Brick\Money\Context;
