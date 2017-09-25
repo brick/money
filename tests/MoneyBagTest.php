@@ -2,6 +2,7 @@
 
 namespace Brick\Money\Tests;
 
+use Brick\Money\Context\ExactContext;
 use Brick\Money\Currency;
 use Brick\Money\CurrencyConverter;
 use Brick\Money\ExchangeRateProvider\ConfigurableExchangeRateProvider;
@@ -50,10 +51,10 @@ class MoneyBagTest extends AbstractTestCase
         $moneyBag->add(Money::of(3, 'JPY'));
         $this->assertMoneyBagContains(['EUR' => '357.99', 'JPY' => '3'], $moneyBag);
 
-        $moneyBag->add(Money::parse('JPY 1.1234'));
+        $moneyBag->add(Money::of('1.1234', 'JPY', new ExactContext()));
         $this->assertMoneyBagContains(['EUR' => '357.99', 'JPY' => '4.1234'], $moneyBag);
 
-        $moneyBag->subtract(Money::parse('EUR 3.589950'));
+        $moneyBag->subtract(Money::of('3.589950', 'EUR', new ExactContext()));
         $this->assertMoneyBagContains(['EUR' => '354.400050', 'JPY' => '4.1234'], $moneyBag);
 
         return $moneyBag;

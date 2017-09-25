@@ -225,39 +225,6 @@ class Money
     }
 
     /**
-     * Parses a string representation of a money as returned by `__toString()`, e.g. "USD 23.00".
-     *
-     * @param string $string
-     *
-     * @return Money
-     *
-     * @throws MoneyParseException      If the parsing fails.
-     * @throws UnknownCurrencyException If the currency code is not known.
-     */
-    public static function parse($string)
-    {
-        $pos = strrpos($string, ' ');
-
-        if ($pos === false) {
-            throw MoneyParseException::invalidFormat($string);
-        }
-
-        $currency = substr($string, 0, $pos);
-        $amount   = substr($string, $pos + 1);
-
-        $currency = Currency::of($currency);
-
-        try {
-            $amount = BigDecimal::of($amount);
-        }
-        catch (ArithmeticException $e) {
-            throw MoneyParseException::wrap($e);
-        }
-
-        return new Money($amount, $currency, new PrecisionContext($amount->scale()));
-    }
-
-    /**
      * Returns a Money with zero value, in the given currency.
      *
      * By default, the money is created with a DefaultContext: it has the default scale for the currency.
