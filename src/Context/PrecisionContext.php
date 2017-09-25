@@ -25,7 +25,6 @@ class PrecisionContext implements Context
     /**
      * @param int $scale
      * @param int $step
-     * @param int $roundingMode
      */
     public function __construct($scale, $step = 1)
     {
