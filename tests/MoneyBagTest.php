@@ -18,7 +18,7 @@ class MoneyBagTest extends AbstractTestCase
         $this->assertMoneyBagContains([], $moneyBag);
 
         foreach (['USD', 'EUR', 'GBP', 'JPY'] as $currencyCode) {
-            $this->assertTrue($moneyBag->get($currencyCode)->isZero());
+            $this->assertTrue($moneyBag->getAmount($currencyCode)->isZero());
         }
     }
 

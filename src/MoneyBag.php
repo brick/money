@@ -2,8 +2,6 @@
 
 namespace Brick\Money;
 
-use Brick\Money\Context\ExactContext;
-
 use Brick\Math\BigDecimal;
 
 /**
@@ -27,7 +25,7 @@ class MoneyBag
      *
      * @return BigDecimal
      */
-    public function get($currency)
+    public function getAmount($currency)
     {
         $currencyCode = (string) $currency;
 
@@ -58,7 +56,7 @@ class MoneyBag
         $currency = $money->getCurrency();
         $currencyCode = $currency->getCurrencyCode();
 
-        $this->amounts[$currencyCode] = $this->get($currency)->plus($money->getAmount());
+        $this->amounts[$currencyCode] = $this->getAmount($currency)->plus($money->getAmount());
 
         return $this;
     }
@@ -75,7 +73,7 @@ class MoneyBag
         $currency = $money->getCurrency();
         $currencyCode = $currency->getCurrencyCode();
 
-        $this->amounts[$currencyCode] = $this->get($currency)->minus($money->getAmount());
+        $this->amounts[$currencyCode] = $this->getAmount($currency)->minus($money->getAmount());
 
         return $this;
     }

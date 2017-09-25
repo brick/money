@@ -60,7 +60,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
         // Test get() on each currency
         foreach ($expectedAmounts as $currencyCode => $expectedAmount) {
-            $actualAmount = $moneyBag->get($currencyCode);
+            $actualAmount = $moneyBag->getAmount($currencyCode);
 
             $this->assertInstanceOf(BigDecimal::class, $actualAmount);
             $this->assertSame($expectedAmount, (string) $actualAmount);
