@@ -2,11 +2,11 @@
 
 namespace Brick\Money;
 
-use Brick\Math\BigRational;
-use Brick\Math\RoundingMode;
 use Brick\Money\Exception\CurrencyConversionException;
 
+use Brick\Math\BigRational;
 use Brick\Math\Exception\RoundingNecessaryException;
+use Brick\Math\RoundingMode;
 
 /**
  * Converts monies into different currencies, using an exchange rate provider.
