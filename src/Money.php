@@ -190,7 +190,7 @@ class Money
      *
      * The result is a Money with a DefaultContext: this Money has the default scale for the currency.
      *
-     * @param BigNumber|number|string $amountMinor The amount in minor units. Must be convertible to a BigInteger.
+     * @param BigNumber|number|string $minorAmount The amount in minor units. Must be convertible to a BigInteger.
      * @param Currency|string         $currency    The currency, as a Currency instance or currency code string.
      *
      * @return Money
@@ -198,11 +198,11 @@ class Money
      * @throws UnknownCurrencyException If the currency is an unknown currency code.
      * @throws ArithmeticException      If the amount cannot be converted to a BigInteger.
      */
-    public static function ofMinor($amountMinor, $currency)
+    public static function ofMinor($minorAmount, $currency)
     {
         $currency = Currency::of($currency);
 
-        $amount = BigDecimal::ofUnscaledValue($amountMinor, $currency->getDefaultFractionDigits());
+        $amount = BigDecimal::ofUnscaledValue($minorAmount, $currency->getDefaultFractionDigits());
 
         return new Money($amount, $currency, new DefaultContext());
     }
@@ -253,6 +253,33 @@ class Money
     public function getAmount()
     {
         return $this->amount;
+    }
+
+    /**
+     * Returns the amount of this Money in minor units (cents) for the currency.
+     *
+     * The value is returned as a BigDecimal. If this Money has a scale greater than that of the currency, the result
+     * will have a non-zero scale.
+     *
+     * For example, `USD 1.23` will return a BigDecimal of `123`, while `USD 1.2345` will return `123.45`.
+     *
+     * @return BigDecimal
+     */
+    public function getMinorAmount()
+    {
+        return $this->amount->withPointMovedRight($this->currency->getDefaultFractionDigits());
+    }
+
+    /**
+     * Returns a BigInteger containing the unscaled value of this money in minor units.
+     *
+     * For example, `123.4567 USD` will return a BigInteger of `1234567`.
+     *
+     * @return BigInteger
+     */
+    public function getUnscaledAmount()
+    {
+        return BigInteger::of($this->amount->unscaledValue());
     }
 
     /**
@@ -661,33 +688,6 @@ class Money
         $that = $this->handleMoney($that);
 
         return $this->amount->isGreaterThanOrEqualTo($that);
-    }
-
-    /**
-     * Returns the amount of this Money in minor units (cents) for the currency.
-     *
-     * The value is returned as a BigDecimal. If this Money has a scale greater than that of the currency, the result
-     * will have a non-zero scale.
-     *
-     * For example, `USD 1.23` will return a BigDecimal of `123`, while `USD 1.2345` will return `123.45`.
-     *
-     * @return BigDecimal
-     */
-    public function getAmountMinor()
-    {
-        return $this->amount->withPointMovedRight($this->currency->getDefaultFractionDigits());
-    }
-
-    /**
-     * Returns a BigInteger containing the unscaled value of this money in minor units.
-     *
-     * For example, `123.4567 USD` will return a BigInteger of `1234567`.
-     *
-     * @return BigInteger
-     */
-    public function getUnscaledValue()
-    {
-        return BigInteger::of($this->amount->unscaledValue());
     }
 
     /**

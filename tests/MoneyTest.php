@@ -649,14 +649,14 @@ class MoneyTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider providerGetAmountMinor
+     * @dataProvider providerGetMinorAmount
      *
      * @param array  $money
      * @param string $expected
      */
-    public function testGetAmountMinor(array $money, $expected)
+    public function testGetMinorAmount(array $money, $expected)
     {
-        $actual = Money::of(...$money)->getAmountMinor();
+        $actual = Money::of(...$money)->getMinorAmount();
 
         $this->assertInstanceOf(BigDecimal::class, $actual);
         $this->assertSame($expected, (string) $actual);
@@ -665,7 +665,7 @@ class MoneyTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerGetAmountMinor()
+    public function providerGetMinorAmount()
     {
         return [
             [[50, 'USD'], '5000'],
@@ -676,9 +676,9 @@ class MoneyTest extends AbstractTestCase
         ];
     }
 
-    public function testGetUnscaledValue()
+    public function testGetUnscaledAmount()
     {
-        $actual = Money::of('123.45', 'USD')->getUnscaledValue();
+        $actual = Money::of('123.45', 'USD')->getUnscaledAmount();
 
         $this->assertInstanceOf(BigInteger::class, $actual);
         $this->assertSame('12345', (string) $actual);
