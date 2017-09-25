@@ -121,7 +121,7 @@ class RationalMoney
      */
     public function multipliedBy($that)
     {
-        $amount = $this->amount->dividedBy($that);
+        $amount = $this->amount->multipliedBy($that);
 
         return new self($amount, $this->currency);
     }
