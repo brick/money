@@ -47,30 +47,6 @@ class MoneyBag
     }
 
     /**
-     * Returns the total of the monies in this bag, in the given currency.
-     *
-     * @param Currency|string   $currency
-     * @param CurrencyConverter $converter
-     *
-     * @return Money
-     */
-    public function getValue($currency, CurrencyConverter $converter)
-    {
-        $currency = Currency::of($currency);
-        $total = Money::zero($currency);
-
-        $context = new ExactContext();
-
-        foreach ($this->amounts as $currencyCode => $amount) {
-            $money = Money::of($amount, $currencyCode, $context);
-            $money = $converter->convert($money, $currency);
-            $total = $total->toRational()->plus($money->getAmount())->toExactResult();
-        }
-
-        return $total;
-    }
-
-    /**
      * Adds a Money to this bag.
      *
      * @param Money $money

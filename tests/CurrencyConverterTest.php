@@ -2,13 +2,16 @@
 
 namespace Brick\Money\Tests;
 
+use Brick\Money\Context;
 use Brick\Money\Context\DefaultContext;
 use Brick\Money\Context\ExactContext;
+use Brick\Money\Context\PrecisionContext;
 use Brick\Money\Currency;
 use Brick\Money\CurrencyConverter;
 use Brick\Money\Exception\CurrencyConversionException;
 use Brick\Money\ExchangeRateProvider\ConfigurableExchangeRateProvider;
 use Brick\Money\Money;
+use Brick\Money\MoneyBag;
 
 use Brick\Math\Exception\RoundingNecessaryException;
 use Brick\Math\RoundingMode;
@@ -76,6 +79,46 @@ class CurrencyConverterTest extends AbstractTestCase
             [Money::of('1.23', 'USD'), 'BSD', RoundingMode::DOWN, CurrencyConversionException::class],
             [Money::of('1.23', 'EUR'), 'EUR', RoundingMode::UNNECESSARY, 'EUR 1.23'],
             [Money::of('123456.789', 'JPY', new ExactContext()), 'JPY', RoundingMode::HALF_EVEN, 'JPY 123457'],
+        ];
+    }
+
+    /**
+     * @dataProvider providerGetTotal
+     *
+     * @param array   $monies       The mixed monies to add.
+     * @param string  $currency     The target currency code.
+     * @param Context $context      The target context.
+     * @param int     $roundingMode The rounding mode to use.
+     * @param string  $total        The expected total
+     */
+    public function testGetTotal(array $monies, $currency, Context $context, $roundingMode, $total)
+    {
+        $exchangeRateProvider = new ConfigurableExchangeRateProvider();
+        $exchangeRateProvider->setExchangeRate('EUR', 'USD', '1.23456789');
+        $exchangeRateProvider->setExchangeRate('JPY', 'USD', '0.00987654321');
+
+        $moneyBag = new MoneyBag();
+
+        foreach ($monies as $money) {
+            $money = Money::of($money[0], $money[1], new ExactContext());
+            $moneyBag->add($money);
+        }
+
+        $currencyConverter = new CurrencyConverter($exchangeRateProvider, $context, $roundingMode);
+        $this->assertMoneyIs($total, $currencyConverter->getTotal($moneyBag, $currency));
+    }
+
+    /**
+     * @return array
+     */
+    public function providerGetTotal()
+    {
+        return [
+            [[['354.40005', 'EUR'], ['3.1234', 'JPY']], 'USD', new DefaultContext(), RoundingMode::DOWN, 'USD 437.56'],
+            [[['354.40005', 'EUR'], ['3.1234', 'JPY']], 'USD', new DefaultContext(), RoundingMode::UP, 'USD 437.57'],
+
+            [[['1234.56', 'EUR'], ['31562', 'JPY']], 'USD', new PrecisionContext(6), RoundingMode::DOWN, 'USD 1835.871591'],
+            [[['1234.56', 'EUR'], ['31562', 'JPY']], 'USD', new PrecisionContext(6), RoundingMode::UP, 'USD 1835.871592']
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Brick\Money;
 
+use Brick\Math\BigRational;
 use Brick\Math\RoundingMode;
 use Brick\Money\Exception\CurrencyConversionException;
 
@@ -18,7 +19,7 @@ class CurrencyConverter
     private $exchangeRateProvider;
 
     /**
-     * @var Context|null
+     * @var Context
      */
     private $context;
 
@@ -29,10 +30,10 @@ class CurrencyConverter
 
     /**
      * @param ExchangeRateProvider $exchangeRateProvider The exchange rate provider.
-     * @param Context|null         $context              An optional context. If not provided, the Money's context is used.
-     * @param int                  $roundingMode         An optional rounding mode.
+     * @param Context              $context              The context of the monies created by this currency converter.
+     * @param int                  $roundingMode         The rounding mode, if necessary.
      */
-    public function __construct(ExchangeRateProvider $exchangeRateProvider, Context $context = null, $roundingMode = RoundingMode::UNNECESSARY)
+    public function __construct(ExchangeRateProvider $exchangeRateProvider, Context $context, $roundingMode = RoundingMode::UNNECESSARY)
     {
         $this->exchangeRateProvider = $exchangeRateProvider;
         $this->context              = $context;
@@ -40,6 +41,8 @@ class CurrencyConverter
     }
 
     /**
+     * Converts the given Money to the given Currency.
+     *
      * @param Money           $money
      * @param Currency|string $currency
      *
@@ -59,5 +62,29 @@ class CurrencyConverter
         }
 
         return $money->convertedTo($currency, $exchangeRate, $this->context, $this->roundingMode);
+    }
+
+    /**
+     * Returns the total value of the given MoneyBag, in the given Currency.
+     *
+     * @param MoneyBag        $moneyBag
+     * @param Currency|string $currency
+     *
+     * @return Money
+     */
+    public function getTotal(MoneyBag $moneyBag, $currency)
+    {
+        $targetCurrency = Currency::of($currency);
+        $targetCurrencyCode = (string) $currency;
+
+        $total = BigRational::zero();
+
+        foreach ($moneyBag->getAmounts() as $currencyCode => $amount) {
+            $exchangeRate = $this->exchangeRateProvider->getExchangeRate($currencyCode, $targetCurrencyCode);
+            $convertedAmount = $amount->toBigRational()->multipliedBy($exchangeRate);
+            $total = $total->plus($convertedAmount);
+        }
+
+        return Money::create($total, $targetCurrency, $this->context, $this->roundingMode);
     }
 }
