@@ -654,30 +654,6 @@ class Money
     }
 
     /**
-     * Returns a string representing the integral part of the amount of this money.
-     *
-     * Example: 123.45 will return '123'.
-     *
-     * @return string
-     */
-    public function getIntegral()
-    {
-        return $this->amount->integral();
-    }
-
-    /**
-     * Returns a string representing the fractional part of the amount of this money.
-     *
-     * Example: 123.45 will return '45'.
-     *
-     * @return string
-     */
-    public function getFraction()
-    {
-        return $this->amount->fraction();
-    }
-
-    /**
      * Returns the amount of this Money in minor units (cents) for the currency.
      *
      * The value is returned as a BigDecimal. If this Money has a scale greater than that of the currency, the result

@@ -637,16 +637,6 @@ class MoneyTest extends AbstractTestCase
         ];
     }
 
-    public function testGetIntegral()
-    {
-        $this->assertSame('123', Money::of('123.45', 'USD')->getIntegral());
-    }
-
-    public function testGetFraction()
-    {
-        $this->assertSame('45', Money::of('123.45', 'USD')->getFraction());
-    }
-
     /**
      * @dataProvider providerGetAmountMinor
      *
