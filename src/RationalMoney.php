@@ -4,6 +4,7 @@ namespace Brick\Money;
 
 use Brick\Money\Context\DefaultContext;
 use Brick\Money\Context\ExactContext;
+use Brick\Money\Exception\MoneyMismatchException;
 
 use Brick\Math\BigNumber;
 use Brick\Math\BigRational;
@@ -56,63 +57,71 @@ class RationalMoney
     }
 
     /**
-     * @todo allow Money and RationalMoney
+     * Returns the sum of this RationalMoney and the given amount.
      *
-     * Returns the sum of this money and the given amount.
-     *
-     * @param BigNumber|number|string $that The amount to add.
+     * @param RationalMoney|Money|BigNumber|number|string $that The amount to add.
      *
      * @return RationalMoney
      *
-     * @throws ArithmeticException
+     * @throws ArithmeticException    If the argument is not a valid number.
+     * @throws MoneyMismatchException If the argument is a RationalMoney or a Money in another currency.
      */
-    public function plus($amount)
+    public function plus($that)
     {
-        return new self($this->amount->plus($amount), $this->currency);
+        $amount = $this->getAmountFrom($that);
+        $amount = $this->amount->plus($amount);
+
+        return new self($amount, $this->currency);
     }
 
     /**
-     * @todo allow Money and RationalMoney
+     * Returns the difference of this RationalMoney and the given amount.
      *
-     * Returns the difference of this money and the given amount.
-     *
-     * @param BigNumber|number|string $that The amount to subtract.
+     * @param RationalMoney|Money|BigNumber|number|string $that The amount to subtract.
      *
      * @return RationalMoney
      *
-     * @throws ArithmeticException
+     * @throws ArithmeticException    If the argument is not a valid number.
+     * @throws MoneyMismatchException If the argument is a RationalMoney or a Money in another currency.
      */
-    public function minus($amount)
+    public function minus($that)
     {
-        return new self($this->amount->minus($amount), $this->currency);
+        $amount = $this->getAmountFrom($that);
+        $amount = $this->amount->minus($amount);
+
+        return new self($amount, $this->currency);
     }
 
     /**
-     * Returns the product of this money and the given number.
+     * Returns the product of this RationalMoney and the given number.
      *
      * @param BigNumber|number|string $that The multiplier.
      *
      * @return RationalMoney
      *
-     * @throws ArithmeticException
+     * @throws ArithmeticException If the argument is not a valid number.
      */
-    public function multipliedBy($amount)
+    public function multipliedBy($that)
     {
-        return new self($this->amount->dividedBy($amount), $this->currency);
+        $amount = $this->amount->dividedBy($that);
+
+        return new self($amount, $this->currency);
     }
 
     /**
-     * Returns the result of the division of this money by the given number.
+     * Returns the result of the division of this RationalMoney by the given number.
      *
      * @param BigNumber|number|string $that The divisor.
      *
      * @return RationalMoney
      *
-     * @throws ArithmeticException
+     * @throws ArithmeticException If the argument is not a valid number.
      */
-    public function dividedBy($amount)
+    public function dividedBy($that)
     {
-        return new self($this->amount->dividedBy($amount), $this->currency);
+        $amount = $this->amount->dividedBy($that);
+
+        return new self($amount, $this->currency);
     }
 
     /**
@@ -156,5 +165,47 @@ class RationalMoney
         }
 
         return $this->currency . ' ' . $amount;
+    }
+
+    /**
+     * Returns the amount of the given parameter.
+     *
+     * If the parameter is a RationalMoney or a Money, its Currency is checked against this object's Currency.
+     *
+     * @param RationalMoney|Money|BigNumber|number|string $that
+     *
+     * @return BigNumber|number|string
+     *
+     * @throws MoneyMismatchException If the given currency is not equal to this RationalMoney's currency.
+     */
+    private function getAmountFrom($that)
+    {
+        if ($that instanceof RationalMoney) {
+            $this->checkCurrency($that->currency);
+
+            return $that->amount;
+        }
+
+        if ($that instanceof Money) {
+            $this->checkCurrency($that->getCurrency());
+
+            return $that->amount;
+        }
+
+        return $that;
+    }
+
+    /**
+     * @param Currency $currency
+     *
+     * @return void
+     *
+     * @throws MoneyMismatchException If the given currency is not equal to this RationalMoney's currency.
+     */
+    private function checkCurrency(Currency $currency)
+    {
+        if (! $currency->is($this->currency)) {
+            throw MoneyMismatchException::currencyMismatch($this->currency, $currency);
+        }
     }
 }
