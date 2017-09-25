@@ -31,13 +31,31 @@ class RationalMoney
     private $currency;
 
     /**
-     * @param BigRational $amount
-     * @param Currency    $currency
+     * Class constructor.
+     *
+     * @param BigRational $amount   The amount.
+     * @param Currency    $currency The currency.
      */
     public function __construct(BigRational $amount, Currency $currency)
     {
         $this->amount   = $amount;
         $this->currency = $currency;
+    }
+
+    /**
+     * Convenience factory method.
+     *
+     * @param BigNumber|number|string $amount   The amount.
+     * @param Currency|string         $currency A Currency instance or currency code.
+     *
+     * @return RationalMoney
+     */
+    public static function of($amount, $currency)
+    {
+        $amount = BigRational::of($amount);
+        $currency = Currency::of($currency);
+
+        return new RationalMoney($amount, $currency);
     }
 
     /**
