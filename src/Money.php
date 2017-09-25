@@ -118,26 +118,21 @@ class Money
     /**
      * Returns the total of the given monies.
      *
-     * The number of fraction digits in the resulting Money is the maximum number of fraction digits
-     * across all the given monies.
+     * The monies must share the same currency and context.
      *
      * @param Money    $money  The first money.
      * @param Money ...$monies The subsequent monies.
      *
      * @return Money
      *
-     * @throws MoneyMismatchException If all the monies are not in the same currency.
+     * @throws MoneyMismatchException If all the monies are not in the same currency and context.
      */
     public static function total(Money $money, Money ...$monies)
     {
         $total = $money;
 
         foreach ($monies as $money) {
-            if ($money->getAmount()->scale() > $total->getAmount()->scale()) {
-                $total = $money->plus($total);
-            } else {
-                $total = $total->plus($money);
-            }
+            $total = $total->plus($money);
         }
 
         return $total;
