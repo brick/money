@@ -2,7 +2,7 @@
 
 namespace Brick\Money;
 
-use Brick\Money\CurrencyProvider\DefaultCurrencyProvider;
+use Brick\Money\CurrencyProvider\ISOCurrencyProvider;
 use Brick\Money\Exception\UnknownCurrencyException;
 
 /**
@@ -101,9 +101,7 @@ class Currency
     /**
      * Returns a Currency instance of the given parameter.
      *
-     * This method resolves currency codes using the DefaultCurrencyProvider.
-     * By default, only ISO currencies are available; additional currencies can be registered
-     * with the DefaultCurrencyProvider and will be made available here.
+     * This method resolves currency codes using the ISOCurrencyProvider.
      *
      * @param Currency|string $currency
      *
@@ -117,7 +115,7 @@ class Currency
             return $currency;
         }
 
-        return DefaultCurrencyProvider::getInstance()->getCurrency($currency);
+        return ISOCurrencyProvider::getInstance()->getCurrency($currency);
     }
 
     /**
