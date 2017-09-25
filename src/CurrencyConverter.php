@@ -30,7 +30,7 @@ class CurrencyConverter
 
     /**
      * @param ExchangeRateProvider $exchangeRateProvider The exchange rate provider.
-     * @param Context|null         $context              An optional context.
+     * @param Context|null         $context              An optional context. If not provided, the Money's context is used.
      * @param int                  $roundingMode         An optional rounding mode.
      */
     public function __construct(ExchangeRateProvider $exchangeRateProvider, Context $context = null, $roundingMode = RoundingMode::UNNECESSARY)

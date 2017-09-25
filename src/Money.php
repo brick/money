@@ -733,12 +733,11 @@ class Money
     /**
      * Converts this Money to another currency, using an exchange rate.
      *
-     * By default, the resulting Money is created with an ExactContext: the scale of the result is adjusted to represent
-     * the exact converted value.
+     * By default, the resulting Money has the same context as this Money.
+     * This can be overridden by providing a Context.
      *
-     * For example, converting `USD 1.23` to `EUR` with an exchange rate of `0.91` will yield `USD 1.1193`.
-     *
-     * The scale can be adjusted by providing a Context instance.
+     * For example, converting a default money of `USD 1.23` to `EUR` with an exchange rate of `0.91` and
+     * RoundingMode::UP will yield `EUR 1.12`.
      *
      * @param Currency|string         $currency     The target currency or currency code.
      * @param BigNumber|number|string $exchangeRate The exchange rate to multiply by.
@@ -755,7 +754,7 @@ class Money
         $currency = Currency::of($currency);
 
         if ($context === null) {
-            $context = new ExactContext();
+            $context = $this->context;
         }
 
         $amount = $this->amount->toBigRational()->multipliedBy($exchangeRate);
