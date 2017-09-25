@@ -154,24 +154,6 @@ class RationalMoney
     }
 
     /**
-     * @param int $roundingMode
-     *
-     * @return Money
-     */
-    public function toDefaultScale($roundingMode = RoundingMode::UNNECESSARY)
-    {
-        return $this->to(new DefaultContext(), $roundingMode);
-    }
-
-    /**
-     * @return Money
-     */
-    public function toExactResult()
-    {
-        return $this->to(new ExactContext());
-    }
-
-    /**
      * @return string
      */
     public function __toString()
