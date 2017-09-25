@@ -79,7 +79,7 @@ class MoneyComparator
      */
     public function isEqual(Money $a, Money $b)
     {
-        return $this->compare($a, $b) == 0;
+        return $this->compare($a, $b) === 0;
     }
 
     /**
