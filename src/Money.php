@@ -678,15 +678,30 @@ class Money
     }
 
     /**
-     * Returns a string containing the value of this money in minor units.
+     * Returns the amount of this Money in minor units (cents) for the currency.
      *
-     * Example: 123.45 USD will return '12345'.
+     * The value is returned as a BigDecimal. If this Money has a scale greater than that of the currency, the result
+     * will have a non-zero scale.
      *
-     * @return string
+     * For example, `USD 1.23` will return a BigDecimal of `123`, while `USD 1.2345` will return `123.45`.
+     *
+     * @return BigDecimal
      */
     public function getAmountMinor()
     {
-        return $this->amount->unscaledValue();
+        return $this->amount->withPointMovedRight($this->currency->getDefaultFractionDigits());
+    }
+
+    /**
+     * Returns a BigInteger containing the unscaled value of this money in minor units.
+     *
+     * For example, `123.4567 USD` will return a BigInteger of `1234567`.
+     *
+     * @return BigInteger
+     */
+    public function getUnscaledValue()
+    {
+        return BigInteger::of($this->amount->unscaledValue());
     }
 
     /**

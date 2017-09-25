@@ -10,6 +10,8 @@ use Brick\Money\Context\DefaultContext;
 use Brick\Money\Context\ExactContext;
 use Brick\Money\Context\PrecisionContext;
 
+use Brick\Math\BigDecimal;
+use Brick\Math\BigInteger;
 use Brick\Math\BigRational;
 use Brick\Math\RoundingMode;
 use Brick\Math\Exception\DivisionByZeroException;
@@ -645,9 +647,40 @@ class MoneyTest extends AbstractTestCase
         $this->assertSame('45', Money::of('123.45', 'USD')->getFraction());
     }
 
-    public function testGetAmountMinor()
+    /**
+     * @dataProvider providerGetAmountMinor
+     *
+     * @param array  $money
+     * @param string $expected
+     */
+    public function testGetAmountMinor(array $money, $expected)
     {
-        $this->assertSame('12345', Money::of('123.45', 'USD')->getAmountMinor());
+        $actual = Money::of(...$money)->getAmountMinor();
+
+        $this->assertInstanceOf(BigDecimal::class, $actual);
+        $this->assertSame($expected, (string) $actual);
+    }
+
+    /**
+     * @return array
+     */
+    public function providerGetAmountMinor()
+    {
+        return [
+            [[50, 'USD'], '5000'],
+            [['1.23', 'USD'], '123'],
+            [['1.2345', 'USD', new ExactContext()], '123.45'],
+            [[50, 'JPY'], '50'],
+            [['1.123', 'JPY', new ExactContext()], '1.123']
+        ];
+    }
+
+    public function testGetUnscaledValue()
+    {
+        $actual = Money::of('123.45', 'USD')->getUnscaledValue();
+
+        $this->assertInstanceOf(BigInteger::class, $actual);
+        $this->assertSame('12345', (string) $actual);
     }
 
     /**
