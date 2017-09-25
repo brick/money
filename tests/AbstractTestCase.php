@@ -8,6 +8,7 @@ use Brick\Money\Money;
 use Brick\Money\MoneyBag;
 
 use Brick\Math\BigDecimal;
+use Brick\Money\RationalMoney;
 
 /**
  * Base class for money tests.
@@ -77,6 +78,16 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         sort($actualAmounts);
 
         $this->assertSame($expectedAmounts, $actualAmounts);
+    }
+
+    /**
+     * @param string        $expected
+     * @param RationalMoney $actual
+     */
+    final protected function assertRationalMoneyEquals($expected, $actual)
+    {
+        $this->assertInstanceOf(RationalMoney::class, $actual);
+        $this->assertSame($expected, (string) $actual);
     }
 
     /**
