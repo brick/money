@@ -426,6 +426,17 @@ class MoneyTest extends AbstractTestCase
      * @param array $money
      * @param int   $sign
      */
+    public function testGetSign(array $money, $sign)
+    {
+        $this->assertSame($sign, Money::of(...$money)->getSign());
+    }
+
+    /**
+     * @dataProvider providerSign
+     *
+     * @param array $money
+     * @param int   $sign
+     */
     public function testIsZero(array $money, $sign)
     {
         $this->assertSame($sign === 0, Money::of(...$money)->isZero());

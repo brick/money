@@ -502,6 +502,16 @@ class Money
     }
 
     /**
+     * Returns the sign of this Money.
+     *
+     * @return int -1 if the number is negative, 0 if zero, 1 if positive.
+     */
+    public function getSign()
+    {
+        return $this->amount->sign();
+    }
+
+    /**
      * Returns whether this Money has zero value.
      *
      * @return bool
