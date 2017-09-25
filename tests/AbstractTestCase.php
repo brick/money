@@ -2,6 +2,7 @@
 
 namespace Brick\Money\Tests;
 
+use Brick\Money\Context;
 use Brick\Money\Currency;
 use Brick\Money\CurrencyProvider;
 use Brick\Money\Money;
@@ -28,13 +29,18 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param Money|string $expected The expected money, or its string representation.
+     * @param string       $expected The expected string representation of the Money.
      * @param Money        $actual   The money to test.
+     * @param Context|null $context  An optional context to check against the Money.
      */
-    final protected function assertMoneyIs($expected, $actual)
+    final protected function assertMoneyIs($expected, $actual, Context $context = null)
     {
         $this->assertInstanceOf(Money::class, $actual);
         $this->assertSame((string) $expected, (string) $actual);
+
+        if ($context !== null) {
+            $this->assertEquals($context, $actual->getContext());
+        }
     }
 
     /**

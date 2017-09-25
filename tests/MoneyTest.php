@@ -6,6 +6,7 @@ use Brick\Money\Currency;
 use Brick\Money\Exception\MoneyMismatchException;
 use Brick\Money\Money;
 use Brick\Money\Context;
+use Brick\Money\Context\CashContext;
 use Brick\Money\Context\DefaultContext;
 use Brick\Money\Context\ExactContext;
 use Brick\Money\Context\PrecisionContext;
@@ -81,6 +82,33 @@ class MoneyTest extends AbstractTestCase
             ['EUR', 1, '0.01'],
             ['USD', 600, '6.00'],
             ['JPY', 600, '600'],
+        ];
+    }
+
+    /**
+     * @dataProvider providerZero
+     *
+     * @param string       $currency
+     * @param Context|null $context
+     * @param string       $expected
+     */
+    public function testZero($currency, Context $context = null, $expected)
+    {
+        $actual = Money::zero($currency, $context);
+        $this->assertMoneyIs($expected, $actual, $context === null ? new DefaultContext() : $context);
+    }
+
+    /**
+     * @return array
+     */
+    public function providerZero()
+    {
+        return [
+            ['USD', null, 'USD 0.00'],
+            ['TND', null, 'TND 0.000'],
+            ['JPY', null, 'JPY 0'],
+            ['USD', new PrecisionContext(4), 'USD 0.0000'],
+            ['USD', new ExactContext(), 'USD 0']
         ];
     }
 
@@ -165,14 +193,19 @@ class MoneyTest extends AbstractTestCase
             [['1', 'JPY'], '2.5', RoundingMode::UNNECESSARY, RoundingNecessaryException::class],
             [['1.20', 'USD'], ['1.80', 'USD'], RoundingMode::UNNECESSARY, 'USD 3.00'],
             [['1.20', 'USD'], ['0.80', 'EUR'], RoundingMode::UNNECESSARY, MoneyMismatchException::class],
+            [['1.23', 'USD', new ExactContext()], '0.01', RoundingMode::UP, \InvalidArgumentException::class],
+            [['123.00', 'CZK', new CashContext(100)], '12.50', RoundingMode::UNNECESSARY, RoundingNecessaryException::class],
+            [['123.00', 'CZK', new CashContext(100)], '12.50', RoundingMode::DOWN, 'CZK 135.00'],
+            [['123.00', 'CZK', new CashContext(1)], '12.50', RoundingMode::UNNECESSARY, 'CZK 135.50'],
         ];
     }
+
     /**
      * @expectedException \Brick\Money\Exception\MoneyMismatchException
      */
     public function testPlusDifferentContextThrowsException()
     {
-        $a = Money::of(50, 'CHF', new Context\CashContext(5));
+        $a = Money::of(50, 'CHF', new CashContext(5));
         $b = Money::of(20, 'CHF');
 
         $a->plus($b);
@@ -687,22 +720,13 @@ class MoneyTest extends AbstractTestCase
     /**
      * @dataProvider providerConvertedTo
      *
-     * @param array    $money
-     * @param string   $currency
-     * @param string   $exchangeRate
-     * @param int|null $roundingMode
-     * @param int      $scale
-     * @param string   $expected
+     * @param array  $money
+     * @param array  $parameters
+     * @param string $expected
      */
-    public function testConvertedTo(array $money, $currency, $exchangeRate, $roundingMode, $scale, $expected)
+    public function testConvertedTo(array $money, array $parameters, $expected)
     {
-        if ($scale === null) {
-            $context = new DefaultContext();
-        } else {
-            $context = new PrecisionContext($scale, 1);
-        }
-
-        $actual = Money::of(...$money)->convertedTo($currency, $exchangeRate, $context, $roundingMode);
+        $actual = Money::of(...$money)->convertedTo(...$parameters);
         $this->assertMoneyIs($expected, $actual);
     }
 
@@ -712,9 +736,9 @@ class MoneyTest extends AbstractTestCase
     public function providerConvertedTo()
     {
         return [
-            [['1.23', 'USD'], 'JPY', '125', RoundingMode::UNNECESSARY, 2, 'JPY 153.75'],
-            [['1.23', 'USD'], 'JPY', '125', RoundingMode::DOWN, null, 'JPY 153'],
-            [['1.23', 'USD'], 'JPY', '125', RoundingMode::UP, null, 'JPY 154'],
+            [['1.23', 'USD'], ['JPY', '125', new PrecisionContext(2)], 'JPY 153.75'],
+            [['1.23', 'USD'], ['JPY', '125', null, RoundingMode::DOWN], 'JPY 153'],
+            [['1.23', 'USD'], ['JPY', '125', new DefaultContext(), RoundingMode::UP], 'JPY 154'],
         ];
     }
 
@@ -768,6 +792,12 @@ class MoneyTest extends AbstractTestCase
             [['1.23', 'USD'], 'fr_FR', '1,23 $US'],
             [['1.23', 'EUR'], 'fr_FR', '1,23 €'],
         ];
+    }
+
+    public function testToRational()
+    {
+        $money = Money::of('12.3456', 'EUR', new ExactContext());
+        $this->assertRationalMoneyEquals('EUR 12.3456', $money->toRational());
     }
 
     /**
