@@ -2,8 +2,6 @@
 
 namespace Brick\Money;
 
-use Brick\Money\Context\DefaultContext;
-use Brick\Money\Context\ExactContext;
 use Brick\Money\Exception\MoneyMismatchException;
 
 use Brick\Math\BigNumber;
