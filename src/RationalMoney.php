@@ -207,7 +207,7 @@ class RationalMoney
         if ($that instanceof Money) {
             $this->checkCurrency($that->getCurrency());
 
-            return $that->amount;
+            return $that->getAmount();
         }
 
         return $that;
