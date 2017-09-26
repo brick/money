@@ -48,6 +48,14 @@ class PDOExchangeRateProvider implements ExchangeRateProvider
     {
         $conditions = [];
 
+        if ($configuration->tableName === null) {
+            throw new \InvalidArgumentException('Invalid configuration: $tableName is not set.');
+        }
+
+        if ($configuration->exchangeRateColumnName === null) {
+            throw new \InvalidArgumentException('Invalid configuration: $exchangeRateColumnName is not set.');
+        }
+
         if ($configuration->whereConditions !== null) {
             $conditions[] = '(' . $configuration->whereConditions . ')';
         }
@@ -57,7 +65,7 @@ class PDOExchangeRateProvider implements ExchangeRateProvider
         } elseif ($configuration->sourceCurrencyColumnName !== null) {
             $conditions[] = $configuration->sourceCurrencyColumnName . ' = ?';
         } else {
-            throw new \InvalidArgumentException('Invalid configuration: one of $sourceCurrencyCode or $sourceCurrencyColumnName must be provided.');
+            throw new \InvalidArgumentException('Invalid configuration: one of $sourceCurrencyCode or $sourceCurrencyColumnName must be set.');
         }
 
         if ($configuration->targetCurrencyCode !== null) {
@@ -65,7 +73,7 @@ class PDOExchangeRateProvider implements ExchangeRateProvider
         } elseif ($configuration->targetCurrencyColumnName !== null) {
             $conditions[] = $configuration->targetCurrencyColumnName . ' = ?';
         } else {
-            throw new \InvalidArgumentException('Invalid configuration: one of $targetCurrencyCode or $targetCurrencyColumnName must be provided.');
+            throw new \InvalidArgumentException('Invalid configuration: one of $targetCurrencyCode or $targetCurrencyColumnName must be set.');
         }
 
         $conditions = implode(' AND ' , $conditions);
