@@ -53,10 +53,10 @@ class Currency
     /**
      * Private constructor. Use getInstance() to obtain an instance.
      *
-     * @param string  $currencyCode          The currency code.
-     * @param string  $numericCode           The numeric currency code.
-     * @param string  $name                  The currency name.
-     * @param int     $defaultFractionDigits The default number of fraction digits.
+     * @param string $currencyCode          The currency code.
+     * @param string $numericCode           The numeric currency code.
+     * @param string $name                  The currency name.
+     * @param int    $defaultFractionDigits The default number of fraction digits.
      */
     private function __construct($currencyCode, $numericCode, $name, $defaultFractionDigits)
     {
@@ -99,11 +99,11 @@ class Currency
     }
 
     /**
-     * Returns a Currency instance of the given parameter.
+     * Returns a Currency instance matching the given ISO currency code.
      *
-     * This method resolves currency codes using the ISOCurrencyProvider.
+     * If a Currency instance is provided, it is returned as is.
      *
-     * @param Currency|string $currency
+     * @param Currency|string $currency The ISO 4217 currency code, or a Currency instance.
      *
      * @return Currency
      *
@@ -174,7 +174,7 @@ class Currency
      *
      * The currencies are considered equal if their currency codes are equal.
      *
-     * @param Currency|string $currency A currency instance or currency code.
+     * @param Currency|string $currency The currency to check, as a Currency instance or ISO currency code.
      *
      * @return bool
      */

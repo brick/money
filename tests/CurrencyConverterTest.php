@@ -46,8 +46,6 @@ class CurrencyConverterTest extends AbstractTestCase
      */
     public function testConvert($money, $toCurrency, $roundingMode, $expectedResult)
     {
-        $toCurrency = Currency::of($toCurrency);
-
         $currencyConverter = $this->createCurrencyConverter($roundingMode);
 
         if ($this->isExceptionClass($expectedResult)) {

@@ -43,8 +43,8 @@ class CurrencyConverter
     /**
      * Converts the given Money to the given Currency.
      *
-     * @param Money           $money
-     * @param Currency|string $currency
+     * @param Money           $money    The money to convert.
+     * @param Currency|string $currency The target currency, as a Currency instance or ISO currency code.
      *
      * @return Money
      *
@@ -67,15 +67,15 @@ class CurrencyConverter
     /**
      * Returns the total value of the given MoneyBag, in the given Currency.
      *
-     * @param MoneyBag        $moneyBag
-     * @param Currency|string $currency
+     * @param MoneyBag        $moneyBag The money bag.
+     * @param Currency|string $currency The currency, as a Currency instance or ISO currency code.
      *
      * @return Money
      */
     public function getTotal(MoneyBag $moneyBag, $currency)
     {
         $targetCurrency = Currency::of($currency);
-        $targetCurrencyCode = (string) $currency;
+        $targetCurrencyCode = $targetCurrency->getCurrencyCode();
 
         $total = BigRational::zero();
 

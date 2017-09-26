@@ -21,7 +21,7 @@ class MoneyBag
     /**
      * Returns the amount in the given currency contained in the bag.
      *
-     * @param Currency|string $currency
+     * @param Currency|string $currency The currency, as a Currency instance or ISO currency code.
      *
      * @return BigDecimal
      */

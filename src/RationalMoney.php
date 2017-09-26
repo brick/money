@@ -43,8 +43,8 @@ class RationalMoney
     /**
      * Convenience factory method.
      *
-     * @param BigNumber|number|string $amount   The amount.
-     * @param Currency|string         $currency A Currency instance or currency code.
+     * @param BigNumber|number|string $amount   The monetary amount.
+     * @param Currency|string         $currency The currency, as a Currency instance or ISO currency code.
      *
      * @return RationalMoney
      */

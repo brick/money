@@ -163,7 +163,7 @@ class Money
      * Operations on this Money return a Money with the same context.
      *
      * @param BigNumber|number|string $amount       The monetary amount.
-     * @param Currency|string         $currency     The currency, as a `Currency` object or currency code string.
+     * @param Currency|string         $currency     The currency, as a Currency instance or ISO currency code.
      * @param Context|null            $context      An optional Context.
      * @param int                     $roundingMode An optional RoundingMode, if the amount does not fit the context.
      *
@@ -191,7 +191,7 @@ class Money
      * The result is a Money with a DefaultContext: this Money has the default scale for the currency.
      *
      * @param BigNumber|number|string $minorAmount The amount in minor units. Must be convertible to a BigInteger.
-     * @param Currency|string         $currency    The currency, as a Currency instance or currency code string.
+     * @param Currency|string         $currency    The currency, as a Currency instance or ISO currency code.
      *
      * @return Money
      *
@@ -227,7 +227,7 @@ class Money
      * By default, the money is created with a DefaultContext: it has the default scale for the currency.
      * A Context instance can be provided to override the default.
      *
-     * @param Currency|string $currency A currency instance or currency code.
+     * @param Currency|string $currency The currency, as a Currency instance or ISO currency code.
      * @param Context|null    $context  An optional context.
      *
      * @return Money
@@ -699,7 +699,7 @@ class Money
      * For example, converting a default money of `USD 1.23` to `EUR` with an exchange rate of `0.91` and
      * RoundingMode::UP will yield `EUR 1.12`.
      *
-     * @param Currency|string         $currency     The target currency or currency code.
+     * @param Currency|string         $currency     The target currency, as a Currency instance or ISO currency code.
      * @param BigNumber|number|string $exchangeRate The exchange rate to multiply by.
      * @param Context|null            $context      An optional context.
      * @param int                     $roundingMode An optional rounding mode.
