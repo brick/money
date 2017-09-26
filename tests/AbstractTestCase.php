@@ -7,15 +7,25 @@ use Brick\Money\Currency;
 use Brick\Money\CurrencyProvider;
 use Brick\Money\Money;
 use Brick\Money\MoneyBag;
+use Brick\Money\RationalMoney;
 
 use Brick\Math\BigDecimal;
-use Brick\Money\RationalMoney;
 
 /**
  * Base class for money tests.
  */
 abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @param string     $expected
+     * @param BigDecimal $actual
+     */
+    final protected function assertBigDecimalIs($expected, $actual)
+    {
+        $this->assertInstanceOf(BigDecimal::class, $actual);
+        $this->assertSame($expected, (string) $actual);
+    }
+
     /**
      * @param string $expectedAmount   The expected decimal amount.
      * @param string $expectedCurrency The expected currency code.
