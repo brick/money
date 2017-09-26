@@ -7,9 +7,9 @@ use Brick\Money\ExchangeRateProvider\ConfigurableProvider;
 use Brick\Money\ExchangeRateProvider\ProviderChain;
 
 /**
- * Tests for class ExchangeRateProviderChain.
+ * Tests for class ProviderChain.
  */
-class ExchangeRateProviderChainTest extends AbstractTestCase
+class ProviderChainTest extends AbstractTestCase
 {
     /**
      * @var ExchangeRateProvider

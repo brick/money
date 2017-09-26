@@ -8,11 +8,11 @@ use Brick\Money\ExchangeRateProvider\PDOProviderConfiguration;
 use Brick\Money\Tests\AbstractTestCase;
 
 /**
- * Tests for class PDOExchangeRateProvider.
+ * Tests for class PDOProvider.
  *
  * @requires extension pdo_sqlite
  */
-class PDOExchangeRateProviderTest extends AbstractTestCase
+class PDOProviderTest extends AbstractTestCase
 {
     /**
      * @dataProvider providerConstructorWithInvalidConfiguration

@@ -11,9 +11,9 @@ use Brick\Math\BigRational;
 use Brick\Math\RoundingMode;
 
 /**
- * Tests for class BaseCurrencyExchangeRateProvider.
+ * Tests for class BaseCurrencyProvider.
  */
-class BaseCurrencyExchangeRateProviderTest extends AbstractTestCase
+class BaseCurrencyProviderTest extends AbstractTestCase
 {
     /**
      * @return ExchangeRateProvider

@@ -7,13 +7,13 @@ use Brick\Money\ExchangeRateProvider\CachedProvider;
 use Brick\Money\Tests\AbstractTestCase;
 
 /**
- * Tests for class CachedExchangeRateProvider.
+ * Tests for class CachedProvider.
  */
-class CachedExchangeRateProviderTest extends AbstractTestCase
+class CachedProviderTest extends AbstractTestCase
 {
     public function testGetExchangeRateAndInvalidate()
     {
-        $mock = new ExchangeRateProviderMock();
+        $mock = new ProviderMock();
         $provider = new CachedProvider($mock);
 
         $this->assertSame(1.1, $provider->getExchangeRate('EUR', 'USD'));
@@ -36,7 +36,7 @@ class CachedExchangeRateProviderTest extends AbstractTestCase
 
     public function testGetExchangeRateOfUnknownCurrencyPair()
     {
-        $mock = new ExchangeRateProviderMock();
+        $mock = new ProviderMock();
         $provider = new CachedProvider($mock);
 
         $this->expectException(CurrencyConversionException::class);
