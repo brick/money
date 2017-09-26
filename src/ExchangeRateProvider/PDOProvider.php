@@ -56,6 +56,10 @@ class PDOProvider implements ExchangeRateProvider
             throw new \InvalidArgumentException('Invalid configuration: $exchangeRateColumnName is not set.');
         }
 
+        if ($configuration->sourceCurrencyCode !== null && $configuration->targetCurrencyCode !== null) {
+            throw new \InvalidArgumentException('Invalid configuration: $sourceCurrencyCode and $targetCurrencyCode cannot be both set.');
+        }
+
         if ($configuration->whereConditions !== null) {
             $conditions[] = '(' . $configuration->whereConditions . ')';
         }
