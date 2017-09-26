@@ -12,6 +12,11 @@ use Brick\Money\Exception\UnknownCurrencyException;
 class ISOCurrencyProvider implements CurrencyProvider
 {
     /**
+     * @var ISOCurrencyProvider|null
+     */
+    private static $instance;
+
+    /**
      * The raw currency data, indexed by currency code.
      *
      * @var array
@@ -51,13 +56,11 @@ class ISOCurrencyProvider implements CurrencyProvider
      */
     public static function getInstance()
     {
-        static $instance;
-
-        if ($instance === null) {
-            $instance = new ISOCurrencyProvider();
+        if (self::$instance === null) {
+            self::$instance = new ISOCurrencyProvider();
         }
 
-        return $instance;
+        return self::$instance;
     }
 
     /**
