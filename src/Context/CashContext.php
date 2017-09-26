@@ -20,7 +20,7 @@ class CashContext implements Context
     /**
      * @param int $step
      */
-    public function __construct($step = 1)
+    public function __construct($step)
     {
         $this->step = (int) $step;
     }
