@@ -54,8 +54,8 @@ class MoneyTest extends AbstractTestCase
             ['JPY 1.200', '1.2', 'JPY', new PrecisionContext(3)],
             ['EUR 0.42', BigRational::of('3/7'), 'EUR', null, RoundingMode::DOWN],
             ['EUR 0.43', BigRational::of('3/7'), 'EUR', null, RoundingMode::UP],
-            ['CUSTOM 0.428', BigRational::of('3/7'), Currency::create('CUSTOM', 0, '', 3), null, RoundingMode::DOWN],
-            ['CUSTOM 0.4286', BigRational::of('3/7'), Currency::create('CUSTOM', 0, '', 3), new PrecisionContext(4, 1), RoundingMode::UP],
+            ['CUSTOM 0.428', BigRational::of('3/7'), new Currency('CUSTOM', 0, '', 3), null, RoundingMode::DOWN],
+            ['CUSTOM 0.4286', BigRational::of('3/7'), new Currency('CUSTOM', 0, '', 3), new PrecisionContext(4, 1), RoundingMode::UP],
             [RoundingNecessaryException::class, '1.2', 'JPY'],
             [NumberFormatException::class, '1.', 'JPY'],
         ];

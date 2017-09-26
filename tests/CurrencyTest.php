@@ -47,7 +47,7 @@ class CurrencyTest extends AbstractTestCase
 
     public function testCreate()
     {
-        $bitCoin = Currency::create('BTC', '123456789', 'BitCoin', 8);
+        $bitCoin = new Currency('BTC', '123456789', 'BitCoin', 8);
         $this->assertCurrencyEquals('BTC', '123456789', 'BitCoin', 8, $bitCoin);
     }
 
@@ -56,7 +56,7 @@ class CurrencyTest extends AbstractTestCase
      */
     public function testCreateWithNegativeFractionDigits()
     {
-        Currency::create('BTC', 0, 'BitCoin', -1);
+        new Currency('BTC', 0, 'BitCoin', -1);
     }
 
     public function testIs()

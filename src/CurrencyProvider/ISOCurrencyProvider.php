@@ -76,7 +76,7 @@ class ISOCurrencyProvider implements CurrencyProvider
             throw UnknownCurrencyException::unknownCurrency($currencyCode);
         }
 
-        $currency = Currency::create(... $this->currencyData[$currencyCode]);
+        $currency = new Currency(... $this->currencyData[$currencyCode]);
 
         return $this->currencies[$currencyCode] = $currency;
     }
@@ -89,7 +89,7 @@ class ISOCurrencyProvider implements CurrencyProvider
         if ($this->isPartial) {
             foreach ($this->currencyData as $currencyCode => $data) {
                 if (! isset($this->currencies[$currencyCode])) {
-                    $this->currencies[$currencyCode] = Currency::create(... $data);
+                    $this->currencies[$currencyCode] = new Currency(... $data);
                 }
             }
 

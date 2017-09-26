@@ -58,44 +58,18 @@ class Currency
      * @param string $name                  The currency name.
      * @param int    $defaultFractionDigits The default number of fraction digits.
      */
-    private function __construct($currencyCode, $numericCode, $name, $defaultFractionDigits)
+    public function __construct($currencyCode, $numericCode, $name, $defaultFractionDigits)
     {
-        $this->currencyCode          = $currencyCode;
-        $this->numericCode           = $numericCode;
-        $this->name                  = $name;
-        $this->defaultFractionDigits = $defaultFractionDigits;
-    }
-
-    /**
-     * Creates a Currency.
-     *
-     * @param string  $currencyCode          The currency code.
-     * @param string  $numericCode           The numeric currency code.
-     * @param string  $name                  The currency name.
-     * @param int     $defaultFractionDigits The default number of fraction digits.
-     *
-     * @return Currency
-     */
-    public static function create($currencyCode, $numericCode, $name, $defaultFractionDigits)
-    {
-        $currencyCode          = (string) $currencyCode;
-        $numericCode           = (string) $numericCode;
-        $name                  = (string) $name;
         $defaultFractionDigits = (int) $defaultFractionDigits;
-
-        if (preg_match('/^[a-zA-Z0-9]+$/', $currencyCode) !== 1) {
-            throw new \InvalidArgumentException('The currency code must be alphanumeric and non empty.');
-        }
-
-        if (! ctype_digit($numericCode)) {
-            throw new \InvalidArgumentException('The numeric code must consist of digits only.');
-        }
 
         if ($defaultFractionDigits < 0) {
             throw new \InvalidArgumentException('The default fraction digits cannot be less than zero.');
         }
 
-        return new Currency($currencyCode, $numericCode, $name, $defaultFractionDigits);
+        $this->currencyCode          = (string) $currencyCode;
+        $this->numericCode           = (string) $numericCode;
+        $this->name                  = (string) $name;
+        $this->defaultFractionDigits = $defaultFractionDigits;
     }
 
     /**
