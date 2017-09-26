@@ -10,7 +10,7 @@ use Brick\Math\BigNumber;
 /**
  * A configurable exchange rate provider.
  */
-class ConfigurableExchangeRateProvider implements ExchangeRateProvider
+class ConfigurableProvider implements ExchangeRateProvider
 {
     /**
      * @var array
@@ -22,7 +22,7 @@ class ConfigurableExchangeRateProvider implements ExchangeRateProvider
      * @param string                  $targetCurrencyCode
      * @param BigNumber|number|string $exchangeRate
      *
-     * @return ConfigurableExchangeRateProvider This instance, for chaining.
+     * @return ConfigurableProvider This instance, for chaining.
      */
     public function setExchangeRate($sourceCurrencyCode, $targetCurrencyCode, $exchangeRate)
     {

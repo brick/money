@@ -15,7 +15,7 @@ use Brick\Math\BigRational;
  * using this provider on top of it would allow you to get an exchange rate from EUR to USD, GBP to USD,
  * or even EUR to GBP and GBP to EUR.
  */
-class BaseCurrencyExchangeRateProvider implements ExchangeRateProvider
+class BaseCurrencyProvider implements ExchangeRateProvider
 {
     /**
      * The provider for rates relative to the base currency.

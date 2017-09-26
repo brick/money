@@ -3,7 +3,7 @@
 namespace Brick\Money\Tests\ExchangeRateProvider;
 
 use Brick\Money\Exception\CurrencyConversionException;
-use Brick\Money\ExchangeRateProvider\CachedExchangeRateProvider;
+use Brick\Money\ExchangeRateProvider\CachedProvider;
 use Brick\Money\Tests\AbstractTestCase;
 
 /**
@@ -14,7 +14,7 @@ class CachedExchangeRateProviderTest extends AbstractTestCase
     public function testGetExchangeRateAndInvalidate()
     {
         $mock = new ExchangeRateProviderMock();
-        $provider = new CachedExchangeRateProvider($mock);
+        $provider = new CachedProvider($mock);
 
         $this->assertSame(1.1, $provider->getExchangeRate('EUR', 'USD'));
         $this->assertEquals(1, $mock->getCalls());
@@ -37,7 +37,7 @@ class CachedExchangeRateProviderTest extends AbstractTestCase
     public function testGetExchangeRateOfUnknownCurrencyPair()
     {
         $mock = new ExchangeRateProviderMock();
-        $provider = new CachedExchangeRateProvider($mock);
+        $provider = new CachedProvider($mock);
 
         $this->expectException(CurrencyConversionException::class);
         $provider->getExchangeRate('USD', 'EUR');

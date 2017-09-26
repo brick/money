@@ -8,7 +8,7 @@ use Brick\Money\ExchangeRateProvider;
 /**
  * A chain of exchange rate providers.
  */
-class ExchangeRateProviderChain implements ExchangeRateProvider
+class ProviderChain implements ExchangeRateProvider
 {
     /**
      * The exchange rate providers, indexed by object hash.
@@ -24,7 +24,7 @@ class ExchangeRateProviderChain implements ExchangeRateProvider
      *
      * @param ExchangeRateProvider $provider The exchange rate provider to add.
      *
-     * @return ExchangeRateProviderChain This instance, for chaining.
+     * @return ProviderChain This instance, for chaining.
      */
     public function addExchangeRateProvider(ExchangeRateProvider $provider)
     {
@@ -41,7 +41,7 @@ class ExchangeRateProviderChain implements ExchangeRateProvider
      *
      * @param ExchangeRateProvider $provider The exchange rate provider to remove.
      *
-     * @return ExchangeRateProviderChain This instance, for chaining.
+     * @return ProviderChain This instance, for chaining.
      */
     public function removeExchangeRateProvider(ExchangeRateProvider $provider)
     {

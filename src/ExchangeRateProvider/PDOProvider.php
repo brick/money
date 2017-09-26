@@ -8,7 +8,7 @@ use Brick\Money\Exception\CurrencyConversionException;
 /**
  * Reads exchange rates from a PDO database connection.
  */
-class PDOExchangeRateProvider implements ExchangeRateProvider
+class PDOProvider implements ExchangeRateProvider
 {
     /**
      * The SELECT statement.
@@ -40,11 +40,11 @@ class PDOExchangeRateProvider implements ExchangeRateProvider
 
     /**
      * @param \PDO                                 $pdo
-     * @param PDOExchangeRateProviderConfiguration $configuration
+     * @param PDOProviderConfiguration $configuration
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct(\PDO $pdo, PDOExchangeRateProviderConfiguration $configuration)
+    public function __construct(\PDO $pdo, PDOProviderConfiguration $configuration)
     {
         $conditions = [];
 

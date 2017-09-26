@@ -3,8 +3,8 @@
 namespace Brick\Money\Tests;
 
 use Brick\Money\ExchangeRateProvider;
-use Brick\Money\ExchangeRateProvider\ConfigurableExchangeRateProvider;
-use Brick\Money\ExchangeRateProvider\ExchangeRateProviderChain;
+use Brick\Money\ExchangeRateProvider\ConfigurableProvider;
+use Brick\Money\ExchangeRateProvider\ProviderChain;
 
 /**
  * Tests for class ExchangeRateProviderChain.
@@ -23,13 +23,13 @@ class ExchangeRateProviderChainTest extends AbstractTestCase
 
     public static function setUpBeforeClass()
     {
-        $provider = new ConfigurableExchangeRateProvider();
+        $provider = new ConfigurableProvider();
         $provider->setExchangeRate('USD', 'GBP', 0.7);
         $provider->setExchangeRate('USD', 'EUR', 0.9);
 
         self::$provider1 = $provider;
 
-        $provider = new ConfigurableExchangeRateProvider();
+        $provider = new ConfigurableProvider();
         $provider->setExchangeRate('USD', 'EUR', 0.8);
         $provider->setExchangeRate('EUR', 'USD', 1.2);
 
@@ -41,16 +41,16 @@ class ExchangeRateProviderChainTest extends AbstractTestCase
      */
     public function testUnknownExchangeRate()
     {
-        $providerChain = new ExchangeRateProviderChain();
+        $providerChain = new ProviderChain();
         $providerChain->getExchangeRate('USD', 'GBP');
     }
 
     /**
-     * @return ExchangeRateProviderChain
+     * @return ProviderChain
      */
     public function testAddFirstProvider()
     {
-        $provider = new ExchangeRateProviderChain();
+        $provider = new ProviderChain();
         $provider->addExchangeRateProvider(self::$provider1);
 
         $this->assertSame(0.7, $provider->getExchangeRate('USD', 'GBP'));
@@ -62,11 +62,11 @@ class ExchangeRateProviderChainTest extends AbstractTestCase
     /**
      * @depends testAddFirstProvider
      *
-     * @param ExchangeRateProviderChain $provider
+     * @param ProviderChain $provider
      *
-     * @return ExchangeRateProviderChain
+     * @return ProviderChain
      */
-    public function testAddSecondProvider(ExchangeRateProviderChain $provider)
+    public function testAddSecondProvider(ProviderChain $provider)
     {
         $provider->addExchangeRateProvider(self::$provider2);
 
@@ -80,9 +80,9 @@ class ExchangeRateProviderChainTest extends AbstractTestCase
     /**
      * @depends testAddSecondProvider
      *
-     * @param ExchangeRateProviderChain $provider
+     * @param ProviderChain $provider
      */
-    public function testRemoveProvider(ExchangeRateProviderChain $provider)
+    public function testRemoveProvider(ProviderChain $provider)
     {
         $provider->removeExchangeRateProvider(self::$provider1);
 

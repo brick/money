@@ -9,7 +9,7 @@ use Brick\Money\Context\PrecisionContext;
 use Brick\Money\Currency;
 use Brick\Money\CurrencyConverter;
 use Brick\Money\Exception\CurrencyConversionException;
-use Brick\Money\ExchangeRateProvider\ConfigurableExchangeRateProvider;
+use Brick\Money\ExchangeRateProvider\ConfigurableProvider;
 use Brick\Money\Money;
 use Brick\Money\MoneyBag;
 
@@ -28,7 +28,7 @@ class CurrencyConverterTest extends AbstractTestCase
      */
     private function createCurrencyConverter($roundingMode)
     {
-        $exchangeRateProvider = new ConfigurableExchangeRateProvider();
+        $exchangeRateProvider = new ConfigurableProvider();
         $exchangeRateProvider->setExchangeRate('EUR', 'USD', '1.1');
         $exchangeRateProvider->setExchangeRate('USD', 'EUR', '10/11');
         $exchangeRateProvider->setExchangeRate('BSD', 'USD', 1);
@@ -93,7 +93,7 @@ class CurrencyConverterTest extends AbstractTestCase
      */
     public function testGetTotal(array $monies, $currency, Context $context, $roundingMode, $total)
     {
-        $exchangeRateProvider = new ConfigurableExchangeRateProvider();
+        $exchangeRateProvider = new ConfigurableProvider();
         $exchangeRateProvider->setExchangeRate('EUR', 'USD', '1.23456789');
         $exchangeRateProvider->setExchangeRate('JPY', 'USD', '0.00987654321');
 

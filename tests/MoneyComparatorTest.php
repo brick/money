@@ -4,7 +4,7 @@ namespace Brick\Money\Tests;
 
 use Brick\Money\Context\ExactContext;
 use Brick\Money\Exception\CurrencyConversionException;
-use Brick\Money\ExchangeRateProvider\ConfigurableExchangeRateProvider;
+use Brick\Money\ExchangeRateProvider\ConfigurableProvider;
 use Brick\Money\Money;
 use Brick\Money\MoneyComparator;
 
@@ -14,11 +14,11 @@ use Brick\Money\MoneyComparator;
 class MoneyComparatorTest extends AbstractTestCase
 {
     /**
-     * @return ConfigurableExchangeRateProvider
+     * @return ConfigurableProvider
      */
     private function getExchangeRateProvider()
     {
-        $provider = new ConfigurableExchangeRateProvider();
+        $provider = new ConfigurableProvider();
 
         $provider->setExchangeRate('EUR', 'USD', 1.1);
         $provider->setExchangeRate('USD', 'EUR', 0.9);
