@@ -2,16 +2,30 @@
 
 namespace Brick\Money\Tests;
 
+use Brick\Money\Context;
 use Brick\Money\Currency;
 use Brick\Money\CurrencyProvider;
 use Brick\Money\Money;
 use Brick\Money\MoneyBag;
+use Brick\Money\RationalMoney;
+
+use Brick\Math\BigDecimal;
 
 /**
  * Base class for money tests.
  */
 abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @param string     $expected
+     * @param BigDecimal $actual
+     */
+    final protected function assertBigDecimalIs($expected, $actual)
+    {
+        $this->assertInstanceOf(BigDecimal::class, $actual);
+        $this->assertSame($expected, (string) $actual);
+    }
+
     /**
      * @param string $expectedAmount   The expected decimal amount.
      * @param string $expectedCurrency The expected currency code.
@@ -25,40 +39,71 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param Money|string $expected The expected money, or its string representation.
+     * @param string       $expected The expected string representation of the Money.
      * @param Money        $actual   The money to test.
+     * @param Context|null $context  An optional context to check against the Money.
      */
-    final protected function assertMoneyIs($expected, $actual)
+    final protected function assertMoneyIs($expected, $actual, Context $context = null)
     {
         $this->assertInstanceOf(Money::class, $actual);
         $this->assertSame((string) $expected, (string) $actual);
+
+        if ($context !== null) {
+            $this->assertEquals($context, $actual->getContext());
+        }
     }
 
     /**
-     * @param array    $expectedMonies
+     * @param string[] $expected
+     * @param Money[]  $actual
+     */
+    final protected function assertMoniesAre(array $expected, array $actual)
+    {
+        foreach ($actual as $key => $money) {
+            $this->assertInstanceOf(Money::class, $money);
+            $actual[$key] = (string) $money;
+        }
+
+        $this->assertSame($expected, $actual);
+    }
+
+    /**
+     * @param array    $expectedAmounts
      * @param MoneyBag $moneyBag
      */
-    final protected function assertMoneyBagContains(array $expectedMonies, $moneyBag)
+    final protected function assertMoneyBagContains(array $expectedAmounts, $moneyBag)
     {
         $this->assertInstanceOf(MoneyBag::class, $moneyBag);
 
         // Test get() on each currency
-        foreach ($expectedMonies as $money) {
-            $money = Money::parse($money);
-            $this->assertMoneyIs($money, $moneyBag->get($money->getCurrency()));
+        foreach ($expectedAmounts as $currencyCode => $expectedAmount) {
+            $actualAmount = $moneyBag->getAmount($currencyCode);
+
+            $this->assertInstanceOf(BigDecimal::class, $actualAmount);
+            $this->assertSame($expectedAmount, (string) $actualAmount);
         }
 
-        $actualMonies = $moneyBag->getMonies();
+        // Test getAmounts()
+        $actualAmounts = $moneyBag->getAmounts();
 
-        foreach ($actualMonies as & $money) {
-            $money = (string) $money;
+        foreach ($actualAmounts as $currencyCode => $amount) {
+            $actualAmounts[$currencyCode] = (string) $amount;
         }
 
-        sort($expectedMonies);
-        sort($actualMonies);
+        sort($expectedAmounts);
+        sort($actualAmounts);
 
-        // Test getMonies()
-        $this->assertSame($expectedMonies, $actualMonies);
+        $this->assertSame($expectedAmounts, $actualAmounts);
+    }
+
+    /**
+     * @param string        $expected
+     * @param RationalMoney $actual
+     */
+    final protected function assertRationalMoneyEquals($expected, $actual)
+    {
+        $this->assertInstanceOf(RationalMoney::class, $actual);
+        $this->assertSame($expected, (string) $actual);
     }
 
     /**

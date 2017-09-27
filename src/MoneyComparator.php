@@ -79,7 +79,7 @@ class MoneyComparator
      */
     public function isEqual(Money $a, Money $b)
     {
-        return $this->compare($a, $b) == 0;
+        return $this->compare($a, $b) === 0;
     }
 
     /**
@@ -165,7 +165,7 @@ class MoneyComparator
     }
 
     /**
-     * Returns the larget of the given monies.
+     * Returns the largest of the given monies.
      *
      * The monies are compared from left to right. This distinction can be important if the exchange rate provider does
      * not have bidirectional exchange rates, or applies different rates depending on the direction of the conversion.

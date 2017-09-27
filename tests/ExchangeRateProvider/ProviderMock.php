@@ -8,7 +8,7 @@ use Brick\Money\ExchangeRateProvider;
 /**
  * A mock implementation of ExchangeRateProvider for tests.
  */
-class ExchangeRateProviderMock implements ExchangeRateProvider
+class ProviderMock implements ExchangeRateProvider
 {
     /**
      * @var array

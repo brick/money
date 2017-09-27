@@ -2,7 +2,7 @@
 
 namespace Brick\Money;
 
-use Brick\Money\CurrencyProvider\DefaultCurrencyProvider;
+use Brick\Money\CurrencyProvider\ISOCurrencyProvider;
 use Brick\Money\Exception\UnknownCurrencyException;
 
 /**
@@ -53,59 +53,31 @@ class Currency
     /**
      * Private constructor. Use getInstance() to obtain an instance.
      *
-     * @param string  $currencyCode          The currency code.
-     * @param string  $numericCode           The numeric currency code.
-     * @param string  $name                  The currency name.
-     * @param int     $defaultFractionDigits The default number of fraction digits.
+     * @param string $currencyCode          The currency code.
+     * @param string $numericCode           The numeric currency code.
+     * @param string $name                  The currency name.
+     * @param int    $defaultFractionDigits The default number of fraction digits.
      */
-    private function __construct($currencyCode, $numericCode, $name, $defaultFractionDigits)
+    public function __construct($currencyCode, $numericCode, $name, $defaultFractionDigits)
     {
-        $this->currencyCode          = $currencyCode;
-        $this->numericCode           = $numericCode;
-        $this->name                  = $name;
-        $this->defaultFractionDigits = $defaultFractionDigits;
-    }
-
-    /**
-     * Creates a Currency.
-     *
-     * @param string  $currencyCode          The currency code.
-     * @param string  $numericCode           The numeric currency code.
-     * @param string  $name                  The currency name.
-     * @param int     $defaultFractionDigits The default number of fraction digits.
-     *
-     * @return Currency
-     */
-    public static function create($currencyCode, $numericCode, $name, $defaultFractionDigits)
-    {
-        $currencyCode          = (string) $currencyCode;
-        $numericCode           = (string) $numericCode;
-        $name                  = (string) $name;
         $defaultFractionDigits = (int) $defaultFractionDigits;
-
-        if (preg_match('/^[a-zA-Z0-9]+$/', $currencyCode) !== 1) {
-            throw new \InvalidArgumentException('The currency code must be alphanumeric and non empty.');
-        }
-
-        if (! ctype_digit($numericCode)) {
-            throw new \InvalidArgumentException('The numeric code must consist of digits only.');
-        }
 
         if ($defaultFractionDigits < 0) {
             throw new \InvalidArgumentException('The default fraction digits cannot be less than zero.');
         }
 
-        return new Currency($currencyCode, $numericCode, $name, $defaultFractionDigits);
+        $this->currencyCode          = (string) $currencyCode;
+        $this->numericCode           = (string) $numericCode;
+        $this->name                  = (string) $name;
+        $this->defaultFractionDigits = $defaultFractionDigits;
     }
 
     /**
-     * Returns a Currency instance of the given parameter.
+     * Returns a Currency instance matching the given ISO currency code.
      *
-     * This method resolves currency codes using the DefaultCurrencyProvider.
-     * By default, only ISO currencies are available; additional currencies can be registered
-     * with the DefaultCurrencyProvider and will be made available here.
+     * If a Currency instance is provided, it is returned as is.
      *
-     * @param Currency|string $currency
+     * @param Currency|string $currency The ISO 4217 currency code, or a Currency instance.
      *
      * @return Currency
      *
@@ -117,7 +89,7 @@ class Currency
             return $currency;
         }
 
-        return DefaultCurrencyProvider::getInstance()->getCurrency($currency);
+        return ISOCurrencyProvider::getInstance()->getCurrency($currency);
     }
 
     /**
@@ -176,7 +148,7 @@ class Currency
      *
      * The currencies are considered equal if their currency codes are equal.
      *
-     * @param Currency|string $currency A currency instance or currency code.
+     * @param Currency|string $currency The currency to check, as a Currency instance or ISO currency code.
      *
      * @return bool
      */

@@ -12,6 +12,20 @@ use Brick\Money\Tests\AbstractTestCase;
 class ISOCurrencyProviderTest extends AbstractTestCase
 {
     /**
+     * Resets the singleton instance before running the tests.
+     *
+     * This is necessary for code coverage to "see" the actual instantiation happen, as it may happen indirectly from
+     * another class internally resolving an ISO currency code using ISOCurrencyProvider, and this can originate from
+     * code outside test methods (for example in data providers).
+     */
+    public static function setUpBeforeClass()
+    {
+        $reflection = new \ReflectionProperty(ISOCurrencyProvider::class, 'instance');
+        $reflection->setAccessible(true);
+        $reflection->setValue(null);
+    }
+
+    /**
      * @dataProvider providerGetCurrency
      *
      * @param string $currencyCode

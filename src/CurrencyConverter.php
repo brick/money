@@ -2,10 +2,11 @@
 
 namespace Brick\Money;
 
-use Brick\Money\ExchangeRateProvider;
 use Brick\Money\Exception\CurrencyConversionException;
 
+use Brick\Math\BigRational;
 use Brick\Math\Exception\RoundingNecessaryException;
+use Brick\Math\RoundingMode;
 
 /**
  * Converts monies into different currencies, using an exchange rate provider.
@@ -18,23 +19,32 @@ class CurrencyConverter
     private $exchangeRateProvider;
 
     /**
-     * @var MoneyContext
+     * @var Context
      */
     private $context;
 
     /**
-     * @param ExchangeRateProvider $exchangeRateProvider The exchange rate provider.
-     * @param MoneyContext         $context              The scale & rounding context to use.
+     * @var int
      */
-    public function __construct(ExchangeRateProvider $exchangeRateProvider, MoneyContext $context)
+    private $roundingMode;
+
+    /**
+     * @param ExchangeRateProvider $exchangeRateProvider The exchange rate provider.
+     * @param Context              $context              The context of the monies created by this currency converter.
+     * @param int                  $roundingMode         The rounding mode, if necessary.
+     */
+    public function __construct(ExchangeRateProvider $exchangeRateProvider, Context $context, $roundingMode = RoundingMode::UNNECESSARY)
     {
         $this->exchangeRateProvider = $exchangeRateProvider;
         $this->context              = $context;
+        $this->roundingMode         = (int) $roundingMode;
     }
 
     /**
-     * @param Money           $money
-     * @param Currency|string $currency
+     * Converts the given Money to the given Currency.
+     *
+     * @param Money           $money    The money to convert.
+     * @param Currency|string $currency The target currency, as a Currency instance or ISO currency code.
      *
      * @return Money
      *
@@ -51,6 +61,30 @@ class CurrencyConverter
             $exchangeRate = $this->exchangeRateProvider->getExchangeRate($money->getCurrency()->getCurrencyCode(), $currency->getCurrencyCode());
         }
 
-        return $money->convertedTo($currency, $exchangeRate, $this->context);
+        return $money->convertedTo($currency, $exchangeRate, $this->context, $this->roundingMode);
+    }
+
+    /**
+     * Returns the total value of the given MoneyBag, in the given Currency.
+     *
+     * @param MoneyBag        $moneyBag The money bag.
+     * @param Currency|string $currency The currency, as a Currency instance or ISO currency code.
+     *
+     * @return Money
+     */
+    public function getTotal(MoneyBag $moneyBag, $currency)
+    {
+        $targetCurrency = Currency::of($currency);
+        $targetCurrencyCode = $targetCurrency->getCurrencyCode();
+
+        $total = BigRational::zero();
+
+        foreach ($moneyBag->getAmounts() as $currencyCode => $amount) {
+            $exchangeRate = $this->exchangeRateProvider->getExchangeRate($currencyCode, $targetCurrencyCode);
+            $convertedAmount = $amount->toBigRational()->multipliedBy($exchangeRate);
+            $total = $total->plus($convertedAmount);
+        }
+
+        return Money::create($total, $targetCurrency, $this->context, $this->roundingMode);
     }
 }

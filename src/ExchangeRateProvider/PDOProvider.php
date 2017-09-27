@@ -8,7 +8,7 @@ use Brick\Money\Exception\CurrencyConversionException;
 /**
  * Reads exchange rates from a PDO database connection.
  */
-class PDOExchangeRateProvider implements ExchangeRateProvider
+class PDOProvider implements ExchangeRateProvider
 {
     /**
      * The SELECT statement.
@@ -40,13 +40,25 @@ class PDOExchangeRateProvider implements ExchangeRateProvider
 
     /**
      * @param \PDO                                 $pdo
-     * @param PDOExchangeRateProviderConfiguration $configuration
+     * @param PDOProviderConfiguration $configuration
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct(\PDO $pdo, PDOExchangeRateProviderConfiguration $configuration)
+    public function __construct(\PDO $pdo, PDOProviderConfiguration $configuration)
     {
         $conditions = [];
+
+        if ($configuration->tableName === null) {
+            throw new \InvalidArgumentException('Invalid configuration: $tableName is not set.');
+        }
+
+        if ($configuration->exchangeRateColumnName === null) {
+            throw new \InvalidArgumentException('Invalid configuration: $exchangeRateColumnName is not set.');
+        }
+
+        if ($configuration->sourceCurrencyCode !== null && $configuration->targetCurrencyCode !== null) {
+            throw new \InvalidArgumentException('Invalid configuration: $sourceCurrencyCode and $targetCurrencyCode cannot be both set.');
+        }
 
         if ($configuration->whereConditions !== null) {
             $conditions[] = '(' . $configuration->whereConditions . ')';
@@ -57,7 +69,7 @@ class PDOExchangeRateProvider implements ExchangeRateProvider
         } elseif ($configuration->sourceCurrencyColumnName !== null) {
             $conditions[] = $configuration->sourceCurrencyColumnName . ' = ?';
         } else {
-            throw new \InvalidArgumentException('Invalid configuration: one of $sourceCurrencyCode or $sourceCurrencyColumnName must be provided.');
+            throw new \InvalidArgumentException('Invalid configuration: one of $sourceCurrencyCode or $sourceCurrencyColumnName must be set.');
         }
 
         if ($configuration->targetCurrencyCode !== null) {
@@ -65,7 +77,7 @@ class PDOExchangeRateProvider implements ExchangeRateProvider
         } elseif ($configuration->targetCurrencyColumnName !== null) {
             $conditions[] = $configuration->targetCurrencyColumnName . ' = ?';
         } else {
-            throw new \InvalidArgumentException('Invalid configuration: one of $targetCurrencyCode or $targetCurrencyColumnName must be provided.');
+            throw new \InvalidArgumentException('Invalid configuration: one of $targetCurrencyCode or $targetCurrencyColumnName must be set.');
         }
 
         $conditions = implode(' AND ' , $conditions);
