@@ -24,6 +24,13 @@ class ISOCurrencyProvider implements CurrencyProvider
     private $currencyData;
 
     /**
+     * An associative array of country code to currency codes.
+     *
+     * @var array|null
+     */
+    private $countryToCurrency;
+
+    /**
      * The Currency instances.
      *
      * The instances are created on-demand, as soon as they are requested.
@@ -97,5 +104,63 @@ class ISOCurrencyProvider implements CurrencyProvider
         }
 
         return $this->currencies;
+    }
+
+    /**
+     * Returns the currency for the given ISO country code.
+     *
+     * @param string $countryCode A 2-letter ISO 3166-1 country code.
+     *
+     * @return Currency
+     *
+     * @throws UnknownCurrencyException If the country code is not known, or the country has no single currency.
+     */
+    public function getCurrencyForCountry($countryCode)
+    {
+        $currencies = $this->getCurrenciesForCountry($countryCode);
+
+        $count = count($currencies);;
+
+        if ($count === 1) {
+            return $currencies[0];
+        }
+
+        if ($count === 0) {
+            throw new UnknownCurrencyException('No currency found for ' . $countryCode);
+        }
+
+        $currencyCodes = [];
+
+        foreach ($currencies as $currency) {
+            $currencyCodes[] = $currency->getCurrencyCode();
+        }
+
+        throw new UnknownCurrencyException('Several currencies found for ' . $countryCode . ': ' . implode(', ', $currencyCodes));
+    }
+
+    /**
+     * Returns the currencies for the given ISO country code.
+     *
+     * If the country code is not known, or if the country has no official currency, an empty array is returned.
+     *
+     * @param string $countryCode The 2-letter ISO 3166-1 country codes.
+     *
+     * @return Currency[]
+     */
+    public function getCurrenciesForCountry($countryCode)
+    {
+        if ($this->countryToCurrency === null) {
+            $this->countryToCurrency = require __DIR__ . '/../../data/country-to-currency.php';
+        }
+
+        $result = [];
+
+        if (isset($this->countryToCurrency[$countryCode])) {
+            foreach ($this->countryToCurrency[$countryCode] as $currencyCode) {
+                $result[] = $this->getCurrency($currencyCode);
+            }
+        }
+
+        return $result;
     }
 }

@@ -3,6 +3,7 @@
 namespace Brick\Money\Tests;
 
 use Brick\Money\Currency;
+use Brick\Money\Exception\UnknownCurrencyException;
 
 /**
  * Unit tests for class Currency.
@@ -49,6 +50,46 @@ class CurrencyTest extends AbstractTestCase
     public function testOfReturnsSameInstance()
     {
         $this->assertSame(Currency::of('EUR'), Currency::of('EUR'));
+    }
+
+    /**
+     * @dataProvider providerOfCountry
+     *
+     * @param string $countryCode
+     * @param string $expected
+     */
+    public function testOfCountry($countryCode, $expected)
+    {
+        if ($this->isExceptionClass($expected)) {
+            $this->expectException($expected);
+        }
+
+        $actual = Currency::ofCountry($countryCode);
+
+        if (! $this->isExceptionClass($expected)) {
+            $this->assertInstanceOf(Currency::class, $actual);
+            $this->assertSame($expected, $actual->getCurrencyCode());
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function providerOfCountry()
+    {
+        return [
+            ['CA', 'CAD'],
+            ['CH', 'CHF'],
+            ['DE', 'EUR'],
+            ['ES', 'EUR'],
+            ['FR', 'EUR'],
+            ['GB', 'GBP'],
+            ['IT', 'EUR'],
+            ['US', 'USD'],
+            ['AQ', UnknownCurrencyException::class], // no currency
+            ['CU', UnknownCurrencyException::class], // 2 currencies
+            ['XX', UnknownCurrencyException::class], // unknown
+        ];
     }
 
     /**

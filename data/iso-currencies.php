@@ -829,7 +829,7 @@
   array (
     0 => 'PHP',
     1 => '608',
-    2 => 'Philippine Peso',
+    2 => 'Philippine Piso',
     3 => 2,
   ),
   'PLN' => 

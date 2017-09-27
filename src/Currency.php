@@ -93,6 +93,20 @@ class Currency
     }
 
     /**
+     * Returns a Currency instance for the given ISO country code.
+     *
+     * @param string $countryCode A 2-letter ISO 3166-1 country code.
+     *
+     * @return Currency
+     *
+     * @throws UnknownCurrencyException If the country code is unknown, or there is no single currency for the country.
+     */
+    public static function ofCountry($countryCode)
+    {
+        return ISOCurrencyProvider::getInstance()->getCurrencyForCountry($countryCode);
+    }
+
+    /**
      * Returns the currency code.
      *
      * For ISO currencies this will be the 3-letter uppercase ISO 4217 currency code.
