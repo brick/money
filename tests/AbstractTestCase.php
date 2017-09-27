@@ -4,7 +4,6 @@ namespace Brick\Money\Tests;
 
 use Brick\Money\Context;
 use Brick\Money\Currency;
-use Brick\Money\CurrencyProvider;
 use Brick\Money\Money;
 use Brick\Money\MoneyBag;
 use Brick\Money\RationalMoney;

@@ -3,7 +3,7 @@
 namespace Brick\Money\Tests\CurrencyProvider;
 
 use Brick\Money\Currency;
-use Brick\Money\CurrencyProvider\ISOCurrencyProvider;
+use Brick\Money\ISOCurrencyProvider;
 use Brick\Money\Tests\AbstractTestCase;
 
 /**

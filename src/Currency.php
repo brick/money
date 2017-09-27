@@ -2,7 +2,7 @@
 
 namespace Brick\Money;
 
-use Brick\Money\CurrencyProvider\ISOCurrencyProvider;
+use Brick\Money\ISOCurrencyProvider;
 use Brick\Money\Exception\UnknownCurrencyException;
 
 /**

@@ -1,15 +1,13 @@
 <?php
 
-namespace Brick\Money\CurrencyProvider;
+namespace Brick\Money;
 
-use Brick\Money\Currency;
-use Brick\Money\CurrencyProvider;
 use Brick\Money\Exception\UnknownCurrencyException;
 
 /**
- * Built-in provider for ISO currencies.
+ * Provides ISO 4217 currencies.
  */
-class ISOCurrencyProvider implements CurrencyProvider
+class ISOCurrencyProvider
 {
     /**
      * @var ISOCurrencyProvider|null
@@ -53,7 +51,7 @@ class ISOCurrencyProvider implements CurrencyProvider
      */
     private function __construct()
     {
-        $this->currencyData = require __DIR__ . '/../../data/iso-currencies.php';
+        $this->currencyData = require __DIR__ . '/../data/iso-currencies.php';
     }
 
     /**
@@ -71,7 +69,13 @@ class ISOCurrencyProvider implements CurrencyProvider
     }
 
     /**
-     * {@inheritdoc}
+     * Returns the currency matching the given currency code.
+     *
+     * @param string $currencyCode The ISO 4217 currency code.
+     *
+     * @return Currency The currency.
+     *
+     * @throws UnknownCurrencyException If the currency code is not known.
      */
     public function getCurrency($currencyCode)
     {
@@ -89,7 +93,9 @@ class ISOCurrencyProvider implements CurrencyProvider
     }
 
     /**
-     * {@inheritdoc}
+     * Returns all the available currencies.
+     *
+     * @return Currency[] The currencies, indexed by currency code.
      */
     public function getAvailableCurrencies()
     {
@@ -99,6 +105,8 @@ class ISOCurrencyProvider implements CurrencyProvider
                     $this->currencies[$currencyCode] = new Currency(... $data);
                 }
             }
+
+            ksort($this->currencies);
 
             $this->isPartial = false;
         }
@@ -150,7 +158,7 @@ class ISOCurrencyProvider implements CurrencyProvider
     public function getCurrenciesForCountry($countryCode)
     {
         if ($this->countryToCurrency === null) {
-            $this->countryToCurrency = require __DIR__ . '/../../data/country-to-currency.php';
+            $this->countryToCurrency = require __DIR__ . '/../data/country-to-currency.php';
         }
 
         $result = [];
