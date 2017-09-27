@@ -123,28 +123,6 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param Currency[]       $expectedCurrencies
-     * @param CurrencyProvider $currencyProvider
-     */
-    final protected function assertCurrencyProviderContains(array $expectedCurrencies, $currencyProvider)
-    {
-        $this->assertInstanceOf(CurrencyProvider::class, $currencyProvider);
-
-        // Test getAvailableCurrencies()
-        $actualCurrencies = $currencyProvider->getAvailableCurrencies();
-
-        ksort($expectedCurrencies);
-        ksort($actualCurrencies);
-
-        $this->assertSame($expectedCurrencies, $actualCurrencies);
-
-        // Test getCurrency() on each currency code
-        foreach ($expectedCurrencies as $currencyCode => $currency) {
-            $this->assertSame($currency, $currencyProvider->getCurrency($currencyCode));
-        }
-    }
-
-    /**
      * @param string $value
      *
      * @return bool
