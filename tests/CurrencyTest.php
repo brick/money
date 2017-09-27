@@ -40,15 +40,15 @@ class CurrencyTest extends AbstractTestCase
         ];
     }
 
-    public function testOf()
-    {
-        $this->assertSame(Currency::of('EUR'), Currency::of('EUR'));
-    }
-
-    public function testCreate()
+    public function testConstructor()
     {
         $bitCoin = new Currency('BTC', '123456789', 'BitCoin', 8);
         $this->assertCurrencyEquals('BTC', '123456789', 'BitCoin', 8, $bitCoin);
+    }
+
+    public function testOfReturnsSameInstance()
+    {
+        $this->assertSame(Currency::of('EUR'), Currency::of('EUR'));
     }
 
     /**
