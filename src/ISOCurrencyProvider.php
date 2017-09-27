@@ -24,6 +24,8 @@ class ISOCurrencyProvider
     /**
      * An associative array of country code to currency codes.
      *
+     * This property is set on-demand, as soon as required.
+     *
      * @var array|null
      */
     private $countryToCurrency;
@@ -127,7 +129,7 @@ class ISOCurrencyProvider
     {
         $currencies = $this->getCurrenciesForCountry($countryCode);
 
-        $count = count($currencies);;
+        $count = count($currencies);
 
         if ($count === 1) {
             return $currencies[0];
