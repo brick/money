@@ -75,27 +75,21 @@ class Currency
     /**
      * Returns a Currency instance matching the given ISO currency code.
      *
-     * If a Currency instance is provided, it is returned as is.
-     *
-     * @param Currency|string $currency The ISO 4217 currency code, or a Currency instance.
+     * @param string $currencyCode The 3-letter ISO 4217 currency code.
      *
      * @return Currency
      *
      * @throws UnknownCurrencyException If an unknown currency code is given.
      */
-    public static function of($currency)
+    public static function of($currencyCode)
     {
-        if ($currency instanceof Currency) {
-            return $currency;
-        }
-
-        return ISOCurrencyProvider::getInstance()->getCurrency($currency);
+        return ISOCurrencyProvider::getInstance()->getCurrency($currencyCode);
     }
 
     /**
      * Returns a Currency instance for the given ISO country code.
      *
-     * @param string $countryCode A 2-letter ISO 3166-1 country code.
+     * @param string $countryCode The 2-letter ISO 3166-1 country code.
      *
      * @return Currency
      *

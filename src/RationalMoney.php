@@ -51,7 +51,10 @@ class RationalMoney
     public static function of($amount, $currency)
     {
         $amount = BigRational::of($amount);
-        $currency = Currency::of($currency);
+
+        if (! $currency instanceof Currency) {
+            $currency = Currency::of($currency);
+        }
 
         return new RationalMoney($amount, $currency);
     }

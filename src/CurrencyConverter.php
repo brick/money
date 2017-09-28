@@ -53,7 +53,9 @@ class CurrencyConverter
      */
     public function convert(Money $money, $currency)
     {
-        $currency = Currency::of($currency);
+        if (! $currency instanceof Currency) {
+            $currency = Currency::of($currency);
+        }
 
         if ($money->getCurrency()->is($currency)) {
             $exchangeRate = 1;
@@ -74,17 +76,20 @@ class CurrencyConverter
      */
     public function getTotal(MoneyBag $moneyBag, $currency)
     {
-        $targetCurrency = Currency::of($currency);
-        $targetCurrencyCode = $targetCurrency->getCurrencyCode();
+        if (! $currency instanceof Currency) {
+            $currency = Currency::of($currency);
+        }
+
+        $currencyCode = $currency->getCurrencyCode();
 
         $total = BigRational::zero();
 
-        foreach ($moneyBag->getAmounts() as $currencyCode => $amount) {
-            $exchangeRate = $this->exchangeRateProvider->getExchangeRate($currencyCode, $targetCurrencyCode);
+        foreach ($moneyBag->getAmounts() as $sourceCurrencyCode => $amount) {
+            $exchangeRate = $this->exchangeRateProvider->getExchangeRate($sourceCurrencyCode, $currencyCode);
             $convertedAmount = $amount->toBigRational()->multipliedBy($exchangeRate);
             $total = $total->plus($convertedAmount);
         }
 
-        return Money::create($total, $targetCurrency, $this->context, $this->roundingMode);
+        return Money::create($total, $currency, $this->context, $this->roundingMode);
     }
 }

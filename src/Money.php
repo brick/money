@@ -174,7 +174,9 @@ class Money
      */
     public static function of($amount, $currency, Context $context = null, $roundingMode = RoundingMode::UNNECESSARY)
     {
-        $currency = Currency::of($currency);
+        if (! $currency instanceof Currency) {
+            $currency = Currency::of($currency);
+        }
 
         if ($context === null) {
             $context = new DefaultContext();
@@ -200,7 +202,9 @@ class Money
      */
     public static function ofMinor($minorAmount, $currency)
     {
-        $currency = Currency::of($currency);
+        if (! $currency instanceof Currency) {
+            $currency = Currency::of($currency);
+        }
 
         $amount = BigDecimal::ofUnscaledValue($minorAmount, $currency->getDefaultFractionDigits());
 
@@ -234,7 +238,9 @@ class Money
      */
     public static function zero($currency, Context $context = null)
     {
-        $currency = Currency::of($currency);
+        if (! $currency instanceof Currency) {
+            $currency = Currency::of($currency);
+        }
 
         if ($context === null) {
             $context = new DefaultContext();
@@ -711,7 +717,9 @@ class Money
      */
     public function convertedTo($currency, $exchangeRate, Context $context = null, $roundingMode = RoundingMode::UNNECESSARY)
     {
-        $currency = Currency::of($currency);
+        if (! $currency instanceof Currency) {
+            $currency = Currency::of($currency);
+        }
 
         if ($context === null) {
             $context = $this->context;
