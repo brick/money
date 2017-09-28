@@ -385,12 +385,13 @@ class MoneyTest extends AbstractTestCase
     /**
      * @dataProvider providerAllocate
      *
-     * @param Money $money
+     * @param array $money
      * @param array $ratios
      * @param array $expected
      */
-    public function testAllocate(Money $money, array $ratios, array $expected)
+    public function testAllocate(array $money, array $ratios, array $expected)
     {
+        $money = Money::of(...$money);
         $monies = $money->allocate(...$ratios);
         $this->assertMoniesAre($expected, $monies);
     }
@@ -401,10 +402,12 @@ class MoneyTest extends AbstractTestCase
     public function providerAllocate()
     {
         return [
-            [Money::of(100, 'USD'), [30, 20, 40], ['USD 33.34', 'USD 22.22', 'USD 44.44']],
-            [Money::of(100, 'USD'), [30, 20, 40, 40], ['USD 23.08', 'USD 15.39', 'USD 30.77', 'USD 30.76']],
-            [Money::of(100, 'CHF', new PrecisionContext(2, 5)), [1, 2, 3, 7], ['CHF 7.70', 'CHF 15.40', 'CHF 23.10', 'CHF 53.80']],
-            [Money::of(100.123, 'EUR', new ExactContext()), [2, 3, 1, 1], ['EUR 28.607', 'EUR 42.910', 'EUR 14.303', 'EUR 14.303']]
+            [[100, 'USD'], [30, 20, 40], ['USD 33.34', 'USD 22.22', 'USD 44.44']],
+            [[100, 'USD'], [30, 20, 40, 40], ['USD 23.08', 'USD 15.39', 'USD 30.77', 'USD 30.76']],
+            [[100, 'CHF', new PrecisionContext(2, 5)], [1, 2, 3, 7], ['CHF 7.70', 'CHF 15.40', 'CHF 23.10', 'CHF 53.80']],
+            [['100.123', 'EUR', new ExactContext()], [2, 3, 1, 1], ['EUR 28.607', 'EUR 42.910', 'EUR 14.303', 'EUR 14.303']],
+            [['0.02', 'EUR'], [1, 1, 1, 1], ['EUR 0.01', 'EUR 0.01', 'EUR 0.00', 'EUR 0.00']],
+            [['0.02', 'EUR'], [1, 1, 3, 1], ['EUR 0.01', 'EUR 0.00', 'EUR 0.01', 'EUR 0.00']],
         ];
     }
 
