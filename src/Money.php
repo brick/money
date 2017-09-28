@@ -138,14 +138,14 @@ class Money
     /**
      * Creates a Money from a rational amount, a currency, and a context.
      *
-     * @param BigNumber $amount
-     * @param Currency  $currency
-     * @param Context   $context
-     * @param int       $roundingMode
+     * @param BigNumber $amount       The amount.
+     * @param Currency  $currency     The currency.
+     * @param Context   $context      The context.
+     * @param int       $roundingMode An optional rounding mode if the amount does not fit the context.
      *
      * @return Money
      */
-    public static function create(BigNumber $amount, Currency $currency, Context $context, $roundingMode)
+    public static function create(BigNumber $amount, Currency $currency, Context $context, $roundingMode = RoundingMode::UNNECESSARY)
     {
         $amount = $context->applyTo($amount, $currency, $roundingMode);
 
