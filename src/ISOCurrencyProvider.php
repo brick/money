@@ -136,7 +136,7 @@ class ISOCurrencyProvider
         }
 
         if ($count === 0) {
-            throw new UnknownCurrencyException('No currency found for ' . $countryCode);
+            throw UnknownCurrencyException::noCurrencyForCountry($countryCode);
         }
 
         $currencyCodes = [];
@@ -145,7 +145,7 @@ class ISOCurrencyProvider
             $currencyCodes[] = $currency->getCurrencyCode();
         }
 
-        throw new UnknownCurrencyException('Several currencies found for ' . $countryCode . ': ' . implode(', ', $currencyCodes));
+        throw UnknownCurrencyException::noSingleCurrencyForCountry($countryCode, $currencyCodes);
     }
 
     /**

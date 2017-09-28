@@ -16,4 +16,25 @@ class UnknownCurrencyException extends MoneyException
     {
         return new self('Unknown currency code: ' . $currencyCode);
     }
+
+    /**
+     * @param string $countryCode
+     *
+     * @return UnknownCurrencyException
+     */
+    public static function noCurrencyForCountry($countryCode)
+    {
+        return new self('No currency found for country ' . $countryCode);
+    }
+
+    /**
+     * @param string $countryCode
+     * @param array  $currencyCodes
+     *
+     * @return UnknownCurrencyException
+     */
+    public static function noSingleCurrencyForCountry($countryCode, array $currencyCodes)
+    {
+        return new self('No single currency for country ' . $countryCode . ': ' . implode(', ', $currencyCodes));
+    }
 }
