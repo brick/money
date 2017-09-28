@@ -162,7 +162,7 @@ class Money
      * To override this behaviour, a Context instance can be provided.
      * Operations on this Money return a Money with the same context.
      *
-     * @param BigNumber|number|string  $amount         The monetary amount.
+     * @param BigNumber|number|string $amount       The monetary amount.
      * @param Currency|string         $currency     The currency, as a Currency instance or ISO currency code.
      * @param Context|null            $context      An optional Context.
      * @param int                     $roundingMode An optional RoundingMode, if the amount does not fit the context.
@@ -223,7 +223,7 @@ class Money
     public static function ofRational(RationalMoney $money, Context $context, $roundingMode = RoundingMode::UNNECESSARY)
     {
         return self::create($money->getAmount(), $money->getCurrency(), $context, $roundingMode);
-        }
+    }
 
     /**
      * Returns a Money with zero value, in the given currency.
@@ -511,7 +511,7 @@ class Money
 
             $monies[$key] = $money->plus($unit);
             $remainder = $remainder->minus($unit);
-    }
+        }
 
         return $monies;
     }
@@ -607,7 +607,7 @@ class Money
      *
      * @return int [-1, 0, 1] if `$this` is less than, equal to, or greater than `$that`.
      *
-     * @throws ArithmeticException       If the argument is an invalid number.
+     * @throws ArithmeticException    If the argument is an invalid number.
      * @throws MoneyMismatchException If the argument is a money in a different currency.
      */
     public function compareTo($that)
@@ -624,7 +624,7 @@ class Money
      *
      * @return bool
      *
-     * @throws ArithmeticException       If the argument is an invalid number.
+     * @throws ArithmeticException    If the argument is an invalid number.
      * @throws MoneyMismatchException If the argument is a money in a different currency.
      */
     public function isEqualTo($that)
@@ -641,7 +641,7 @@ class Money
      *
      * @return bool
      *
-     * @throws ArithmeticException       If the argument is an invalid number.
+     * @throws ArithmeticException    If the argument is an invalid number.
      * @throws MoneyMismatchException If the argument is a money in a different currency.
      */
     public function isLessThan($that)
@@ -658,7 +658,7 @@ class Money
      *
      * @return bool
      *
-     * @throws ArithmeticException       If the argument is an invalid number.
+     * @throws ArithmeticException    If the argument is an invalid number.
      * @throws MoneyMismatchException If the argument is a money in a different currency.
      */
     public function isLessThanOrEqualTo($that)
@@ -675,7 +675,7 @@ class Money
      *
      * @return bool
      *
-     * @throws ArithmeticException       If the argument is an invalid number.
+     * @throws ArithmeticException    If the argument is an invalid number.
      * @throws MoneyMismatchException If the argument is a money in a different currency.
      */
     public function isGreaterThan($that)
@@ -692,7 +692,7 @@ class Money
      *
      * @return bool
      *
-     * @throws ArithmeticException       If the argument is an invalid number.
+     * @throws ArithmeticException    If the argument is an invalid number.
      * @throws MoneyMismatchException If the argument is a money in a different currency.
      */
     public function isGreaterThanOrEqualTo($that)
@@ -712,7 +712,7 @@ class Money
      * RoundingMode::UP will yield `EUR 1.12`.
      *
      * @param Currency|string         $currency     The target currency, as a Currency instance or ISO currency code.
-     * @param BigNumber|number|string $exchangeRate   The exchange rate to multiply by.
+     * @param BigNumber|number|string $exchangeRate The exchange rate to multiply by.
      * @param Context|null            $context      An optional context.
      * @param int                     $roundingMode An optional rounding mode.
      *
