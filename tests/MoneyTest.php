@@ -391,7 +391,7 @@ class MoneyTest extends AbstractTestCase
      */
     public function testAllocate(Money $money, array $ratios, array $expected)
     {
-        $monies = $money->allocate($ratios);
+        $monies = $money->allocate(...$ratios);
         $this->assertMoniesAre($expected, $monies);
     }
 

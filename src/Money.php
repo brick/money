@@ -486,7 +486,7 @@ class Money
      *
      * @return Money[]
      */
-    public function allocate(array $ratios)
+    public function allocate(...$ratios)
     {
         $total = array_sum($ratios);
         $step = $this->context->getStep();
