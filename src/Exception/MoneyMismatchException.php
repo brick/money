@@ -5,7 +5,7 @@ namespace Brick\Money\Exception;
 use Brick\Money\Currency;
 
 /**
- * Exception thrown when a money is not in the expected currency.
+ * Exception thrown when a money is not in the expected currency or context.
  */
 class MoneyMismatchException extends MoneyException
 {

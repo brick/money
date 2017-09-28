@@ -73,7 +73,7 @@ class ISOCurrencyProvider
     /**
      * Returns the currency matching the given currency code.
      *
-     * @param string $currencyCode The ISO 4217 currency code.
+     * @param string $currencyCode The 3-letter ISO 4217 currency code.
      *
      * @return Currency The currency.
      *
@@ -119,7 +119,7 @@ class ISOCurrencyProvider
     /**
      * Returns the currency for the given ISO country code.
      *
-     * @param string $countryCode A 2-letter ISO 3166-1 country code.
+     * @param string $countryCode The 2-letter ISO 3166-1 country code.
      *
      * @return Currency
      *
@@ -153,7 +153,7 @@ class ISOCurrencyProvider
      *
      * If the country code is not known, or if the country has no official currency, an empty array is returned.
      *
-     * @param string $countryCode The 2-letter ISO 3166-1 country codes.
+     * @param string $countryCode The 2-letter ISO 3166-1 country code.
      *
      * @return Currency[]
      */
