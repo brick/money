@@ -402,12 +402,100 @@ class MoneyTest extends AbstractTestCase
     public function providerAllocate()
     {
         return [
+            [['99.99', 'USD'], [100], ['USD 99.99']],
+            [['99.99', 'USD'], [100, 100], ['USD 50.00', 'USD 49.99']],
             [[100, 'USD'], [30, 20, 40], ['USD 33.34', 'USD 22.22', 'USD 44.44']],
             [[100, 'USD'], [30, 20, 40, 40], ['USD 23.08', 'USD 15.39', 'USD 30.77', 'USD 30.76']],
-            [[100, 'CHF', new PrecisionContext(2, 5)], [1, 2, 3, 7], ['CHF 7.70', 'CHF 15.40', 'CHF 23.10', 'CHF 53.80']],
+            [[100, 'CHF', new CashContext(5)], [1, 2, 3, 7], ['CHF 7.70', 'CHF 15.40', 'CHF 23.10', 'CHF 53.80']],
             [['100.123', 'EUR', new ExactContext()], [2, 3, 1, 1], ['EUR 28.607', 'EUR 42.910', 'EUR 14.303', 'EUR 14.303']],
             [['0.02', 'EUR'], [1, 1, 1, 1], ['EUR 0.01', 'EUR 0.01', 'EUR 0.00', 'EUR 0.00']],
             [['0.02', 'EUR'], [1, 1, 3, 1], ['EUR 0.01', 'EUR 0.00', 'EUR 0.01', 'EUR 0.00']],
+        ];
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Cannot allocate() an empty list of ratios.
+     */
+    public function testAllocateEmptyList()
+    {
+        $money = Money::of(50, 'USD');
+        $money->allocate();
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Cannot allocate() negative ratios.
+     */
+    public function testAllocateNegativeRatios()
+    {
+        $money = Money::of(50, 'USD');
+        $money->allocate(1, 2, -1);
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Cannot allocate() to zero ratios only.
+     */
+    public function testAllocateZeroRatios()
+    {
+        $money = Money::of(50, 'USD');
+        $money->allocate(0, 0, 0, 0, 0);
+    }
+
+    /**
+     * @dataProvider providerSplit
+     *
+     * @param array $money
+     * @param int   $targets
+     * @param array $expected
+     */
+    public function testSplit(array $money, $targets, array $expected)
+    {
+        $money = Money::of(...$money);
+        $monies = $money->split($targets);
+        $this->assertMoniesAre($expected, $monies);
+    }
+
+    /**
+     * @return array
+     */
+    public function providerSplit()
+    {
+        return [
+            [['99.99', 'USD'], 1, ['USD 99.99']],
+            [['99.99', 'USD'], 2, ['USD 50.00', 'USD 49.99']],
+            [['99.99', 'USD'], 3, ['USD 33.33', 'USD 33.33', 'USD 33.33']],
+            [['99.99', 'USD'], 4, ['USD 25.00', 'USD 25.00', 'USD 25.00', 'USD 24.99']],
+            [[100, 'CHF', new CashContext(5)], 3, ['CHF 33.35', 'CHF 33.35', 'CHF 33.30']],
+            [[100, 'CHF', new CashContext(5)], 7, ['CHF 14.30','CHF 14.30', 'CHF 14.30', 'CHF 14.30', 'CHF 14.30', 'CHF 14.25', 'CHF 14.25']],
+            [['100.123', 'EUR', new ExactContext()], 4, ['EUR 25.031', 'EUR 25.031', 'EUR 25.031', 'EUR 25.030']],
+            [['0.02', 'EUR'], 4, ['EUR 0.01', 'EUR 0.01', 'EUR 0.00', 'EUR 0.00']],
+        ];
+    }
+
+    /**
+     * @dataProvider providerSplitIntoLessThanOnePart
+     *
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Cannot split() into less than 1 part.
+     *
+     * @param int $parts
+     */
+    public function testSplitIntoLessThanOnePart($parts)
+    {
+        $money = Money::of(50, 'USD');
+        $money->split($parts);
+    }
+
+    /**
+     * @return array
+     */
+    public function providerSplitIntoLessThanOnePart()
+    {
+        return [
+            [-1],
+            [0]
         ];
     }
 

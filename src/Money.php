@@ -392,7 +392,7 @@ class Money
         $amount = $this->amount->multipliedBy($that);
 
         return self::create($amount, $this->currency, $this->context, $roundingMode);
-        }
+    }
 
     /**
      * Returns the result of the division of this Money by the given number.
@@ -475,20 +475,38 @@ class Money
     /**
      * Allocates this Money according to a list of ratios.
      *
-     * For example, `USD 50.00` allocated to [1, 2, 3, 4] would return:
-     * [`USD 5.00`, `USD 10.00`, `USD 15.00`, `USD 20.00`].
+     * If the allocation yields a remainder, its amount is split over the first monies in the list,
+     * so that the total of the resulting monies is always equal to this Money.
      *
-     * If the allocation yields a remainder, its amount is split evenly over the first monies in the list.
+     * For example, given a `USD 49.99` money in the default context,
+     * `allocate(1, 2, 3, 4)` returns [`USD 5.00`, `USD 10.00`, `USD 15.00`, `USD 19.99`]
      *
      * The resulting monies have the same context as this Money.
      *
-     * @param int[] $ratios
+     * @param int[] $ratios The ratios.
      *
      * @return Money[]
+     *
+     * @throws \InvalidArgumentException If called with invalid parameters.
      */
     public function allocate(...$ratios)
     {
+        if (! $ratios) {
+            throw new \InvalidArgumentException('Cannot allocate() an empty list of ratios.');
+        }
+
+        foreach ($ratios as $ratio) {
+            if ($ratio < 0) {
+                throw new \InvalidArgumentException('Cannot allocate() negative ratios.');
+            }
+        }
+
         $total = array_sum($ratios);
+
+        if ($total === 0) {
+            throw new \InvalidArgumentException('Cannot allocate() to zero ratios only.');
+        }
+
         $step = $this->context->getStep();
 
         $monies = [];
@@ -514,6 +532,34 @@ class Money
         }
 
         return $monies;
+    }
+
+    /**
+     * Splits this Money into a number of parts.
+     *
+     * If the division of this Money by the number of parts yields a remainder, its amount is split over the first
+     * monies in the list, so that the total of the resulting monies is always equal to this Money.
+     *
+     * For example, given a `USD 100.00` money in the default context,
+     * `split(3)` returns [`USD 33.34`, `USD 33.33`, `USD 33.33`]
+     *
+     * The resulting monies have the same context as this Money.
+     *
+     * @param int $parts The number of parts.
+     *
+     * @return Money[]
+     *
+     * @throws \InvalidArgumentException If called with invalid parameters.
+     */
+    public function split($parts)
+    {
+        $parts = (int) $parts;
+
+        if ($parts < 1) {
+            throw new \InvalidArgumentException('Cannot split() into less than 1 part.');
+        }
+
+        return $this->allocate(...array_fill(0, $parts, 1));
     }
 
     /**
