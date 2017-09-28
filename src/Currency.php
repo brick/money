@@ -14,7 +14,7 @@ class Currency
      * The currency code.
      *
      * For ISO currencies this will be the 3-letter uppercase ISO 4217 currency code.
-     * For non ISO currencies this can be any non-empty string of ASCII letters and digits.
+     * For non ISO currencies no constraints are defined.
      *
      * @var string
      */
@@ -23,10 +23,10 @@ class Currency
     /**
      * The numeric currency code.
      *
-     * For ISO currencies this will be the 3-digit ISO 4217 numeric currency code.
-     * For non ISO currencies this can be any non-empty string of digits, typically '0' if unused.
+     * For ISO currencies this will be the ISO 4217 numeric currency code, without leading zeros.
+     * For non ISO currencies no constraints are defined.
      *
-     * @var string
+     * @var int
      */
     private $numericCode;
 
@@ -54,7 +54,7 @@ class Currency
      * Private constructor. Use getInstance() to obtain an instance.
      *
      * @param string $currencyCode          The currency code.
-     * @param string $numericCode           The numeric currency code.
+     * @param int    $numericCode           The numeric currency code.
      * @param string $name                  The currency name.
      * @param int    $defaultFractionDigits The default number of fraction digits.
      */
@@ -67,7 +67,7 @@ class Currency
         }
 
         $this->currencyCode          = (string) $currencyCode;
-        $this->numericCode           = (string) $numericCode;
+        $this->numericCode           = (int) $numericCode;
         $this->name                  = (string) $name;
         $this->defaultFractionDigits = $defaultFractionDigits;
     }
@@ -104,7 +104,7 @@ class Currency
      * Returns the currency code.
      *
      * For ISO currencies this will be the 3-letter uppercase ISO 4217 currency code.
-     * For non ISO currencies this can be any non-empty string of ASCII letters and digits.
+     * For non ISO currencies no constraints are defined.
      *
      * @return string
      */
@@ -116,10 +116,10 @@ class Currency
     /**
      * Returns the numeric currency code.
      *
-     * For ISO currencies this will be the 3-digit ISO 4217 numeric currency code.
-     * For non ISO currencies this can be any non-empty string of digits, typically '0' if unused.
+     * For ISO currencies this will be the ISO 4217 numeric currency code, without leading zeros.
+     * For non ISO currencies no constraints are defined.
      *
-     * @return string
+     * @return int
      */
     public function getNumericCode()
     {

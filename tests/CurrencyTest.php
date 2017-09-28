@@ -14,7 +14,7 @@ class CurrencyTest extends AbstractTestCase
      * @dataProvider accessorsProvider
      *
      * @param string $currencyCode   The currency code.
-     * @param string $numericCode    The currency's numeric code.
+     * @param int    $numericCode    The currency's numeric code.
      * @param int    $fractionDigits The currency's default fraction digits.
      * @param string $name           The currency's name.
      */
@@ -37,14 +37,15 @@ class CurrencyTest extends AbstractTestCase
             ['USD', 840, 2, 'US Dollar'],
             ['EUR', 978, 2, 'Euro'],
             ['GBP', 826, 2, 'Pound Sterling'],
-            ['JPY', 392, 0, 'Yen']
+            ['JPY', 392, 0, 'Yen'],
+            ['DZD', 12, 2, 'Algerian Dinar'],
         ];
     }
 
     public function testConstructor()
     {
-        $bitCoin = new Currency('BTC', '123456789', 'BitCoin', 8);
-        $this->assertCurrencyEquals('BTC', '123456789', 'BitCoin', 8, $bitCoin);
+        $bitCoin = new Currency('BTC', -1, 'BitCoin', 8);
+        $this->assertCurrencyEquals('BTC', -1, 'BitCoin', 8, $bitCoin);
     }
 
     public function testOfReturnsSameInstance()

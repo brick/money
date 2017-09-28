@@ -408,7 +408,7 @@ function checkNumericCode($numericCode)
         throw new \RuntimeException('Invalid numeric code: ' . $numericCode);
     }
 
-    return $numericCode;
+    return (int) ltrim($numericCode, '0');
 }
 
 /**
