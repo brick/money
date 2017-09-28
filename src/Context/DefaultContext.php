@@ -8,8 +8,7 @@ use Brick\Money\Currency;
 use Brick\Math\BigNumber;
 
 /**
- * Adjusts the scale of the result to the default scale for the currency in use.
- * Adjustments are performed in step 1.
+ * Adjusts a number to the default scale for the currency.
  */
 class DefaultContext implements Context
 {

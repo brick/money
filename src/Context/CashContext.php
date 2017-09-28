@@ -8,17 +8,21 @@ use Brick\Money\Currency;
 use Brick\Math\BigNumber;
 
 /**
- * Adjusts the result to the currency's default scale, applying a cash rounding.
+ * Adjusts a number to the default scale for the currency, respecting a cash rounding.
  */
 class CashContext implements Context
 {
     /**
+     * The cash rounding step, in minor units.
+     *
+     * For example, step 5 on CHF would allow CHF 0.00, CHF 0.05, CHF 0.10, etc.
+     *
      * @var int
      */
     private $step;
 
     /**
-     * @param int $step
+     * @param int $step The cash rounding step, in minor units. Must be a multiple of 2 and/or 5.
      */
     public function __construct($step)
     {

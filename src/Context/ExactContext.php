@@ -9,7 +9,7 @@ use Brick\Math\BigNumber;
 use Brick\Math\RoundingMode;
 
 /**
- * Adjust the scale of an operation result to return an exact result.
+ * Adjusts a number to a scale large enough to represent its exact value.
  */
 class ExactContext implements Context
 {
