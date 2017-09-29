@@ -2,6 +2,7 @@
 
 namespace Brick\Money;
 
+use Brick\Money\Context\DefaultContext;
 use Brick\Money\Exception\CurrencyConversionException;
 
 use Brick\Math\BigRational;
@@ -14,30 +15,31 @@ use Brick\Math\RoundingMode;
 class CurrencyConverter
 {
     /**
+     * The exchange rate provider.
+     *
      * @var ExchangeRateProvider
      */
     private $exchangeRateProvider;
 
     /**
+     * The context of the monies created by this currency converter.
+     *
      * @var Context
      */
     private $context;
 
     /**
-     * @var int
-     */
-    private $roundingMode;
-
-    /**
      * @param ExchangeRateProvider $exchangeRateProvider The exchange rate provider.
-     * @param Context              $context              The context of the monies created by this currency converter.
-     * @param int                  $roundingMode         The rounding mode, if necessary.
+     * @param Context|null         $context              A context to create the monies in, or null to use the default.
      */
-    public function __construct(ExchangeRateProvider $exchangeRateProvider, Context $context, $roundingMode = RoundingMode::UNNECESSARY)
+    public function __construct(ExchangeRateProvider $exchangeRateProvider, Context $context = null)
     {
+        if ($context === null) {
+            $context = new DefaultContext();
+        }
+
         $this->exchangeRateProvider = $exchangeRateProvider;
         $this->context              = $context;
-        $this->roundingMode         = (int) $roundingMode;
     }
 
     /**
@@ -45,13 +47,14 @@ class CurrencyConverter
      *
      * @param MoneyContainer  $moneyContainer The Money, RationalMoney or MoneyBag to convert.
      * @param Currency|string $currency       The currency, as a Currency instance or ISO currency code.
+     * @param int             $roundingMode   The rounding mode, if necessary.
      *
      * @return Money
      *
      * @throws CurrencyConversionException If the exchange rate is not available.
-     * @throws RoundingNecessaryException  If rounding is necessary but this converter uses RoundingMode::UNNECESSARY.
+     * @throws RoundingNecessaryException  If rounding is necessary and RoundingMode::UNNECESSARY is used.
      */
-    public function convert(MoneyContainer $moneyContainer, $currency)
+    public function convert(MoneyContainer $moneyContainer, $currency, $roundingMode = RoundingMode::UNNECESSARY)
     {
         if (! $currency instanceof Currency) {
             $currency = Currency::of($currency);
@@ -70,6 +73,6 @@ class CurrencyConverter
             $total = $total->plus($amount);
         }
 
-        return Money::create($total, $currency, $this->context, $this->roundingMode);
+        return Money::create($total, $currency, $this->context, $roundingMode);
     }
 }

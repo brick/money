@@ -22,18 +22,16 @@ use Brick\Money\RationalMoney;
 class CurrencyConverterTest extends AbstractTestCase
 {
     /**
-     * @param int $roundingMode
-     *
      * @return CurrencyConverter
      */
-    private function createCurrencyConverter($roundingMode)
+    private function createCurrencyConverter()
     {
         $exchangeRateProvider = new ConfigurableProvider();
         $exchangeRateProvider->setExchangeRate('EUR', 'USD', '1.1');
         $exchangeRateProvider->setExchangeRate('USD', 'EUR', '10/11');
         $exchangeRateProvider->setExchangeRate('BSD', 'USD', 1);
 
-        return new CurrencyConverter($exchangeRateProvider, new DefaultContext(), $roundingMode);
+        return new CurrencyConverter($exchangeRateProvider);
     }
 
     /**
@@ -47,13 +45,13 @@ class CurrencyConverterTest extends AbstractTestCase
     public function testConvertMoney(array $money, $toCurrency, $roundingMode, $expectedResult)
     {
         $money = Money::of(...$money);
-        $currencyConverter = $this->createCurrencyConverter($roundingMode);
+        $currencyConverter = $this->createCurrencyConverter();
 
         if ($this->isExceptionClass($expectedResult)) {
             $this->expectException($expectedResult);
         }
 
-        $actualResult = $currencyConverter->convert($money, $toCurrency);
+        $actualResult = $currencyConverter->convert($money, $toCurrency, $roundingMode);
 
         if (! $this->isExceptionClass($expectedResult)) {
             $this->assertMoneyIs($expectedResult, $actualResult);
@@ -103,8 +101,8 @@ class CurrencyConverterTest extends AbstractTestCase
             $moneyBag->add($money);
         }
 
-        $currencyConverter = new CurrencyConverter($exchangeRateProvider, $context, $roundingMode);
-        $this->assertMoneyIs($total, $currencyConverter->convert($moneyBag, $currency));
+        $currencyConverter = new CurrencyConverter($exchangeRateProvider, $context);
+        $this->assertMoneyIs($total, $currencyConverter->convert($moneyBag, $currency, $roundingMode));
     }
 
     /**
@@ -131,7 +129,7 @@ class CurrencyConverterTest extends AbstractTestCase
      */
     public function testConvertRationalMoney(array $money, $toCurrency, $roundingMode, $expectedResult)
     {
-        $currencyConverter = $this->createCurrencyConverter($roundingMode);
+        $currencyConverter = $this->createCurrencyConverter();
 
         $rationalMoney = RationalMoney::of(...$money);
 
@@ -139,7 +137,7 @@ class CurrencyConverterTest extends AbstractTestCase
             $this->expectException($expectedResult);
         }
 
-        $actualResult = $currencyConverter->convert($rationalMoney, $toCurrency);
+        $actualResult = $currencyConverter->convert($rationalMoney, $toCurrency, $roundingMode);
 
         if (! $this->isExceptionClass($expectedResult)) {
             $this->assertMoneyIs($expectedResult, $actualResult);

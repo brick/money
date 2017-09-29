@@ -237,17 +237,16 @@ What can you do with a MoneyBag? Well, you can convert it to a Money in the curr
 
 ## Currency conversion
 
-This library ships with a `CurrencyConverter` that can convert any kind of money (Money, RationalMoney, or MoneyBag) to another currency:
+This library ships with a `CurrencyConverter` that can convert any kind of money (`Money`, `RationalMoney` or `MoneyBag`) to another currency:
 
 ```php
 use Brick\Money\CurrencyConverter;
 
 $exchangeRateProvider = ...;
-
-$converter = new CurrencyConverter($exchangeRateProvider, new DefaultContext(), RoundingMode::DOWN);
+$converter = new CurrencyConverter($exchangeRateProvider); // optionally provide a Context
 
 $money = Money::of('50', 'USD');
-$converter->convert($money, 'EUR');
+$converter->convert($money, 'EUR', RoundingMode::DOWN);
 ```
 
 The converter performs the most precise calculation possible, internally representing the final amount as a rational number until the very last step.
