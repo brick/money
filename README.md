@@ -107,7 +107,7 @@ $money->dividedBy(3, RoundingMode::UP); // USD 16.67
 
 ## Money contexts
 
-By default, monies have the official scale for the currency, as defined by the [ISO 4217 standard](https://www.currency-iso.org/). For example, EUR and USD have 2 decimal places, while JPY has 0. You can change this behaviour by providing a `Context` instance. All operations on such monies return another Money with the same context. Each context targets a particular use case:
+By default, monies have the official scale for the currency, as defined by the [ISO 4217 standard](https://www.currency-iso.org/) (for example, EUR and USD have 2 decimal places, while JPY has 0) and increment by steps of 1 minor unit (cent). You can change this behaviour by providing a `Context` instance. All operations on such monies return another Money with the same context. Each context targets a particular use case:
 
 ### Cash rounding
 
@@ -133,10 +133,11 @@ You can use custom scale monies by providing a `PrecisionContext`:
 ```php
 use Brick\Money\Money;
 use Brick\Money\Context\PrecisionContext;
+use Brick\Math\RoundingMode;
 
 $context = new PrecisionContext(4);
 $money = Money::of(10, 'USD', $context); // USD 10.0000
-$money->dividedBy(16); // USD 0.6250
+$money->dividedBy(7, RoundingMode::UP); // USD 1.4286
 ```
 
 ### Exact result
@@ -181,7 +182,7 @@ As you can see, the intermediate results are represented as a fraction, and no r
 
 ## Money allocation
 
-You can easily split a Money into a number parts:
+You can easily split a Money into a number of parts:
 
 ```php
 use Brick\Money\Money;
@@ -213,7 +214,7 @@ Note that the ratios can be any (non-negative) integer values and *do not need t
 
 When the allocation yields a remainder, both `split()` and `allocate()` spread it on the first monies in the list, until the total adds up to the original Money. This is the algorithm suggested by Martin Fowler in his book [Patterns of Enterprise Application Architecture](https://martinfowler.com/books/eaa.html). You can see that in the first example, where the first money gets `33.34` dollars while the others get `33.33` dollars.
 
-## Mixing currencies
+## Money bags (mixed currencies)
 
 You may sometimes need to add monies in different currencies together. `MoneyBag` comes in handy for this:
 
@@ -237,13 +238,13 @@ What can you do with a MoneyBag? Well, you can convert it to a Money in the curr
 
 ## Currency conversion
 
-This library ships with a `CurrencyConverter` that can convert any kind of money (`Money`, `RationalMoney` or `MoneyBag`) to another currency:
+This library ships with a `CurrencyConverter` that can convert any kind of money (`Money`, `RationalMoney` or `MoneyBag`) to a Money in another currency:
 
 ```php
 use Brick\Money\CurrencyConverter;
 
 $exchangeRateProvider = ...;
-$converter = new CurrencyConverter($exchangeRateProvider); // optionally provide a Context
+$converter = new CurrencyConverter($exchangeRateProvider); // optionally provide a Context here
 
 $money = Money::of('50', 'USD');
 $converter->convert($money, 'EUR', RoundingMode::DOWN);
@@ -251,7 +252,7 @@ $converter->convert($money, 'EUR', RoundingMode::DOWN);
 
 The converter performs the most precise calculation possible, internally representing the final amount as a rational number until the very last step.
 
-To use this converter, you need an `ExchangeRateProvider`. Several implementations are provided, among which:
+To use the currency converter, you need an `ExchangeRateProvider`. Several implementations are provided, among which:
 
 ### ConfigurableProvider 
 
@@ -290,7 +291,7 @@ PDOProvider also supports fixed source or target currency, and dynamic WHERE con
 
 This provider builds on top of another exchange rate provider, for the quite common case where all your available exchange rates are relative to a single currency. For example, the [exchange rates](https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml) provided by the European Central Bank are all relative to EUR. You can use them directly to convert EUR to USD, but not USD to EUR, let alone USD TO GBP.
 
-This provider will use the reciprocal of exchange rates, or combine them together, to get the expected result:
+This provider will combine exchange rates to get the expected result:
 
 ```php
 use Brick\Money\ExchangeRateProvider\ConfigurableProvider;
@@ -307,11 +308,11 @@ $provider->getExchangeRate('USD', 'EUR'); // 10/11
 $provider->getExchangeRate('GBP', 'USD'); // 11/9
 ```
 
-Notice that exchange rate providers can return rational results!
+Notice that exchange rate providers can return rational rates!
 
 ### Write your own provider
 
-Writing your own provider is easy: the `ExchangeRateProvider` has just one method, `getExchangeRate()`, that can return any kind of number.
+Writing your own provider is easy: the `ExchangeRateProvider` interface has just one method, `getExchangeRate()`, that takes the currency codes and returns a number.
 
 ## Custom currencies
 
@@ -326,9 +327,9 @@ $bitcoin = new Currency('XBT', 0, 'Bitcoin', 8);
 
 The second parameter is a numeric code, mainly useful for ISO currencies. If you don't need it, you can set it to `0`. The fourth parameter is the default scale for monies in this currency.
 
-You can now use this instance instead of a currency code:
+You can now use this Currency instead of a currency code:
 
 ```php
-$money = Money::of('0.5', $bitcoin); // XBT 0.50000000
+$money = Money::of('0.123', $bitcoin); // XBT 0.12300000
 ```
 
