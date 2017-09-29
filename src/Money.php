@@ -212,20 +212,6 @@ class Money extends AbstractMoney
     }
 
     /**
-     * Creates a Money from a RationalMoney and a Context.
-     *
-     * @param RationalMoney $money
-     * @param Context       $context
-     * @param int           $roundingMode
-     *
-     * @return Money
-     */
-    public static function ofRational(RationalMoney $money, Context $context, $roundingMode = RoundingMode::UNNECESSARY)
-    {
-        return self::create($money->getAmount(), $money->getCurrency(), $context, $roundingMode);
-    }
-
-    /**
      * Returns a Money with zero value, in the given currency.
      *
      * By default, the money is created with a DefaultContext: it has the default scale for the currency.

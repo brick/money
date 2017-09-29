@@ -151,7 +151,7 @@ class RationalMoney extends AbstractMoney
      */
     public function to(Context $context, $roundingMode = RoundingMode::UNNECESSARY)
     {
-        return Money::ofRational($this, $context, $roundingMode);
+        return Money::create($this->amount, $this->currency, $context, $roundingMode);
     }
 
     /**
