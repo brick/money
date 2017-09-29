@@ -27,7 +27,7 @@ use Brick\Math\Exception\RoundingNecessaryException;
  * - PrecisionContext handles monies with a custom scale, and optionally step.
  * - ExactContext always returns an exact result, adjusting the scale as required by the operation.
  */
-class Money implements MoneyContainer
+class Money extends AbstractMoney
 {
     /**
      * The amount.
@@ -262,18 +262,6 @@ class Money implements MoneyContainer
     }
 
     /**
-     * Required by interface MoneyContainer.
-     *
-     * @return BigDecimal[]
-     */
-    public function getAmounts()
-    {
-        return [
-            $this->currency->getCurrencyCode() => $this->amount
-        ];
-    }
-
-    /**
      * Returns the amount of this Money in minor units (cents) for the currency.
      *
      * The value is returned as a BigDecimal. If this Money has a scale greater than that of the currency, the result
@@ -343,8 +331,8 @@ class Money implements MoneyContainer
      * rounding mode can be provided. If a rounding mode is not provided and rounding is necessary, an exception is
      * thrown.
      *
-     * @param Money|BigNumber|number|string $that         The amount to add.
-     * @param int                           $roundingMode An optional RoundingMode constant.
+     * @param AbstractMoney|BigNumber|number|string $that         The money or amount to add.
+     * @param int                                   $roundingMode An optional RoundingMode constant.
      *
      * @return Money
      *
@@ -369,8 +357,8 @@ class Money implements MoneyContainer
      * rounding mode can be provided. If a rounding mode is not provided and rounding is necessary, an exception is
      * thrown.
      *
-     * @param Money|BigNumber|number|string $that         The amount to subtract.
-     * @param int                           $roundingMode An optional RoundingMode constant.
+     * @param AbstractMoney|BigNumber|number|string $that         The money or amount to subtract.
+     * @param int                                   $roundingMode An optional RoundingMode constant.
      *
      * @return Money
      *
@@ -599,168 +587,6 @@ class Money implements MoneyContainer
     }
 
     /**
-     * Returns the sign of this Money.
-     *
-     * @return int -1 if the number is negative, 0 if zero, 1 if positive.
-     */
-    public function getSign()
-    {
-        return $this->amount->sign();
-    }
-
-    /**
-     * Returns whether this Money has zero value.
-     *
-     * @return bool
-     */
-    public function isZero()
-    {
-        return $this->amount->isZero();
-    }
-
-    /**
-     * Returns whether this Money has a negative value.
-     *
-     * @return bool
-     */
-    public function isNegative()
-    {
-        return $this->amount->isNegative();
-    }
-
-    /**
-     * Returns whether this Money has a negative or zero value.
-     *
-     * @return bool
-     */
-    public function isNegativeOrZero()
-    {
-        return $this->amount->isNegativeOrZero();
-    }
-
-    /**
-     * Returns whether this Money has a positive value.
-     *
-     * @return bool
-     */
-    public function isPositive()
-    {
-        return $this->amount->isPositive();
-    }
-
-    /**
-     * Returns whether this Money has a positive or zero value.
-     *
-     * @return bool
-     */
-    public function isPositiveOrZero()
-    {
-        return $this->amount->isPositiveOrZero();
-    }
-
-    /**
-     * Compares this Money to the given amount.
-     *
-     * @param Money|BigNumber|number|string $that
-     *
-     * @return int [-1, 0, 1] if `$this` is less than, equal to, or greater than `$that`.
-     *
-     * @throws ArithmeticException    If the argument is an invalid number.
-     * @throws MoneyMismatchException If the argument is a money in a different currency.
-     */
-    public function compareTo($that)
-    {
-        $that = $this->handleMoney($that);
-
-        return $this->amount->compareTo($that);
-    }
-
-    /**
-     * Returns whether this Money is equal to the given amount.
-     *
-     * @param Money|BigNumber|number|string $that
-     *
-     * @return bool
-     *
-     * @throws ArithmeticException    If the argument is an invalid number.
-     * @throws MoneyMismatchException If the argument is a money in a different currency.
-     */
-    public function isEqualTo($that)
-    {
-        $that = $this->handleMoney($that);
-
-        return $this->amount->isEqualTo($that);
-    }
-
-    /**
-     * Returns whether this Money is less than the given amount
-     *
-     * @param Money|BigNumber|number|string $that
-     *
-     * @return bool
-     *
-     * @throws ArithmeticException    If the argument is an invalid number.
-     * @throws MoneyMismatchException If the argument is a money in a different currency.
-     */
-    public function isLessThan($that)
-    {
-        $that = $this->handleMoney($that);
-
-        return $this->amount->isLessThan($that);
-    }
-
-    /**
-     * Returns whether this Money is less than or equal to the given amount.
-     *
-     * @param Money|BigNumber|number|string $that
-     *
-     * @return bool
-     *
-     * @throws ArithmeticException    If the argument is an invalid number.
-     * @throws MoneyMismatchException If the argument is a money in a different currency.
-     */
-    public function isLessThanOrEqualTo($that)
-    {
-        $that = $this->handleMoney($that);
-
-        return $this->amount->isLessThanOrEqualTo($that);
-    }
-
-    /**
-     * Returns whether this Money is greater than the given amount.
-     *
-     * @param Money|BigNumber|number|string $that
-     *
-     * @return bool
-     *
-     * @throws ArithmeticException    If the argument is an invalid number.
-     * @throws MoneyMismatchException If the argument is a money in a different currency.
-     */
-    public function isGreaterThan($that)
-    {
-        $that = $this->handleMoney($that);
-
-        return $this->amount->isGreaterThan($that);
-    }
-
-    /**
-     * Returns whether this Money is greater than or equal to the given amount.
-     *
-     * @param Money|BigNumber|number|string $that
-     *
-     * @return bool
-     *
-     * @throws ArithmeticException    If the argument is an invalid number.
-     * @throws MoneyMismatchException If the argument is a money in a different currency.
-     */
-    public function isGreaterThanOrEqualTo($that)
-    {
-        $that = $this->handleMoney($that);
-
-        return $this->amount->isGreaterThanOrEqualTo($that);
-    }
-
-    /**
      * Converts this Money to another currency, using an exchange rate.
      *
      * By default, the resulting Money has the same context as this Money.
@@ -848,27 +674,21 @@ class Money implements MoneyContainer
     /**
      * Handles the special case of monies in methods like `plus()`, `minus()`, etc.
      *
-     * @param Money|BigNumber|number|string $that   The Money instance or amount.
-     * @param string|null                   $method The method name. If provided, checks that the contexts match.
+     * @param AbstractMoney|BigNumber|number|string $that   The money or amount.
+     * @param string                                $method The method name.
      *
      * @return BigNumber|number|string
      *
      * @throws MoneyMismatchException If monies don't match.
      */
-    private function handleMoney($that, $method = null)
+    protected function handleMoney($that, $method)
     {
         if ($that instanceof Money) {
-            if (! $that->currency->is($this->currency)) {
-                throw MoneyMismatchException::currencyMismatch($this->currency, $that->currency);
-            }
-
-            if ($method !== null && $this->context != $that->context) { // non-strict equality on purpose
+            if ($this->context != $that->context) { // non-strict equality on purpose
                 throw MoneyMismatchException::contextMismatch($method);
             }
-
-            return $that->amount;
         }
 
-        return $that;
+        return $this->handleAbstractMoney($that);
     }
 }

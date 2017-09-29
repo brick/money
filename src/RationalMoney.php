@@ -16,7 +16,7 @@ use Brick\Math\RoundingMode;
  * This is used to represent intermediate calculation results, and may not be exactly convertible to a decimal amount
  * with a finite number of digits. The final conversion to a Money may require rounding.
  */
-class RationalMoney implements MoneyContainer
+class RationalMoney extends AbstractMoney
 {
     /**
      * @var BigRational
@@ -68,18 +68,6 @@ class RationalMoney implements MoneyContainer
     }
 
     /**
-     * Required by interface MoneyContainer.
-     *
-     * @return BigRational[]
-     */
-    public function getAmounts()
-    {
-        return [
-            $this->currency->getCurrencyCode() => $this->amount
-        ];
-    }
-
-    /**
      * @return Currency
      */
     public function getCurrency()
@@ -90,7 +78,7 @@ class RationalMoney implements MoneyContainer
     /**
      * Returns the sum of this RationalMoney and the given amount.
      *
-     * @param RationalMoney|Money|BigNumber|number|string $that The amount to add.
+     * @param AbstractMoney|BigNumber|number|string $that The money or amount to add.
      *
      * @return RationalMoney
      *
@@ -99,7 +87,7 @@ class RationalMoney implements MoneyContainer
      */
     public function plus($that)
     {
-        $amount = $this->getAmountFrom($that);
+        $amount = $this->handleAbstractMoney($that);
         $amount = $this->amount->plus($amount);
 
         return new self($amount, $this->currency);
@@ -108,7 +96,7 @@ class RationalMoney implements MoneyContainer
     /**
      * Returns the difference of this RationalMoney and the given amount.
      *
-     * @param RationalMoney|Money|BigNumber|number|string $that The amount to subtract.
+     * @param AbstractMoney|BigNumber|number|string $that The money or amount to subtract.
      *
      * @return RationalMoney
      *
@@ -117,7 +105,7 @@ class RationalMoney implements MoneyContainer
      */
     public function minus($that)
     {
-        $amount = $this->getAmountFrom($that);
+        $amount = $this->handleAbstractMoney($that);
         $amount = $this->amount->minus($amount);
 
         return new self($amount, $this->currency);
@@ -178,47 +166,5 @@ class RationalMoney implements MoneyContainer
         }
 
         return $this->currency . ' ' . $amount;
-    }
-
-    /**
-     * Returns the amount of the given parameter.
-     *
-     * If the parameter is a RationalMoney or a Money, its Currency is checked against this object's Currency.
-     *
-     * @param RationalMoney|Money|BigNumber|number|string $that
-     *
-     * @return BigNumber|number|string
-     *
-     * @throws MoneyMismatchException If the given currency is not equal to this RationalMoney's currency.
-     */
-    private function getAmountFrom($that)
-    {
-        if ($that instanceof RationalMoney) {
-            $this->checkCurrency($that->currency);
-
-            return $that->amount;
-        }
-
-        if ($that instanceof Money) {
-            $this->checkCurrency($that->getCurrency());
-
-            return $that->getAmount();
-        }
-
-        return $that;
-    }
-
-    /**
-     * @param Currency $currency
-     *
-     * @return void
-     *
-     * @throws MoneyMismatchException If the given currency is not equal to this RationalMoney's currency.
-     */
-    private function checkCurrency(Currency $currency)
-    {
-        if (! $currency->is($this->currency)) {
-            throw MoneyMismatchException::currencyMismatch($this->currency, $currency);
-        }
     }
 }
