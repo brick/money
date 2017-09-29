@@ -11,7 +11,7 @@ use Brick\Math\Exception\RoundingNecessaryException;
 use Brick\Math\RoundingMode;
 
 /**
- * An exact monetary amount, represented as a rational number.
+ * An exact monetary amount, represented as a rational number. This class is immutable.
  *
  * This is used to represent intermediate calculation results, and may not be exactly convertible to a decimal amount
  * with a finite number of digits. The final conversion to a Money may require rounding.
