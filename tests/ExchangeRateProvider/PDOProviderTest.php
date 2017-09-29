@@ -98,11 +98,9 @@ class PDOProviderTest extends AbstractTestCase
 
         $actualRate = $provider->getExchangeRate($sourceCurrencyCode, $targetCurrencyCode);
 
-        if ($this->isExceptionClass($expectedResult)) {
-            return;
+        if (! $this->isExceptionClass($expectedResult)) {
+            $this->assertEquals($expectedResult, $actualRate);
         }
-
-        $this->assertEquals($expectedResult, $actualRate);
     }
 
     /**
@@ -157,11 +155,9 @@ class PDOProviderTest extends AbstractTestCase
 
         $actualRate = $provider->getExchangeRate($sourceCurrencyCode, $targetCurrencyCode);
 
-        if ($this->isExceptionClass($expectedResult)) {
-            return;
+        if (! $this->isExceptionClass($expectedResult)) {
+            $this->assertEquals($expectedResult, $actualRate);
         }
-
-        $this->assertEquals($expectedResult, $actualRate);
     }
 
     /**
@@ -216,11 +212,9 @@ class PDOProviderTest extends AbstractTestCase
 
         $actualRate = $provider->getExchangeRate($sourceCurrencyCode, $targetCurrencyCode);
 
-        if ($this->isExceptionClass($expectedResult)) {
-            return;
+        if (! $this->isExceptionClass($expectedResult)) {
+            $this->assertEquals($expectedResult, $actualRate);
         }
-
-        $this->assertEquals($expectedResult, $actualRate);
     }
 
     /**
@@ -275,19 +269,17 @@ class PDOProviderTest extends AbstractTestCase
         $configuration->whereConditions          = 'year = ? AND month = ?';
 
         $provider = new PDOProvider($pdo, $configuration);
+        $provider->setParameters(...$parameters);
 
         if ($this->isExceptionClass($expectedResult)) {
             $this->expectException($expectedResult);
         }
 
-        $provider->setParameters(...$parameters);
         $actualRate = $provider->getExchangeRate($sourceCurrencyCode, $targetCurrencyCode);
 
-        if ($this->isExceptionClass($expectedResult)) {
-            return;
+        if (! $this->isExceptionClass($expectedResult)) {
+            $this->assertEquals($expectedResult, $actualRate);
         }
-
-        $this->assertEquals($expectedResult, $actualRate);
     }
 
     /**

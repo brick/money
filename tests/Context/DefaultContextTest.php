@@ -25,17 +25,20 @@ class DefaultContextTest extends AbstractTestCase
      */
     public function testApplyTo($amount, $currency, $roundingMode, $expected)
     {
-        if ($this->isExceptionClass($expected)) {
-            $this->expectException($expected);
-        }
-
         $amount = BigNumber::of($amount);
         $currency = Currency::of($currency);
 
         $context = new DefaultContext();
+
+        if ($this->isExceptionClass($expected)) {
+            $this->expectException($expected);
+        }
+
         $actual = $context->applyTo($amount, $currency, $roundingMode);
 
-        $this->assertBigDecimalIs($expected, $actual);
+        if (! $this->isExceptionClass($expected)) {
+            $this->assertBigDecimalIs($expected, $actual);
+        }
     }
 
     /**

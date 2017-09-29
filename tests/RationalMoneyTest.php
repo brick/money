@@ -48,7 +48,10 @@ class RationalMoneyTest extends AbstractTestCase
         }
 
         $actual = $rationalMoney->plus($amount);
-        $this->assertRationalMoneyEquals($expected, $actual);
+
+        if (! $this->isExceptionClass($expected)) {
+            $this->assertRationalMoneyEquals($expected, $actual);
+        }
     }
 
     /**
@@ -83,7 +86,10 @@ class RationalMoneyTest extends AbstractTestCase
         }
 
         $actual = $rationalMoney->minus($amount);
-        $this->assertRationalMoneyEquals($expected, $actual);
+
+        if (! $this->isExceptionClass($expected)) {
+            $this->assertRationalMoneyEquals($expected, $actual);
+        }
     }
 
     /**
@@ -118,7 +124,10 @@ class RationalMoneyTest extends AbstractTestCase
         }
 
         $actual = $rationalMoney->multipliedBy($operand);
-        $this->assertRationalMoneyEquals($expected, $actual);
+
+        if (! $this->isExceptionClass($expected)) {
+            $this->assertRationalMoneyEquals($expected, $actual);
+        }
     }
 
     /**
@@ -149,7 +158,10 @@ class RationalMoneyTest extends AbstractTestCase
         }
 
         $actual = $rationalMoney->dividedBy($operand);
-        $this->assertRationalMoneyEquals($expected, $actual);
+
+        if (! $this->isExceptionClass($expected)) {
+            $this->assertRationalMoneyEquals($expected, $actual);
+        }
     }
 
     /**
@@ -168,20 +180,24 @@ class RationalMoneyTest extends AbstractTestCase
     /**
      * @dataProvider providerTo
      *
-     * @param RationalMoney $rationalMoney
-     * @param Context       $context
-     * @param int           $roundingMode
-     * @param string        $expected
+     * @param array   $rationalMoney
+     * @param Context $context
+     * @param int     $roundingMode
+     * @param string  $expected
      */
-    public function testTo(RationalMoney $rationalMoney, $context, $roundingMode, $expected)
+    public function testTo(array $rationalMoney, $context, $roundingMode, $expected)
     {
+        $rationalMoney = RationalMoney::of(...$rationalMoney);
+
         if ($this->isExceptionClass($expected)) {
             $this->expectException($expected);
         }
 
         $actual = $rationalMoney->to($context, $roundingMode);
 
-        $this->assertMoneyIs($expected, $actual);
+        if (! $this->isExceptionClass($expected)) {
+            $this->assertMoneyIs($expected, $actual);
+        }
     }
 
     /**
@@ -190,12 +206,12 @@ class RationalMoneyTest extends AbstractTestCase
     public function providerTo()
     {
         return [
-            [RationalMoney::of('987.65', 'USD'), new DefaultContext(), RoundingMode::UNNECESSARY, 'USD 987.65'],
-            [RationalMoney::of('246/200', 'USD'), new DefaultContext(), RoundingMode::UNNECESSARY, 'USD 1.23'],
-            [RationalMoney::of('987.65', 'CZK'), new CashContext(100), RoundingMode::UP, 'CZK 988.00'],
-            [RationalMoney::of('123/456', 'GBP'), new PrecisionContext(4), RoundingMode::UP, 'GBP 0.2698'],
-            [RationalMoney::of('123/456', 'GBP'), new ExactContext(), RoundingMode::UNNECESSARY, RoundingNecessaryException::class],
-            [RationalMoney::of('123456789/256', 'CHF'), new ExactContext(), RoundingMode::UNNECESSARY, 'CHF 482253.08203125']
+            [['987.65', 'USD'], new DefaultContext(), RoundingMode::UNNECESSARY, 'USD 987.65'],
+            [['246/200', 'USD'], new DefaultContext(), RoundingMode::UNNECESSARY, 'USD 1.23'],
+            [['987.65', 'CZK'], new CashContext(100), RoundingMode::UP, 'CZK 988.00'],
+            [['123/456', 'GBP'], new PrecisionContext(4), RoundingMode::UP, 'GBP 0.2698'],
+            [['123/456', 'GBP'], new ExactContext(), RoundingMode::UNNECESSARY, RoundingNecessaryException::class],
+            [['123456789/256', 'CHF'], new ExactContext(), RoundingMode::UNNECESSARY, 'CHF 482253.08203125']
         ];
     }
 }

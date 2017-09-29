@@ -122,12 +122,17 @@ class MoneyTest extends AbstractTestCase
      */
     public function testWith(array $money, Context $context, $roundingMode, $expected)
     {
+        $money = Money::of(...$money);
+
         if ($this->isExceptionClass($expected)) {
             $this->expectException($expected);
         }
 
-        $result = Money::of(...$money)->with($context, $roundingMode);
-        $this->assertMoneyIs($expected, $result);
+        $result = $money->with($context, $roundingMode);
+
+        if (! $this->isExceptionClass($expected)) {
+            $this->assertMoneyIs($expected, $result);
+        }
     }
 
     /**
