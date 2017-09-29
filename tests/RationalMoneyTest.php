@@ -35,12 +35,14 @@ class RationalMoneyTest extends AbstractTestCase
     /**
      * @dataProvider providerPlus
      *
-     * @param RationalMoney $rationalMoney
-     * @param mixed         $amount
-     * @param string        $expected
+     * @param array  $rationalMoney
+     * @param mixed  $amount
+     * @param string $expected
      */
-    public function testPlus(RationalMoney $rationalMoney, $amount, $expected)
+    public function testPlus(array $rationalMoney, $amount, $expected)
     {
+        $rationalMoney = RationalMoney::of(...$rationalMoney);
+
         if ($this->isExceptionClass($expected)) {
             $this->expectException($expected);
         }
@@ -55,25 +57,27 @@ class RationalMoneyTest extends AbstractTestCase
     public function providerPlus()
     {
         return [
-            [RationalMoney::of('1.1234', 'USD'), '987.65', 'USD 988.7734'],
-            [RationalMoney::of('123/456', 'GBP'), '14.99', 'GBP 57987/3800'],
-            [RationalMoney::of('123/456', 'GBP'), '567/890', 'GBP 61337/67640'],
-            [RationalMoney::of('1.123', 'CHF'), RationalMoney::of('0.1', 'CHF'), 'CHF 1.223'],
-            [RationalMoney::of('1.123', 'CHF'), RationalMoney::of('0.1', 'CAD'), MoneyMismatchException::class],
-            [RationalMoney::of('9.876', 'CAD'), Money::of(3, 'CAD'), 'CAD 12.876'],
-            [RationalMoney::of('9.876', 'CAD'), Money::of(3, 'USD'), MoneyMismatchException::class]
+            [['1.1234', 'USD'], '987.65', 'USD 988.7734'],
+            [['123/456', 'GBP'], '14.99', 'GBP 57987/3800'],
+            [['123/456', 'GBP'], '567/890', 'GBP 61337/67640'],
+            [['1.123', 'CHF'], RationalMoney::of('0.1', 'CHF'), 'CHF 1.223'],
+            [['1.123', 'CHF'], RationalMoney::of('0.1', 'CAD'), MoneyMismatchException::class],
+            [['9.876', 'CAD'], Money::of(3, 'CAD'), 'CAD 12.876'],
+            [['9.876', 'CAD'], Money::of(3, 'USD'), MoneyMismatchException::class]
         ];
     }
 
     /**
      * @dataProvider providerMinus
      *
-     * @param RationalMoney $rationalMoney
-     * @param mixed         $amount
-     * @param string        $expected
+     * @param array  $rationalMoney
+     * @param mixed  $amount
+     * @param string $expected
      */
-    public function testMinus(RationalMoney $rationalMoney, $amount, $expected)
+    public function testMinus(array $rationalMoney, $amount, $expected)
     {
+        $rationalMoney = RationalMoney::of(...$rationalMoney);
+
         if ($this->isExceptionClass($expected)) {
             $this->expectException($expected);
         }
@@ -88,25 +92,27 @@ class RationalMoneyTest extends AbstractTestCase
     public function providerMinus()
     {
         return [
-            [RationalMoney::of('987.65', 'USD'), '1.1234', 'USD 986.5266'],
-            [RationalMoney::of('123/456', 'GBP'), '14.99', 'GBP -55937/3800'],
-            [RationalMoney::of('123/456', 'GBP'), '567/890', 'GBP -24847/67640'],
-            [RationalMoney::of('1.123', 'CHF'), RationalMoney::of('0.1', 'CHF'), 'CHF 1.023'],
-            [RationalMoney::of('1.123', 'CHF'), RationalMoney::of('0.1', 'CAD'), MoneyMismatchException::class],
-            [RationalMoney::of('9.876', 'CAD'), Money::of(3, 'CAD'), 'CAD 6.876'],
-            [RationalMoney::of('9.876', 'CAD'), Money::of(3, 'USD'), MoneyMismatchException::class]
+            [['987.65', 'USD'], '1.1234', 'USD 986.5266'],
+            [['123/456', 'GBP'], '14.99', 'GBP -55937/3800'],
+            [['123/456', 'GBP'], '567/890', 'GBP -24847/67640'],
+            [['1.123', 'CHF'], RationalMoney::of('0.1', 'CHF'), 'CHF 1.023'],
+            [['1.123', 'CHF'], RationalMoney::of('0.1', 'CAD'), MoneyMismatchException::class],
+            [['9.876', 'CAD'], Money::of(3, 'CAD'), 'CAD 6.876'],
+            [['9.876', 'CAD'], Money::of(3, 'USD'), MoneyMismatchException::class]
         ];
     }
 
     /**
      * @dataProvider providerMultipliedBy
      *
-     * @param RationalMoney $rationalMoney
-     * @param mixed         $operand
-     * @param string        $expected
+     * @param array  $rationalMoney
+     * @param mixed  $operand
+     * @param string $expected
      */
-    public function testMultipliedBy(RationalMoney $rationalMoney, $operand, $expected)
+    public function testMultipliedBy(array $rationalMoney, $operand, $expected)
     {
+        $rationalMoney = RationalMoney::of(...$rationalMoney);
+
         if ($this->isExceptionClass($expected)) {
             $this->expectException($expected);
         }
@@ -121,21 +127,23 @@ class RationalMoneyTest extends AbstractTestCase
     public function providerMultipliedBy()
     {
         return [
-            [RationalMoney::of('987.65', 'USD'), '1.123456', 'USD 1109.5813184'],
-            [RationalMoney::of('123/456', 'GBP'), '14.99', 'GBP 61459/15200'],
-            [RationalMoney::of('123/456', 'GBP'), '567/890', 'GBP 23247/135280'],
+            [['987.65', 'USD'], '1.123456', 'USD 1109.5813184'],
+            [['123/456', 'GBP'], '14.99', 'GBP 61459/15200'],
+            [['123/456', 'GBP'], '567/890', 'GBP 23247/135280'],
         ];
     }
 
     /**
      * @dataProvider providerDividedBy
      *
-     * @param RationalMoney $rationalMoney
-     * @param mixed         $operand
-     * @param string        $expected
+     * @param array  $rationalMoney
+     * @param mixed  $operand
+     * @param string $expected
      */
-    public function testDividedBy(RationalMoney $rationalMoney, $operand, $expected)
+    public function testDividedBy(array $rationalMoney, $operand, $expected)
     {
+        $rationalMoney = RationalMoney::of(...$rationalMoney);
+
         if ($this->isExceptionClass($expected)) {
             $this->expectException($expected);
         }
@@ -150,10 +158,10 @@ class RationalMoneyTest extends AbstractTestCase
     public function providerDividedBy()
     {
         return [
-            [RationalMoney::of('987.65', 'USD'), '1.123456', 'USD 61728125/70216'],
-            [RationalMoney::of('987.65', 'USD'), '5', 'USD 197.53'],
-            [RationalMoney::of('123/456', 'GBP'), '14.99', 'GBP 1025/56962'],
-            [RationalMoney::of('123/456', 'GBP'), '567/890', 'GBP 18245/43092'],
+            [['987.65', 'USD'], '1.123456', 'USD 61728125/70216'],
+            [['987.65', 'USD'], '5', 'USD 197.53'],
+            [['123/456', 'GBP'], '14.99', 'GBP 1025/56962'],
+            [['123/456', 'GBP'], '567/890', 'GBP 18245/43092'],
         ];
     }
 

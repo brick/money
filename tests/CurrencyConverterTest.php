@@ -39,13 +39,14 @@ class CurrencyConverterTest extends AbstractTestCase
     /**
      * @dataProvider providerConvertMoney
      *
-     * @param Money  $money          The base money.
+     * @param array  $money          The base money.
      * @param string $toCurrency     The currency code to convert to.
      * @param int    $roundingMode   The rounding mode to use.
      * @param string $expectedResult The expected money's string representation, or an exception class name.
      */
-    public function testConvertMoney($money, $toCurrency, $roundingMode, $expectedResult)
+    public function testConvertMoney(array $money, $toCurrency, $roundingMode, $expectedResult)
     {
+        $money = Money::of(...$money);
         $currencyConverter = $this->createCurrencyConverter($roundingMode);
 
         if ($this->isExceptionClass($expectedResult)) {
@@ -65,18 +66,18 @@ class CurrencyConverterTest extends AbstractTestCase
     public function providerConvertMoney()
     {
         return [
-            [Money::of('1.23', 'EUR'), 'USD', RoundingMode::DOWN, 'USD 1.35'],
-            [Money::of('1.23', 'EUR'), 'USD', RoundingMode::UP, 'USD 1.36'],
-            [Money::of('1.10', 'EUR'), 'USD', RoundingMode::DOWN, 'USD 1.21'],
-            [Money::of('1.10', 'EUR'), 'USD', RoundingMode::UP, 'USD 1.21'],
-            [Money::of('123.57', 'USD'), 'EUR', RoundingMode::DOWN, 'EUR 112.33'],
-            [Money::of('123.57', 'USD'), 'EUR', RoundingMode::UP, 'EUR 112.34'],
-            [Money::of('123.57', 'USD'), 'EUR', RoundingMode::UNNECESSARY, RoundingNecessaryException::class],
-            [Money::of('1724657496.87', 'USD', new ExactContext()), 'EUR', RoundingMode::UNNECESSARY, 'EUR 1567870451.70'],
-            [Money::of('127.367429', 'BSD', new ExactContext()), 'USD', RoundingMode::UP, 'USD 127.37'],
-            [Money::of('1.23', 'USD'), 'BSD', RoundingMode::DOWN, CurrencyConversionException::class],
-            [Money::of('1.23', 'EUR'), 'EUR', RoundingMode::UNNECESSARY, 'EUR 1.23'],
-            [Money::of('123456.789', 'JPY', new ExactContext()), 'JPY', RoundingMode::HALF_EVEN, 'JPY 123457'],
+            [['1.23', 'EUR'], 'USD', RoundingMode::DOWN, 'USD 1.35'],
+            [['1.23', 'EUR'], 'USD', RoundingMode::UP, 'USD 1.36'],
+            [['1.10', 'EUR'], 'USD', RoundingMode::DOWN, 'USD 1.21'],
+            [['1.10', 'EUR'], 'USD', RoundingMode::UP, 'USD 1.21'],
+            [['123.57', 'USD'], 'EUR', RoundingMode::DOWN, 'EUR 112.33'],
+            [['123.57', 'USD'], 'EUR', RoundingMode::UP, 'EUR 112.34'],
+            [['123.57', 'USD'], 'EUR', RoundingMode::UNNECESSARY, RoundingNecessaryException::class],
+            [['1724657496.87', 'USD', new ExactContext()], 'EUR', RoundingMode::UNNECESSARY, 'EUR 1567870451.70'],
+            [['127.367429', 'BSD', new ExactContext()], 'USD', RoundingMode::UP, 'USD 127.37'],
+            [['1.23', 'USD'], 'BSD', RoundingMode::DOWN, CurrencyConversionException::class],
+            [['1.23', 'EUR'], 'EUR', RoundingMode::UNNECESSARY, 'EUR 1.23'],
+            [['123456.789', 'JPY', new ExactContext()], 'JPY', RoundingMode::HALF_EVEN, 'JPY 123457'],
         ];
     }
 
@@ -128,7 +129,7 @@ class CurrencyConverterTest extends AbstractTestCase
      * @param int    $roundingMode   The rounding mode to use.
      * @param string $expectedResult The expected money's string representation, or an exception class name.
      */
-    public function testConvertRationalMoney($money, $toCurrency, $roundingMode, $expectedResult)
+    public function testConvertRationalMoney(array $money, $toCurrency, $roundingMode, $expectedResult)
     {
         $currencyConverter = $this->createCurrencyConverter($roundingMode);
 

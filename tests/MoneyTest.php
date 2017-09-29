@@ -347,13 +347,14 @@ class MoneyTest extends AbstractTestCase
     /**
      * @dataProvider providerQuotientAndRemainder
      *
-     * @param Money  $money
+     * @param array  $money
      * @param int    $divisor
      * @param string $expectedQuotient
      * @param string $expectedRemainder
      */
-    public function testQuotientAndRemainder(Money $money, $divisor, $expectedQuotient, $expectedRemainder)
+    public function testQuotientAndRemainder(array $money, $divisor, $expectedQuotient, $expectedRemainder)
     {
+        $money = Money::of(...$money);
         list ($quotient, $remainder) = $money->quotientAndRemainder($divisor);
 
         $this->assertMoneyIs($expectedQuotient, $quotient);
@@ -366,10 +367,10 @@ class MoneyTest extends AbstractTestCase
     public function providerQuotientAndRemainder()
     {
         return [
-            [Money::of('10', 'USD'), 3, 'USD 3.33', 'USD 0.01'],
-            [Money::of('100', 'USD'), 9, 'USD 11.11', 'USD 0.01'],
-            [Money::of('20', 'CHF', new PrecisionContext(2, 5)), 3, 'CHF 6.65', 'CHF 0.05'],
-            [Money::of('50','CZK', new PrecisionContext(2, 100)), 3, 'CZK 16.00', 'CZK 2.00']
+            [['10', 'USD'], 3, 'USD 3.33', 'USD 0.01'],
+            [['100', 'USD'], 9, 'USD 11.11', 'USD 0.01'],
+            [['20', 'CHF', new PrecisionContext(2, 5)], 3, 'CHF 6.65', 'CHF 0.05'],
+            [['50','CZK', new PrecisionContext(2, 100)], 3, 'CZK 16.00', 'CZK 2.00']
         ];
     }
 
