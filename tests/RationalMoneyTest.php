@@ -165,14 +165,6 @@ class RationalMoneyTest extends AbstractTestCase
         ];
     }
 
-    public function testTo2()
-    {
-        $money = RationalMoney::of('987654321/56789', 'EUR');
-        $money = $money->to(new DefaultContext(), RoundingMode::UP);
-
-        $this->assertMoneyIs('EUR 17391.65', $money);
-    }
-
     /**
      * @dataProvider providerTo
      *
