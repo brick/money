@@ -151,7 +151,7 @@ class RationalMoney extends AbstractMoney
      *
      * @throws RoundingNecessaryException If RoundingMode::UNNECESSARY is used but rounding is necessary.
      */
-    public function to(Context $context, $roundingMode = RoundingMode::UNNECESSARY)
+    public function toMoney(Context $context, $roundingMode = RoundingMode::UNNECESSARY)
     {
         return Money::create($this->amount, $this->currency, $context, $roundingMode);
     }

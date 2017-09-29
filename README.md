@@ -169,14 +169,14 @@ $money
   ->dividedBy(3) // EUR 10/3
   ->plus('17.795') // EUR 12677/600
   ->multipliedBy('1.196') // EUR 3790423/150000
-  ->to($money->getContext(), RoundingMode::DOWN); // EUR 25.26
+  ->toMoney($money->getContext(), RoundingMode::DOWN); // EUR 25.26
 ```
 
-As you can see, the intermediate results are represented as a fraction, and no rounding is ever performed. The final `to()` method converts it to a `Money`, applying a context and a rounding mode if necessary. Most of the time you want the result in the same context as the original Money, which is what the example above does. But you can really apply any context:
+As you can see, the intermediate results are represented as a fraction, and no rounding is ever performed. The final `toMoney()` method converts it to a `Money`, applying a context and a rounding mode if necessary. Most of the time you want the result in the same context as the original Money, which is what the example above does. But you can really apply any context:
 
 ```php
 ...
-->to(new PrecisionContext(8), RoundingMode::UP); // EUR 25.26948667
+->toMoney(new PrecisionContext(8), RoundingMode::UP); // EUR 25.26948667
 ```
 
 ## Money allocation
