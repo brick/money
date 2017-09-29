@@ -1,10 +1,9 @@
 <?php
 
-namespace Brick\Money\Tests\CurrencyProvider;
+namespace Brick\Money\Tests;
 
 use Brick\Money\Currency;
 use Brick\Money\ISOCurrencyProvider;
-use Brick\Money\Tests\AbstractTestCase;
 
 /**
  * Tests for class ISOCurrencyProvider.
