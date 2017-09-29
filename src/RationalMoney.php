@@ -16,7 +16,7 @@ use Brick\Math\RoundingMode;
  * This is used to represent intermediate calculation results, and may not be exactly convertible to a decimal amount
  * with a finite number of digits. The final conversion to a Money may require rounding.
  */
-class RationalMoney
+class RationalMoney implements MoneyContainer
 {
     /**
      * @var BigRational
@@ -65,6 +65,18 @@ class RationalMoney
     public function getAmount()
     {
         return $this->amount;
+    }
+
+    /**
+     * Required by interface MoneyContainer.
+     *
+     * @return BigRational[]
+     */
+    public function getAmounts()
+    {
+        return [
+            $this->currency->getCurrencyCode() => $this->amount
+        ];
     }
 
     /**

@@ -41,40 +41,17 @@ class CurrencyConverter
     }
 
     /**
-     * Converts the given Money to the given Currency.
+     * Converts the given money to the given currency.
      *
-     * @param Money           $money    The money to convert.
-     * @param Currency|string $currency The target currency, as a Currency instance or ISO currency code.
+     * @param MoneyContainer  $moneyContainer The Money, RationalMoney or MoneyBag to convert.
+     * @param Currency|string $currency       The currency, as a Currency instance or ISO currency code.
      *
      * @return Money
      *
      * @throws CurrencyConversionException If the exchange rate is not available.
-     * @throws RoundingNecessaryException  If rounding was necessary but this converter uses RoundingMode::UNNECESSARY.
+     * @throws RoundingNecessaryException  If rounding is necessary but this converter uses RoundingMode::UNNECESSARY.
      */
-    public function convert(Money $money, $currency)
-    {
-        if (! $currency instanceof Currency) {
-            $currency = Currency::of($currency);
-        }
-
-        if ($money->getCurrency()->is($currency)) {
-            $exchangeRate = 1;
-        } else {
-            $exchangeRate = $this->exchangeRateProvider->getExchangeRate($money->getCurrency()->getCurrencyCode(), $currency->getCurrencyCode());
-        }
-
-        return $money->convertedTo($currency, $exchangeRate, $this->context, $this->roundingMode);
-    }
-
-    /**
-     * Returns the total value of the given MoneyBag, in the given Currency.
-     *
-     * @param MoneyBag        $moneyBag The money bag.
-     * @param Currency|string $currency The currency, as a Currency instance or ISO currency code.
-     *
-     * @return Money
-     */
-    public function getTotal(MoneyBag $moneyBag, $currency)
+    public function convert(MoneyContainer $moneyContainer, $currency)
     {
         if (! $currency instanceof Currency) {
             $currency = Currency::of($currency);
@@ -84,10 +61,13 @@ class CurrencyConverter
 
         $total = BigRational::zero();
 
-        foreach ($moneyBag->getAmounts() as $sourceCurrencyCode => $amount) {
-            $exchangeRate = $this->exchangeRateProvider->getExchangeRate($sourceCurrencyCode, $currencyCode);
-            $convertedAmount = $amount->toBigRational()->multipliedBy($exchangeRate);
-            $total = $total->plus($convertedAmount);
+        foreach ($moneyContainer->getAmounts() as $sourceCurrencyCode => $amount) {
+            if ($sourceCurrencyCode !== $currencyCode) {
+                $exchangeRate = $this->exchangeRateProvider->getExchangeRate($sourceCurrencyCode, $currencyCode);
+                $amount = $amount->toBigRational()->multipliedBy($exchangeRate);
+            }
+
+            $total = $total->plus($amount);
         }
 
         return Money::create($total, $currency, $this->context, $this->roundingMode);

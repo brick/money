@@ -27,7 +27,7 @@ use Brick\Math\Exception\RoundingNecessaryException;
  * - PrecisionContext handles monies with a custom scale, and optionally step.
  * - ExactContext always returns an exact result, adjusting the scale as required by the operation.
  */
-class Money
+class Money implements MoneyContainer
 {
     /**
      * The amount.
@@ -259,6 +259,18 @@ class Money
     public function getAmount()
     {
         return $this->amount;
+    }
+
+    /**
+     * Required by interface MoneyContainer.
+     *
+     * @return BigDecimal[]
+     */
+    public function getAmounts()
+    {
+        return [
+            $this->currency->getCurrencyCode() => $this->amount
+        ];
     }
 
     /**

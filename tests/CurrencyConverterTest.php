@@ -6,7 +6,6 @@ use Brick\Money\Context;
 use Brick\Money\Context\DefaultContext;
 use Brick\Money\Context\ExactContext;
 use Brick\Money\Context\PrecisionContext;
-use Brick\Money\Currency;
 use Brick\Money\CurrencyConverter;
 use Brick\Money\Exception\CurrencyConversionException;
 use Brick\Money\ExchangeRateProvider\ConfigurableProvider;
@@ -15,6 +14,7 @@ use Brick\Money\MoneyBag;
 
 use Brick\Math\Exception\RoundingNecessaryException;
 use Brick\Math\RoundingMode;
+use Brick\Money\RationalMoney;
 
 /**
  * Tests for class CurrencyConverter.
@@ -37,14 +37,14 @@ class CurrencyConverterTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider providerConvert
+     * @dataProvider providerConvertMoney
      *
      * @param Money  $money          The base money.
      * @param string $toCurrency     The currency code to convert to.
      * @param int    $roundingMode   The rounding mode to use.
      * @param string $expectedResult The expected money's string representation, or an exception class name.
      */
-    public function testConvert($money, $toCurrency, $roundingMode, $expectedResult)
+    public function testConvertMoney($money, $toCurrency, $roundingMode, $expectedResult)
     {
         $currencyConverter = $this->createCurrencyConverter($roundingMode);
 
@@ -62,7 +62,7 @@ class CurrencyConverterTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerConvert()
+    public function providerConvertMoney()
     {
         return [
             [Money::of('1.23', 'EUR'), 'USD', RoundingMode::DOWN, 'USD 1.35'],
@@ -81,7 +81,7 @@ class CurrencyConverterTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider providerGetTotal
+     * @dataProvider providerConvertMoneyBag
      *
      * @param array   $monies       The mixed monies to add.
      * @param string  $currency     The target currency code.
@@ -89,7 +89,7 @@ class CurrencyConverterTest extends AbstractTestCase
      * @param int     $roundingMode The rounding mode to use.
      * @param string  $total        The expected total
      */
-    public function testGetTotal(array $monies, $currency, Context $context, $roundingMode, $total)
+    public function testConvertMoneyBag(array $monies, $currency, Context $context, $roundingMode, $total)
     {
         $exchangeRateProvider = new ConfigurableProvider();
         $exchangeRateProvider->setExchangeRate('EUR', 'USD', '1.23456789');
@@ -103,13 +103,13 @@ class CurrencyConverterTest extends AbstractTestCase
         }
 
         $currencyConverter = new CurrencyConverter($exchangeRateProvider, $context, $roundingMode);
-        $this->assertMoneyIs($total, $currencyConverter->getTotal($moneyBag, $currency));
+        $this->assertMoneyIs($total, $currencyConverter->convert($moneyBag, $currency));
     }
 
     /**
      * @return array
      */
-    public function providerGetTotal()
+    public function providerConvertMoneyBag()
     {
         return [
             [[['354.40005', 'EUR'], ['3.1234', 'JPY']], 'USD', new DefaultContext(), RoundingMode::DOWN, 'USD 437.56'],
@@ -117,6 +117,44 @@ class CurrencyConverterTest extends AbstractTestCase
 
             [[['1234.56', 'EUR'], ['31562', 'JPY']], 'USD', new PrecisionContext(6), RoundingMode::DOWN, 'USD 1835.871591'],
             [[['1234.56', 'EUR'], ['31562', 'JPY']], 'USD', new PrecisionContext(6), RoundingMode::UP, 'USD 1835.871592']
+        ];
+    }
+
+    /**
+     * @dataProvider providerConvertRationalMoney
+     *
+     * @param array  $money          The original amount and currency.
+     * @param string $toCurrency     The currency code to convert to.
+     * @param int    $roundingMode   The rounding mode to use.
+     * @param string $expectedResult The expected money's string representation, or an exception class name.
+     */
+    public function testConvertRationalMoney($money, $toCurrency, $roundingMode, $expectedResult)
+    {
+        $currencyConverter = $this->createCurrencyConverter($roundingMode);
+
+        $rationalMoney = RationalMoney::of(...$money);
+
+        if ($this->isExceptionClass($expectedResult)) {
+            $this->expectException($expectedResult);
+        }
+
+        $actualResult = $currencyConverter->convert($rationalMoney, $toCurrency);
+
+        if (! $this->isExceptionClass($expectedResult)) {
+            $this->assertMoneyIs($expectedResult, $actualResult);
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function providerConvertRationalMoney()
+    {
+        return [
+            [['7/9', 'USD'], 'EUR', RoundingMode::DOWN, 'EUR 0.70'],
+            [['7/9', 'USD'], 'EUR', RoundingMode::UP, 'EUR 0.71'],
+            [['4/3', 'EUR'], 'USD', RoundingMode::DOWN, 'USD 1.46'],
+            [['4/3', 'EUR'], 'USD', RoundingMode::UP, 'USD 1.47'],
         ];
     }
 }

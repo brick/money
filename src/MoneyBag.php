@@ -9,7 +9,7 @@ use Brick\Math\BigDecimal;
  *
  * This class is mutable.
  */
-class MoneyBag
+class MoneyBag implements MoneyContainer
 {
     /**
      * The amounts in this bag, indexed by currency code.
