@@ -148,6 +148,8 @@ class RationalMoney extends AbstractMoney
      * @param int     $roundingMode
      *
      * @return Money
+     *
+     * @throws RoundingNecessaryException If RoundingMode::UNNECESSARY is used but rounding is necessary.
      */
     public function to(Context $context, $roundingMode = RoundingMode::UNNECESSARY)
     {

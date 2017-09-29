@@ -144,6 +144,8 @@ class Money extends AbstractMoney
      * @param int       $roundingMode An optional rounding mode if the amount does not fit the context.
      *
      * @return Money
+     *
+     * @throws RoundingNecessaryException If RoundingMode::UNNECESSARY is used but rounding is necessary.
      */
     public static function create(BigNumber $amount, Currency $currency, Context $context, $roundingMode = RoundingMode::UNNECESSARY)
     {
