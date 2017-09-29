@@ -2,7 +2,7 @@
 
 namespace Brick\Money;
 
-use Brick\Math\BigDecimal;
+use Brick\Math\BigRational;
 
 /**
  * Container for monies in different currencies.
@@ -14,7 +14,7 @@ class MoneyBag implements MoneyContainer
     /**
      * The amounts in this bag, indexed by currency code.
      *
-     * @var BigDecimal[]
+     * @var BigRational[]
      */
     private $amounts = [];
 
@@ -23,7 +23,7 @@ class MoneyBag implements MoneyContainer
      *
      * @param Currency|string $currency The currency, as a Currency instance or ISO currency code.
      *
-     * @return BigDecimal
+     * @return BigRational
      */
     public function getAmount($currency)
     {
@@ -31,13 +31,13 @@ class MoneyBag implements MoneyContainer
 
         return isset($this->amounts[$currencyCode])
             ? $this->amounts[$currencyCode]
-            : BigDecimal::zero();
+            : BigRational::zero();
     }
 
     /**
      * Returns the amounts contained in this bag, indexed by currency code.
      *
-     * @return BigDecimal[]
+     * @return BigRational[]
      */
     public function getAmounts()
     {
@@ -45,35 +45,33 @@ class MoneyBag implements MoneyContainer
     }
 
     /**
-     * Adds a Money to this bag.
+     * Adds money to this bag.
      *
-     * @param Money $money
+     * @param MoneyContainer $money A Money, RationalMoney, or MoneyBag instance.
      *
      * @return MoneyBag This instance.
      */
-    public function add(Money $money)
+    public function add(MoneyContainer $money)
     {
-        $currency = $money->getCurrency();
-        $currencyCode = $currency->getCurrencyCode();
-
-        $this->amounts[$currencyCode] = $this->getAmount($currency)->plus($money->getAmount());
+        foreach ($money->getAmounts() as $currencyCode => $amount) {
+            $this->amounts[$currencyCode] = $this->getAmount($currencyCode)->plus($amount);
+        }
 
         return $this;
     }
 
     /**
-     * Subtracts a Money from this bag.
+     * Subtracts money from this bag.
      *
-     * @param Money $money
+     * @param MoneyContainer $money A Money, RationalMoney, or MoneyBag instance.
      *
      * @return MoneyBag This instance.
      */
-    public function subtract(Money $money)
+    public function subtract(MoneyContainer $money)
     {
-        $currency = $money->getCurrency();
-        $currencyCode = $currency->getCurrencyCode();
-
-        $this->amounts[$currencyCode] = $this->getAmount($currency)->minus($money->getAmount());
+        foreach ($money->getAmounts() as $currencyCode => $amount) {
+            $this->amounts[$currencyCode] = $this->getAmount($currencyCode)->minus($amount);
+        }
 
         return $this;
     }

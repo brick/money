@@ -9,6 +9,8 @@ use Brick\Money\MoneyBag;
 use Brick\Money\RationalMoney;
 
 use Brick\Math\BigDecimal;
+use Brick\Math\BigNumber;
+use Brick\Math\BigRational;
 
 /**
  * Base class for money tests.
@@ -67,6 +69,15 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param string    $expected
+     * @param BigNumber $actual
+     */
+    final protected function assertBigNumberEquals($expected, BigNumber $actual)
+    {
+        $this->assertTrue($actual->isEqualTo($expected), $actual . ' != ' . $expected);
+    }
+
+    /**
      * @param array    $expectedAmounts
      * @param MoneyBag $moneyBag
      */
@@ -78,21 +89,17 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         foreach ($expectedAmounts as $currencyCode => $expectedAmount) {
             $actualAmount = $moneyBag->getAmount($currencyCode);
 
-            $this->assertInstanceOf(BigDecimal::class, $actualAmount);
-            $this->assertSame($expectedAmount, (string) $actualAmount);
+            $this->assertInstanceOf(BigRational::class, $actualAmount);
+            $this->assertBigNumberEquals($expectedAmount, $actualAmount);
         }
 
         // Test getAmounts()
         $actualAmounts = $moneyBag->getAmounts();
 
-        foreach ($actualAmounts as $currencyCode => $amount) {
-            $actualAmounts[$currencyCode] = (string) $amount;
+        foreach ($actualAmounts as $currencyCode => $actualAmount) {
+            $this->assertInstanceOf(BigRational::class, $actualAmount);
+            $this->assertBigNumberEquals($expectedAmounts[$currencyCode], $actualAmount);
         }
-
-        sort($expectedAmounts);
-        sort($actualAmounts);
-
-        $this->assertSame($expectedAmounts, $actualAmounts);
     }
 
     /**
