@@ -15,7 +15,7 @@ interface Context
      * Applies this context to a rational amount, and returns a decimal number.
      *
      * The given rounding mode MUST be respected; no default rounding mode must be applied.
-     * In case the rounding mode is irrelevant, for example in ExactContext, this method MUST throw an exception if a
+     * In case the rounding mode is irrelevant, for example in AutoContext, this method MUST throw an exception if a
      * rounding mode other than RoundingMode::UNNECESSARY is used.
      *
      * @param BigNumber $amount       The amount.

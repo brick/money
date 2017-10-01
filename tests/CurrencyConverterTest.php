@@ -4,7 +4,7 @@ namespace Brick\Money\Tests;
 
 use Brick\Money\Context;
 use Brick\Money\Context\DefaultContext;
-use Brick\Money\Context\ExactContext;
+use Brick\Money\Context\AutoContext;
 use Brick\Money\Context\PrecisionContext;
 use Brick\Money\CurrencyConverter;
 use Brick\Money\Exception\CurrencyConversionException;
@@ -71,11 +71,11 @@ class CurrencyConverterTest extends AbstractTestCase
             [['123.57', 'USD'], 'EUR', RoundingMode::DOWN, 'EUR 112.33'],
             [['123.57', 'USD'], 'EUR', RoundingMode::UP, 'EUR 112.34'],
             [['123.57', 'USD'], 'EUR', RoundingMode::UNNECESSARY, RoundingNecessaryException::class],
-            [['1724657496.87', 'USD', new ExactContext()], 'EUR', RoundingMode::UNNECESSARY, 'EUR 1567870451.70'],
-            [['127.367429', 'BSD', new ExactContext()], 'USD', RoundingMode::UP, 'USD 127.37'],
+            [['1724657496.87', 'USD', new AutoContext()], 'EUR', RoundingMode::UNNECESSARY, 'EUR 1567870451.70'],
+            [['127.367429', 'BSD', new AutoContext()], 'USD', RoundingMode::UP, 'USD 127.37'],
             [['1.23', 'USD'], 'BSD', RoundingMode::DOWN, CurrencyConversionException::class],
             [['1.23', 'EUR'], 'EUR', RoundingMode::UNNECESSARY, 'EUR 1.23'],
-            [['123456.789', 'JPY', new ExactContext()], 'JPY', RoundingMode::HALF_EVEN, 'JPY 123457'],
+            [['123456.789', 'JPY', new AutoContext()], 'JPY', RoundingMode::HALF_EVEN, 'JPY 123457'],
         ];
     }
 
@@ -97,7 +97,7 @@ class CurrencyConverterTest extends AbstractTestCase
         $moneyBag = new MoneyBag();
 
         foreach ($monies as $money) {
-            $money = Money::of($money[0], $money[1], new ExactContext());
+            $money = Money::of($money[0], $money[1], new AutoContext());
             $moneyBag->add($money);
         }
 

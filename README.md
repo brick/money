@@ -107,7 +107,7 @@ $money->dividedBy(3, RoundingMode::UP); // USD 16.67
 
 ## Money contexts
 
-By default, monies have the official scale for the currency, as defined by the [ISO 4217 standard](https://www.currency-iso.org/) (for example, EUR and USD have 2 decimal places, while JPY has 0) and increment by steps of 1 minor unit (cent). You can change this behaviour by providing a `Context` instance. All operations on such monies return another Money with the same context. Each context targets a particular use case:
+By default, monies have the official scale for the currency, as defined by the [ISO 4217 standard](https://www.currency-iso.org/) (for example, EUR and USD have 2 decimal places, while JPY has 0) and increment by steps of 1 minor unit (cent). They internally use the `DefaultContext`. You can change this behaviour by providing a `Context` instance. All operations on monies return another Money with the same context. Each context targets a particular use case:
 
 ### Cash rounding
 
@@ -120,8 +120,7 @@ use Brick\Money\Money;
 use Brick\Money\Context\CashContext;
 use Brick\Math\RoundingMode;
 
-$context = new CashContext(5);
-$money = Money::of(10, 'CHF', $context); // CHF 10.00
+$money = Money::of(10, 'CHF', new CashContext(5)); // CHF 10.00
 $money->dividedBy(3, RoundingMode::DOWN); // CHF 3.30
 $money->dividedBy(3, RoundingMode::UP); // CHF 3.35
 ```
@@ -135,26 +134,24 @@ use Brick\Money\Money;
 use Brick\Money\Context\PrecisionContext;
 use Brick\Math\RoundingMode;
 
-$context = new PrecisionContext(4);
-$money = Money::of(10, 'USD', $context); // USD 10.0000
+$money = Money::of(10, 'USD', new PrecisionContext(4)); // USD 10.0000
 $money->dividedBy(7, RoundingMode::UP); // USD 1.4286
 ```
 
-### Exact result
+### Auto scale
 
-If you need monies that adjust their scale to fit the operation result, just like `BigDecimal` does, then `ExactContext` is for you:
+If you need monies that adjust their scale to fit the operation result, then `AutoContext` is for you:
 
 ```php
 use Brick\Money\Money;
-use Brick\Money\Context\ExactContext;
+use Brick\Money\Context\AutoContext;
 
-$context = new ExactContext();
-$money = Money::of('1.1', 'USD', $context); // USD 1.1
+$money = Money::of('1.10', 'USD', new AutoContext()); // USD 1.1
 $money->multipliedBy('2.5'); // USD 2.75
 $money->dividedBy(8); // USD 0.1375
 ```
 
-Note that *you should not use `ExactContext` to represent an intermediate calculation result*. In particular, it cannot represent the result of some divisions, that may lead to an infinite repeating decimal. For these use cases, `RationalMoney` is what you need. Head on to the next section!
+Note that *you should not use `AutoContext` to represent an intermediate calculation result*. In particular, it cannot represent the result of all divisions, as some of them may lead to an infinite repeating decimal. For these use cases, `RationalMoney` is what you need. Head on to the next section!
 
 ## Advanced calculations
 

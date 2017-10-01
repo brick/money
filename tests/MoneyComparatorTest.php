@@ -2,7 +2,7 @@
 
 namespace Brick\Money\Tests;
 
-use Brick\Money\Context\ExactContext;
+use Brick\Money\Context\AutoContext;
 use Brick\Money\Exception\CurrencyConversionException;
 use Brick\Money\ExchangeRateProvider\ConfigurableProvider;
 use Brick\Money\Money;
@@ -76,14 +76,14 @@ class MoneyComparatorTest extends AbstractTestCase
             [['123.57', 'USD'], ['123.57', 'BSD'], 0],
             [['123.57', 'BSD'], ['123.57', 'USD'], 0],
 
-            [['1000250.123456', 'EUR', new ExactContext()], ['800200.0987648', 'GBP', new ExactContext()], 0],
-            [['1000250.123456', 'EUR', new ExactContext()], ['800200.098764', 'GBP', new ExactContext()], 1],
-            [['1000250.123456', 'EUR', new ExactContext()], ['800200.098765', 'GBP', new ExactContext()], -1],
+            [['1000250.123456', 'EUR', new AutoContext()], ['800200.0987648', 'GBP', new AutoContext()], 0],
+            [['1000250.123456', 'EUR', new AutoContext()], ['800200.098764', 'GBP', new AutoContext()], 1],
+            [['1000250.123456', 'EUR', new AutoContext()], ['800200.098765', 'GBP', new AutoContext()], -1],
 
-            [['800200.098764', 'GBP', new ExactContext()], ['1000250.123456', 'EUR', new ExactContext()], -1],
-            [['800200.098764', 'GBP', new ExactContext()], ['960240.1185168000', 'EUR', new ExactContext()], 0],
-            [['800200.098764', 'GBP', new ExactContext()], ['960240.118516', 'EUR', new ExactContext()], 1],
-            [['800200.098764', 'GBP', new ExactContext()], ['960240.118517', 'EUR', new ExactContext()], -1],
+            [['800200.098764', 'GBP', new AutoContext()], ['1000250.123456', 'EUR', new AutoContext()], -1],
+            [['800200.098764', 'GBP', new AutoContext()], ['960240.1185168000', 'EUR', new AutoContext()], 0],
+            [['800200.098764', 'GBP', new AutoContext()], ['960240.118516', 'EUR', new AutoContext()], 1],
+            [['800200.098764', 'GBP', new AutoContext()], ['960240.118517', 'EUR', new AutoContext()], -1],
 
             [['1.0', 'EUR'], ['1.0', 'BSD'], CurrencyConversionException::class],
         ];
@@ -167,7 +167,7 @@ class MoneyComparatorTest extends AbstractTestCase
             [[['1.00', 'EUR'], ['1.22', 'USD'], ['1.20', 'BSD']], 'USD 1.22'],
             [[['1.00', 'EUR'], ['1.12', 'USD'], ['1.20', 'BSD']], 'BSD 1.20'],
             [[['1.05', 'EUR'], ['1.00', 'GBP'], ['1.19', 'EUR']], 'GBP 1.00'],
-            [[['1.05', 'EUR'], ['1.00', 'GBP'], ['1.2001', 'EUR', new ExactContext()]], 'EUR 1.2001'],
+            [[['1.05', 'EUR'], ['1.00', 'GBP'], ['1.2001', 'EUR', new AutoContext()]], 'EUR 1.2001'],
         ];
     }
 }

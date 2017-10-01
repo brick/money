@@ -25,7 +25,7 @@ use Brick\Math\Exception\RoundingNecessaryException;
  * - DefaultContext handles monies with the default scale for the currency.
  * - CashContext is similar to DefaultContext, but supports a cash rounding step.
  * - PrecisionContext handles monies with a custom scale, and optionally step.
- * - ExactContext always returns an exact result, adjusting the scale as required by the operation.
+ * - AutoContext automatically adjusts the scale of the result to the minimum required.
  */
 class Money extends AbstractMoney
 {

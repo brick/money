@@ -5,7 +5,7 @@ namespace Brick\Money\Tests;
 use Brick\Money\Context;
 use Brick\Money\Context\CashContext;
 use Brick\Money\Context\DefaultContext;
-use Brick\Money\Context\ExactContext;
+use Brick\Money\Context\AutoContext;
 use Brick\Money\Context\PrecisionContext;
 use Brick\Money\Currency;
 use Brick\Money\Exception\MoneyMismatchException;
@@ -210,8 +210,8 @@ class RationalMoneyTest extends AbstractTestCase
             [['246/200', 'USD'], new DefaultContext(), RoundingMode::UNNECESSARY, 'USD 1.23'],
             [['987.65', 'CZK'], new CashContext(100), RoundingMode::UP, 'CZK 988.00'],
             [['123/456', 'GBP'], new PrecisionContext(4), RoundingMode::UP, 'GBP 0.2698'],
-            [['123/456', 'GBP'], new ExactContext(), RoundingMode::UNNECESSARY, RoundingNecessaryException::class],
-            [['123456789/256', 'CHF'], new ExactContext(), RoundingMode::UNNECESSARY, 'CHF 482253.08203125']
+            [['123/456', 'GBP'], new AutoContext(), RoundingMode::UNNECESSARY, RoundingNecessaryException::class],
+            [['123456789/256', 'CHF'], new AutoContext(), RoundingMode::UNNECESSARY, 'CHF 482253.08203125']
         ];
     }
 }

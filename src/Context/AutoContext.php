@@ -9,9 +9,9 @@ use Brick\Math\BigNumber;
 use Brick\Math\RoundingMode;
 
 /**
- * Adjusts a number to a scale large enough to represent its exact value.
+ * Automatically adjusts the scale of a number to the strict minimum.
  */
-class ExactContext implements Context
+class AutoContext implements Context
 {
     /**
      * {@inheritdoc}
@@ -19,10 +19,10 @@ class ExactContext implements Context
     public function applyTo(BigNumber $amount, Currency $currency, $roundingMode)
     {
         if ($roundingMode !== RoundingMode::UNNECESSARY) {
-            throw new \InvalidArgumentException('ExactContext only supports RoundingMode::UNNECESSARY');
+            throw new \InvalidArgumentException('AutoContext only supports RoundingMode::UNNECESSARY');
         }
 
-        return $amount->toBigDecimal();
+        return $amount->toBigDecimal()->stripTrailingZeros();
     }
 
     /**

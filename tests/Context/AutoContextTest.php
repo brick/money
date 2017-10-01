@@ -5,16 +5,16 @@ namespace Brick\Money\Tests\Context;
 use Brick\Math\Exception\RoundingNecessaryException;
 use Brick\Math\RoundingMode;
 use Brick\Money\Context\CashContext;
-use Brick\Money\Context\ExactContext;
+use Brick\Money\Context\AutoContext;
 use Brick\Money\Currency;
 use Brick\Money\Tests\AbstractTestCase;
 
 use Brick\Math\BigNumber;
 
 /**
- * Tests for class ExactContext.
+ * Tests for class AutoContext.
  */
-class ExactContextTest extends AbstractTestCase
+class AutoContextTest extends AbstractTestCase
 {
     /**
      * @dataProvider providerApplyTo
@@ -29,7 +29,7 @@ class ExactContextTest extends AbstractTestCase
         $amount = BigNumber::of($amount);
         $currency = Currency::of($currency);
 
-        $context = new ExactContext;
+        $context = new AutoContext();
 
         if ($this->isExceptionClass($expected)) {
             $this->expectException($expected);
