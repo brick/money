@@ -5,7 +5,7 @@ namespace Brick\Money\Tests;
 use Brick\Money\Context;
 use Brick\Money\Context\DefaultContext;
 use Brick\Money\Context\AutoContext;
-use Brick\Money\Context\PrecisionContext;
+use Brick\Money\Context\CustomContext;
 use Brick\Money\CurrencyConverter;
 use Brick\Money\Exception\CurrencyConversionException;
 use Brick\Money\ExchangeRateProvider\ConfigurableProvider;
@@ -114,8 +114,8 @@ class CurrencyConverterTest extends AbstractTestCase
             [[['354.40005', 'EUR'], ['3.1234', 'JPY']], 'USD', new DefaultContext(), RoundingMode::DOWN, 'USD 437.56'],
             [[['354.40005', 'EUR'], ['3.1234', 'JPY']], 'USD', new DefaultContext(), RoundingMode::UP, 'USD 437.57'],
 
-            [[['1234.56', 'EUR'], ['31562', 'JPY']], 'USD', new PrecisionContext(6), RoundingMode::DOWN, 'USD 1835.871591'],
-            [[['1234.56', 'EUR'], ['31562', 'JPY']], 'USD', new PrecisionContext(6), RoundingMode::UP, 'USD 1835.871592']
+            [[['1234.56', 'EUR'], ['31562', 'JPY']], 'USD', new CustomContext(6), RoundingMode::DOWN, 'USD 1835.871591'],
+            [[['1234.56', 'EUR'], ['31562', 'JPY']], 'USD', new CustomContext(6), RoundingMode::UP, 'USD 1835.871592']
         ];
     }
 

@@ -125,16 +125,16 @@ $money->dividedBy(3, RoundingMode::DOWN); // CHF 3.30
 $money->dividedBy(3, RoundingMode::UP); // CHF 3.35
 ```
 
-### Custom precision
+### Custom scale
 
-You can use custom scale monies by providing a `PrecisionContext`:
+You can use custom scale monies by providing a `CustomContext`:
 
 ```php
 use Brick\Money\Money;
-use Brick\Money\Context\PrecisionContext;
+use Brick\Money\Context\CustomContext;
 use Brick\Math\RoundingMode;
 
-$money = Money::of(10, 'USD', new PrecisionContext(4)); // USD 10.0000
+$money = Money::of(10, 'USD', new CustomContext(4)); // USD 10.0000
 $money->dividedBy(7, RoundingMode::UP); // USD 1.4286
 ```
 
@@ -151,7 +151,7 @@ $money->multipliedBy('2.5'); // USD 2.75
 $money->dividedBy(8); // USD 0.1375
 ```
 
-Note that *you should not use `AutoContext` to represent an intermediate calculation result*. In particular, it cannot represent the result of all divisions, as some of them may lead to an infinite repeating decimal. For these use cases, `RationalMoney` is what you need. Head on to the next section!
+Note that it is not advised to use `AutoContext` to represent an intermediate calculation result: in particular, it cannot represent the result of all divisions, as some of them may lead to an infinite repeating decimal. For these use cases, `RationalMoney` is what you need. Head on to the next section!
 
 ## Advanced calculations
 
@@ -174,7 +174,7 @@ As you can see, the intermediate results are represented as a fraction, and no r
 
 ```php
 ...
-->toMoney(new PrecisionContext(8), RoundingMode::UP); // EUR 25.26948667
+->toMoney(new CustomContext(8), RoundingMode::UP); // EUR 25.26948667
 ```
 
 ## Money allocation

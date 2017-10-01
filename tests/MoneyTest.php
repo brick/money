@@ -9,7 +9,7 @@ use Brick\Money\Context;
 use Brick\Money\Context\CashContext;
 use Brick\Money\Context\DefaultContext;
 use Brick\Money\Context\AutoContext;
-use Brick\Money\Context\PrecisionContext;
+use Brick\Money\Context\CustomContext;
 
 use Brick\Math\BigDecimal;
 use Brick\Math\BigInteger;
@@ -51,11 +51,11 @@ class MoneyTest extends AbstractTestCase
         return [
             ['USD 1.00', 1, 'USD'],
             ['JPY 1', 1.0, 'JPY'],
-            ['JPY 1.200', '1.2', 'JPY', new PrecisionContext(3)],
+            ['JPY 1.200', '1.2', 'JPY', new CustomContext(3)],
             ['EUR 0.42', BigRational::of('3/7'), 'EUR', null, RoundingMode::DOWN],
             ['EUR 0.43', BigRational::of('3/7'), 'EUR', null, RoundingMode::UP],
             ['CUSTOM 0.428', BigRational::of('3/7'), new Currency('CUSTOM', 0, '', 3), null, RoundingMode::DOWN],
-            ['CUSTOM 0.4286', BigRational::of('3/7'), new Currency('CUSTOM', 0, '', 3), new PrecisionContext(4, 1), RoundingMode::UP],
+            ['CUSTOM 0.4286', BigRational::of('3/7'), new Currency('CUSTOM', 0, '', 3), new CustomContext(4, 1), RoundingMode::UP],
             [RoundingNecessaryException::class, '1.2', 'JPY'],
             [NumberFormatException::class, '1.', 'JPY'],
         ];
@@ -107,7 +107,7 @@ class MoneyTest extends AbstractTestCase
             ['USD', null, 'USD 0.00'],
             ['TND', null, 'TND 0.000'],
             ['JPY', null, 'JPY 0'],
-            ['USD', new PrecisionContext(4), 'USD 0.0000'],
+            ['USD', new CustomContext(4), 'USD 0.0000'],
             ['USD', new AutoContext(), 'USD 0']
         ];
     }
@@ -144,13 +144,13 @@ class MoneyTest extends AbstractTestCase
             [['1.234', 'USD', new AutoContext()], new DefaultContext(), RoundingMode::DOWN, 'USD 1.23'],
             [['1.234', 'USD', new AutoContext()], new DefaultContext(), RoundingMode::UP, 'USD 1.24'],
             [['1.234', 'USD', new AutoContext()], new DefaultContext(), RoundingMode::UNNECESSARY, RoundingNecessaryException::class],
-            [['1.234', 'USD', new AutoContext()], new PrecisionContext(2, 5), RoundingMode::DOWN, 'USD 1.20'],
-            [['1.234', 'USD', new AutoContext()], new PrecisionContext(2, 5), RoundingMode::UP, 'USD 1.25'],
+            [['1.234', 'USD', new AutoContext()], new CustomContext(2, 5), RoundingMode::DOWN, 'USD 1.20'],
+            [['1.234', 'USD', new AutoContext()], new CustomContext(2, 5), RoundingMode::UP, 'USD 1.25'],
             [['1.234', 'USD', new AutoContext()], new AutoContext(), RoundingMode::UNNECESSARY, 'USD 1.234'],
-            [['1.234', 'USD', new AutoContext()], new PrecisionContext(1, 1), RoundingMode::DOWN, 'USD 1.2'],
-            [['1.234', 'USD', new AutoContext()], new PrecisionContext(1, 1), RoundingMode::UP, 'USD 1.3'],
-            [['1.234', 'USD', new AutoContext()], new PrecisionContext(1, 2), RoundingMode::DOWN, 'USD 1.2'],
-            [['1.234', 'USD', new AutoContext()], new PrecisionContext(1, 2), RoundingMode::UP, 'USD 1.4'],
+            [['1.234', 'USD', new AutoContext()], new CustomContext(1, 1), RoundingMode::DOWN, 'USD 1.2'],
+            [['1.234', 'USD', new AutoContext()], new CustomContext(1, 1), RoundingMode::UP, 'USD 1.3'],
+            [['1.234', 'USD', new AutoContext()], new CustomContext(1, 2), RoundingMode::DOWN, 'USD 1.2'],
+            [['1.234', 'USD', new AutoContext()], new CustomContext(1, 2), RoundingMode::UP, 'USD 1.4'],
         ];
     }
 
@@ -340,8 +340,8 @@ class MoneyTest extends AbstractTestCase
             [['1.234', 'USD', new AutoContext()], '2.0', RoundingMode::UNNECESSARY, 'USD 0.617'],
             [['12.34', 'USD'], '20', RoundingMode::DOWN, 'USD 0.61'],
             [['12.34', 'USD'], 20, RoundingMode::UP, 'USD 0.62'],
-            [['1.2345', 'USD', new PrecisionContext(4)], '2', RoundingMode::CEILING, 'USD 0.6173'],
-            [['1.2345', 'USD', new PrecisionContext(4)], 2, RoundingMode::FLOOR, 'USD 0.6172'],
+            [['1.2345', 'USD', new CustomContext(4)], '2', RoundingMode::CEILING, 'USD 0.6173'],
+            [['1.2345', 'USD', new CustomContext(4)], 2, RoundingMode::FLOOR, 'USD 0.6172'],
             [['12.34', 'USD'], 20, RoundingMode::UNNECESSARY, RoundingNecessaryException::class],
             [['10.28', 'USD'], '8', RoundingMode::UNNECESSARY, RoundingNecessaryException::class],
             [['1.1', 'USD', new AutoContext()], 2, RoundingMode::UNNECESSARY, 'USD 0.55'],
@@ -374,8 +374,8 @@ class MoneyTest extends AbstractTestCase
         return [
             [['10', 'USD'], 3, 'USD 3.33', 'USD 0.01'],
             [['100', 'USD'], 9, 'USD 11.11', 'USD 0.01'],
-            [['20', 'CHF', new PrecisionContext(2, 5)], 3, 'CHF 6.65', 'CHF 0.05'],
-            [['50','CZK', new PrecisionContext(2, 100)], 3, 'CZK 16.00', 'CZK 2.00']
+            [['20', 'CHF', new CustomContext(2, 5)], 3, 'CHF 6.65', 'CHF 0.05'],
+            [['50','CZK', new CustomContext(2, 100)], 3, 'CZK 16.00', 'CZK 2.00']
         ];
     }
 
@@ -833,7 +833,7 @@ class MoneyTest extends AbstractTestCase
     public function providerConvertedTo()
     {
         return [
-            [['1.23', 'USD'], ['JPY', '125', new PrecisionContext(2)], 'JPY 153.75'],
+            [['1.23', 'USD'], ['JPY', '125', new CustomContext(2)], 'JPY 153.75'],
             [['1.23', 'USD'], ['JPY', '125', null, RoundingMode::DOWN], 'JPY 153'],
             [['1.23', 'USD'], ['JPY', '125', new DefaultContext(), RoundingMode::UP], 'JPY 154'],
         ];

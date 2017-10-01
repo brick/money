@@ -4,16 +4,16 @@ namespace Brick\Money\Tests\Context;
 
 use Brick\Math\Exception\RoundingNecessaryException;
 use Brick\Math\RoundingMode;
-use Brick\Money\Context\PrecisionContext;
+use Brick\Money\Context\CustomContext;
 use Brick\Money\Currency;
 use Brick\Money\Tests\AbstractTestCase;
 
 use Brick\Math\BigNumber;
 
 /**
- * Tests for class PrecisionContext.
+ * Tests for class CustomContext.
  */
-class PrecisionContextTest extends AbstractTestCase
+class CustomContextTest extends AbstractTestCase
 {
     /**
      * @dataProvider providerApplyTo
@@ -30,7 +30,7 @@ class PrecisionContextTest extends AbstractTestCase
         $amount = BigNumber::of($amount);
         $currency = Currency::of($currency);
 
-        $context = new PrecisionContext($scale, $step);
+        $context = new CustomContext($scale, $step);
 
         if ($this->isExceptionClass($expected)) {
             $this->expectException($expected);
@@ -96,7 +96,7 @@ class PrecisionContextTest extends AbstractTestCase
 
     public function testGetStep()
     {
-        $context = new PrecisionContext(2, 50);
+        $context = new CustomContext(2, 50);
         $this->assertSame(50, $context->getStep());
     }
 }
