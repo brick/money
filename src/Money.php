@@ -317,7 +317,7 @@ class Money extends AbstractMoney
     public function plus($that, $roundingMode = RoundingMode::UNNECESSARY)
     {
         $that = $this->handleMoney($that, __FUNCTION__);
-        $amount = $this->amount->plus($that);
+        $amount = $this->amount->toBigRational()->plus($that);
 
         return self::create($amount, $this->currency, $this->context, $roundingMode);
     }
@@ -343,7 +343,7 @@ class Money extends AbstractMoney
     public function minus($that, $roundingMode = RoundingMode::UNNECESSARY)
     {
         $that = $this->handleMoney($that, __FUNCTION__);
-        $amount = $this->amount->minus($that);
+        $amount = $this->amount->toBigRational()->minus($that);
 
         return self::create($amount, $this->currency, $this->context, $roundingMode);
     }
@@ -364,7 +364,7 @@ class Money extends AbstractMoney
      */
     public function multipliedBy($that, $roundingMode = RoundingMode::UNNECESSARY)
     {
-        $amount = $this->amount->multipliedBy($that);
+        $amount = $this->amount->toBigRational()->multipliedBy($that);
 
         return self::create($amount, $this->currency, $this->context, $roundingMode);
     }
