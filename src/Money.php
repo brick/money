@@ -297,19 +297,6 @@ class Money extends AbstractMoney
     }
 
     /**
-     * Converts this Money to a Money with the given Context.
-     *
-     * @param Context $context
-     * @param int     $roundingMode
-     *
-     * @return Money
-     */
-    public function with(Context $context, $roundingMode = RoundingMode::UNNECESSARY)
-    {
-        return self::create($this->amount, $this->currency, $context, $roundingMode);
-    }
-
-    /**
      * Returns the sum of this Money and the given amount.
      *
      * If the operand is a Money, it must have the same context and scale as this Money, or an exception is thrown.
@@ -639,6 +626,21 @@ class Money extends AbstractMoney
     public function formatTo($locale)
     {
         return $this->formatWith(new \NumberFormatter($locale, \NumberFormatter::CURRENCY));
+    }
+
+    /**
+     * Converts this Money to a Money in the given Context.
+     *
+     * @param Context $context      The context.
+     * @param int     $roundingMode The rounding mode, if necessary.
+     *
+     * @return Money
+     *
+     * @throws RoundingNecessaryException If RoundingMode::UNNECESSARY is used but rounding is necessary.
+     */
+    public function to(Context $context, $roundingMode = RoundingMode::UNNECESSARY)
+    {
+        return self::create($this->amount, $this->currency, $context, $roundingMode);
     }
 
     /**

@@ -113,14 +113,14 @@ class MoneyTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider providerWith
+     * @dataProvider providerTo
      *
      * @param array   $money
      * @param Context $context
      * @param int     $roundingMode
      * @param string  $expected
      */
-    public function testWith(array $money, Context $context, $roundingMode, $expected)
+    public function testTo(array $money, Context $context, $roundingMode, $expected)
     {
         $money = Money::of(...$money);
 
@@ -128,7 +128,7 @@ class MoneyTest extends AbstractTestCase
             $this->expectException($expected);
         }
 
-        $result = $money->with($context, $roundingMode);
+        $result = $money->to($context, $roundingMode);
 
         if (! $this->isExceptionClass($expected)) {
             $this->assertMoneyIs($expected, $result);
@@ -138,7 +138,7 @@ class MoneyTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerWith()
+    public function providerTo()
     {
         return [
             [['1.234', 'USD', new AutoContext()], new DefaultContext(), RoundingMode::DOWN, 'USD 1.23'],
