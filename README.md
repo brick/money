@@ -151,7 +151,7 @@ $money->multipliedBy('2.5'); // USD 2.75
 $money->dividedBy(8); // USD 0.1375
 ```
 
-Note that it is not advised to use `AutoContext` to represent an intermediate calculation result: in particular, it cannot represent the result of all divisions, as some of them may lead to an infinite repeating decimal. For these use cases, `RationalMoney` is what you need. Head on to the next section!
+Note that it is not advised to use `AutoContext` to represent an intermediate calculation result: in particular, it cannot represent the result of all divisions, as some of them may lead to an infinite repeating decimal, which would throw an exception. For these use cases, `RationalMoney` is what you need. Head on to the next section!
 
 ## Advanced calculations
 
