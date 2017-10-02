@@ -32,8 +32,19 @@ interface Context
      * Returns the step used by this context.
      *
      * If no cash rounding is involved, this must return 1.
+     * This value is used by money allocation methods that do not go through the applyTo() method.
      *
      * @return int
      */
     public function getStep();
+
+    /**
+     * Returns whether this context uses a fixed scale and step.
+     *
+     * When the scale and step are fixed, it is considered safe to add or subtract monies amounts directly —as long as
+     * they are in the same context— without going through the applyTo() method, allowing for an optimization.
+     *
+     * @return bool
+     */
+    public function isFixedScale();
 }

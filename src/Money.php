@@ -321,6 +321,10 @@ class Money extends AbstractMoney
 
         if ($that instanceof Money) {
             $this->checkContext($that->getContext(), __FUNCTION__);
+
+            if ($this->context->isFixedScale()) {
+                return new Money($this->amount->plus($that->amount), $this->currency, $this->context);
+            }
         }
 
         $amount = $this->amount->toBigRational()->plus($amount);
@@ -353,6 +357,10 @@ class Money extends AbstractMoney
 
         if ($that instanceof Money) {
             $this->checkContext($that->getContext(), __FUNCTION__);
+
+            if ($this->context->isFixedScale()) {
+                return new Money($this->amount->minus($that->amount), $this->currency, $this->context);
+            }
         }
 
         $amount = $this->amount->toBigRational()->minus($amount);

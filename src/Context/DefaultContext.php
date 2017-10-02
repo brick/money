@@ -27,4 +27,12 @@ class DefaultContext implements Context
     {
         return 1;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isFixedScale()
+    {
+        return true;
+    }
 }

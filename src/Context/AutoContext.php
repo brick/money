@@ -32,4 +32,12 @@ class AutoContext implements Context
     {
         return 1;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isFixedScale()
+    {
+        return false;
+    }
 }

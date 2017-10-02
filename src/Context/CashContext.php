@@ -54,4 +54,12 @@ class CashContext implements Context
     {
         return $this->step;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isFixedScale()
+    {
+        return true;
+    }
 }
