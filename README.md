@@ -14,7 +14,7 @@ Working with financial data is a serious matter, and small rounding mistakes in 
 
 This component is based on the [Math](https://github.com/brick/math) component and handles exact calculations on monies of any size.
 
-## Requirements and installation
+### Requirements and installation
 
 This library requires PHP 5.6 or PHP 7.
 
@@ -23,9 +23,24 @@ Just define the following requirement in your `composer.json` file:
 
     {
         "require": {
-            "brick/money": "dev-master"
+            "brick/money": "0.1.*"
         }
     }
+
+### Project status & release process
+
+While this library is still under development, it is well tested and should be stable enough to use in production
+environments.
+
+The current releases are numbered `0.x.y`. When a non-breaking change is introduced (adding new methods, optimizing
+existing code, etc.), `y` is incremented.
+
+**When a breaking change is introduced, a new `0.x` version cycle is always started.**
+
+It is therefore safe to lock your project to a given release cycle, such as `0.1.*`.
+
+If you need to upgrade to a newer release cycle, check the [release history](https://github.com/brick/money/releases)
+for a list of changes introduced by each further `0.x.0` version.
 
 ## Creating a Money
 
