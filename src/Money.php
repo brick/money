@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Brick\Money;
 
 use Brick\Money\Context\DefaultContext;
@@ -637,8 +639,8 @@ final class Money extends AbstractMoney
     public function formatWith(\NumberFormatter $formatter) : string
     {
         return $formatter->formatCurrency(
-            (string) $this->amount,
-            (string) $this->currency
+            $this->amount->toFloat(),
+            $this->currency->getCurrencyCode()
         );
     }
 

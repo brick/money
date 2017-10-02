@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Brick\Money\Exception;
 
 /**
@@ -8,11 +10,11 @@ namespace Brick\Money\Exception;
 class UnknownCurrencyException extends MoneyException
 {
     /**
-     * @param string $currencyCode
+     * @param string|int $currencyCode
      *
      * @return UnknownCurrencyException
      */
-    public static function unknownCurrency(string $currencyCode) : self
+    public static function unknownCurrency($currencyCode) : self
     {
         return new self('Unknown currency code: ' . $currencyCode);
     }
