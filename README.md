@@ -6,6 +6,7 @@ A money and currency library for PHP.
 
 [![Build Status](https://secure.travis-ci.org/brick/money.svg?branch=master)](http://travis-ci.org/brick/money)
 [![Coverage Status](https://coveralls.io/repos/brick/money/badge.svg?branch=master)](https://coveralls.io/r/brick/money?branch=master)
+[![Latest Stable Version](https://poser.pugx.org/brick/money/v/stable)](https://packagist.org/packages/brick/money)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
 
 ## Introduction
