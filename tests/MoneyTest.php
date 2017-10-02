@@ -64,13 +64,20 @@ class MoneyTest extends AbstractTestCase
     /**
      * @dataProvider providerOfMinor
      *
-     * @param string $currency
-     * @param int    $amountMinor
-     * @param string $expectedAmount
+     * @param string $expectedResult The resulting money as a string, or an exception class.
+     * @param mixed  ...$args        The arguments to the ofMinor() method.
      */
-    public function testOfMinor($currency, $amountMinor, $expectedAmount)
+    public function testOfMinor($expectedResult, ...$args)
     {
-        $this->assertMoneyEquals($expectedAmount, $currency, Money::ofMinor($amountMinor, $currency));
+        if ($this->isExceptionClass($expectedResult)) {
+            $this->expectException($expectedResult);
+        }
+
+        $money = Money::ofMinor(...$args);
+
+        if (! $this->isExceptionClass($expectedResult)) {
+            $this->assertMoneyIs($expectedResult, $money);
+        }
     }
 
     /**
@@ -79,9 +86,12 @@ class MoneyTest extends AbstractTestCase
     public function providerOfMinor()
     {
         return [
-            ['EUR', 1, '0.01'],
-            ['USD', 600, '6.00'],
-            ['JPY', 600, '600'],
+            ['EUR 0.01', 1, 'EUR'],
+            ['USD 6.00', 600, 'USD'],
+            ['JPY 600', 600, 'JPY'],
+            ['USD 1.2350', '123.5', 'USD', new CustomContext(4)],
+            [RoundingNecessaryException::class, '123.5', 'USD'],
+            [NumberFormatException::class, '123.', 'USD'],
         ];
     }
 

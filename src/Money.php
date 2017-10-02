@@ -9,6 +9,7 @@ use Brick\Money\Exception\UnknownCurrencyException;
 use Brick\Math\BigDecimal;
 use Brick\Math\BigInteger;
 use Brick\Math\BigNumber;
+use Brick\Math\BigRational;
 use Brick\Math\RoundingMode;
 use Brick\Math\Exception\ArithmeticException;
 use Brick\Math\Exception\NumberFormatException;
@@ -192,25 +193,33 @@ class Money extends AbstractMoney
     /**
      * Returns a Money from a number of minor units.
      *
-     * The result is a Money with a DefaultContext: this Money has the default scale for the currency.
+     * By default, the money is created with a DefaultContext. This means that the amount is scaled to match the
+     * currency's default fraction digits. For example, `Money::ofMinor(1234, 'USD')` will yield `USD 12.34`.
+     * If the amount cannot be safely converted to this scale, an exception is thrown.
      *
-     * @param BigNumber|number|string $minorAmount The amount in minor units. Must be convertible to a BigInteger.
-     * @param Currency|string         $currency    The currency, as a Currency instance or ISO currency code.
+     * @param BigNumber|number|string $minorAmount  The amount in minor units.
+     * @param Currency|string         $currency     The currency, as a Currency instance or ISO currency code.
+     * @param Context|null            $context      An optional Context.
+     * @param int                     $roundingMode An optional RoundingMode, if the amount does not fit the context.
      *
      * @return Money
      *
      * @throws UnknownCurrencyException If the currency is an unknown currency code.
      * @throws ArithmeticException      If the amount cannot be converted to a BigInteger.
      */
-    public static function ofMinor($minorAmount, $currency)
+    public static function ofMinor($minorAmount, $currency, Context $context = null, $roundingMode = RoundingMode::UNNECESSARY)
     {
         if (! $currency instanceof Currency) {
             $currency = Currency::of($currency);
         }
 
-        $amount = BigDecimal::ofUnscaledValue($minorAmount, $currency->getDefaultFractionDigits());
+        if ($context === null) {
+            $context = new DefaultContext();
+        }
 
-        return new Money($amount, $currency, new DefaultContext());
+        $amount = BigRational::of($minorAmount)->dividedBy(10 ** $currency->getDefaultFractionDigits());
+
+        return self::create($amount, $currency, $context, $roundingMode);
     }
 
     /**
