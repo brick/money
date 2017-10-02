@@ -70,7 +70,7 @@ final class ISOCurrencyProvider
      *
      * @return ISOCurrencyProvider
      */
-    public static function getInstance()
+    public static function getInstance() : ISOCurrencyProvider
     {
         if (self::$instance === null) {
             self::$instance = new ISOCurrencyProvider();
@@ -88,7 +88,7 @@ final class ISOCurrencyProvider
      *
      * @throws UnknownCurrencyException If the currency code is not known.
      */
-    public function getCurrency($currencyCode)
+    public function getCurrency($currencyCode) : Currency
     {
         if (isset($this->currencies[$currencyCode])) {
             return $this->currencies[$currencyCode];
@@ -116,7 +116,7 @@ final class ISOCurrencyProvider
      *
      * @return Currency[] The currencies, indexed by currency code.
      */
-    public function getAvailableCurrencies()
+    public function getAvailableCurrencies() : array
     {
         if ($this->isPartial) {
             foreach ($this->currencyData as $currencyCode => $data) {
@@ -142,7 +142,7 @@ final class ISOCurrencyProvider
      *
      * @throws UnknownCurrencyException If the country code is not known, or the country has no single currency.
      */
-    public function getCurrencyForCountry($countryCode)
+    public function getCurrencyForCountry(string $countryCode) : Currency
     {
         $currencies = $this->getCurrenciesForCountry($countryCode);
 
@@ -174,7 +174,7 @@ final class ISOCurrencyProvider
      *
      * @return Currency[]
      */
-    public function getCurrenciesForCountry($countryCode)
+    public function getCurrenciesForCountry(string $countryCode) : array
     {
         if ($this->countryToCurrency === null) {
             $this->countryToCurrency = require __DIR__ . '/../data/country-to-currency.php';

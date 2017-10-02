@@ -20,14 +20,14 @@ abstract class AbstractMoney implements MoneyContainer
     /**
      * @return Currency
      */
-    abstract public function getCurrency();
+    abstract public function getCurrency() : Currency;
 
     /**
      * Required by interface MoneyContainer.
      *
      * @return BigNumber[]
      */
-    final public function getAmounts()
+    final public function getAmounts() : array
     {
         return [
             $this->getCurrency()->getCurrencyCode() => $this->getAmount()
@@ -39,7 +39,7 @@ abstract class AbstractMoney implements MoneyContainer
      *
      * @return int -1 if the number is negative, 0 if zero, 1 if positive.
      */
-    final public function getSign()
+    final public function getSign() : int
     {
         return $this->getAmount()->sign();
     }
@@ -49,7 +49,7 @@ abstract class AbstractMoney implements MoneyContainer
      *
      * @return bool
      */
-    final public function isZero()
+    final public function isZero() : bool
     {
         return $this->getAmount()->isZero();
     }
@@ -59,7 +59,7 @@ abstract class AbstractMoney implements MoneyContainer
      *
      * @return bool
      */
-    final public function isNegative()
+    final public function isNegative() : bool
     {
         return $this->getAmount()->isNegative();
     }
@@ -69,7 +69,7 @@ abstract class AbstractMoney implements MoneyContainer
      *
      * @return bool
      */
-    final public function isNegativeOrZero()
+    final public function isNegativeOrZero() : bool
     {
         return $this->getAmount()->isNegativeOrZero();
     }
@@ -79,7 +79,7 @@ abstract class AbstractMoney implements MoneyContainer
      *
      * @return bool
      */
-    final public function isPositive()
+    final public function isPositive() : bool
     {
         return $this->getAmount()->isPositive();
     }
@@ -89,7 +89,7 @@ abstract class AbstractMoney implements MoneyContainer
      *
      * @return bool
      */
-    final public function isPositiveOrZero()
+    final public function isPositiveOrZero() : bool
     {
         return $this->getAmount()->isPositiveOrZero();
     }
@@ -104,7 +104,7 @@ abstract class AbstractMoney implements MoneyContainer
      * @throws ArithmeticException    If the argument is an invalid number.
      * @throws MoneyMismatchException If the argument is a money in a different currency.
      */
-    final public function compareTo($that)
+    final public function compareTo($that) : int
     {
         return $this->getAmount()->compareTo($this->getAmountOf($that));
     }
@@ -119,7 +119,7 @@ abstract class AbstractMoney implements MoneyContainer
      * @throws ArithmeticException    If the argument is an invalid number.
      * @throws MoneyMismatchException If the argument is a money in a different currency.
      */
-    final public function isEqualTo($that)
+    final public function isEqualTo($that) : bool
     {
         return $this->getAmount()->isEqualTo($this->getAmountOf($that));
     }
@@ -134,7 +134,7 @@ abstract class AbstractMoney implements MoneyContainer
      * @throws ArithmeticException    If the argument is an invalid number.
      * @throws MoneyMismatchException If the argument is a money in a different currency.
      */
-    final public function isLessThan($that)
+    final public function isLessThan($that) : bool
     {
         return $this->getAmount()->isLessThan($this->getAmountOf($that));
     }
@@ -149,7 +149,7 @@ abstract class AbstractMoney implements MoneyContainer
      * @throws ArithmeticException    If the argument is an invalid number.
      * @throws MoneyMismatchException If the argument is a money in a different currency.
      */
-    final public function isLessThanOrEqualTo($that)
+    final public function isLessThanOrEqualTo($that) : bool
     {
         return $this->getAmount()->isLessThanOrEqualTo($this->getAmountOf($that));
     }
@@ -164,7 +164,7 @@ abstract class AbstractMoney implements MoneyContainer
      * @throws ArithmeticException    If the argument is an invalid number.
      * @throws MoneyMismatchException If the argument is a money in a different currency.
      */
-    final public function isGreaterThan($that)
+    final public function isGreaterThan($that) : bool
     {
         return $this->getAmount()->isGreaterThan($this->getAmountOf($that));
     }
@@ -179,7 +179,7 @@ abstract class AbstractMoney implements MoneyContainer
      * @throws ArithmeticException    If the argument is an invalid number.
      * @throws MoneyMismatchException If the argument is a money in a different currency.
      */
-    final public function isGreaterThanOrEqualTo($that)
+    final public function isGreaterThanOrEqualTo($that) : bool
     {
         return $this->getAmount()->isGreaterThanOrEqualTo($this->getAmountOf($that));
     }

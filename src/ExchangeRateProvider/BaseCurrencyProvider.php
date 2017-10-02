@@ -35,7 +35,7 @@ final class BaseCurrencyProvider implements ExchangeRateProvider
      * @param ExchangeRateProvider $provider         The provider for rates relative to the base currency.
      * @param string               $baseCurrencyCode The code of the currency all the exchanges rates are based on.
      */
-    public function __construct(ExchangeRateProvider $provider, $baseCurrencyCode)
+    public function __construct(ExchangeRateProvider $provider, string $baseCurrencyCode)
     {
         $this->provider         = $provider;
         $this->baseCurrencyCode = $baseCurrencyCode;
@@ -44,13 +44,13 @@ final class BaseCurrencyProvider implements ExchangeRateProvider
     /**
      * {@inheritdoc}
      */
-    public function getExchangeRate($sourceCurrencyCode, $targetCurrencyCode)
+    public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode)
     {
-        if ($sourceCurrencyCode == $this->baseCurrencyCode) {
+        if ($sourceCurrencyCode === $this->baseCurrencyCode) {
             return $this->provider->getExchangeRate($sourceCurrencyCode, $targetCurrencyCode);
         }
 
-        if ($targetCurrencyCode == $this->baseCurrencyCode) {
+        if ($targetCurrencyCode === $this->baseCurrencyCode) {
             $exchangeRate = $this->provider->getExchangeRate($targetCurrencyCode, $sourceCurrencyCode);
 
             return BigRational::of($exchangeRate)->reciprocal();

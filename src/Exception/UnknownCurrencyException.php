@@ -12,7 +12,7 @@ class UnknownCurrencyException extends MoneyException
      *
      * @return UnknownCurrencyException
      */
-    public static function unknownCurrency($currencyCode)
+    public static function unknownCurrency(string $currencyCode) : self
     {
         return new self('Unknown currency code: ' . $currencyCode);
     }
@@ -22,7 +22,7 @@ class UnknownCurrencyException extends MoneyException
      *
      * @return UnknownCurrencyException
      */
-    public static function noCurrencyForCountry($countryCode)
+    public static function noCurrencyForCountry(string $countryCode) : self
     {
         return new self('No currency found for country ' . $countryCode);
     }
@@ -33,7 +33,7 @@ class UnknownCurrencyException extends MoneyException
      *
      * @return UnknownCurrencyException
      */
-    public static function noSingleCurrencyForCountry($countryCode, array $currencyCodes)
+    public static function noSingleCurrencyForCountry(string $countryCode, array $currencyCodes) : self
     {
         return new self('No single currency for country ' . $countryCode . ': ' . implode(', ', $currencyCodes));
     }

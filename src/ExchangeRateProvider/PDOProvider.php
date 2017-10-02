@@ -39,7 +39,7 @@ final class PDOProvider implements ExchangeRateProvider
     private $parameters = [];
 
     /**
-     * @param \PDO                                 $pdo
+     * @param \PDO                     $pdo
      * @param PDOProviderConfiguration $configuration
      *
      * @throws \InvalidArgumentException
@@ -102,7 +102,7 @@ final class PDOProvider implements ExchangeRateProvider
      *
      * @return void
      */
-    public function setParameters(...$parameters)
+    public function setParameters(...$parameters) : void
     {
         $this->parameters = $parameters;
     }
@@ -110,7 +110,7 @@ final class PDOProvider implements ExchangeRateProvider
     /**
      * {@inheritdoc}
      */
-    public function getExchangeRate($sourceCurrencyCode, $targetCurrencyCode)
+    public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode)
     {
         $parameters = $this->parameters;
 

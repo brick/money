@@ -5,6 +5,7 @@ namespace Brick\Money\Context;
 use Brick\Money\Context;
 use Brick\Money\Currency;
 
+use Brick\Math\BigDecimal;
 use Brick\Math\BigNumber;
 
 /**
@@ -15,7 +16,7 @@ final class DefaultContext implements Context
     /**
      * @inheritdoc
      */
-    public function applyTo(BigNumber $amount, Currency $currency, $roundingMode)
+    public function applyTo(BigNumber $amount, Currency $currency, int $roundingMode) : BigDecimal
     {
         return $amount->toScale($currency->getDefaultFractionDigits(), $roundingMode);
     }
@@ -23,7 +24,7 @@ final class DefaultContext implements Context
     /**
      * {@inheritdoc}
      */
-    public function getStep()
+    public function getStep() : int
     {
         return 1;
     }
@@ -31,7 +32,7 @@ final class DefaultContext implements Context
     /**
      * {@inheritdoc}
      */
-    public function isFixedScale()
+    public function isFixedScale() : bool
     {
         return true;
     }

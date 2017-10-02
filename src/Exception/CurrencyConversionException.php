@@ -14,7 +14,7 @@ class CurrencyConversionException extends MoneyException
      *
      * @return CurrencyConversionException
      */
-    public static function exchangeRateNotAvailable($sourceCurrencyCode, $targetCurrencyCode, $info = null)
+    public static function exchangeRateNotAvailable(string $sourceCurrencyCode, string $targetCurrencyCode, string $info = null) : self
     {
         $message = sprintf(
             'No exchange rate available to convert %s to %s',

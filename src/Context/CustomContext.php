@@ -2,6 +2,7 @@
 
 namespace Brick\Money\Context;
 
+use Brick\Math\BigDecimal;
 use Brick\Money\Context;
 use Brick\Money\Currency;
 
@@ -32,16 +33,16 @@ final class CustomContext implements Context
      * @param int $scale The scale of the monies using this context.
      * @param int $step  An optional cash rounding step. Must be a multiple of 2 and/or 5.
      */
-    public function __construct($scale, $step = 1)
+    public function __construct(int $scale, int $step = 1)
     {
-        $this->scale = (int) $scale;
-        $this->step  = (int) $step;
+        $this->scale = $scale;
+        $this->step  = $step;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function applyTo(BigNumber $amount, Currency $currency, $roundingMode)
+    public function applyTo(BigNumber $amount, Currency $currency, int $roundingMode) : BigDecimal
     {
         if ($this->step === 1) {
             return $amount->toScale($this->scale, $roundingMode);
@@ -57,7 +58,7 @@ final class CustomContext implements Context
     /**
      * {@inheritdoc}
      */
-    public function getStep()
+    public function getStep() : int
     {
         return $this->step;
     }
@@ -65,7 +66,7 @@ final class CustomContext implements Context
     /**
      * {@inheritdoc}
      */
-    public function isFixedScale()
+    public function isFixedScale() : bool
     {
         return true;
     }

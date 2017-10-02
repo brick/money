@@ -19,5 +19,5 @@ interface ExchangeRateProvider
      *
      * @throws CurrencyConversionException If the exchange rate is not available.
      */
-    public function getExchangeRate($sourceCurrencyCode, $targetCurrencyCode);
+    public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode);
 }

@@ -5,6 +5,7 @@ namespace Brick\Money\Context;
 use Brick\Money\Context;
 use Brick\Money\Currency;
 
+use Brick\Math\BigDecimal;
 use Brick\Math\BigNumber;
 use Brick\Math\RoundingMode;
 
@@ -16,7 +17,7 @@ final class AutoContext implements Context
     /**
      * {@inheritdoc}
      */
-    public function applyTo(BigNumber $amount, Currency $currency, $roundingMode)
+    public function applyTo(BigNumber $amount, Currency $currency, int $roundingMode) : BigDecimal
     {
         if ($roundingMode !== RoundingMode::UNNECESSARY) {
             throw new \InvalidArgumentException('AutoContext only supports RoundingMode::UNNECESSARY');
@@ -28,7 +29,7 @@ final class AutoContext implements Context
     /**
      * {@inheritdoc}
      */
-    public function getStep()
+    public function getStep() : int
     {
         return 1;
     }
@@ -36,7 +37,7 @@ final class AutoContext implements Context
     /**
      * {@inheritdoc}
      */
-    public function isFixedScale()
+    public function isFixedScale() : bool
     {
         return false;
     }

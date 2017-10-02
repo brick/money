@@ -26,7 +26,7 @@ interface Context
      *
      * @throws RoundingNecessaryException If the result cannot be represented at the required scale without rounding.
      */
-    public function applyTo(BigNumber $amount, Currency $currency, $roundingMode);
+    public function applyTo(BigNumber $amount, Currency $currency, int $roundingMode) : BigDecimal;
 
     /**
      * Returns the step used by this context.
@@ -36,7 +36,7 @@ interface Context
      *
      * @return int
      */
-    public function getStep();
+    public function getStep() : int;
 
     /**
      * Returns whether this context uses a fixed scale and step.
@@ -46,5 +46,5 @@ interface Context
      *
      * @return bool
      */
-    public function isFixedScale();
+    public function isFixedScale() : bool;
 }

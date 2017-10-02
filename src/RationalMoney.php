@@ -48,7 +48,7 @@ final class RationalMoney extends AbstractMoney
      *
      * @return RationalMoney
      */
-    public static function of($amount, $currency)
+    public static function of($amount, $currency) : RationalMoney
     {
         $amount = BigRational::of($amount);
 
@@ -62,7 +62,7 @@ final class RationalMoney extends AbstractMoney
     /**
      * @return BigRational
      */
-    public function getAmount()
+    public function getAmount() : BigRational
     {
         return $this->amount;
     }
@@ -70,7 +70,7 @@ final class RationalMoney extends AbstractMoney
     /**
      * @return Currency
      */
-    public function getCurrency()
+    public function getCurrency() : Currency
     {
         return $this->currency;
     }
@@ -85,7 +85,7 @@ final class RationalMoney extends AbstractMoney
      * @throws ArithmeticException    If the argument is not a valid number.
      * @throws MoneyMismatchException If the argument is a money in another currency.
      */
-    public function plus($that)
+    public function plus($that) : RationalMoney
     {
         $that = $this->getAmountOf($that);
         $amount = $this->amount->plus($that);
@@ -103,7 +103,7 @@ final class RationalMoney extends AbstractMoney
      * @throws ArithmeticException    If the argument is not a valid number.
      * @throws MoneyMismatchException If the argument is a money in another currency.
      */
-    public function minus($that)
+    public function minus($that) : RationalMoney
     {
         $that = $this->getAmountOf($that);
         $amount = $this->amount->minus($that);
@@ -120,7 +120,7 @@ final class RationalMoney extends AbstractMoney
      *
      * @throws ArithmeticException If the argument is not a valid number.
      */
-    public function multipliedBy($that)
+    public function multipliedBy($that) : RationalMoney
     {
         $amount = $this->amount->multipliedBy($that);
 
@@ -136,7 +136,7 @@ final class RationalMoney extends AbstractMoney
      *
      * @throws ArithmeticException If the argument is not a valid number.
      */
-    public function dividedBy($that)
+    public function dividedBy($that) : RationalMoney
     {
         $amount = $this->amount->dividedBy($that);
 
@@ -151,7 +151,7 @@ final class RationalMoney extends AbstractMoney
      *
      * @throws RoundingNecessaryException If RoundingMode::UNNECESSARY is used but rounding is necessary.
      */
-    public function toMoney(Context $context, $roundingMode = RoundingMode::UNNECESSARY)
+    public function toMoney(Context $context, int $roundingMode = RoundingMode::UNNECESSARY) : Money
     {
         return Money::create($this->amount, $this->currency, $context, $roundingMode);
     }
@@ -159,7 +159,7 @@ final class RationalMoney extends AbstractMoney
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString() : string
     {
         try {
             $amount = $this->amount->toBigDecimal();

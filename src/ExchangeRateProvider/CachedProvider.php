@@ -36,7 +36,7 @@ final class CachedProvider implements ExchangeRateProvider
     /**
      * {@inheritdoc}
      */
-    public function getExchangeRate($sourceCurrencyCode, $targetCurrencyCode)
+    public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode)
     {
         if (isset($this->exchangeRates[$sourceCurrencyCode][$targetCurrencyCode])) {
             return $this->exchangeRates[$sourceCurrencyCode][$targetCurrencyCode];
@@ -56,7 +56,7 @@ final class CachedProvider implements ExchangeRateProvider
      *
      * @return void
      */
-    public function invalidate()
+    public function invalidate() : void
     {
         $this->exchangeRates = [];
     }

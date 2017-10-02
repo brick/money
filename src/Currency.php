@@ -64,17 +64,15 @@ final class Currency
      * @param string $name                  The currency name.
      * @param int    $defaultFractionDigits The default number of fraction digits.
      */
-    public function __construct($currencyCode, $numericCode, $name, $defaultFractionDigits)
+    public function __construct(string $currencyCode, int $numericCode, string $name, int $defaultFractionDigits)
     {
-        $defaultFractionDigits = (int) $defaultFractionDigits;
-
         if ($defaultFractionDigits < 0) {
             throw new \InvalidArgumentException('The default fraction digits cannot be less than zero.');
         }
 
-        $this->currencyCode          = (string) $currencyCode;
-        $this->numericCode           = (int) $numericCode;
-        $this->name                  = (string) $name;
+        $this->currencyCode          = $currencyCode;
+        $this->numericCode           = $numericCode;
+        $this->name                  = $name;
         $this->defaultFractionDigits = $defaultFractionDigits;
     }
 
@@ -87,7 +85,7 @@ final class Currency
      *
      * @throws UnknownCurrencyException If an unknown currency code is given.
      */
-    public static function of($currencyCode)
+    public static function of($currencyCode) : Currency
     {
         return ISOCurrencyProvider::getInstance()->getCurrency($currencyCode);
     }
@@ -101,7 +99,7 @@ final class Currency
      *
      * @throws UnknownCurrencyException If the country code is unknown, or there is no single currency for the country.
      */
-    public static function ofCountry($countryCode)
+    public static function ofCountry(string $countryCode) : Currency
     {
         return ISOCurrencyProvider::getInstance()->getCurrencyForCountry($countryCode);
     }
@@ -114,7 +112,7 @@ final class Currency
      *
      * @return string
      */
-    public function getCurrencyCode()
+    public function getCurrencyCode() : string
     {
         return $this->currencyCode;
     }
@@ -127,7 +125,7 @@ final class Currency
      *
      * @return int
      */
-    public function getNumericCode()
+    public function getNumericCode() : int
     {
         return $this->numericCode;
     }
@@ -140,7 +138,7 @@ final class Currency
      *
      * @return string
      */
-    public function getName()
+    public function getName() : string
     {
         return $this->name;
     }
@@ -152,7 +150,7 @@ final class Currency
      *
      * @return int
      */
-    public function getDefaultFractionDigits()
+    public function getDefaultFractionDigits() : int
     {
         return $this->defaultFractionDigits;
     }
@@ -166,7 +164,7 @@ final class Currency
      *
      * @return bool
      */
-    public function is($currency)
+    public function is($currency) : bool
     {
         if ($currency instanceof Currency) {
             return $this->currencyCode === $currency->currencyCode;
@@ -181,7 +179,7 @@ final class Currency
      *
      * @return string
      */
-    public function __toString()
+    public function __toString() : string
     {
         return $this->currencyCode;
     }

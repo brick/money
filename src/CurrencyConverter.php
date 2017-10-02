@@ -54,7 +54,7 @@ final class CurrencyConverter
      * @throws CurrencyConversionException If the exchange rate is not available.
      * @throws RoundingNecessaryException  If rounding is necessary and RoundingMode::UNNECESSARY is used.
      */
-    public function convert(MoneyContainer $moneyContainer, $currency, $roundingMode = RoundingMode::UNNECESSARY)
+    public function convert(MoneyContainer $moneyContainer, $currency, int $roundingMode = RoundingMode::UNNECESSARY) : Money
     {
         if (! $currency instanceof Currency) {
             $currency = Currency::of($currency);

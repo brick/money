@@ -26,7 +26,7 @@ final class ProviderChain implements ExchangeRateProvider
      *
      * @return ProviderChain This instance, for chaining.
      */
-    public function addExchangeRateProvider(ExchangeRateProvider $provider)
+    public function addExchangeRateProvider(ExchangeRateProvider $provider) : self
     {
         $hash = spl_object_hash($provider);
         $this->providers[$hash] = $provider;
@@ -43,7 +43,7 @@ final class ProviderChain implements ExchangeRateProvider
      *
      * @return ProviderChain This instance, for chaining.
      */
-    public function removeExchangeRateProvider(ExchangeRateProvider $provider)
+    public function removeExchangeRateProvider(ExchangeRateProvider $provider) : self
     {
         $hash = spl_object_hash($provider);
         unset($this->providers[$hash]);
@@ -54,7 +54,7 @@ final class ProviderChain implements ExchangeRateProvider
     /**
      * {@inheritdoc}
      */
-    public function getExchangeRate($sourceCurrencyCode, $targetCurrencyCode)
+    public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode)
     {
         foreach ($this->providers as $provider) {
             try {

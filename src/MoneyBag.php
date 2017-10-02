@@ -19,13 +19,13 @@ final class MoneyBag implements MoneyContainer
     private $amounts = [];
 
     /**
-     * Returns the amount in the given currency contained in the bag.
+     * Returns the amount in the given currency contained in the bag, as a rational number.
      *
      * @param Currency|string $currency The Currency instance or currency code.
      *
      * @return BigRational
      */
-    public function getAmount($currency)
+    public function getAmount($currency) : BigRational
     {
         $currencyCode = (string) $currency;
 
@@ -35,11 +35,11 @@ final class MoneyBag implements MoneyContainer
     }
 
     /**
-     * Returns the amounts contained in this bag, indexed by currency code.
+     * Returns the amounts contained in this bag, as rational numbers, indexed by currency code.
      *
      * @return BigRational[]
      */
-    public function getAmounts()
+    public function getAmounts() : array
     {
         return $this->amounts;
     }
@@ -51,7 +51,7 @@ final class MoneyBag implements MoneyContainer
      *
      * @return MoneyBag This instance.
      */
-    public function add(MoneyContainer $money)
+    public function add(MoneyContainer $money) : MoneyBag
     {
         foreach ($money->getAmounts() as $currencyCode => $amount) {
             $this->amounts[$currencyCode] = $this->getAmount($currencyCode)->plus($amount);
@@ -67,7 +67,7 @@ final class MoneyBag implements MoneyContainer
      *
      * @return MoneyBag This instance.
      */
-    public function subtract(MoneyContainer $money)
+    public function subtract(MoneyContainer $money) : MoneyBag
     {
         foreach ($money->getAmounts() as $currencyCode => $amount) {
             $this->amounts[$currencyCode] = $this->getAmount($currencyCode)->minus($amount);
