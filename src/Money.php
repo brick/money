@@ -660,21 +660,6 @@ final class Money extends AbstractMoney
     }
 
     /**
-     * Converts this Money to a Money in the given Context.
-     *
-     * @param Context $context      The context.
-     * @param int     $roundingMode The rounding mode, if necessary.
-     *
-     * @return Money
-     *
-     * @throws RoundingNecessaryException If RoundingMode::UNNECESSARY is used but rounding is necessary.
-     */
-    public function to(Context $context, int $roundingMode = RoundingMode::UNNECESSARY) : Money
-    {
-        return self::create($this->amount, $this->currency, $context, $roundingMode);
-    }
-
-    /**
      * @return RationalMoney
      */
     public function toRational() : RationalMoney

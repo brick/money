@@ -7,7 +7,9 @@ namespace Brick\Money;
 use Brick\Money\Exception\MoneyMismatchException;
 
 use Brick\Math\BigNumber;
+use Brick\Math\RoundingMode;
 use Brick\Math\Exception\ArithmeticException;
+use Brick\Math\Exception\RoundingNecessaryException;
 
 /**
  * Base class for Money and RationalMoney.
@@ -23,6 +25,21 @@ abstract class AbstractMoney implements MoneyContainer
      * @return Currency
      */
     abstract public function getCurrency() : Currency;
+
+    /**
+     * Converts this money to a Money in the given Context.
+     *
+     * @param Context $context      The context.
+     * @param int     $roundingMode The rounding mode, if necessary.
+     *
+     * @return Money
+     *
+     * @throws RoundingNecessaryException If RoundingMode::UNNECESSARY is used but rounding is necessary.
+     */
+    final public function to(Context $context, int $roundingMode = RoundingMode::UNNECESSARY) : Money
+    {
+        return Money::create($this->getAmount(), $this->getCurrency(), $context, $roundingMode);
+    }
 
     /**
      * Required by interface MoneyContainer.

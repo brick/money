@@ -146,6 +146,8 @@ final class RationalMoney extends AbstractMoney
     }
 
     /**
+     * @deprecated use to().
+     *
      * @param Context $context
      * @param int     $roundingMode
      *
@@ -155,7 +157,7 @@ final class RationalMoney extends AbstractMoney
      */
     public function toMoney(Context $context, int $roundingMode = RoundingMode::UNNECESSARY) : Money
     {
-        return Money::create($this->amount, $this->currency, $context, $roundingMode);
+        return $this->to($context, $roundingMode);
     }
 
     /**
