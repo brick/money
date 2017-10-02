@@ -56,8 +56,8 @@ use Brick\Money\Money;
 $money = Money::of(50, 'USD');
 
 echo $money->plus('4.99'); // USD 54.99
-echo $money->minus('4.99'); // USD 45.01
-echo $money->multipliedBy('2.5'); // USD 125.00
+echo $money->minus(1); // USD 49.00
+echo $money->multipliedBy('1.999'); // USD 99.95
 echo $money->dividedBy(4); // USD 12.50
 ```
 
@@ -107,7 +107,7 @@ $money->dividedBy(3, RoundingMode::UP); // USD 16.67
 
 ## Money contexts
 
-By default, monies have the official scale for the currency, as defined by the [ISO 4217 standard](https://www.currency-iso.org/) (for example, EUR and USD have 2 decimal places, while JPY has 0) and increment by steps of 1 minor unit (cent). They internally use the `DefaultContext`. You can change this behaviour by providing a `Context` instance. All operations on monies return another Money with the same context. Each context targets a particular use case:
+By default, monies have the official scale for the currency, as defined by the [ISO 4217 standard](https://www.currency-iso.org/) (for example, EUR and USD have 2 decimal places, while JPY has 0) and increment by steps of 1 minor unit (cent); they internally use what is called the `DefaultContext`. You can change this behaviour by providing a `Context` instance. All operations on Money return another Money with the same context. Each context targets a particular use case:
 
 ### Cash rounding
 
