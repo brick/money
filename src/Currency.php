@@ -14,7 +14,8 @@ final class Currency
      * The currency code.
      *
      * For ISO currencies this will be the 3-letter uppercase ISO 4217 currency code.
-     * For non ISO currencies no constraints are defined, but the code must be unique across an application.
+     * For non ISO currencies no constraints are defined, but the code must be unique across an application, and must
+     * not conflict with ISO currency codes.
      *
      * @var string
      */
@@ -24,7 +25,10 @@ final class Currency
      * The numeric currency code.
      *
      * For ISO currencies this will be the ISO 4217 numeric currency code, without leading zeros.
-     * For non ISO currencies no constraints are defined, but the code must be unique across an application.
+     * For non ISO currencies no constraints are defined, but the code must be unique across an application, and must
+     * not conflict with ISO currency codes.
+     *
+     * If set to zero, the currency is considered to not have a numeric code.
      *
      * The numeric code can be useful when storing monies in a database.
      *
@@ -165,12 +169,11 @@ final class Currency
     public function is($currency)
     {
         if ($currency instanceof Currency) {
-            return $this->currencyCode === $currency->currencyCode
-                && $this->numericCode === $currency->numericCode;
+            return $this->currencyCode === $currency->currencyCode;
         }
 
         return $this->currencyCode === (string) $currency
-            || $this->numericCode === (int) $currency;
+            || ($this->numericCode !== 0 && $this->numericCode === (int) $currency);
     }
 
     /**

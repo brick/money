@@ -305,7 +305,7 @@ $provider->getExchangeRate('USD', 'EUR'); // 10/11
 $provider->getExchangeRate('GBP', 'USD'); // 11/9
 ```
 
-Notice that exchange rate providers can return rational rates!
+Notice that exchange rate providers can return rational numbers!
 
 ### Write your own provider
 
@@ -322,11 +322,10 @@ use Brick\Money\Money;
 $bitcoin = new Currency('XBT', 0, 'Bitcoin', 8);
 ```
 
-The second parameter is a numeric code, mainly useful for ISO currencies. If you don't need it, you can set it to `0`. The fourth parameter is the default scale for monies in this currency.
+The second parameter is a numeric code, that can be useful when storing monies in a database. You can set it to any unique value, or to `0` if unused. The fourth parameter is the default scale for monies in this currency.
 
 You can now use this Currency instead of a currency code:
 
 ```php
 $money = Money::of('0.123', $bitcoin); // XBT 0.12300000
 ```
-
