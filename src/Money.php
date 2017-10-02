@@ -300,7 +300,8 @@ class Money extends AbstractMoney
      * Returns the sum of this Money and the given amount.
      *
      * If the operand is a Money, it must have the same context as this Money, or an exception is thrown.
-     * If you do need to add a Money in a different context, you can use `plus($money->getAmount())`.
+     * This is by design, to ensure that contexts are not mixed accidentally.
+     * If you do need to add a Money in a different context, you can use `plus($money->toRational())`.
      *
      * The resulting Money has the same context as this Money. If the result needs rounding to fit this context, a
      * rounding mode can be provided. If a rounding mode is not provided and rounding is necessary, an exception is
@@ -331,7 +332,8 @@ class Money extends AbstractMoney
      * Returns the difference of this Money and the given amount.
      *
      * If the operand is a Money, it must have the same context as this Money, or an exception is thrown.
-     * If you do need to subtract a Money in a different context, you can use `minus($money->getAmount())`.
+     * This is by design, to ensure that contexts are not mixed accidentally.
+     * If you do need to subtract a Money in a different context, you can use `minus($money->toRational())`.
      *
      * The resulting Money has the same context as this Money. If the result needs rounding to fit this context, a
      * rounding mode can be provided. If a rounding mode is not provided and rounding is necessary, an exception is

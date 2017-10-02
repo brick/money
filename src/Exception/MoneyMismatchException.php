@@ -33,7 +33,7 @@ class MoneyMismatchException extends MoneyException
     {
         return new self(sprintf(
             'The monies do not share the same context. ' .
-            'If this is intended, use %s($money->getAmount()) instead of %s($money).',
+            'If this is intended, use %s($money->toRational()) instead of %s($money).',
             $method,
             $method
         ));
