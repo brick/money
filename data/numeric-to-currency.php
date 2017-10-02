@@ -1,4 +1,4 @@
-<?php return array (
+<?php return [
   8 => 'ALL',
   12 => 'DZD',
   32 => 'ARS',
@@ -164,4 +164,4 @@
   986 => 'BRL',
   990 => 'CLF',
   997 => 'USN',
-);
+];

@@ -351,7 +351,41 @@ printf('Exported %d currencies in %d countries.' . PHP_EOL, count($currencies), 
  */
 function exportToFile($file, $data)
 {
-    file_put_contents($file, sprintf("<?php return %s;\n", var_export($data, true)));
+    file_put_contents($file, sprintf("<?php return %s;\n", export($data)));
+}
+
+/**
+ * Compact & pretty alternative to var_export().
+ *
+ * @param mixed $variable
+ *
+ * @return string
+ */
+function export($variable)
+{
+    if (! is_array($variable)) {
+        return var_export($variable, true);
+    }
+
+    if (array_values($variable) === $variable) {
+        $values = [];
+
+        foreach ($variable as $value) {
+            $values[] = var_export($value, true);
+        }
+
+        return '[' . implode(', ', $values) . ']';
+    }
+
+    $result = "[\n";
+
+    foreach ($variable as $key => $value) {
+        $result .= '  ' . var_export($key, true) . ' => ' . export($value) . ",\n";
+    }
+
+    $result .= ']';
+
+    return $result;
 }
 
 /**
