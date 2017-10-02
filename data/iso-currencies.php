@@ -1,16 +1,16 @@
 <?php return array (
+  'AED' => 
+  array (
+    0 => 'AED',
+    1 => 784,
+    2 => 'UAE Dirham',
+    3 => 2,
+  ),
   'AFN' => 
   array (
     0 => 'AFN',
     1 => 971,
     2 => 'Afghani',
-    3 => 2,
-  ),
-  'EUR' => 
-  array (
-    0 => 'EUR',
-    1 => 978,
-    2 => 'Euro',
     3 => 2,
   ),
   'ALL' => 
@@ -20,18 +20,18 @@
     2 => 'Lek',
     3 => 2,
   ),
-  'DZD' => 
+  'AMD' => 
   array (
-    0 => 'DZD',
-    1 => 12,
-    2 => 'Algerian Dinar',
+    0 => 'AMD',
+    1 => 51,
+    2 => 'Armenian Dram',
     3 => 2,
   ),
-  'USD' => 
+  'ANG' => 
   array (
-    0 => 'USD',
-    1 => 840,
-    2 => 'US Dollar',
+    0 => 'ANG',
+    1 => 532,
+    2 => 'Netherlands Antillean Guilder',
     3 => 2,
   ),
   'AOA' => 
@@ -41,32 +41,11 @@
     2 => 'Kwanza',
     3 => 2,
   ),
-  'XCD' => 
-  array (
-    0 => 'XCD',
-    1 => 951,
-    2 => 'East Caribbean Dollar',
-    3 => 2,
-  ),
   'ARS' => 
   array (
     0 => 'ARS',
     1 => 32,
     2 => 'Argentine Peso',
-    3 => 2,
-  ),
-  'AMD' => 
-  array (
-    0 => 'AMD',
-    1 => 51,
-    2 => 'Armenian Dram',
-    3 => 2,
-  ),
-  'AWG' => 
-  array (
-    0 => 'AWG',
-    1 => 533,
-    2 => 'Aruban Florin',
     3 => 2,
   ),
   'AUD' => 
@@ -76,6 +55,13 @@
     2 => 'Australian Dollar',
     3 => 2,
   ),
+  'AWG' => 
+  array (
+    0 => 'AWG',
+    1 => 533,
+    2 => 'Aruban Florin',
+    3 => 2,
+  ),
   'AZN' => 
   array (
     0 => 'AZN',
@@ -83,25 +69,11 @@
     2 => 'Azerbaijan Manat',
     3 => 2,
   ),
-  'BSD' => 
+  'BAM' => 
   array (
-    0 => 'BSD',
-    1 => 44,
-    2 => 'Bahamian Dollar',
-    3 => 2,
-  ),
-  'BHD' => 
-  array (
-    0 => 'BHD',
-    1 => 48,
-    2 => 'Bahraini Dinar',
-    3 => 3,
-  ),
-  'BDT' => 
-  array (
-    0 => 'BDT',
-    1 => 50,
-    2 => 'Taka',
+    0 => 'BAM',
+    1 => 977,
+    2 => 'Convertible Mark',
     3 => 2,
   ),
   'BBD' => 
@@ -111,25 +83,32 @@
     2 => 'Barbados Dollar',
     3 => 2,
   ),
-  'BYN' => 
+  'BDT' => 
   array (
-    0 => 'BYN',
-    1 => 933,
-    2 => 'Belarusian Ruble',
+    0 => 'BDT',
+    1 => 50,
+    2 => 'Taka',
     3 => 2,
   ),
-  'BZD' => 
+  'BGN' => 
   array (
-    0 => 'BZD',
-    1 => 84,
-    2 => 'Belize Dollar',
+    0 => 'BGN',
+    1 => 975,
+    2 => 'Bulgarian Lev',
     3 => 2,
   ),
-  'XOF' => 
+  'BHD' => 
   array (
-    0 => 'XOF',
-    1 => 952,
-    2 => 'CFA Franc BCEAO',
+    0 => 'BHD',
+    1 => 48,
+    2 => 'Bahraini Dinar',
+    3 => 3,
+  ),
+  'BIF' => 
+  array (
+    0 => 'BIF',
+    1 => 108,
+    2 => 'Burundi Franc',
     3 => 0,
   ),
   'BMD' => 
@@ -139,18 +118,11 @@
     2 => 'Bermudian Dollar',
     3 => 2,
   ),
-  'INR' => 
+  'BND' => 
   array (
-    0 => 'INR',
-    1 => 356,
-    2 => 'Indian Rupee',
-    3 => 2,
-  ),
-  'BTN' => 
-  array (
-    0 => 'BTN',
-    1 => 64,
-    2 => 'Ngultrum',
+    0 => 'BND',
+    1 => 96,
+    2 => 'Brunei Dollar',
     3 => 2,
   ),
   'BOB' => 
@@ -167,11 +139,25 @@
     2 => 'Mvdol',
     3 => 2,
   ),
-  'BAM' => 
+  'BRL' => 
   array (
-    0 => 'BAM',
-    1 => 977,
-    2 => 'Convertible Mark',
+    0 => 'BRL',
+    1 => 986,
+    2 => 'Brazilian Real',
+    3 => 2,
+  ),
+  'BSD' => 
+  array (
+    0 => 'BSD',
+    1 => 44,
+    2 => 'Bahamian Dollar',
+    3 => 2,
+  ),
+  'BTN' => 
+  array (
+    0 => 'BTN',
+    1 => 64,
+    2 => 'Ngultrum',
     3 => 2,
   ),
   'BWP' => 
@@ -181,61 +167,19 @@
     2 => 'Pula',
     3 => 2,
   ),
-  'NOK' => 
+  'BYN' => 
   array (
-    0 => 'NOK',
-    1 => 578,
-    2 => 'Norwegian Krone',
+    0 => 'BYN',
+    1 => 933,
+    2 => 'Belarusian Ruble',
     3 => 2,
   ),
-  'BRL' => 
+  'BZD' => 
   array (
-    0 => 'BRL',
-    1 => 986,
-    2 => 'Brazilian Real',
+    0 => 'BZD',
+    1 => 84,
+    2 => 'Belize Dollar',
     3 => 2,
-  ),
-  'BND' => 
-  array (
-    0 => 'BND',
-    1 => 96,
-    2 => 'Brunei Dollar',
-    3 => 2,
-  ),
-  'BGN' => 
-  array (
-    0 => 'BGN',
-    1 => 975,
-    2 => 'Bulgarian Lev',
-    3 => 2,
-  ),
-  'BIF' => 
-  array (
-    0 => 'BIF',
-    1 => 108,
-    2 => 'Burundi Franc',
-    3 => 0,
-  ),
-  'CVE' => 
-  array (
-    0 => 'CVE',
-    1 => 132,
-    2 => 'Cabo Verde Escudo',
-    3 => 2,
-  ),
-  'KHR' => 
-  array (
-    0 => 'KHR',
-    1 => 116,
-    2 => 'Riel',
-    3 => 2,
-  ),
-  'XAF' => 
-  array (
-    0 => 'XAF',
-    1 => 950,
-    2 => 'CFA Franc BEAC',
-    3 => 0,
   ),
   'CAD' => 
   array (
@@ -244,19 +188,33 @@
     2 => 'Canadian Dollar',
     3 => 2,
   ),
-  'KYD' => 
+  'CDF' => 
   array (
-    0 => 'KYD',
-    1 => 136,
-    2 => 'Cayman Islands Dollar',
+    0 => 'CDF',
+    1 => 976,
+    2 => 'Congolese Franc',
     3 => 2,
   ),
-  'CLP' => 
+  'CHE' => 
   array (
-    0 => 'CLP',
-    1 => 152,
-    2 => 'Chilean Peso',
-    3 => 0,
+    0 => 'CHE',
+    1 => 947,
+    2 => 'WIR Euro',
+    3 => 2,
+  ),
+  'CHF' => 
+  array (
+    0 => 'CHF',
+    1 => 756,
+    2 => 'Swiss Franc',
+    3 => 2,
+  ),
+  'CHW' => 
+  array (
+    0 => 'CHW',
+    1 => 948,
+    2 => 'WIR Franc',
+    3 => 2,
   ),
   'CLF' => 
   array (
@@ -264,6 +222,13 @@
     1 => 990,
     2 => 'Unidad de Fomento',
     3 => 4,
+  ),
+  'CLP' => 
+  array (
+    0 => 'CLP',
+    1 => 152,
+    2 => 'Chilean Peso',
+    3 => 0,
   ),
   'CNY' => 
   array (
@@ -286,46 +251,11 @@
     2 => 'Unidad de Valor Real',
     3 => 2,
   ),
-  'KMF' => 
-  array (
-    0 => 'KMF',
-    1 => 174,
-    2 => 'Comorian Franc ',
-    3 => 0,
-  ),
-  'CDF' => 
-  array (
-    0 => 'CDF',
-    1 => 976,
-    2 => 'Congolese Franc',
-    3 => 2,
-  ),
-  'NZD' => 
-  array (
-    0 => 'NZD',
-    1 => 554,
-    2 => 'New Zealand Dollar',
-    3 => 2,
-  ),
   'CRC' => 
   array (
     0 => 'CRC',
     1 => 188,
     2 => 'Costa Rican Colon',
-    3 => 2,
-  ),
-  'HRK' => 
-  array (
-    0 => 'HRK',
-    1 => 191,
-    2 => 'Kuna',
-    3 => 2,
-  ),
-  'CUP' => 
-  array (
-    0 => 'CUP',
-    1 => 192,
-    2 => 'Cuban Peso',
     3 => 2,
   ),
   'CUC' => 
@@ -335,11 +265,18 @@
     2 => 'Peso Convertible',
     3 => 2,
   ),
-  'ANG' => 
+  'CUP' => 
   array (
-    0 => 'ANG',
-    1 => 532,
-    2 => 'Netherlands Antillean Guilder',
+    0 => 'CUP',
+    1 => 192,
+    2 => 'Cuban Peso',
+    3 => 2,
+  ),
+  'CVE' => 
+  array (
+    0 => 'CVE',
+    1 => 132,
+    2 => 'Cabo Verde Escudo',
     3 => 2,
   ),
   'CZK' => 
@@ -349,19 +286,19 @@
     2 => 'Czech Koruna',
     3 => 2,
   ),
-  'DKK' => 
-  array (
-    0 => 'DKK',
-    1 => 208,
-    2 => 'Danish Krone',
-    3 => 2,
-  ),
   'DJF' => 
   array (
     0 => 'DJF',
     1 => 262,
     2 => 'Djibouti Franc',
     3 => 0,
+  ),
+  'DKK' => 
+  array (
+    0 => 'DKK',
+    1 => 208,
+    2 => 'Danish Krone',
+    3 => 2,
   ),
   'DOP' => 
   array (
@@ -370,18 +307,18 @@
     2 => 'Dominican Peso',
     3 => 2,
   ),
+  'DZD' => 
+  array (
+    0 => 'DZD',
+    1 => 12,
+    2 => 'Algerian Dinar',
+    3 => 2,
+  ),
   'EGP' => 
   array (
     0 => 'EGP',
     1 => 818,
     2 => 'Egyptian Pound',
-    3 => 2,
-  ),
-  'SVC' => 
-  array (
-    0 => 'SVC',
-    1 => 222,
-    2 => 'El Salvador Colon',
     3 => 2,
   ),
   'ERN' => 
@@ -398,11 +335,11 @@
     2 => 'Ethiopian Birr',
     3 => 2,
   ),
-  'FKP' => 
+  'EUR' => 
   array (
-    0 => 'FKP',
-    1 => 238,
-    2 => 'Falkland Islands Pound',
+    0 => 'EUR',
+    1 => 978,
+    2 => 'Euro',
     3 => 2,
   ),
   'FJD' => 
@@ -412,18 +349,18 @@
     2 => 'Fiji Dollar',
     3 => 2,
   ),
-  'XPF' => 
+  'FKP' => 
   array (
-    0 => 'XPF',
-    1 => 953,
-    2 => 'CFP Franc',
-    3 => 0,
+    0 => 'FKP',
+    1 => 238,
+    2 => 'Falkland Islands Pound',
+    3 => 2,
   ),
-  'GMD' => 
+  'GBP' => 
   array (
-    0 => 'GMD',
-    1 => 270,
-    2 => 'Dalasi',
+    0 => 'GBP',
+    1 => 826,
+    2 => 'Pound Sterling',
     3 => 2,
   ),
   'GEL' => 
@@ -447,18 +384,11 @@
     2 => 'Gibraltar Pound',
     3 => 2,
   ),
-  'GTQ' => 
+  'GMD' => 
   array (
-    0 => 'GTQ',
-    1 => 320,
-    2 => 'Quetzal',
-    3 => 2,
-  ),
-  'GBP' => 
-  array (
-    0 => 'GBP',
-    1 => 826,
-    2 => 'Pound Sterling',
+    0 => 'GMD',
+    1 => 270,
+    2 => 'Dalasi',
     3 => 2,
   ),
   'GNF' => 
@@ -468,25 +398,18 @@
     2 => 'Guinean Franc',
     3 => 0,
   ),
+  'GTQ' => 
+  array (
+    0 => 'GTQ',
+    1 => 320,
+    2 => 'Quetzal',
+    3 => 2,
+  ),
   'GYD' => 
   array (
     0 => 'GYD',
     1 => 328,
     2 => 'Guyana Dollar',
-    3 => 2,
-  ),
-  'HTG' => 
-  array (
-    0 => 'HTG',
-    1 => 332,
-    2 => 'Gourde',
-    3 => 2,
-  ),
-  'HNL' => 
-  array (
-    0 => 'HNL',
-    1 => 340,
-    2 => 'Lempira',
     3 => 2,
   ),
   'HKD' => 
@@ -496,19 +419,33 @@
     2 => 'Hong Kong Dollar',
     3 => 2,
   ),
+  'HNL' => 
+  array (
+    0 => 'HNL',
+    1 => 340,
+    2 => 'Lempira',
+    3 => 2,
+  ),
+  'HRK' => 
+  array (
+    0 => 'HRK',
+    1 => 191,
+    2 => 'Kuna',
+    3 => 2,
+  ),
+  'HTG' => 
+  array (
+    0 => 'HTG',
+    1 => 332,
+    2 => 'Gourde',
+    3 => 2,
+  ),
   'HUF' => 
   array (
     0 => 'HUF',
     1 => 348,
     2 => 'Forint',
     3 => 2,
-  ),
-  'ISK' => 
-  array (
-    0 => 'ISK',
-    1 => 352,
-    2 => 'Iceland Krona',
-    3 => 0,
   ),
   'IDR' => 
   array (
@@ -517,11 +454,18 @@
     2 => 'Rupiah',
     3 => 2,
   ),
-  'IRR' => 
+  'ILS' => 
   array (
-    0 => 'IRR',
-    1 => 364,
-    2 => 'Iranian Rial',
+    0 => 'ILS',
+    1 => 376,
+    2 => 'New Israeli Sheqel',
+    3 => 2,
+  ),
+  'INR' => 
+  array (
+    0 => 'INR',
+    1 => 356,
+    2 => 'Indian Rupee',
     3 => 2,
   ),
   'IQD' => 
@@ -531,12 +475,19 @@
     2 => 'Iraqi Dinar',
     3 => 3,
   ),
-  'ILS' => 
+  'IRR' => 
   array (
-    0 => 'ILS',
-    1 => 376,
-    2 => 'New Israeli Sheqel',
+    0 => 'IRR',
+    1 => 364,
+    2 => 'Iranian Rial',
     3 => 2,
+  ),
+  'ISK' => 
+  array (
+    0 => 'ISK',
+    1 => 352,
+    2 => 'Iceland Krona',
+    3 => 0,
   ),
   'JMD' => 
   array (
@@ -545,13 +496,6 @@
     2 => 'Jamaican Dollar',
     3 => 2,
   ),
-  'JPY' => 
-  array (
-    0 => 'JPY',
-    1 => 392,
-    2 => 'Yen',
-    3 => 0,
-  ),
   'JOD' => 
   array (
     0 => 'JOD',
@@ -559,12 +503,12 @@
     2 => 'Jordanian Dinar',
     3 => 3,
   ),
-  'KZT' => 
+  'JPY' => 
   array (
-    0 => 'KZT',
-    1 => 398,
-    2 => 'Tenge',
-    3 => 2,
+    0 => 'JPY',
+    1 => 392,
+    2 => 'Yen',
+    3 => 0,
   ),
   'KES' => 
   array (
@@ -572,6 +516,27 @@
     1 => 404,
     2 => 'Kenyan Shilling',
     3 => 2,
+  ),
+  'KGS' => 
+  array (
+    0 => 'KGS',
+    1 => 417,
+    2 => 'Som',
+    3 => 2,
+  ),
+  'KHR' => 
+  array (
+    0 => 'KHR',
+    1 => 116,
+    2 => 'Riel',
+    3 => 2,
+  ),
+  'KMF' => 
+  array (
+    0 => 'KMF',
+    1 => 174,
+    2 => 'Comorian Franc ',
+    3 => 0,
   ),
   'KPW' => 
   array (
@@ -594,11 +559,18 @@
     2 => 'Kuwaiti Dinar',
     3 => 3,
   ),
-  'KGS' => 
+  'KYD' => 
   array (
-    0 => 'KGS',
-    1 => 417,
-    2 => 'Som',
+    0 => 'KYD',
+    1 => 136,
+    2 => 'Cayman Islands Dollar',
+    3 => 2,
+  ),
+  'KZT' => 
+  array (
+    0 => 'KZT',
+    1 => 398,
+    2 => 'Tenge',
     3 => 2,
   ),
   'LAK' => 
@@ -615,18 +587,11 @@
     2 => 'Lebanese Pound',
     3 => 2,
   ),
-  'LSL' => 
+  'LKR' => 
   array (
-    0 => 'LSL',
-    1 => 426,
-    2 => 'Loti',
-    3 => 2,
-  ),
-  'ZAR' => 
-  array (
-    0 => 'ZAR',
-    1 => 710,
-    2 => 'Rand',
+    0 => 'LKR',
+    1 => 144,
+    2 => 'Sri Lanka Rupee',
     3 => 2,
   ),
   'LRD' => 
@@ -636,6 +601,13 @@
     2 => 'Liberian Dollar',
     3 => 2,
   ),
+  'LSL' => 
+  array (
+    0 => 'LSL',
+    1 => 426,
+    2 => 'Loti',
+    3 => 2,
+  ),
   'LYD' => 
   array (
     0 => 'LYD',
@@ -643,25 +615,18 @@
     2 => 'Libyan Dinar',
     3 => 3,
   ),
-  'CHF' => 
+  'MAD' => 
   array (
-    0 => 'CHF',
-    1 => 756,
-    2 => 'Swiss Franc',
+    0 => 'MAD',
+    1 => 504,
+    2 => 'Moroccan Dirham',
     3 => 2,
   ),
-  'MOP' => 
+  'MDL' => 
   array (
-    0 => 'MOP',
-    1 => 446,
-    2 => 'Pataca',
-    3 => 2,
-  ),
-  'MKD' => 
-  array (
-    0 => 'MKD',
-    1 => 807,
-    2 => 'Denar',
+    0 => 'MDL',
+    1 => 498,
+    2 => 'Moldovan Leu',
     3 => 2,
   ),
   'MGA' => 
@@ -671,25 +636,32 @@
     2 => 'Malagasy Ariary',
     3 => 2,
   ),
-  'MWK' => 
+  'MKD' => 
   array (
-    0 => 'MWK',
-    1 => 454,
-    2 => 'Malawi Kwacha',
+    0 => 'MKD',
+    1 => 807,
+    2 => 'Denar',
     3 => 2,
   ),
-  'MYR' => 
+  'MMK' => 
   array (
-    0 => 'MYR',
-    1 => 458,
-    2 => 'Malaysian Ringgit',
+    0 => 'MMK',
+    1 => 104,
+    2 => 'Kyat',
     3 => 2,
   ),
-  'MVR' => 
+  'MNT' => 
   array (
-    0 => 'MVR',
-    1 => 462,
-    2 => 'Rufiyaa',
+    0 => 'MNT',
+    1 => 496,
+    2 => 'Tugrik',
+    3 => 2,
+  ),
+  'MOP' => 
+  array (
+    0 => 'MOP',
+    1 => 446,
+    2 => 'Pataca',
     3 => 2,
   ),
   'MRO' => 
@@ -706,6 +678,20 @@
     2 => 'Mauritius Rupee',
     3 => 2,
   ),
+  'MVR' => 
+  array (
+    0 => 'MVR',
+    1 => 462,
+    2 => 'Rufiyaa',
+    3 => 2,
+  ),
+  'MWK' => 
+  array (
+    0 => 'MWK',
+    1 => 454,
+    2 => 'Malawi Kwacha',
+    3 => 2,
+  ),
   'MXN' => 
   array (
     0 => 'MXN',
@@ -720,25 +706,11 @@
     2 => 'Mexican Unidad de Inversion (UDI)',
     3 => 2,
   ),
-  'MDL' => 
+  'MYR' => 
   array (
-    0 => 'MDL',
-    1 => 498,
-    2 => 'Moldovan Leu',
-    3 => 2,
-  ),
-  'MNT' => 
-  array (
-    0 => 'MNT',
-    1 => 496,
-    2 => 'Tugrik',
-    3 => 2,
-  ),
-  'MAD' => 
-  array (
-    0 => 'MAD',
-    1 => 504,
-    2 => 'Moroccan Dirham',
+    0 => 'MYR',
+    1 => 458,
+    2 => 'Malaysian Ringgit',
     3 => 2,
   ),
   'MZN' => 
@@ -748,32 +720,11 @@
     2 => 'Mozambique Metical',
     3 => 2,
   ),
-  'MMK' => 
-  array (
-    0 => 'MMK',
-    1 => 104,
-    2 => 'Kyat',
-    3 => 2,
-  ),
   'NAD' => 
   array (
     0 => 'NAD',
     1 => 516,
     2 => 'Namibia Dollar',
-    3 => 2,
-  ),
-  'NPR' => 
-  array (
-    0 => 'NPR',
-    1 => 524,
-    2 => 'Nepalese Rupee',
-    3 => 2,
-  ),
-  'NIO' => 
-  array (
-    0 => 'NIO',
-    1 => 558,
-    2 => 'Cordoba Oro',
     3 => 2,
   ),
   'NGN' => 
@@ -783,6 +734,34 @@
     2 => 'Naira',
     3 => 2,
   ),
+  'NIO' => 
+  array (
+    0 => 'NIO',
+    1 => 558,
+    2 => 'Cordoba Oro',
+    3 => 2,
+  ),
+  'NOK' => 
+  array (
+    0 => 'NOK',
+    1 => 578,
+    2 => 'Norwegian Krone',
+    3 => 2,
+  ),
+  'NPR' => 
+  array (
+    0 => 'NPR',
+    1 => 524,
+    2 => 'Nepalese Rupee',
+    3 => 2,
+  ),
+  'NZD' => 
+  array (
+    0 => 'NZD',
+    1 => 554,
+    2 => 'New Zealand Dollar',
+    3 => 2,
+  ),
   'OMR' => 
   array (
     0 => 'OMR',
@@ -790,18 +769,18 @@
     2 => 'Rial Omani',
     3 => 3,
   ),
-  'PKR' => 
-  array (
-    0 => 'PKR',
-    1 => 586,
-    2 => 'Pakistan Rupee',
-    3 => 2,
-  ),
   'PAB' => 
   array (
     0 => 'PAB',
     1 => 590,
     2 => 'Balboa',
+    3 => 2,
+  ),
+  'PEN' => 
+  array (
+    0 => 'PEN',
+    1 => 604,
+    2 => 'Sol',
     3 => 2,
   ),
   'PGK' => 
@@ -811,25 +790,18 @@
     2 => 'Kina',
     3 => 2,
   ),
-  'PYG' => 
-  array (
-    0 => 'PYG',
-    1 => 600,
-    2 => 'Guarani',
-    3 => 0,
-  ),
-  'PEN' => 
-  array (
-    0 => 'PEN',
-    1 => 604,
-    2 => 'Sol',
-    3 => 2,
-  ),
   'PHP' => 
   array (
     0 => 'PHP',
     1 => 608,
     2 => 'Philippine Piso',
+    3 => 2,
+  ),
+  'PKR' => 
+  array (
+    0 => 'PKR',
+    1 => 586,
+    2 => 'Pakistan Rupee',
     3 => 2,
   ),
   'PLN' => 
@@ -838,6 +810,13 @@
     1 => 985,
     2 => 'Zloty',
     3 => 2,
+  ),
+  'PYG' => 
+  array (
+    0 => 'PYG',
+    1 => 600,
+    2 => 'Guarani',
+    3 => 0,
   ),
   'QAR' => 
   array (
@@ -851,6 +830,13 @@
     0 => 'RON',
     1 => 946,
     2 => 'Romanian Leu',
+    3 => 2,
+  ),
+  'RSD' => 
+  array (
+    0 => 'RSD',
+    1 => 941,
+    2 => 'Serbian Dinar',
     3 => 2,
   ),
   'RUB' => 
@@ -867,60 +853,11 @@
     2 => 'Rwanda Franc',
     3 => 0,
   ),
-  'SHP' => 
-  array (
-    0 => 'SHP',
-    1 => 654,
-    2 => 'Saint Helena Pound',
-    3 => 2,
-  ),
-  'WST' => 
-  array (
-    0 => 'WST',
-    1 => 882,
-    2 => 'Tala',
-    3 => 2,
-  ),
-  'STD' => 
-  array (
-    0 => 'STD',
-    1 => 678,
-    2 => 'Dobra',
-    3 => 2,
-  ),
   'SAR' => 
   array (
     0 => 'SAR',
     1 => 682,
     2 => 'Saudi Riyal',
-    3 => 2,
-  ),
-  'RSD' => 
-  array (
-    0 => 'RSD',
-    1 => 941,
-    2 => 'Serbian Dinar',
-    3 => 2,
-  ),
-  'SCR' => 
-  array (
-    0 => 'SCR',
-    1 => 690,
-    2 => 'Seychelles Rupee',
-    3 => 2,
-  ),
-  'SLL' => 
-  array (
-    0 => 'SLL',
-    1 => 694,
-    2 => 'Leone',
-    3 => 2,
-  ),
-  'SGD' => 
-  array (
-    0 => 'SGD',
-    1 => 702,
-    2 => 'Singapore Dollar',
     3 => 2,
   ),
   'SBD' => 
@@ -930,25 +867,11 @@
     2 => 'Solomon Islands Dollar',
     3 => 2,
   ),
-  'SOS' => 
+  'SCR' => 
   array (
-    0 => 'SOS',
-    1 => 706,
-    2 => 'Somali Shilling',
-    3 => 2,
-  ),
-  'SSP' => 
-  array (
-    0 => 'SSP',
-    1 => 728,
-    2 => 'South Sudanese Pound',
-    3 => 2,
-  ),
-  'LKR' => 
-  array (
-    0 => 'LKR',
-    1 => 144,
-    2 => 'Sri Lanka Rupee',
+    0 => 'SCR',
+    1 => 690,
+    2 => 'Seychelles Rupee',
     3 => 2,
   ),
   'SDG' => 
@@ -958,20 +881,6 @@
     2 => 'Sudanese Pound',
     3 => 2,
   ),
-  'SRD' => 
-  array (
-    0 => 'SRD',
-    1 => 968,
-    2 => 'Surinam Dollar',
-    3 => 2,
-  ),
-  'SZL' => 
-  array (
-    0 => 'SZL',
-    1 => 748,
-    2 => 'Lilangeni',
-    3 => 2,
-  ),
   'SEK' => 
   array (
     0 => 'SEK',
@@ -979,18 +888,60 @@
     2 => 'Swedish Krona',
     3 => 2,
   ),
-  'CHE' => 
+  'SGD' => 
   array (
-    0 => 'CHE',
-    1 => 947,
-    2 => 'WIR Euro',
+    0 => 'SGD',
+    1 => 702,
+    2 => 'Singapore Dollar',
     3 => 2,
   ),
-  'CHW' => 
+  'SHP' => 
   array (
-    0 => 'CHW',
-    1 => 948,
-    2 => 'WIR Franc',
+    0 => 'SHP',
+    1 => 654,
+    2 => 'Saint Helena Pound',
+    3 => 2,
+  ),
+  'SLL' => 
+  array (
+    0 => 'SLL',
+    1 => 694,
+    2 => 'Leone',
+    3 => 2,
+  ),
+  'SOS' => 
+  array (
+    0 => 'SOS',
+    1 => 706,
+    2 => 'Somali Shilling',
+    3 => 2,
+  ),
+  'SRD' => 
+  array (
+    0 => 'SRD',
+    1 => 968,
+    2 => 'Surinam Dollar',
+    3 => 2,
+  ),
+  'SSP' => 
+  array (
+    0 => 'SSP',
+    1 => 728,
+    2 => 'South Sudanese Pound',
+    3 => 2,
+  ),
+  'STD' => 
+  array (
+    0 => 'STD',
+    1 => 678,
+    2 => 'Dobra',
+    3 => 2,
+  ),
+  'SVC' => 
+  array (
+    0 => 'SVC',
+    1 => 222,
+    2 => 'El Salvador Colon',
     3 => 2,
   ),
   'SYP' => 
@@ -1000,25 +951,11 @@
     2 => 'Syrian Pound',
     3 => 2,
   ),
-  'TWD' => 
+  'SZL' => 
   array (
-    0 => 'TWD',
-    1 => 901,
-    2 => 'New Taiwan Dollar',
-    3 => 2,
-  ),
-  'TJS' => 
-  array (
-    0 => 'TJS',
-    1 => 972,
-    2 => 'Somoni',
-    3 => 2,
-  ),
-  'TZS' => 
-  array (
-    0 => 'TZS',
-    1 => 834,
-    2 => 'Tanzanian Shilling',
+    0 => 'SZL',
+    1 => 748,
+    2 => 'Lilangeni',
     3 => 2,
   ),
   'THB' => 
@@ -1028,32 +965,11 @@
     2 => 'Baht',
     3 => 2,
   ),
-  'TOP' => 
+  'TJS' => 
   array (
-    0 => 'TOP',
-    1 => 776,
-    2 => 'Pa’anga',
-    3 => 2,
-  ),
-  'TTD' => 
-  array (
-    0 => 'TTD',
-    1 => 780,
-    2 => 'Trinidad and Tobago Dollar',
-    3 => 2,
-  ),
-  'TND' => 
-  array (
-    0 => 'TND',
-    1 => 788,
-    2 => 'Tunisian Dinar',
-    3 => 3,
-  ),
-  'TRY' => 
-  array (
-    0 => 'TRY',
-    1 => 949,
-    2 => 'Turkish Lira',
+    0 => 'TJS',
+    1 => 972,
+    2 => 'Somoni',
     3 => 2,
   ),
   'TMT' => 
@@ -1063,12 +979,47 @@
     2 => 'Turkmenistan New Manat',
     3 => 2,
   ),
-  'UGX' => 
+  'TND' => 
   array (
-    0 => 'UGX',
-    1 => 800,
-    2 => 'Uganda Shilling',
-    3 => 0,
+    0 => 'TND',
+    1 => 788,
+    2 => 'Tunisian Dinar',
+    3 => 3,
+  ),
+  'TOP' => 
+  array (
+    0 => 'TOP',
+    1 => 776,
+    2 => 'Pa’anga',
+    3 => 2,
+  ),
+  'TRY' => 
+  array (
+    0 => 'TRY',
+    1 => 949,
+    2 => 'Turkish Lira',
+    3 => 2,
+  ),
+  'TTD' => 
+  array (
+    0 => 'TTD',
+    1 => 780,
+    2 => 'Trinidad and Tobago Dollar',
+    3 => 2,
+  ),
+  'TWD' => 
+  array (
+    0 => 'TWD',
+    1 => 901,
+    2 => 'New Taiwan Dollar',
+    3 => 2,
+  ),
+  'TZS' => 
+  array (
+    0 => 'TZS',
+    1 => 834,
+    2 => 'Tanzanian Shilling',
+    3 => 2,
   ),
   'UAH' => 
   array (
@@ -1077,11 +1028,18 @@
     2 => 'Hryvnia',
     3 => 2,
   ),
-  'AED' => 
+  'UGX' => 
   array (
-    0 => 'AED',
-    1 => 784,
-    2 => 'UAE Dirham',
+    0 => 'UGX',
+    1 => 800,
+    2 => 'Uganda Shilling',
+    3 => 0,
+  ),
+  'USD' => 
+  array (
+    0 => 'USD',
+    1 => 840,
+    2 => 'US Dollar',
     3 => 2,
   ),
   'USN' => 
@@ -1091,13 +1049,6 @@
     2 => 'US Dollar (Next day)',
     3 => 2,
   ),
-  'UYU' => 
-  array (
-    0 => 'UYU',
-    1 => 858,
-    2 => 'Peso Uruguayo',
-    3 => 2,
-  ),
   'UYI' => 
   array (
     0 => 'UYI',
@@ -1105,19 +1056,19 @@
     2 => 'Uruguay Peso en Unidades Indexadas (URUIURUI)',
     3 => 0,
   ),
+  'UYU' => 
+  array (
+    0 => 'UYU',
+    1 => 858,
+    2 => 'Peso Uruguayo',
+    3 => 2,
+  ),
   'UZS' => 
   array (
     0 => 'UZS',
     1 => 860,
     2 => 'Uzbekistan Sum',
     3 => 2,
-  ),
-  'VUV' => 
-  array (
-    0 => 'VUV',
-    1 => 548,
-    2 => 'Vatu',
-    3 => 0,
   ),
   'VEF' => 
   array (
@@ -1133,11 +1084,60 @@
     2 => 'Dong',
     3 => 0,
   ),
+  'VUV' => 
+  array (
+    0 => 'VUV',
+    1 => 548,
+    2 => 'Vatu',
+    3 => 0,
+  ),
+  'WST' => 
+  array (
+    0 => 'WST',
+    1 => 882,
+    2 => 'Tala',
+    3 => 2,
+  ),
+  'XAF' => 
+  array (
+    0 => 'XAF',
+    1 => 950,
+    2 => 'CFA Franc BEAC',
+    3 => 0,
+  ),
+  'XCD' => 
+  array (
+    0 => 'XCD',
+    1 => 951,
+    2 => 'East Caribbean Dollar',
+    3 => 2,
+  ),
+  'XOF' => 
+  array (
+    0 => 'XOF',
+    1 => 952,
+    2 => 'CFA Franc BCEAO',
+    3 => 0,
+  ),
+  'XPF' => 
+  array (
+    0 => 'XPF',
+    1 => 953,
+    2 => 'CFP Franc',
+    3 => 0,
+  ),
   'YER' => 
   array (
     0 => 'YER',
     1 => 886,
     2 => 'Yemeni Rial',
+    3 => 2,
+  ),
+  'ZAR' => 
+  array (
+    0 => 'ZAR',
+    1 => 710,
+    2 => 'Rand',
     3 => 2,
   ),
   'ZMW' => 

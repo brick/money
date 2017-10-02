@@ -333,6 +333,10 @@ foreach ($countryCodes as $countryName => $countryCode) {
     }
 }
 
+ksort($currencies);
+ksort($numericToCurrency);
+ksort($countryToCurrency);
+
 exportToFile(__DIR__ . '/data/iso-currencies.php', $currencies);
 exportToFile(__DIR__ . '/data/numeric-to-currency.php', $numericToCurrency);
 exportToFile(__DIR__ . '/data/country-to-currency.php', $countryToCurrency);

@@ -1,57 +1,57 @@
 <?php return array (
-  'AF' => 
-  array (
-    0 => 'AFN',
-  ),
-  'AX' => 
-  array (
-    0 => 'EUR',
-  ),
-  'AL' => 
-  array (
-    0 => 'ALL',
-  ),
-  'DZ' => 
-  array (
-    0 => 'DZD',
-  ),
-  'AS' => 
-  array (
-    0 => 'USD',
-  ),
   'AD' => 
   array (
     0 => 'EUR',
   ),
-  'AO' => 
+  'AE' => 
   array (
-    0 => 'AOA',
+    0 => 'AED',
   ),
-  'AI' => 
+  'AF' => 
   array (
-    0 => 'XCD',
+    0 => 'AFN',
   ),
   'AG' => 
   array (
     0 => 'XCD',
   ),
-  'AR' => 
+  'AI' => 
   array (
-    0 => 'ARS',
+    0 => 'XCD',
+  ),
+  'AL' => 
+  array (
+    0 => 'ALL',
   ),
   'AM' => 
   array (
     0 => 'AMD',
   ),
-  'AW' => 
+  'AO' => 
   array (
-    0 => 'AWG',
+    0 => 'AOA',
+  ),
+  'AR' => 
+  array (
+    0 => 'ARS',
+  ),
+  'AS' => 
+  array (
+    0 => 'USD',
+  ),
+  'AT' => 
+  array (
+    0 => 'EUR',
   ),
   'AU' => 
   array (
     0 => 'AUD',
   ),
-  'AT' => 
+  'AW' => 
+  array (
+    0 => 'AWG',
+  ),
+  'AX' => 
   array (
     0 => 'EUR',
   ),
@@ -59,46 +59,53 @@
   array (
     0 => 'AZN',
   ),
-  'BS' => 
+  'BA' => 
   array (
-    0 => 'BSD',
-  ),
-  'BH' => 
-  array (
-    0 => 'BHD',
-  ),
-  'BD' => 
-  array (
-    0 => 'BDT',
+    0 => 'BAM',
   ),
   'BB' => 
   array (
     0 => 'BBD',
   ),
-  'BY' => 
+  'BD' => 
   array (
-    0 => 'BYN',
+    0 => 'BDT',
   ),
   'BE' => 
   array (
     0 => 'EUR',
   ),
-  'BZ' => 
+  'BF' => 
   array (
-    0 => 'BZD',
+    0 => 'XOF',
+  ),
+  'BG' => 
+  array (
+    0 => 'BGN',
+  ),
+  'BH' => 
+  array (
+    0 => 'BHD',
+  ),
+  'BI' => 
+  array (
+    0 => 'BIF',
   ),
   'BJ' => 
   array (
     0 => 'XOF',
   ),
+  'BL' => 
+  array (
+    0 => 'EUR',
+  ),
   'BM' => 
   array (
     0 => 'BMD',
   ),
-  'BT' => 
+  'BN' => 
   array (
-    0 => 'INR',
-    1 => 'BTN',
+    0 => 'BND',
   ),
   'BO' => 
   array (
@@ -108,126 +115,103 @@
   array (
     0 => 'USD',
   ),
-  'BA' => 
+  'BR' => 
   array (
-    0 => 'BAM',
+    0 => 'BRL',
   ),
-  'BW' => 
+  'BS' => 
   array (
-    0 => 'BWP',
+    0 => 'BSD',
+  ),
+  'BT' => 
+  array (
+    0 => 'INR',
+    1 => 'BTN',
   ),
   'BV' => 
   array (
     0 => 'NOK',
   ),
-  'BR' => 
+  'BW' => 
   array (
-    0 => 'BRL',
+    0 => 'BWP',
   ),
-  'IO' => 
+  'BY' => 
   array (
-    0 => 'USD',
+    0 => 'BYN',
   ),
-  'BN' => 
+  'BZ' => 
   array (
-    0 => 'BND',
-  ),
-  'BG' => 
-  array (
-    0 => 'BGN',
-  ),
-  'BF' => 
-  array (
-    0 => 'XOF',
-  ),
-  'BI' => 
-  array (
-    0 => 'BIF',
-  ),
-  'CV' => 
-  array (
-    0 => 'CVE',
-  ),
-  'KH' => 
-  array (
-    0 => 'KHR',
-  ),
-  'CM' => 
-  array (
-    0 => 'XAF',
+    0 => 'BZD',
   ),
   'CA' => 
   array (
     0 => 'CAD',
   ),
-  'KY' => 
-  array (
-    0 => 'KYD',
-  ),
-  'CF' => 
-  array (
-    0 => 'XAF',
-  ),
-  'TD' => 
-  array (
-    0 => 'XAF',
-  ),
-  'CL' => 
-  array (
-    0 => 'CLP',
-  ),
-  'CN' => 
-  array (
-    0 => 'CNY',
-  ),
-  'CX' => 
-  array (
-    0 => 'AUD',
-  ),
   'CC' => 
   array (
     0 => 'AUD',
-  ),
-  'CO' => 
-  array (
-    0 => 'COP',
-  ),
-  'KM' => 
-  array (
-    0 => 'KMF',
   ),
   'CD' => 
   array (
     0 => 'CDF',
   ),
+  'CF' => 
+  array (
+    0 => 'XAF',
+  ),
   'CG' => 
   array (
     0 => 'XAF',
   ),
-  'CK' => 
+  'CH' => 
   array (
-    0 => 'NZD',
-  ),
-  'CR' => 
-  array (
-    0 => 'CRC',
+    0 => 'CHF',
   ),
   'CI' => 
   array (
     0 => 'XOF',
   ),
-  'HR' => 
+  'CK' => 
   array (
-    0 => 'HRK',
+    0 => 'NZD',
+  ),
+  'CL' => 
+  array (
+    0 => 'CLP',
+  ),
+  'CM' => 
+  array (
+    0 => 'XAF',
+  ),
+  'CN' => 
+  array (
+    0 => 'CNY',
+  ),
+  'CO' => 
+  array (
+    0 => 'COP',
+  ),
+  'CR' => 
+  array (
+    0 => 'CRC',
   ),
   'CU' => 
   array (
     0 => 'CUP',
     1 => 'CUC',
   ),
+  'CV' => 
+  array (
+    0 => 'CVE',
+  ),
   'CW' => 
   array (
     0 => 'ANG',
+  ),
+  'CX' => 
+  array (
+    0 => 'AUD',
   ),
   'CY' => 
   array (
@@ -237,13 +221,17 @@
   array (
     0 => 'CZK',
   ),
-  'DK' => 
+  'DE' => 
   array (
-    0 => 'DKK',
+    0 => 'EUR',
   ),
   'DJ' => 
   array (
     0 => 'DJF',
+  ),
+  'DK' => 
+  array (
+    0 => 'DKK',
   ),
   'DM' => 
   array (
@@ -253,28 +241,31 @@
   array (
     0 => 'DOP',
   ),
+  'DZ' => 
+  array (
+    0 => 'DZD',
+  ),
   'EC' => 
   array (
     0 => 'USD',
+  ),
+  'EE' => 
+  array (
+    0 => 'EUR',
   ),
   'EG' => 
   array (
     0 => 'EGP',
   ),
-  'SV' => 
+  'EH' => 
   array (
-    0 => 'SVC',
-    1 => 'USD',
-  ),
-  'GQ' => 
-  array (
-    0 => 'XAF',
+    0 => 'MAD',
   ),
   'ER' => 
   array (
     0 => 'ERN',
   ),
-  'EE' => 
+  'ES' => 
   array (
     0 => 'EUR',
   ),
@@ -282,35 +273,27 @@
   array (
     0 => 'ETB',
   ),
-  'FK' => 
+  'FI' => 
   array (
-    0 => 'FKP',
-  ),
-  'FO' => 
-  array (
-    0 => 'DKK',
+    0 => 'EUR',
   ),
   'FJ' => 
   array (
     0 => 'FJD',
   ),
-  'FI' => 
+  'FK' => 
   array (
-    0 => 'EUR',
+    0 => 'FKP',
+  ),
+  'FM' => 
+  array (
+    0 => 'USD',
+  ),
+  'FO' => 
+  array (
+    0 => 'DKK',
   ),
   'FR' => 
-  array (
-    0 => 'EUR',
-  ),
-  'GF' => 
-  array (
-    0 => 'EUR',
-  ),
-  'PF' => 
-  array (
-    0 => 'XPF',
-  ),
-  'TF' => 
   array (
     0 => 'EUR',
   ),
@@ -318,17 +301,25 @@
   array (
     0 => 'XAF',
   ),
-  'GM' => 
+  'GB' => 
   array (
-    0 => 'GMD',
+    0 => 'GBP',
+  ),
+  'GD' => 
+  array (
+    0 => 'XCD',
   ),
   'GE' => 
   array (
     0 => 'GEL',
   ),
-  'DE' => 
+  'GF' => 
   array (
     0 => 'EUR',
+  ),
+  'GG' => 
+  array (
+    0 => 'GBP',
   ),
   'GH' => 
   array (
@@ -338,37 +329,37 @@
   array (
     0 => 'GIP',
   ),
-  'GR' => 
-  array (
-    0 => 'EUR',
-  ),
   'GL' => 
   array (
     0 => 'DKK',
   ),
-  'GD' => 
+  'GM' => 
   array (
-    0 => 'XCD',
+    0 => 'GMD',
+  ),
+  'GN' => 
+  array (
+    0 => 'GNF',
   ),
   'GP' => 
   array (
     0 => 'EUR',
   ),
-  'GU' => 
+  'GQ' => 
   array (
-    0 => 'USD',
+    0 => 'XAF',
+  ),
+  'GR' => 
+  array (
+    0 => 'EUR',
   ),
   'GT' => 
   array (
     0 => 'GTQ',
   ),
-  'GG' => 
+  'GU' => 
   array (
-    0 => 'GBP',
-  ),
-  'GN' => 
-  array (
-    0 => 'GNF',
+    0 => 'USD',
   ),
   'GW' => 
   array (
@@ -378,94 +369,110 @@
   array (
     0 => 'GYD',
   ),
-  'HT' => 
+  'HK' => 
   array (
-    0 => 'HTG',
-    1 => 'USD',
+    0 => 'HKD',
   ),
   'HM' => 
   array (
     0 => 'AUD',
   ),
-  'VA' => 
-  array (
-    0 => 'EUR',
-  ),
   'HN' => 
   array (
     0 => 'HNL',
   ),
-  'HK' => 
+  'HR' => 
   array (
-    0 => 'HKD',
+    0 => 'HRK',
+  ),
+  'HT' => 
+  array (
+    0 => 'HTG',
+    1 => 'USD',
   ),
   'HU' => 
   array (
     0 => 'HUF',
   ),
-  'IS' => 
-  array (
-    0 => 'ISK',
-  ),
-  'IN' => 
-  array (
-    0 => 'INR',
-  ),
   'ID' => 
   array (
     0 => 'IDR',
-  ),
-  'IR' => 
-  array (
-    0 => 'IRR',
-  ),
-  'IQ' => 
-  array (
-    0 => 'IQD',
   ),
   'IE' => 
   array (
     0 => 'EUR',
   ),
+  'IL' => 
+  array (
+    0 => 'ILS',
+  ),
   'IM' => 
   array (
     0 => 'GBP',
   ),
-  'IL' => 
+  'IN' => 
   array (
-    0 => 'ILS',
+    0 => 'INR',
+  ),
+  'IO' => 
+  array (
+    0 => 'USD',
+  ),
+  'IQ' => 
+  array (
+    0 => 'IQD',
+  ),
+  'IR' => 
+  array (
+    0 => 'IRR',
+  ),
+  'IS' => 
+  array (
+    0 => 'ISK',
   ),
   'IT' => 
   array (
     0 => 'EUR',
   ),
-  'JM' => 
-  array (
-    0 => 'JMD',
-  ),
-  'JP' => 
-  array (
-    0 => 'JPY',
-  ),
   'JE' => 
   array (
     0 => 'GBP',
+  ),
+  'JM' => 
+  array (
+    0 => 'JMD',
   ),
   'JO' => 
   array (
     0 => 'JOD',
   ),
-  'KZ' => 
+  'JP' => 
   array (
-    0 => 'KZT',
+    0 => 'JPY',
   ),
   'KE' => 
   array (
     0 => 'KES',
   ),
+  'KG' => 
+  array (
+    0 => 'KGS',
+  ),
+  'KH' => 
+  array (
+    0 => 'KHR',
+  ),
   'KI' => 
   array (
     0 => 'AUD',
+  ),
+  'KM' => 
+  array (
+    0 => 'KMF',
+  ),
+  'KN' => 
+  array (
+    0 => 'XCD',
   ),
   'KP' => 
   array (
@@ -479,38 +486,42 @@
   array (
     0 => 'KWD',
   ),
-  'KG' => 
+  'KY' => 
   array (
-    0 => 'KGS',
+    0 => 'KYD',
+  ),
+  'KZ' => 
+  array (
+    0 => 'KZT',
   ),
   'LA' => 
   array (
     0 => 'LAK',
   ),
-  'LV' => 
-  array (
-    0 => 'EUR',
-  ),
   'LB' => 
   array (
     0 => 'LBP',
   ),
-  'LS' => 
+  'LC' => 
   array (
-    0 => 'LSL',
-    1 => 'ZAR',
+    0 => 'XCD',
+  ),
+  'LI' => 
+  array (
+    0 => 'CHF',
+  ),
+  'LK' => 
+  array (
+    0 => 'LKR',
   ),
   'LR' => 
   array (
     0 => 'LRD',
   ),
-  'LY' => 
+  'LS' => 
   array (
-    0 => 'LYD',
-  ),
-  'LI' => 
-  array (
-    0 => 'CHF',
+    0 => 'LSL',
+    1 => 'ZAR',
   ),
   'LT' => 
   array (
@@ -520,39 +531,63 @@
   array (
     0 => 'EUR',
   ),
-  'MO' => 
+  'LV' => 
   array (
-    0 => 'MOP',
+    0 => 'EUR',
   ),
-  'MK' => 
+  'LY' => 
   array (
-    0 => 'MKD',
+    0 => 'LYD',
+  ),
+  'MA' => 
+  array (
+    0 => 'MAD',
+  ),
+  'MC' => 
+  array (
+    0 => 'EUR',
+  ),
+  'MD' => 
+  array (
+    0 => 'MDL',
+  ),
+  'ME' => 
+  array (
+    0 => 'EUR',
+  ),
+  'MF' => 
+  array (
+    0 => 'EUR',
   ),
   'MG' => 
   array (
     0 => 'MGA',
   ),
-  'MW' => 
+  'MH' => 
   array (
-    0 => 'MWK',
+    0 => 'USD',
   ),
-  'MY' => 
+  'MK' => 
   array (
-    0 => 'MYR',
-  ),
-  'MV' => 
-  array (
-    0 => 'MVR',
+    0 => 'MKD',
   ),
   'ML' => 
   array (
     0 => 'XOF',
   ),
-  'MT' => 
+  'MM' => 
   array (
-    0 => 'EUR',
+    0 => 'MMK',
   ),
-  'MH' => 
+  'MN' => 
+  array (
+    0 => 'MNT',
+  ),
+  'MO' => 
+  array (
+    0 => 'MOP',
+  ),
+  'MP' => 
   array (
     0 => 'USD',
   ),
@@ -564,155 +599,143 @@
   array (
     0 => 'MRO',
   ),
+  'MS' => 
+  array (
+    0 => 'XCD',
+  ),
+  'MT' => 
+  array (
+    0 => 'EUR',
+  ),
   'MU' => 
   array (
     0 => 'MUR',
   ),
-  'YT' => 
+  'MV' => 
   array (
-    0 => 'EUR',
+    0 => 'MVR',
+  ),
+  'MW' => 
+  array (
+    0 => 'MWK',
   ),
   'MX' => 
   array (
     0 => 'MXN',
   ),
-  'FM' => 
+  'MY' => 
   array (
-    0 => 'USD',
-  ),
-  'MD' => 
-  array (
-    0 => 'MDL',
-  ),
-  'MC' => 
-  array (
-    0 => 'EUR',
-  ),
-  'MN' => 
-  array (
-    0 => 'MNT',
-  ),
-  'ME' => 
-  array (
-    0 => 'EUR',
-  ),
-  'MS' => 
-  array (
-    0 => 'XCD',
-  ),
-  'MA' => 
-  array (
-    0 => 'MAD',
+    0 => 'MYR',
   ),
   'MZ' => 
   array (
     0 => 'MZN',
-  ),
-  'MM' => 
-  array (
-    0 => 'MMK',
   ),
   'NA' => 
   array (
     0 => 'NAD',
     1 => 'ZAR',
   ),
-  'NR' => 
-  array (
-    0 => 'AUD',
-  ),
-  'NP' => 
-  array (
-    0 => 'NPR',
-  ),
-  'NL' => 
-  array (
-    0 => 'EUR',
-  ),
   'NC' => 
   array (
     0 => 'XPF',
-  ),
-  'NZ' => 
-  array (
-    0 => 'NZD',
-  ),
-  'NI' => 
-  array (
-    0 => 'NIO',
   ),
   'NE' => 
   array (
     0 => 'XOF',
   ),
-  'NG' => 
-  array (
-    0 => 'NGN',
-  ),
-  'NU' => 
-  array (
-    0 => 'NZD',
-  ),
   'NF' => 
   array (
     0 => 'AUD',
   ),
-  'MP' => 
+  'NG' => 
   array (
-    0 => 'USD',
+    0 => 'NGN',
+  ),
+  'NI' => 
+  array (
+    0 => 'NIO',
+  ),
+  'NL' => 
+  array (
+    0 => 'EUR',
   ),
   'NO' => 
   array (
     0 => 'NOK',
   ),
+  'NP' => 
+  array (
+    0 => 'NPR',
+  ),
+  'NR' => 
+  array (
+    0 => 'AUD',
+  ),
+  'NU' => 
+  array (
+    0 => 'NZD',
+  ),
+  'NZ' => 
+  array (
+    0 => 'NZD',
+  ),
   'OM' => 
   array (
     0 => 'OMR',
-  ),
-  'PK' => 
-  array (
-    0 => 'PKR',
-  ),
-  'PW' => 
-  array (
-    0 => 'USD',
   ),
   'PA' => 
   array (
     0 => 'PAB',
     1 => 'USD',
   ),
-  'PG' => 
-  array (
-    0 => 'PGK',
-  ),
-  'PY' => 
-  array (
-    0 => 'PYG',
-  ),
   'PE' => 
   array (
     0 => 'PEN',
+  ),
+  'PF' => 
+  array (
+    0 => 'XPF',
+  ),
+  'PG' => 
+  array (
+    0 => 'PGK',
   ),
   'PH' => 
   array (
     0 => 'PHP',
   ),
-  'PN' => 
+  'PK' => 
   array (
-    0 => 'NZD',
+    0 => 'PKR',
   ),
   'PL' => 
   array (
     0 => 'PLN',
   ),
-  'PT' => 
+  'PM' => 
   array (
     0 => 'EUR',
+  ),
+  'PN' => 
+  array (
+    0 => 'NZD',
   ),
   'PR' => 
   array (
     0 => 'USD',
+  ),
+  'PT' => 
+  array (
+    0 => 'EUR',
+  ),
+  'PW' => 
+  array (
+    0 => 'USD',
+  ),
+  'PY' => 
+  array (
+    0 => 'PYG',
   ),
   'QA' => 
   array (
@@ -726,6 +749,10 @@
   array (
     0 => 'RON',
   ),
+  'RS' => 
+  array (
+    0 => 'RSD',
+  ),
   'RU' => 
   array (
     0 => 'RUB',
@@ -734,205 +761,162 @@
   array (
     0 => 'RWF',
   ),
-  'BL' => 
-  array (
-    0 => 'EUR',
-  ),
-  'SH' => 
-  array (
-    0 => 'SHP',
-  ),
-  'KN' => 
-  array (
-    0 => 'XCD',
-  ),
-  'LC' => 
-  array (
-    0 => 'XCD',
-  ),
-  'MF' => 
-  array (
-    0 => 'EUR',
-  ),
-  'PM' => 
-  array (
-    0 => 'EUR',
-  ),
-  'VC' => 
-  array (
-    0 => 'XCD',
-  ),
-  'WS' => 
-  array (
-    0 => 'WST',
-  ),
-  'SM' => 
-  array (
-    0 => 'EUR',
-  ),
-  'ST' => 
-  array (
-    0 => 'STD',
-  ),
   'SA' => 
   array (
     0 => 'SAR',
-  ),
-  'SN' => 
-  array (
-    0 => 'XOF',
-  ),
-  'RS' => 
-  array (
-    0 => 'RSD',
-  ),
-  'SC' => 
-  array (
-    0 => 'SCR',
-  ),
-  'SL' => 
-  array (
-    0 => 'SLL',
-  ),
-  'SG' => 
-  array (
-    0 => 'SGD',
-  ),
-  'SX' => 
-  array (
-    0 => 'ANG',
-  ),
-  'SK' => 
-  array (
-    0 => 'EUR',
-  ),
-  'SI' => 
-  array (
-    0 => 'EUR',
   ),
   'SB' => 
   array (
     0 => 'SBD',
   ),
-  'SO' => 
+  'SC' => 
   array (
-    0 => 'SOS',
-  ),
-  'ZA' => 
-  array (
-    0 => 'ZAR',
-  ),
-  'SS' => 
-  array (
-    0 => 'SSP',
-  ),
-  'ES' => 
-  array (
-    0 => 'EUR',
-  ),
-  'LK' => 
-  array (
-    0 => 'LKR',
+    0 => 'SCR',
   ),
   'SD' => 
   array (
     0 => 'SDG',
   ),
-  'SR' => 
+  'SE' => 
   array (
-    0 => 'SRD',
+    0 => 'SEK',
+  ),
+  'SG' => 
+  array (
+    0 => 'SGD',
+  ),
+  'SH' => 
+  array (
+    0 => 'SHP',
+  ),
+  'SI' => 
+  array (
+    0 => 'EUR',
   ),
   'SJ' => 
   array (
     0 => 'NOK',
   ),
-  'SZ' => 
+  'SK' => 
   array (
-    0 => 'SZL',
+    0 => 'EUR',
   ),
-  'SE' => 
+  'SL' => 
   array (
-    0 => 'SEK',
+    0 => 'SLL',
   ),
-  'CH' => 
+  'SM' => 
   array (
-    0 => 'CHF',
+    0 => 'EUR',
+  ),
+  'SN' => 
+  array (
+    0 => 'XOF',
+  ),
+  'SO' => 
+  array (
+    0 => 'SOS',
+  ),
+  'SR' => 
+  array (
+    0 => 'SRD',
+  ),
+  'SS' => 
+  array (
+    0 => 'SSP',
+  ),
+  'ST' => 
+  array (
+    0 => 'STD',
+  ),
+  'SV' => 
+  array (
+    0 => 'SVC',
+    1 => 'USD',
+  ),
+  'SX' => 
+  array (
+    0 => 'ANG',
   ),
   'SY' => 
   array (
     0 => 'SYP',
   ),
-  'TW' => 
+  'SZ' => 
   array (
-    0 => 'TWD',
-  ),
-  'TJ' => 
-  array (
-    0 => 'TJS',
-  ),
-  'TZ' => 
-  array (
-    0 => 'TZS',
-  ),
-  'TH' => 
-  array (
-    0 => 'THB',
-  ),
-  'TL' => 
-  array (
-    0 => 'USD',
-  ),
-  'TG' => 
-  array (
-    0 => 'XOF',
-  ),
-  'TK' => 
-  array (
-    0 => 'NZD',
-  ),
-  'TO' => 
-  array (
-    0 => 'TOP',
-  ),
-  'TT' => 
-  array (
-    0 => 'TTD',
-  ),
-  'TN' => 
-  array (
-    0 => 'TND',
-  ),
-  'TR' => 
-  array (
-    0 => 'TRY',
-  ),
-  'TM' => 
-  array (
-    0 => 'TMT',
+    0 => 'SZL',
   ),
   'TC' => 
   array (
     0 => 'USD',
   ),
+  'TD' => 
+  array (
+    0 => 'XAF',
+  ),
+  'TF' => 
+  array (
+    0 => 'EUR',
+  ),
+  'TG' => 
+  array (
+    0 => 'XOF',
+  ),
+  'TH' => 
+  array (
+    0 => 'THB',
+  ),
+  'TJ' => 
+  array (
+    0 => 'TJS',
+  ),
+  'TK' => 
+  array (
+    0 => 'NZD',
+  ),
+  'TL' => 
+  array (
+    0 => 'USD',
+  ),
+  'TM' => 
+  array (
+    0 => 'TMT',
+  ),
+  'TN' => 
+  array (
+    0 => 'TND',
+  ),
+  'TO' => 
+  array (
+    0 => 'TOP',
+  ),
+  'TR' => 
+  array (
+    0 => 'TRY',
+  ),
+  'TT' => 
+  array (
+    0 => 'TTD',
+  ),
   'TV' => 
   array (
     0 => 'AUD',
   ),
-  'UG' => 
+  'TW' => 
   array (
-    0 => 'UGX',
+    0 => 'TWD',
+  ),
+  'TZ' => 
+  array (
+    0 => 'TZS',
   ),
   'UA' => 
   array (
     0 => 'UAH',
   ),
-  'AE' => 
+  'UG' => 
   array (
-    0 => 'AED',
-  ),
-  'GB' => 
-  array (
-    0 => 'GBP',
+    0 => 'UGX',
   ),
   'UM' => 
   array (
@@ -950,17 +934,17 @@
   array (
     0 => 'UZS',
   ),
-  'VU' => 
+  'VA' => 
   array (
-    0 => 'VUV',
+    0 => 'EUR',
+  ),
+  'VC' => 
+  array (
+    0 => 'XCD',
   ),
   'VE' => 
   array (
     0 => 'VEF',
-  ),
-  'VN' => 
-  array (
-    0 => 'VND',
   ),
   'VG' => 
   array (
@@ -970,17 +954,33 @@
   array (
     0 => 'USD',
   ),
+  'VN' => 
+  array (
+    0 => 'VND',
+  ),
+  'VU' => 
+  array (
+    0 => 'VUV',
+  ),
   'WF' => 
   array (
     0 => 'XPF',
   ),
-  'EH' => 
+  'WS' => 
   array (
-    0 => 'MAD',
+    0 => 'WST',
   ),
   'YE' => 
   array (
     0 => 'YER',
+  ),
+  'YT' => 
+  array (
+    0 => 'EUR',
+  ),
+  'ZA' => 
+  array (
+    0 => 'ZAR',
   ),
   'ZM' => 
   array (
