@@ -8,7 +8,7 @@ use Brick\Money\Exception\MoneyMismatchException;
 
 use Brick\Math\BigNumber;
 use Brick\Math\RoundingMode;
-use Brick\Math\Exception\ArithmeticException;
+use Brick\Math\Exception\MathException;
 use Brick\Math\Exception\RoundingNecessaryException;
 
 /**
@@ -60,7 +60,7 @@ abstract class AbstractMoney implements MoneyContainer
      */
     final public function getSign() : int
     {
-        return $this->getAmount()->sign();
+        return $this->getAmount()->getSign();
     }
 
     /**
@@ -120,7 +120,7 @@ abstract class AbstractMoney implements MoneyContainer
      *
      * @return int [-1, 0, 1] if `$this` is less than, equal to, or greater than `$that`.
      *
-     * @throws ArithmeticException    If the argument is an invalid number.
+     * @throws MathException          If the argument is an invalid number.
      * @throws MoneyMismatchException If the argument is a money in a different currency.
      */
     final public function compareTo($that) : int
@@ -135,7 +135,7 @@ abstract class AbstractMoney implements MoneyContainer
      *
      * @return bool
      *
-     * @throws ArithmeticException    If the argument is an invalid number.
+     * @throws MathException          If the argument is an invalid number.
      * @throws MoneyMismatchException If the argument is a money in a different currency.
      */
     final public function isEqualTo($that) : bool
@@ -150,7 +150,7 @@ abstract class AbstractMoney implements MoneyContainer
      *
      * @return bool
      *
-     * @throws ArithmeticException    If the argument is an invalid number.
+     * @throws MathException          If the argument is an invalid number.
      * @throws MoneyMismatchException If the argument is a money in a different currency.
      */
     final public function isLessThan($that) : bool
@@ -165,7 +165,7 @@ abstract class AbstractMoney implements MoneyContainer
      *
      * @return bool
      *
-     * @throws ArithmeticException    If the argument is an invalid number.
+     * @throws MathException          If the argument is an invalid number.
      * @throws MoneyMismatchException If the argument is a money in a different currency.
      */
     final public function isLessThanOrEqualTo($that) : bool
@@ -180,7 +180,7 @@ abstract class AbstractMoney implements MoneyContainer
      *
      * @return bool
      *
-     * @throws ArithmeticException    If the argument is an invalid number.
+     * @throws MathException          If the argument is an invalid number.
      * @throws MoneyMismatchException If the argument is a money in a different currency.
      */
     final public function isGreaterThan($that) : bool
@@ -195,7 +195,7 @@ abstract class AbstractMoney implements MoneyContainer
      *
      * @return bool
      *
-     * @throws ArithmeticException    If the argument is an invalid number.
+     * @throws MathException          If the argument is an invalid number.
      * @throws MoneyMismatchException If the argument is a money in a different currency.
      */
     final public function isGreaterThanOrEqualTo($that) : bool

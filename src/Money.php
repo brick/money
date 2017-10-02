@@ -13,7 +13,7 @@ use Brick\Math\BigInteger;
 use Brick\Math\BigNumber;
 use Brick\Math\BigRational;
 use Brick\Math\RoundingMode;
-use Brick\Math\Exception\ArithmeticException;
+use Brick\Math\Exception\MathException;
 use Brick\Math\Exception\NumberFormatException;
 use Brick\Math\Exception\RoundingNecessaryException;
 
@@ -207,7 +207,7 @@ final class Money extends AbstractMoney
      * @return Money
      *
      * @throws UnknownCurrencyException If the currency is an unknown currency code.
-     * @throws ArithmeticException      If the amount cannot be converted to a BigInteger.
+     * @throws MathException            If the amount cannot be converted to a BigInteger.
      */
     public static function ofMinor($minorAmount, $currency, Context $context = null, int $roundingMode = RoundingMode::UNNECESSARY) : Money
     {
@@ -284,7 +284,7 @@ final class Money extends AbstractMoney
      */
     public function getUnscaledAmount(): BigInteger
     {
-        return BigInteger::of($this->amount->unscaledValue());
+        return $this->amount->getUnscaledValue();
     }
 
     /**
@@ -323,7 +323,7 @@ final class Money extends AbstractMoney
      *
      * @return Money
      *
-     * @throws ArithmeticException    If the argument is an invalid number or rounding is necessary.
+     * @throws MathException          If the argument is an invalid number or rounding is necessary.
      * @throws MoneyMismatchException If the argument is a money in a different currency or in a different context.
      */
     public function plus($that, int $roundingMode = RoundingMode::UNNECESSARY) : Money
@@ -359,7 +359,7 @@ final class Money extends AbstractMoney
      *
      * @return Money
      *
-     * @throws ArithmeticException    If the argument is an invalid number or rounding is necessary.
+     * @throws MathException          If the argument is an invalid number or rounding is necessary.
      * @throws MoneyMismatchException If the argument is a money in a different currency or in a different context.
      */
     public function minus($that, int $roundingMode = RoundingMode::UNNECESSARY) : Money
@@ -391,7 +391,7 @@ final class Money extends AbstractMoney
      *
      * @return Money
      *
-     * @throws ArithmeticException If the argument is an invalid number or rounding is necessary.
+     * @throws MathException If the argument is an invalid number or rounding is necessary.
      */
     public function multipliedBy($that, int $roundingMode = RoundingMode::UNNECESSARY) : Money
     {
@@ -412,7 +412,7 @@ final class Money extends AbstractMoney
      *
      * @return Money
      *
-     * @throws ArithmeticException If the argument is an invalid number or is zero, or rounding is necessary.
+     * @throws MathException If the argument is an invalid number or is zero, or rounding is necessary.
      */
     public function dividedBy($that, int $roundingMode = RoundingMode::UNNECESSARY) : Money
     {
@@ -431,14 +431,14 @@ final class Money extends AbstractMoney
      *
      * @return Money
      *
-     * @throws ArithmeticException If the divisor cannot be converted to a BigInteger.
+     * @throws MathException If the divisor cannot be converted to a BigInteger.
      */
     public function quotient($that) : Money
     {
         $that = BigInteger::of($that);
         $step = $this->context->getStep();
 
-        $scale  = $this->amount->scale();
+        $scale  = $this->amount->getScale();
         $amount = $this->amount->withPointMovedRight($scale)->dividedBy($step);
 
         $q = $amount->quotient($that);
@@ -457,14 +457,14 @@ final class Money extends AbstractMoney
      *
      * @return Money[] The quotient and the remainder.
      *
-     * @throws ArithmeticException If the divisor cannot be converted to a BigInteger.
+     * @throws MathException If the divisor cannot be converted to a BigInteger.
      */
     public function quotientAndRemainder($that) : array
     {
         $that = BigInteger::of($that);
         $step = $this->context->getStep();
 
-        $scale  = $this->amount->scale();
+        $scale  = $this->amount->getScale();
         $amount = $this->amount->withPointMovedRight($scale)->dividedBy($step);
 
         list ($q, $r) = $amount->quotientAndRemainder($that);
@@ -517,7 +517,7 @@ final class Money extends AbstractMoney
 
         $monies = [];
 
-        $unit = BigDecimal::ofUnscaledValue($step, $this->amount->scale());
+        $unit = BigDecimal::ofUnscaledValue($step, $this->amount->getScale());
         $unit = new Money($unit, $this->currency, $this->context);
 
         $remainder = $this;
@@ -609,7 +609,7 @@ final class Money extends AbstractMoney
      * @return Money
      *
      * @throws UnknownCurrencyException If an unknown currency code is given.
-     * @throws ArithmeticException      If the exchange rate or rounding mode is invalid, or rounding is necessary.
+     * @throws MathException            If the exchange rate or rounding mode is invalid, or rounding is necessary.
      */
     public function convertedTo($currency, $exchangeRate, Context $context = null, int $roundingMode = RoundingMode::UNNECESSARY) : Money
     {

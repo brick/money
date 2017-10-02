@@ -8,7 +8,7 @@ use Brick\Money\Exception\MoneyMismatchException;
 
 use Brick\Math\BigNumber;
 use Brick\Math\BigRational;
-use Brick\Math\Exception\ArithmeticException;
+use Brick\Math\Exception\MathException;
 use Brick\Math\Exception\RoundingNecessaryException;
 use Brick\Math\RoundingMode;
 
@@ -84,7 +84,7 @@ final class RationalMoney extends AbstractMoney
      *
      * @return RationalMoney
      *
-     * @throws ArithmeticException    If the argument is not a valid number.
+     * @throws MathException          If the argument is not a valid number.
      * @throws MoneyMismatchException If the argument is a money in another currency.
      */
     public function plus($that) : RationalMoney
@@ -102,7 +102,7 @@ final class RationalMoney extends AbstractMoney
      *
      * @return RationalMoney
      *
-     * @throws ArithmeticException    If the argument is not a valid number.
+     * @throws MathException          If the argument is not a valid number.
      * @throws MoneyMismatchException If the argument is a money in another currency.
      */
     public function minus($that) : RationalMoney
@@ -120,7 +120,7 @@ final class RationalMoney extends AbstractMoney
      *
      * @return RationalMoney
      *
-     * @throws ArithmeticException If the argument is not a valid number.
+     * @throws MathException If the argument is not a valid number.
      */
     public function multipliedBy($that) : RationalMoney
     {
@@ -136,7 +136,7 @@ final class RationalMoney extends AbstractMoney
      *
      * @return RationalMoney
      *
-     * @throws ArithmeticException If the argument is not a valid number.
+     * @throws MathException If the argument is not a valid number.
      */
     public function dividedBy($that) : RationalMoney
     {
