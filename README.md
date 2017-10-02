@@ -16,7 +16,7 @@ This component is based on the [Math](https://github.com/brick/math) component a
 
 ## Requirements and installation
 
-This library requires PHP 5.6, PHP 7 or [HHVM](http://hhvm.com/).
+This library requires PHP 5.6 or PHP 7.
 
 We recommend installing it with [Composer](https://getcomposer.org/).
 Just define the following requirement in your `composer.json` file:
