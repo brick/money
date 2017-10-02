@@ -15,33 +15,38 @@ Working with financial data is a serious matter, and small rounding mistakes in 
 
 This component is based on the [Math](https://github.com/brick/math) component and handles exact calculations on monies of any size.
 
-### Requirements and installation
+### Installation
 
-This library requires PHP 5.6 or PHP 7.
-
-We recommend installing it with [Composer](https://getcomposer.org/).
+This library is installable via [Composer](https://getcomposer.org/).
 Just define the following requirement in your `composer.json` file:
 
-    {
-        "require": {
-            "brick/money": "0.1.*"
-        }
+```json
+{
+    "require": {
+        "brick/money": "0.2.*"
     }
+}
+```
+
+### Requirements
+
+This library requires PHP 7.1 or later.
+
+For PHP 5.6 and PHP 7.0 compatibility, use version `0.1`: **this version will still be supported until 31 December 2018**, when support for PHP 5.6 and 7.0 will be definitely dropped. It will not receive any new features, but will be patched if any bugs are found.
+
+Although not required, it is recommended that you **install the [GMP](http://php.net/manual/en/book.gmp.php) or [BCMath](http://php.net/manual/en/book.bc.php) extension** to speed up calculations.
 
 ### Project status & release process
 
-While this library is still under development, it is well tested and should be stable enough to use in production
-environments.
+While this library is still under development, it is well tested and should be stable enough to use in production environments.
 
-The current releases are numbered `0.x.y`. When a non-breaking change is introduced (adding new methods, optimizing
-existing code, etc.), `y` is incremented.
+The current releases are numbered `0.x.y`. When a non-breaking change is introduced (adding new methods, optimizing existing code, etc.), `y` is incremented.
 
 **When a breaking change is introduced, a new `0.x` version cycle is always started.**
 
-It is therefore safe to lock your project to a given release cycle, such as `0.1.*`.
+It is therefore safe to lock your project to a given release cycle, such as `0.2.*`.
 
-If you need to upgrade to a newer release cycle, check the [release history](https://github.com/brick/money/releases)
-for a list of changes introduced by each further `0.x.0` version.
+If you need to upgrade to a newer release cycle, check the [release history](https://github.com/brick/money/releases) for a list of changes introduced by each further `0.x.0` version.
 
 ## Creating a Money
 
