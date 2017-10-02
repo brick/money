@@ -12,10 +12,12 @@ use Brick\Math\BigDecimal;
 use Brick\Math\BigNumber;
 use Brick\Math\BigRational;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Base class for money tests.
  */
-abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
+abstract class AbstractTestCase extends TestCase
 {
     /**
      * @param string     $expected
