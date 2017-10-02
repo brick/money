@@ -11,27 +11,26 @@ use Brick\Money\Exception\UnknownCurrencyException;
 class CurrencyTest extends AbstractTestCase
 {
     /**
-     * @dataProvider accessorsProvider
+     * @dataProvider providerOf
      *
      * @param string $currencyCode   The currency code.
      * @param int    $numericCode    The currency's numeric code.
      * @param int    $fractionDigits The currency's default fraction digits.
      * @param string $name           The currency's name.
      */
-    public function testAccessors($currencyCode, $numericCode, $fractionDigits, $name)
+    public function testOf($currencyCode, $numericCode, $fractionDigits, $name)
     {
         $currency = Currency::of($currencyCode);
+        $this->assertCurrencyEquals($currencyCode, $numericCode, $name, $fractionDigits, $currency);
 
-        $this->assertEquals($currencyCode, $currency->getCurrencyCode());
-        $this->assertEquals($numericCode, $currency->getNumericCode());
-        $this->assertEquals($fractionDigits, $currency->getDefaultFractionDigits());
-        $this->assertEquals($name, $currency->getName());
+        $currency = Currency::of($numericCode);
+        $this->assertCurrencyEquals($currencyCode, $numericCode, $name, $fractionDigits, $currency);
     }
 
     /**
      * @return array
      */
-    public function accessorsProvider()
+    public function providerOf()
     {
         return [
             ['USD', 840, 2, 'US Dollar'],
@@ -39,6 +38,28 @@ class CurrencyTest extends AbstractTestCase
             ['GBP', 826, 2, 'Pound Sterling'],
             ['JPY', 392, 0, 'Yen'],
             ['DZD', 12, 2, 'Algerian Dinar'],
+        ];
+    }
+
+    /**
+     * @dataProvider providerOfUnknownCurrencyCode
+     * @expectedException \Brick\Money\Exception\UnknownCurrencyException
+     *
+     * @param string|int $currencyCode
+     */
+    public function testOfUnknownCurrencyCode($currencyCode)
+    {
+        Currency::of($currencyCode);
+    }
+
+    /**
+     * @return array
+     */
+    public function providerOfUnknownCurrencyCode()
+    {
+        return [
+            ['XXX'],
+            [-1],
         ];
     }
 
@@ -103,13 +124,17 @@ class CurrencyTest extends AbstractTestCase
 
     public function testIs()
     {
-        $original = Currency::of('EUR');
+        $currency = Currency::of('EUR');
 
-        /** @var Currency $copy */
-        $copy = unserialize(serialize($original));
+        $this->assertTrue($currency->is('EUR'));
+        $this->assertTrue($currency->is(978));
 
-        $this->assertNotSame($original, $copy);
-        $this->assertTrue($copy->is($original));
-        $this->assertTrue($copy->is('EUR'));
+        $this->assertFalse($currency->is('USD'));
+        $this->assertFalse($currency->is(840));
+
+        $clone = clone $currency;
+
+        $this->assertNotSame($currency, $clone);
+        $this->assertTrue($clone->is($currency));
     }
 }

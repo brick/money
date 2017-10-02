@@ -166,7 +166,7 @@ class Money extends AbstractMoney
      * Operations on this Money return a Money with the same context.
      *
      * @param BigNumber|number|string $amount       The monetary amount.
-     * @param Currency|string         $currency     The currency, as a Currency instance or ISO currency code.
+     * @param Currency|string|int     $currency     The Currency instance, ISO currency code or ISO numeric currency code.
      * @param Context|null            $context      An optional Context.
      * @param int                     $roundingMode An optional RoundingMode, if the amount does not fit the context.
      *
@@ -197,8 +197,8 @@ class Money extends AbstractMoney
      * currency's default fraction digits. For example, `Money::ofMinor(1234, 'USD')` will yield `USD 12.34`.
      * If the amount cannot be safely converted to this scale, an exception is thrown.
      *
-     * @param BigNumber|number|string $minorAmount  The amount in minor units.
-     * @param Currency|string         $currency     The currency, as a Currency instance or ISO currency code.
+     * @param BigNumber|number|string $minorAmount  The amount, in minor currency units.
+     * @param Currency|string|int     $currency     The Currency instance, ISO currency code or ISO numeric currency code.
      * @param Context|null            $context      An optional Context.
      * @param int                     $roundingMode An optional RoundingMode, if the amount does not fit the context.
      *
@@ -228,8 +228,8 @@ class Money extends AbstractMoney
      * By default, the money is created with a DefaultContext: it has the default scale for the currency.
      * A Context instance can be provided to override the default.
      *
-     * @param Currency|string $currency The currency, as a Currency instance or ISO currency code.
-     * @param Context|null    $context  An optional context.
+     * @param Currency|string|int $currency The Currency instance, ISO currency code or ISO numeric currency code.
+     * @param Context|null        $context  An optional context.
      *
      * @return Money
      */
@@ -599,7 +599,7 @@ class Money extends AbstractMoney
      * For example, converting a default money of `USD 1.23` to `EUR` with an exchange rate of `0.91` and
      * RoundingMode::UP will yield `EUR 1.12`.
      *
-     * @param Currency|string         $currency     The target currency, as a Currency instance or ISO currency code.
+     * @param Currency|string|int     $currency     The Currency instance, ISO currency code or ISO numeric currency code.
      * @param BigNumber|number|string $exchangeRate The exchange rate to multiply by.
      * @param Context|null            $context      An optional context.
      * @param int                     $roundingMode An optional rounding mode.

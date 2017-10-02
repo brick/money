@@ -22,6 +22,15 @@ class ISOCurrencyProvider
     private $currencyData;
 
     /**
+     * An associative array of currency numeric code to currency code.
+     *
+     * This property is set on-demand, as soon as required.
+     *
+     * @var array|null
+     */
+    private $numericToCurrency;
+
+    /**
      * An associative array of country code to currency codes.
      *
      * This property is set on-demand, as soon as required.
@@ -73,7 +82,7 @@ class ISOCurrencyProvider
     /**
      * Returns the currency matching the given currency code.
      *
-     * @param string $currencyCode The 3-letter ISO 4217 currency code.
+     * @param string|int $currencyCode The 3-letter or numeric ISO 4217 currency code.
      *
      * @return Currency The currency.
      *
@@ -86,6 +95,14 @@ class ISOCurrencyProvider
         }
 
         if (! isset($this->currencyData[$currencyCode])) {
+            if ($this->numericToCurrency === null) {
+                $this->numericToCurrency = require __DIR__ . '/../data/numeric-to-currency.php';
+            }
+
+            if (isset($this->numericToCurrency[$currencyCode])) {
+                return $this->getCurrency($this->numericToCurrency[$currencyCode]);
+            }
+
             throw UnknownCurrencyException::unknownCurrency($currencyCode);
         }
 

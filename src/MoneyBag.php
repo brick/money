@@ -21,7 +21,7 @@ class MoneyBag implements MoneyContainer
     /**
      * Returns the amount in the given currency contained in the bag.
      *
-     * @param Currency|string $currency The currency, as a Currency instance or ISO currency code.
+     * @param Currency|string $currency The Currency instance or currency code.
      *
      * @return BigRational
      */

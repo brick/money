@@ -35,8 +35,11 @@ class ISOCurrencyProviderTest extends AbstractTestCase
     public function testGetCurrency($currencyCode, $numericCode, $name, $defaultFractionDigits)
     {
         $provider = ISOCurrencyProvider::getInstance();
-        $currency = $provider->getCurrency($currencyCode);
 
+        $currency = $provider->getCurrency($currencyCode);
+        $this->assertCurrencyEquals($currencyCode, $numericCode, $name, $defaultFractionDigits, $currency);
+
+        $currency = $provider->getCurrency($numericCode);
         $this->assertCurrencyEquals($currencyCode, $numericCode, $name, $defaultFractionDigits, $currency);
     }
 
@@ -60,11 +63,25 @@ class ISOCurrencyProviderTest extends AbstractTestCase
     }
 
     /**
+     * @dataProvider providerUnknownCurrency
      * @expectedException \Brick\Money\Exception\UnknownCurrencyException
+     *
+     * @param string|int $currencyCode
      */
-    public function testGetUnknownCurrency()
+    public function testGetUnknownCurrency($currencyCode)
     {
-        ISOCurrencyProvider::getInstance()->getCurrency('XXX');
+        ISOCurrencyProvider::getInstance()->getCurrency($currencyCode);
+    }
+
+    /**
+     * @return array
+     */
+    public function providerUnknownCurrency()
+    {
+        return [
+            ['XXX'],
+            [-1],
+        ];
     }
 
     public function testGetAvailableCurrencies()

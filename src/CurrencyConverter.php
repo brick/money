@@ -45,9 +45,9 @@ class CurrencyConverter
     /**
      * Converts the given money to the given currency.
      *
-     * @param MoneyContainer  $moneyContainer The Money, RationalMoney or MoneyBag to convert.
-     * @param Currency|string $currency       The currency, as a Currency instance or ISO currency code.
-     * @param int             $roundingMode   The rounding mode, if necessary.
+     * @param MoneyContainer      $moneyContainer The Money, RationalMoney or MoneyBag to convert.
+     * @param Currency|string|int $currency       The Currency instance, ISO currency code or ISO numeric currency code.
+     * @param int                 $roundingMode   The rounding mode, if necessary.
      *
      * @return Money
      *

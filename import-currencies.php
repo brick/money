@@ -274,6 +274,7 @@ $document->loadXML($data);
 $countries = $document->getElementsByTagName('CcyNtry');
 $currencies = [];
 
+$numericToCurrency = [];
 $countryToCurrency = [];
 $countryNamesFound = [];
 
@@ -322,6 +323,7 @@ foreach ($countries as $country) {
         }
     } else {
         $currencies[$currencyCode] = $value;
+        $numericToCurrency[$numericCode] = $currencyCode;
     }
 }
 
@@ -332,6 +334,7 @@ foreach ($countryCodes as $countryName => $countryCode) {
 }
 
 exportToFile(__DIR__ . '/data/iso-currencies.php', $currencies);
+exportToFile(__DIR__ . '/data/numeric-to-currency.php', $numericToCurrency);
 exportToFile(__DIR__ . '/data/country-to-currency.php', $countryToCurrency);
 
 printf('Exported %d currencies in %d countries.' . PHP_EOL, count($currencies), count($countryToCurrency));

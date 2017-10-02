@@ -50,8 +50,10 @@ class MoneyTest extends AbstractTestCase
     {
         return [
             ['USD 1.00', 1, 'USD'],
+            ['USD 5.60', '5.6', 840],
             ['JPY 1', 1.0, 'JPY'],
             ['JPY 1.200', '1.2', 'JPY', new CustomContext(3)],
+            ['EUR 9.00', 9, 978],
             ['EUR 0.42', BigRational::of('3/7'), 'EUR', null, RoundingMode::DOWN],
             ['EUR 0.43', BigRational::of('3/7'), 'EUR', null, RoundingMode::UP],
             ['CUSTOM 0.428', BigRational::of('3/7'), new Currency('CUSTOM', 0, '', 3), null, RoundingMode::DOWN],
