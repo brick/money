@@ -83,12 +83,12 @@ class RationalMoney extends AbstractMoney
      * @return RationalMoney
      *
      * @throws ArithmeticException    If the argument is not a valid number.
-     * @throws MoneyMismatchException If the argument is a RationalMoney or a Money in another currency.
+     * @throws MoneyMismatchException If the argument is a money in another currency.
      */
     public function plus($that)
     {
-        $amount = $this->handleAbstractMoney($that);
-        $amount = $this->amount->plus($amount);
+        $that = $this->getAmountOf($that);
+        $amount = $this->amount->plus($that);
 
         return new self($amount, $this->currency);
     }
@@ -101,12 +101,12 @@ class RationalMoney extends AbstractMoney
      * @return RationalMoney
      *
      * @throws ArithmeticException    If the argument is not a valid number.
-     * @throws MoneyMismatchException If the argument is a RationalMoney or a Money in another currency.
+     * @throws MoneyMismatchException If the argument is a money in another currency.
      */
     public function minus($that)
     {
-        $amount = $this->handleAbstractMoney($that);
-        $amount = $this->amount->minus($amount);
+        $that = $this->getAmountOf($that);
+        $amount = $this->amount->minus($that);
 
         return new self($amount, $this->currency);
     }

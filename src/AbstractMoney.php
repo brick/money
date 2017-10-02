@@ -106,9 +106,7 @@ abstract class AbstractMoney implements MoneyContainer
      */
     public function compareTo($that)
     {
-        $that = $this->handleAbstractMoney($that);
-
-        return $this->getAmount()->compareTo($that);
+        return $this->getAmount()->compareTo($this->getAmountOf($that));
     }
 
     /**
@@ -123,9 +121,7 @@ abstract class AbstractMoney implements MoneyContainer
      */
     public function isEqualTo($that)
     {
-        $that = $this->handleAbstractMoney($that);
-
-        return $this->getAmount()->isEqualTo($that);
+        return $this->getAmount()->isEqualTo($this->getAmountOf($that));
     }
 
     /**
@@ -140,9 +136,7 @@ abstract class AbstractMoney implements MoneyContainer
      */
     public function isLessThan($that)
     {
-        $that = $this->handleAbstractMoney($that);
-
-        return $this->getAmount()->isLessThan($that);
+        return $this->getAmount()->isLessThan($this->getAmountOf($that));
     }
 
     /**
@@ -157,9 +151,7 @@ abstract class AbstractMoney implements MoneyContainer
      */
     public function isLessThanOrEqualTo($that)
     {
-        $that = $this->handleAbstractMoney($that);
-
-        return $this->getAmount()->isLessThanOrEqualTo($that);
+        return $this->getAmount()->isLessThanOrEqualTo($this->getAmountOf($that));
     }
 
     /**
@@ -174,9 +166,7 @@ abstract class AbstractMoney implements MoneyContainer
      */
     public function isGreaterThan($that)
     {
-        $that = $this->handleAbstractMoney($that);
-
-        return $this->getAmount()->isGreaterThan($that);
+        return $this->getAmount()->isGreaterThan($this->getAmountOf($that));
     }
 
     /**
@@ -191,9 +181,7 @@ abstract class AbstractMoney implements MoneyContainer
      */
     public function isGreaterThanOrEqualTo($that)
     {
-        $that = $this->handleAbstractMoney($that);
-
-        return $this->getAmount()->isGreaterThanOrEqualTo($that);
+        return $this->getAmount()->isGreaterThanOrEqualTo($this->getAmountOf($that));
     }
 
     /**
@@ -207,7 +195,7 @@ abstract class AbstractMoney implements MoneyContainer
      *
      * @throws MoneyMismatchException If currencies don't match.
      */
-    protected function handleAbstractMoney($that)
+    protected function getAmountOf($that)
     {
         if ($that instanceof AbstractMoney) {
             if (! $that->getCurrency()->is($this->getCurrency())) {

@@ -316,8 +316,13 @@ class Money extends AbstractMoney
      */
     public function plus($that, $roundingMode = RoundingMode::UNNECESSARY)
     {
-        $that = $this->handleMoney($that, __FUNCTION__);
-        $amount = $this->amount->toBigRational()->plus($that);
+        $amount = $this->getAmountOf($that);
+
+        if ($that instanceof Money) {
+            $this->checkContext($that->getContext(), __FUNCTION__);
+        }
+
+        $amount = $this->amount->toBigRational()->plus($amount);
 
         return self::create($amount, $this->currency, $this->context, $roundingMode);
     }
@@ -342,8 +347,13 @@ class Money extends AbstractMoney
      */
     public function minus($that, $roundingMode = RoundingMode::UNNECESSARY)
     {
-        $that = $this->handleMoney($that, __FUNCTION__);
-        $amount = $this->amount->toBigRational()->minus($that);
+        $amount = $this->getAmountOf($that);
+
+        if ($that instanceof Money) {
+            $this->checkContext($that->getContext(), __FUNCTION__);
+        }
+
+        $amount = $this->amount->toBigRational()->minus($amount);
 
         return self::create($amount, $this->currency, $this->context, $roundingMode);
     }
@@ -662,23 +672,17 @@ class Money extends AbstractMoney
     }
 
     /**
-     * Handles the special case of monies in methods like `plus()`, `minus()`, etc.
+     * @param Context $context The Context to check against this Money.
+     * @param string  $method  The invoked method name.
      *
-     * @param AbstractMoney|BigNumber|number|string $that   The money or amount.
-     * @param string                                $method The method name.
-     *
-     * @return BigNumber|number|string
+     * @return void
      *
      * @throws MoneyMismatchException If monies don't match.
      */
-    protected function handleMoney($that, $method)
+    protected function checkContext(Context $context, $method)
     {
-        if ($that instanceof Money) {
-            if ($this->context != $that->context) { // non-strict equality on purpose
-                throw MoneyMismatchException::contextMismatch($method);
-            }
+        if ($this->context != $context) { // non-strict equality on purpose
+            throw MoneyMismatchException::contextMismatch($method);
         }
-
-        return $this->handleAbstractMoney($that);
     }
 }
