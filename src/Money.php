@@ -28,7 +28,7 @@ use Brick\Math\Exception\RoundingNecessaryException;
  * - CustomContext handles monies with a custom scale, and optionally step.
  * - AutoContext automatically adjusts the scale of the money to the minimum required.
  */
-class Money extends AbstractMoney
+final class Money extends AbstractMoney
 {
     /**
      * The amount.

@@ -11,7 +11,7 @@ use Brick\Math\RoundingMode;
 /**
  * Automatically adjusts the scale of a number to the strict minimum.
  */
-class AutoContext implements Context
+final class AutoContext implements Context
 {
     /**
      * {@inheritdoc}

@@ -8,7 +8,7 @@ use Brick\Money\Exception\UnknownCurrencyException;
 /**
  * A currency. This class is immutable.
  */
-class Currency
+final class Currency
 {
     /**
      * The currency code.

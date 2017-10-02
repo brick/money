@@ -10,7 +10,7 @@ use Brick\Math\BigNumber;
 /**
  * A configurable exchange rate provider.
  */
-class ConfigurableProvider implements ExchangeRateProvider
+final class ConfigurableProvider implements ExchangeRateProvider
 {
     /**
      * @var array

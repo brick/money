@@ -5,7 +5,7 @@ namespace Brick\Money\ExchangeRateProvider;
 /**
  * Configuration for the PDOExchangeRateProvider.
  */
-class PDOProviderConfiguration
+final class PDOProviderConfiguration
 {
     /**
      * The name of the table that holds the exchange rates. Required.

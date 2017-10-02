@@ -12,7 +12,7 @@ use Brick\Math\RoundingMode;
 /**
  * Converts monies into different currencies, using an exchange rate provider.
  */
-class CurrencyConverter
+final class CurrencyConverter
 {
     /**
      * The exchange rate provider.

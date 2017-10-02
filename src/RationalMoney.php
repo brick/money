@@ -16,7 +16,7 @@ use Brick\Math\RoundingMode;
  * This is used to represent intermediate calculation results, and may not be exactly convertible to a decimal amount
  * with a finite number of digits. The final conversion to a Money may require rounding.
  */
-class RationalMoney extends AbstractMoney
+final class RationalMoney extends AbstractMoney
 {
     /**
      * @var BigRational

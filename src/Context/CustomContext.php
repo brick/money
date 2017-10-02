@@ -10,7 +10,7 @@ use Brick\Math\BigNumber;
 /**
  * Adjusts a number to a custom scale, and optionally step.
  */
-class CustomContext implements Context
+final class CustomContext implements Context
 {
     /**
      * The scale of the monies using this context.

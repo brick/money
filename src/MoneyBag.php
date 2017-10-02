@@ -9,7 +9,7 @@ use Brick\Math\BigRational;
  *
  * This class is mutable.
  */
-class MoneyBag implements MoneyContainer
+final class MoneyBag implements MoneyContainer
 {
     /**
      * The amounts in this bag, indexed by currency code.
