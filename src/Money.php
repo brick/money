@@ -467,7 +467,7 @@ final class Money extends AbstractMoney
         $scale  = $this->amount->getScale();
         $amount = $this->amount->withPointMovedRight($scale)->dividedBy($step);
 
-        list ($q, $r) = $amount->quotientAndRemainder($that);
+        [$q, $r] = $amount->quotientAndRemainder($that);
 
         $q = $q->multipliedBy($step)->withPointMovedLeft($scale);
         $r = $r->multipliedBy($step)->withPointMovedLeft($scale);
