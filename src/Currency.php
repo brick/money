@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Brick\Money;
 
-use Brick\Money\ISOCurrencyProvider;
 use Brick\Money\Exception\UnknownCurrencyException;
 
 /**
