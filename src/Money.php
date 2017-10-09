@@ -247,7 +247,7 @@ final class Money extends AbstractMoney
 
         $amount = BigDecimal::zero();
 
-        return self::create($amount, $currency, $context, RoundingMode::UNNECESSARY);
+        return self::create($amount, $currency, $context);
     }
 
     /**
