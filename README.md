@@ -213,7 +213,7 @@ You can easily split a Money into a number of parts:
 use Brick\Money\Money;
 
 $money = Money::of(100, 'USD');
-list ($a, $b, $c) = $money->split(3); // USD 33.34, USD 33.33, USD 33.33
+[$a, $b, $c] = $money->split(3); // USD 33.34, USD 33.33, USD 33.33
 ```
 
 You can also allocate a Money according to a list of ratios. Say you want to distribute a profit of 987.65 CHF to 3 shareholders, having shares of `48%`, `41%` and `11%` of a company:
@@ -222,7 +222,7 @@ You can also allocate a Money according to a list of ratios. Say you want to dis
 use Brick\Money\Money;
 
 $profit = Money::of('987.65', 'CHF');
-list ($a, $b, $c) = $profit->allocate(48, 41, 11); // CHF 474.08, CHF 404.93, CHF 108.64
+[$a, $b, $c] = $profit->allocate(48, 41, 11); // CHF 474.08, CHF 404.93, CHF 108.64
 ```
 
 It plays well with cash roundings, too:
@@ -232,7 +232,7 @@ use Brick\Money\Money;
 use Brick\Money\Context\CashContext;
 
 $profit = Money::of('987.65', 'CHF', new CashContext(5));
-list ($a, $b, $c) = $profit->allocate(48, 41, 11); // CHF 474.10, CHF 404.95, CHF 108.60
+[$a, $b, $c] = $profit->allocate(48, 41, 11); // CHF 474.10, CHF 404.95, CHF 108.60
 ```
 
 Note that the ratios can be any (non-negative) integer values and *do not need to add up to 100*.
@@ -275,7 +275,7 @@ $money = Money::of('50', 'USD');
 $converter->convert($money, 'EUR', RoundingMode::DOWN);
 ```
 
-The converter performs the most precise calculation possible, internally representing the final amount as a rational number until the very last step.
+The converter performs the most precise calculation possible, internally representing the result as a rational number until the very last step.
 
 To use the currency converter, you need an `ExchangeRateProvider`. Several implementations are provided, among which:
 
@@ -327,7 +327,6 @@ $provider->setExchangeRate('EUR', 'USD', '1.1');
 $provider->setExchangeRate('EUR', 'GBP', '0.9');
 
 $provider = new BaseCurrencyProvider($provider, 'EUR');
-
 $provider->getExchangeRate('EUR', 'USD'); // 1.1
 $provider->getExchangeRate('USD', 'EUR'); // 10/11
 $provider->getExchangeRate('GBP', 'USD'); // 11/9
