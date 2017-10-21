@@ -559,8 +559,6 @@ final class Money extends AbstractMoney
      */
     public function split(int $parts) : array
     {
-        $parts = (int) $parts;
-
         if ($parts < 1) {
             throw new \InvalidArgumentException('Cannot split() into less than 1 part.');
         }
