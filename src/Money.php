@@ -450,7 +450,7 @@ final class Money extends AbstractMoney
     /**
      * Returns the quotient and the remainder of the division of this Money by the given number.
      *
-     * The given number must be an integer value. The resulting Money has the same context as this Money.
+     * The given number must be an integer value. The resulting monies have the same context as this Money.
      * This method can serve as a basis for a money allocation algorithm.
      *
      * @param BigNumber|number|string $that The divisor. Must be convertible to a BigInteger.
