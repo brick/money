@@ -654,7 +654,13 @@ final class Money extends AbstractMoney
      */
     public function formatTo(string $locale) : string
     {
-        return $this->formatWith(new \NumberFormatter($locale, \NumberFormatter::CURRENCY));
+        $scale = $this->amount->getScale();
+
+        $formatter = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
+        $formatter->setAttribute(\NumberFormatter::MIN_FRACTION_DIGITS, $scale);
+        $formatter->setAttribute(\NumberFormatter::MAX_FRACTION_DIGITS, $scale);
+
+        return $this->formatWith($formatter);
     }
 
     /**
