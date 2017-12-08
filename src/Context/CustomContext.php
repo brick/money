@@ -69,4 +69,14 @@ final class CustomContext implements Context
     {
         return true;
     }
+
+    /**
+     * Returns the scale used by this context.
+     *
+     * @return int
+     */
+    public function getScale() : int
+    {
+        return $this->scale;
+    }
 }

@@ -94,9 +94,10 @@ class CustomContextTest extends AbstractTestCase
         ];
     }
 
-    public function testGetStep()
+    public function testGetScaleGetStep()
     {
-        $context = new CustomContext(2, 50);
+        $context = new CustomContext(8, 50);
+        $this->assertSame(8, $context->getScale());
         $this->assertSame(50, $context->getStep());
     }
 }
