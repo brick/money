@@ -75,7 +75,7 @@ final class CustomContext implements Context
      *
      * @return int
      */
-    public function getScale() : int
+    public function getScale()
     {
         return $this->scale;
     }
