@@ -518,6 +518,10 @@ final class Money extends AbstractMoney
         $unit = BigDecimal::ofUnscaledValue($step, $this->amount->scale());
         $unit = new Money($unit, $this->currency, $this->context);
 
+        if ($this->isNegative()) {
+            $unit = $unit->negated();
+        }
+
         $remainder = $this;
 
         foreach ($ratios as $ratio) {
