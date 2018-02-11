@@ -276,13 +276,13 @@ final class Money extends AbstractMoney
     }
 
     /**
-     * Returns a BigInteger containing the unscaled value of this money in minor units.
+     * Returns a BigInteger containing the unscaled value (all digits) of this money.
      *
      * For example, `123.4567 USD` will return a BigInteger of `1234567`.
      *
      * @return BigInteger
      */
-    public function getUnscaledAmount(): BigInteger
+    public function getUnscaledAmount() : BigInteger
     {
         return $this->amount->getUnscaledValue();
     }
