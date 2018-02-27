@@ -19,7 +19,11 @@
     },
     "autoload": {
         "psr-4": {
-            "Brick\\Money\\": "src/",
+            "Brick\\Money\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
             "Brick\\Money\\Tests\\": "tests/"
         }
     }
