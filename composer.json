@@ -13,7 +13,7 @@
         "brick/math": "~0.6.2 || 0.7.*"
     },
     "require-dev": {
-        "phpunit/phpunit": "6.*",
+        "phpunit/phpunit": "7.*",
         "satooshi/php-coveralls": "1.*",
         "ext-pdo": "*"
     },
