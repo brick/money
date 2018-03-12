@@ -2,14 +2,15 @@
 
 namespace Brick\Money\Tests;
 
+use Brick\Money\Context;
+use Brick\Money\Context\AutoContext;
+use Brick\Money\Context\CashContext;
+use Brick\Money\Context\CustomContext;
+use Brick\Money\Context\DefaultContext;
 use Brick\Money\Currency;
 use Brick\Money\Exception\MoneyMismatchException;
 use Brick\Money\Money;
-use Brick\Money\Context;
-use Brick\Money\Context\CashContext;
-use Brick\Money\Context\DefaultContext;
-use Brick\Money\Context\AutoContext;
-use Brick\Money\Context\CustomContext;
+use Brick\Money\RationalMoney;
 
 use Brick\Math\BigDecimal;
 use Brick\Math\BigInteger;
@@ -1003,5 +1004,19 @@ class MoneyTest extends AbstractTestCase
             Money::of('1.00', 'EUR'),
             Money::of('1.00', 'USD')
         );
+    }
+
+    public function testMatches()
+    {
+        $a = Money::of(3, 'USD');
+        $b = RationalMoney::of('15/5', 'USD');
+        $c = RationalMoney::of('15/5', 'EUR');
+
+        $this->assertTrue($a->matches($b));
+        $this->assertTrue($b->matches($a));
+        $this->assertFalse($a->matches($c));
+        $this->assertFalse($c->matches($a));
+        $this->assertFalse($b->matches($c));
+        $this->assertFalse($c->matches($b));
     }
 }
