@@ -315,7 +315,7 @@ PDOProvider also supports fixed source or target currency, and dynamic WHERE con
 
 ### BaseCurrencyProvider
 
-This provider builds on top of another exchange rate provider, for the quite common case where all your available exchange rates are relative to a single currency. For example, the [exchange rates](https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml) provided by the European Central Bank are all relative to EUR. You can use them directly to convert EUR to USD, but not USD to EUR, let alone USD TO GBP.
+This provider builds on top of another exchange rate provider, for the quite common case where all your available exchange rates are relative to a single currency. For example, the [exchange rates](https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml) provided by the European Central Bank are all relative to EUR. You can use them directly to convert EUR to USD, but not USD to EUR, let alone USD to GBP.
 
 This provider will combine exchange rates to get the expected result:
 
