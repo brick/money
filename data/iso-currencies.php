@@ -149,7 +149,7 @@
   'UGX' => ['UGX', 800, 'Uganda Shilling', 0],
   'USD' => ['USD', 840, 'US Dollar', 2],
   'USN' => ['USN', 997, 'US Dollar (Next day)', 2],
-  'UYI' => ['UYI', 940, 'Uruguay Peso en Unidades Indexadas (URUIURUI)', 0],
+  'UYI' => ['UYI', 940, 'Uruguay Peso en Unidades Indexadas (UI)', 0],
   'UYU' => ['UYU', 858, 'Peso Uruguayo', 2],
   'UZS' => ['UZS', 860, 'Uzbekistan Sum', 2],
   'VEF' => ['VEF', 937, 'Bolívar', 2],
