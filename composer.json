@@ -17,6 +17,9 @@
         "php-coveralls/php-coveralls": "2.*",
         "ext-pdo": "*"
     },
+    "suggest": {
+        "ext-intl": "Required to format Money objects"
+    },
     "autoload": {
         "psr-4": {
             "Brick\\Money\\": "src/"
