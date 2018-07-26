@@ -10,16 +10,6 @@ namespace Brick\Money\Exception;
 class UnknownCurrencyException extends MoneyException
 {
     /**
-     * UnknownCurrencyException constructor.
-     *
-     * @param string $message
-     */
-    private function __construct(string $message)
-    {
-        parent::__construct($message);
-    }
-
-    /**
      * @param string|int $currencyCode
      *
      * @return UnknownCurrencyException

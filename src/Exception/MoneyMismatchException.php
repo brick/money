@@ -12,16 +12,6 @@ use Brick\Money\Currency;
 class MoneyMismatchException extends MoneyException
 {
     /**
-     * MoneyMismatchException constructor.
-     *
-     * @param string $message
-     */
-    private function __construct(string $message)
-    {
-        parent::__construct($message);
-    }
-
-    /**
      * @param Currency $expected
      * @param Currency $actual
      *

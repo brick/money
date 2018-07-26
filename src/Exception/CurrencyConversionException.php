@@ -26,7 +26,7 @@ class CurrencyConversionException extends MoneyException
      * @param string $sourceCurrencyCode
      * @param string $targetCurrencyCode
      */
-    private function __construct(string $message, string $sourceCurrencyCode, string $targetCurrencyCode)
+    public function __construct(string $message, string $sourceCurrencyCode, string $targetCurrencyCode)
     {
         parent::__construct($message);
 
