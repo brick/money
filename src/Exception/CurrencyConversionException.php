@@ -10,6 +10,31 @@ namespace Brick\Money\Exception;
 class CurrencyConversionException extends MoneyException
 {
     /**
+     * @var string
+     */
+    private $sourceCurrencyCode;
+
+    /**
+     * @var string
+     */
+    private $targetCurrencyCode;
+
+    /**
+     * CurrencyConversionException constructor.
+     *
+     * @param string $message
+     * @param string $sourceCurrencyCode
+     * @param string $targetCurrencyCode
+     */
+    private function __construct(string $message, string $sourceCurrencyCode, string $targetCurrencyCode)
+    {
+        parent::__construct($message);
+
+        $this->sourceCurrencyCode = $sourceCurrencyCode;
+        $this->targetCurrencyCode = $targetCurrencyCode;
+    }
+
+    /**
      * @param string      $sourceCurrencyCode
      * @param string      $targetCurrencyCode
      * @param string|null $info
@@ -28,6 +53,22 @@ class CurrencyConversionException extends MoneyException
             $message .= ' (' . $info . ')';
         }
 
-        return new self($message);
+        return new self($message, $sourceCurrencyCode, $targetCurrencyCode);
+    }
+
+    /**
+     * @return string
+     */
+    public function getSourceCurrencyCode() : string
+    {
+        return $this->sourceCurrencyCode;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTargetCurrencyCode() : string
+    {
+        return $this->targetCurrencyCode;
     }
 }

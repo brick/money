@@ -142,7 +142,7 @@ final class PDOProvider implements ExchangeRateProvider
                 foreach ($this->parameters as $parameter) {
                     $info[] = var_export($parameter, true);
                 }
-                $info = implode(', ', $info);
+                $info = 'parameters: ' . implode(', ', $info);
             } else {
                 $info = null;
             }
