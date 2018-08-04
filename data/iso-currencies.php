@@ -112,7 +112,7 @@
   'PAB' => ['PAB', 590, 'Balboa', 2],
   'PEN' => ['PEN', 604, 'Sol', 2],
   'PGK' => ['PGK', 598, 'Kina', 2],
-  'PHP' => ['PHP', 608, 'Philippine Piso', 2],
+  'PHP' => ['PHP', 608, 'Philippine Peso', 2],
   'PKR' => ['PKR', 586, 'Pakistan Rupee', 2],
   'PLN' => ['PLN', 985, 'Zloty', 2],
   'PYG' => ['PYG', 600, 'Guarani', 0],
