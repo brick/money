@@ -634,7 +634,7 @@ final class Money extends AbstractMoney
      * Note that NumberFormatter internally represents values using floating point arithmetic,
      * so discrepancies can appear when formatting very large monetary values.
      *
-     * @param \NumberFormatter $formatter
+     * @param \NumberFormatter $formatter The formatter to format with.
      *
      * @return string
      */
@@ -652,15 +652,21 @@ final class Money extends AbstractMoney
      * Note that this method uses NumberFormatter, which internally represents values using floating point arithmetic,
      * so discrepancies can appear when formatting very large monetary values.
      *
-     * @param string $locale
+     * @param string $locale           The locale to format to.
+     * @param bool   $allowWholeNumber Whether to allow formatting as a whole number if the amount has no fraction.
      *
      * @return string
      */
-    public function formatTo(string $locale) : string
+    public function formatTo(string $locale, bool $allowWholeNumber = false) : string
     {
         $scale = $this->amount->getScale();
 
         $formatter = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
+
+        if ($allowWholeNumber && ! $this->amount->hasNonZeroFractionalPart()) {
+            $scale = 0;
+        }
+
         $formatter->setAttribute(\NumberFormatter::MIN_FRACTION_DIGITS, $scale);
         $formatter->setAttribute(\NumberFormatter::MAX_FRACTION_DIGITS, $scale);
 
