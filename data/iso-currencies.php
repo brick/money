@@ -151,6 +151,7 @@
   'USN' => ['USN', 997, 'US Dollar (Next day)', 2],
   'UYI' => ['UYI', 940, 'Uruguay Peso en Unidades Indexadas (UI)', 0],
   'UYU' => ['UYU', 858, 'Peso Uruguayo', 2],
+  'UYW' => ['UYW', 927, 'Unidad Previsional', 4],
   'UZS' => ['UZS', 860, 'Uzbekistan Sum', 2],
   'VES' => ['VES', 928, 'Bolívar Soberano', 2],
   'VND' => ['VND', 704, 'Dong', 0],

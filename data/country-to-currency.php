@@ -229,7 +229,7 @@
   'UG' => ['UGX'],
   'UM' => ['USD'],
   'US' => ['USD'],
-  'UY' => ['UYU'],
+  'UY' => ['UYU', 'UYW'],
   'UZ' => ['UZS'],
   'VA' => ['EUR'],
   'VC' => ['XCD'],
