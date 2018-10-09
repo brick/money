@@ -146,6 +146,16 @@ final class RationalMoney extends AbstractMoney
     }
 
     /**
+     * Returns a copy of this BigRational, with the amount simplified.
+     *
+     * @return RationalMoney
+     */
+    public function simplified() : RationalMoney
+    {
+        return new self($this->amount->simplified(), $this->currency);
+    }
+
+    /**
      * @return string
      */
     public function __toString() : string

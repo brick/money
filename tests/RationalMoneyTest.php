@@ -178,6 +178,33 @@ class RationalMoneyTest extends AbstractTestCase
     }
 
     /**
+     * @dataProvider providerSimplified
+     *
+     * @param array  $rationalMoney
+     * @param string $expected
+     */
+    public function testSimplified(array $rationalMoney, $expected)
+    {
+        $rationalMoney = RationalMoney::of(...$rationalMoney);
+
+        $actual = $rationalMoney->simplified();
+        $this->assertRationalMoneyEquals($expected, $actual);
+    }
+
+    /**
+     * @return array
+     */
+    public function providerSimplified() : array
+    {
+        return [
+            [['123456/10000', 'USD'], 'USD 7716/625'],
+            [['695844/45600', 'CAD'], 'CAD 57987/3800'],
+            [['368022/405840', 'EUR'], 'EUR 61337/67640'],
+            [['-671244/45600', 'GBP'], 'GBP -55937/3800'],
+        ];
+    }
+
+    /**
      * @dataProvider providerTo
      *
      * @param array   $rationalMoney
