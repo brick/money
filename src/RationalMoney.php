@@ -165,12 +165,6 @@ final class RationalMoney extends AbstractMoney
      */
     public function __toString() : string
     {
-        try {
-            $amount = $this->amount->toBigDecimal();
-        } catch (RoundingNecessaryException $e) {
-            $amount = $this->amount->simplified();
-        }
-
-        return $this->currency . ' ' . $amount;
+        return $this->currency . ' ' . $this->amount;
     }
 }
