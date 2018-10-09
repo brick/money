@@ -178,14 +178,14 @@ class RationalMoneyTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider providerToMoney
+     * @dataProvider providerTo
      *
      * @param array   $rationalMoney
      * @param Context $context
      * @param int     $roundingMode
      * @param string  $expected
      */
-    public function testToMoney(array $rationalMoney, $context, $roundingMode, $expected)
+    public function testTo(array $rationalMoney, $context, $roundingMode, $expected)
     {
         $rationalMoney = RationalMoney::of(...$rationalMoney);
 
@@ -193,7 +193,7 @@ class RationalMoneyTest extends AbstractTestCase
             $this->expectException($expected);
         }
 
-        $actual = $rationalMoney->toMoney($context, $roundingMode);
+        $actual = $rationalMoney->to($context, $roundingMode);
 
         if (! $this->isExceptionClass($expected)) {
             $this->assertMoneyIs($expected, $actual);
@@ -203,7 +203,7 @@ class RationalMoneyTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerToMoney()
+    public function providerTo()
     {
         return [
             [['987.65', 'USD'], new DefaultContext(), RoundingMode::UNNECESSARY, 'USD 987.65'],

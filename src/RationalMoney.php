@@ -146,21 +146,6 @@ final class RationalMoney extends AbstractMoney
     }
 
     /**
-     * @deprecated use to().
-     *
-     * @param Context $context
-     * @param int     $roundingMode
-     *
-     * @return Money
-     *
-     * @throws RoundingNecessaryException If RoundingMode::UNNECESSARY is used but rounding is necessary.
-     */
-    public function toMoney(Context $context, int $roundingMode = RoundingMode::UNNECESSARY) : Money
-    {
-        return $this->to($context, $roundingMode);
-    }
-
-    /**
      * @return string
      */
     public function __toString() : string
