@@ -185,26 +185,36 @@ Note that it is not advised to use `AutoContext` to represent an intermediate ca
 
 ## Advanced calculations
 
-You may occasionally need to chain several operations on a Money, and only apply a rounding mode on the last step; if you applied a rounding mode on every single operation, you might end up with a different result. This is where `RationalMoney` comes into play. This class internally stores the amount as a rational number (a fraction). You can create a `RationalMoney` from a `Money`, and conversely:
+You may occasionally need to chain several operations on a Money, and only apply a rounding mode on the very last step; if you applied a rounding mode on every single operation, you might end up with a different result. This is where `RationalMoney` comes into play. This class internally stores the amount as a rational number (a fraction). You can create a `RationalMoney` from a `Money`, and conversely:
 
 ```php
 use Brick\Money\Money;
 use Brick\Math\RoundingMode;
 
-$money = Money::of(10, 'EUR'); // EUR 10.00
+$money = Money::of('9.5', 'EUR'); // EUR 9.50
 $money
-  ->toRational() // EUR 10
-  ->dividedBy(3) // EUR 10/3
-  ->plus('17.795') // EUR 12677/600
-  ->multipliedBy('1.196') // EUR 3790423/150000
-  ->to($money->getContext(), RoundingMode::DOWN); // EUR 25.26
+  ->toRational() // EUR 950/100
+  ->dividedBy(3) // EUR 950/300
+  ->plus('17.795') // EUR 6288500/300000
+  ->multipliedBy('1.196') // EUR 7521046000/300000000
+  ->to($money->getContext(), RoundingMode::DOWN) // EUR 25.07
 ```
 
-As you can see, the intermediate results are represented as a fraction, and no rounding is ever performed. The final `to()` method converts it to a `Money`, applying a context and a rounding mode if necessary. Most of the time you want the result in the same context as the original Money, which is what the example above does. But you can really apply any context:
+As you can see, the intermediate results are represented as fractions, and no rounding is ever performed. The final `to()` method converts it to a `Money`, applying a context and a rounding mode if necessary. Most of the time you want the result in the same context as the original Money, which is what the example above does. But you can really apply any context:
 
 ```php
 ...
-->to(new CustomContext(8), RoundingMode::UP); // EUR 25.26948667
+  ->to(new CustomContext(8), RoundingMode::UP); // EUR 25.07015334
+```
+
+Note: as you can see in the example above, the numbers in the fractions can quickly get very large.
+This is usually not a problem—there is no hard limit on the number of digits involved in the calculations—but if necessary,
+you can simplify the fraction at any time, without affecting the actual monetary value:
+
+```php
+...
+  ->multipliedBy('1.196') // EUR 7521046000/300000000
+  ->simplified() // EUR 3760523/150000
 ```
 
 ## Money allocation
