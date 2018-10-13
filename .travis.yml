@@ -3,7 +3,7 @@ language: php
 php:
   - 7.1
   - 7.2
-  - hhvm
+  - 7.3
 
 before_script:
   - if [[ $TRAVIS_PHP_VERSION = hhv* ]]; then echo hhvm.php7.all=1 >> /etc/hhvm/php.ini; fi
@@ -15,7 +15,3 @@ script:
 
 after_script:
   - vendor/bin/php-coveralls -v
-
-matrix:
-  allow_failures:
-    - php: hhvm
