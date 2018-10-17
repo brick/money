@@ -5,7 +5,12 @@ php:
   - 7.2
   - 7.3
 
+env:
+  - BRICK_MATH_VERSION=~0.7.3
+  - BRICK_MATH_VERSION=~0.8.0
+
 before_script:
+  - composer require brick/math:${BRICK_MATH_VERSION}
   - composer install
 
 script:
