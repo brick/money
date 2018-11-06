@@ -358,10 +358,13 @@ Money supports ISO 4217 currencies by default. You can also use custom currencie
 use Brick\Money\Currency;
 use Brick\Money\Money;
 
-$bitcoin = new Currency('XBT', 0, 'Bitcoin', 8);
+$bitcoin = new Currency(
+    'XBT',     // currency code
+    0,         // numeric currency code, useful when storing monies in a database; set to 0 if unused
+    'Bitcoin', // currency name
+    8          // default scale
+);
 ```
-
-The second parameter is a numeric code, that can be useful when storing monies in a database. You can set it to any unique value, or to `0` if unused. The fourth parameter is the default scale for monies in this currency.
 
 You can now use this Currency instead of a currency code:
 
