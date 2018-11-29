@@ -19,22 +19,10 @@ This component is based on the [Math](https://github.com/brick/math) component a
 
 ### Installation
 
-This library is installable via [Composer](https://getcomposer.org/).
-
-Just run:
+This library is installable via [Composer](https://getcomposer.org/):
 
 ```bash
 composer require brick/money
-```
-
-or manually define the following requirement in your `composer.json` file:
-
-```json
-{
-    "require": {
-        "brick/money": "0.4.*"
-    }
-}
 ```
 
 ### Requirements
