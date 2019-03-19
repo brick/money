@@ -351,7 +351,14 @@ printf('Exported %d currencies in %d countries.' . PHP_EOL, count($currencies), 
  */
 function exportToFile($file, $data)
 {
-    file_put_contents($file, sprintf("<?php return %s;\n", export($data)));
+    $data = sprintf("<?php return %s;\n", export($data));
+
+    if (file_get_contents($file) === $data) {
+        printf("%s: no change\n", $file);
+    } else {
+        file_put_contents($file, $data);
+        printf("%s: UPDATED\n", $file);
+    }
 }
 
 /**
