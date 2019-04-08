@@ -6,16 +6,15 @@ php:
   - 7.3
   - 7.4snapshot
 
-env:
-  - BRICK_MATH_VERSION=~0.7.3
-  - BRICK_MATH_VERSION=~0.8.0
-
 matrix:
+  include:
+    - php: 7.1.0
+      env: dependencies=lowest
   allow_failures:
     - php: 7.4snapshot
 
 before_script:
-  - composer require brick/math:${BRICK_MATH_VERSION}
+  - if [ "$dependencies" = "lowest" ]; then composer update --prefer-lowest --prefer-stable; else composer update; fi;
 
 script:
   - mkdir -p build/logs
