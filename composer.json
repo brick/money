@@ -16,7 +16,8 @@
         "brick/varexporter": "~0.2.1",
         "phpunit/phpunit": "7.*",
         "php-coveralls/php-coveralls": "2.*",
-        "ext-pdo": "*"
+        "ext-pdo": "*",
+        "ext-dom": "*"
     },
     "suggest": {
         "ext-intl": "Required to format Money objects"
