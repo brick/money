@@ -13,6 +13,7 @@
         "brick/math": "~0.7.3 || ~0.8.0"
     },
     "require-dev": {
+        "brick/varexporter": "~0.2.1",
         "phpunit/phpunit": "7.*",
         "php-coveralls/php-coveralls": "2.*",
         "ext-pdo": "*"

@@ -7,6 +7,12 @@
  * This script is meant to be run by project maintainers, on a regular basis.
  */
 
+declare(strict_types=1);
+
+use Brick\VarExporter\VarExporter;
+
+require __DIR__ . '/vendor/autoload.php';
+
 /**
  * Country names are present in the ISO 4217 currency file, but not country codes.
  * This list maps country names to ISO 3166 country codes. It must be up to date or this script will error.
@@ -345,13 +351,13 @@ printf('Exported %d currencies in %d countries.' . PHP_EOL, count($currencies), 
 
 /**
  * @param string $file
- * @param mixed  $data
+ * @param array  $data
  *
  * @return void
  */
-function exportToFile($file, $data)
+function exportToFile(string $file, array $data) : void
 {
-    $data = sprintf("<?php return %s;\n", export($data));
+    $data = '<?php ' . VarExporter::export($data, VarExporter::ADD_RETURN | VarExporter::INLINE_NUMERIC_SCALAR_ARRAY);
 
     if (file_get_contents($file) === $data) {
         printf("%s: no change\n", $file);
@@ -362,46 +368,12 @@ function exportToFile($file, $data)
 }
 
 /**
- * Compact & pretty alternative to var_export().
- *
- * @param mixed $variable
- *
- * @return string
- */
-function export($variable)
-{
-    if (! is_array($variable)) {
-        return var_export($variable, true);
-    }
-
-    if (array_values($variable) === $variable) {
-        $values = [];
-
-        foreach ($variable as $value) {
-            $values[] = var_export($value, true);
-        }
-
-        return '[' . implode(', ', $values) . ']';
-    }
-
-    $result = "[\n";
-
-    foreach ($variable as $key => $value) {
-        $result .= '  ' . var_export($key, true) . ' => ' . export($value) . ",\n";
-    }
-
-    $result .= ']';
-
-    return $result;
-}
-
-/**
  * @param DOMElement $element
  * @param string     $name
  *
  * @return string|null
  */
-function getDomElementString(DOMElement $element, $name)
+function getDomElementString(DOMElement $element, string $name) : ?string
 {
     foreach ($element->getElementsByTagName($name) as $child) {
         /** @var $child DOMElement */
@@ -418,7 +390,7 @@ function getDomElementString(DOMElement $element, $name)
  *
  * @throws RuntimeException
  */
-function checkCurrencyName($name)
+function checkCurrencyName(string $name) : string
 {
     if ($name === '' || ! mb_check_encoding($name, 'UTF-8')) {
         throw new \RuntimeException('Invalid currency name: ' . $name);
@@ -434,7 +406,7 @@ function checkCurrencyName($name)
  *
  * @throws RuntimeException
  */
-function checkCurrencyCode($currencyCode)
+function checkCurrencyCode(string $currencyCode) : string
 {
     if (preg_match('/^[A-Z]{3}$/', $currencyCode) !== 1) {
         throw new \RuntimeException('Invalid currency code: ' . $currencyCode);
@@ -450,7 +422,7 @@ function checkCurrencyCode($currencyCode)
  *
  * @throws RuntimeException
  */
-function checkNumericCode($numericCode)
+function checkNumericCode(string $numericCode) : int
 {
     if (preg_match('/^[0-9]{3}$/', $numericCode) !== 1) {
         throw new \RuntimeException('Invalid numeric code: ' . $numericCode);
@@ -466,7 +438,7 @@ function checkNumericCode($numericCode)
  *
  * @throws RuntimeException
  */
-function checkMinorUnits($minorUnits)
+function checkMinorUnits(string $minorUnits) : int
 {
     if (preg_match('/^[0-9]{1}$/', $minorUnits) !== 1) {
         throw new \RuntimeException('Invalid minor unit: ' . $minorUnits);
