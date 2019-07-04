@@ -659,16 +659,35 @@ final class Money extends AbstractMoney
      */
     public function formatTo(string $locale, bool $allowWholeNumber = false) : string
     {
-        $scale = $this->amount->getScale();
-
-        $formatter = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
+        static $lastFormatter = null;
+        static $lastFormatterLocale;
+        static $lastFormatterScale;
 
         if ($allowWholeNumber && ! $this->amount->hasNonZeroFractionalPart()) {
             $scale = 0;
+        } else {
+            $scale = $this->amount->getScale();
         }
 
-        $formatter->setAttribute(\NumberFormatter::MIN_FRACTION_DIGITS, $scale);
-        $formatter->setAttribute(\NumberFormatter::MAX_FRACTION_DIGITS, $scale);
+        if ($lastFormatter !== null && $lastFormatterLocale === $locale) {
+            $formatter = $lastFormatter;
+
+            if ($lastFormatterScale !== $scale) {
+                $formatter->setAttribute(\NumberFormatter::MIN_FRACTION_DIGITS, $scale);
+                $formatter->setAttribute(\NumberFormatter::MAX_FRACTION_DIGITS, $scale);
+
+                $lastFormatterScale = $scale;
+            }
+        } else {
+            $formatter = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
+
+            $formatter->setAttribute(\NumberFormatter::MIN_FRACTION_DIGITS, $scale);
+            $formatter->setAttribute(\NumberFormatter::MAX_FRACTION_DIGITS, $scale);
+
+            $lastFormatter = $formatter;
+            $lastFormatterLocale = $locale;
+            $lastFormatterScale = $scale;
+        }
 
         return $this->formatWith($formatter);
     }
