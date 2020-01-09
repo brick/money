@@ -46,7 +46,7 @@ final class RationalMoney extends AbstractMoney
      * Convenience factory method.
      *
      * @param BigNumber|number|string $amount   The monetary amount.
-     * @param Currency|string         $currency The Currency instance, ISO currency code or ISO numeric currency code.
+     * @param Currency|string|int     $currency The Currency instance, ISO currency code or ISO numeric currency code.
      *
      * @return RationalMoney
      */
