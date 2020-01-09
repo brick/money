@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Brick\Money\Tests;
 
 use Brick\Money\Context;
@@ -140,11 +142,11 @@ abstract class AbstractTestCase extends TestCase
     }
 
     /**
-     * @param string $value
+     * @param mixed $value
      *
      * @return bool
      */
-    final protected function isExceptionClass(string $value) : bool
+    final protected function isExceptionClass($value) : bool
     {
         return is_string($value) && substr($value, -9) === 'Exception';
     }

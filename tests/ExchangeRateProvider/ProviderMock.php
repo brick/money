@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Brick\Money\Tests\ExchangeRateProvider;
 
 use Brick\Money\Exception\CurrencyConversionException;

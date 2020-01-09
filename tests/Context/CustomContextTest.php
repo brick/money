@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Brick\Money\Tests\Context;
 
 use Brick\Math\Exception\RoundingNecessaryException;
