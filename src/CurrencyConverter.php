@@ -39,7 +39,7 @@ final class CurrencyConverter
      * @param Context|null         $context              A context to create the monies in, or null to use the default.
      *                                                   The context only applies to convert(), not convertToRational().
      */
-    public function __construct(ExchangeRateProvider $exchangeRateProvider, Context $context = null)
+    public function __construct(ExchangeRateProvider $exchangeRateProvider, ?Context $context = null)
     {
         if ($context === null) {
             $context = new DefaultContext();

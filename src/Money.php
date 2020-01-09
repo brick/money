@@ -177,7 +177,7 @@ final class Money extends AbstractMoney
      * @throws NumberFormatException      If the amount is a string in a non-supported format.
      * @throws RoundingNecessaryException If the rounding was necessary to represent the amount at the requested scale.
      */
-    public static function of($amount, $currency, Context $context = null, int $roundingMode = RoundingMode::UNNECESSARY) : Money
+    public static function of($amount, $currency, ?Context $context = null, int $roundingMode = RoundingMode::UNNECESSARY) : Money
     {
         if (! $currency instanceof Currency) {
             $currency = Currency::of($currency);
@@ -209,7 +209,7 @@ final class Money extends AbstractMoney
      * @throws UnknownCurrencyException If the currency is an unknown currency code.
      * @throws MathException            If the amount cannot be converted to a BigInteger.
      */
-    public static function ofMinor($minorAmount, $currency, Context $context = null, int $roundingMode = RoundingMode::UNNECESSARY) : Money
+    public static function ofMinor($minorAmount, $currency, ?Context $context = null, int $roundingMode = RoundingMode::UNNECESSARY) : Money
     {
         if (! $currency instanceof Currency) {
             $currency = Currency::of($currency);
@@ -235,7 +235,7 @@ final class Money extends AbstractMoney
      *
      * @return Money
      */
-    public static function zero($currency, Context $context = null) : Money
+    public static function zero($currency, ?Context $context = null) : Money
     {
         if (! $currency instanceof Currency) {
             $currency = Currency::of($currency);
@@ -613,7 +613,7 @@ final class Money extends AbstractMoney
      * @throws UnknownCurrencyException If an unknown currency code is given.
      * @throws MathException            If the exchange rate or rounding mode is invalid, or rounding is necessary.
      */
-    public function convertedTo($currency, $exchangeRate, Context $context = null, int $roundingMode = RoundingMode::UNNECESSARY) : Money
+    public function convertedTo($currency, $exchangeRate, ?Context $context = null, int $roundingMode = RoundingMode::UNNECESSARY) : Money
     {
         if (! $currency instanceof Currency) {
             $currency = Currency::of($currency);

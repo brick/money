@@ -52,7 +52,7 @@ abstract class AbstractTestCase extends TestCase
      *
      * @return void
      */
-    final protected function assertMoneyIs(string $expected, Money $actual, Context $context = null) : void
+    final protected function assertMoneyIs(string $expected, Money $actual, ?Context $context = null) : void
     {
         $this->assertSame($expected, (string) $actual);
 
