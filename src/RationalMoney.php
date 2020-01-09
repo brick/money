@@ -9,8 +9,6 @@ use Brick\Money\Exception\MoneyMismatchException;
 use Brick\Math\BigNumber;
 use Brick\Math\BigRational;
 use Brick\Math\Exception\MathException;
-use Brick\Math\Exception\RoundingNecessaryException;
-use Brick\Math\RoundingMode;
 
 /**
  * An exact monetary amount, represented as a rational number. This class is immutable.
