@@ -30,7 +30,7 @@ class MoneyTest extends AbstractTestCase
      * @param string $expectedResult The resulting money as a string, or an exception class.
      * @param mixed  ...$args        The arguments to the of() method.
      */
-    public function testOf($expectedResult, ...$args)
+    public function testOf($expectedResult, ...$args) : void
     {
         if ($this->isExceptionClass($expectedResult)) {
             $this->expectException($expectedResult);
@@ -46,7 +46,7 @@ class MoneyTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerOf()
+    public function providerOf() : array
     {
         return [
             ['USD 1.00', 1, 'USD'],
@@ -69,7 +69,7 @@ class MoneyTest extends AbstractTestCase
      * @param string $expectedResult The resulting money as a string, or an exception class.
      * @param mixed  ...$args        The arguments to the ofMinor() method.
      */
-    public function testOfMinor($expectedResult, ...$args)
+    public function testOfMinor($expectedResult, ...$args) : void
     {
         if ($this->isExceptionClass($expectedResult)) {
             $this->expectException($expectedResult);
@@ -85,7 +85,7 @@ class MoneyTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerOfMinor()
+    public function providerOfMinor() : array
     {
         return [
             ['EUR 0.01', 1, 'EUR'],
@@ -104,7 +104,7 @@ class MoneyTest extends AbstractTestCase
      * @param Context|null $context
      * @param string       $expected
      */
-    public function testZero($currency, Context $context = null, $expected)
+    public function testZero(string $currency, ?Context $context, string $expected) : void
     {
         $actual = Money::zero($currency, $context);
         $this->assertMoneyIs($expected, $actual, $context === null ? new DefaultContext() : $context);
@@ -113,7 +113,7 @@ class MoneyTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerZero()
+    public function providerZero() : array
     {
         return [
             ['USD', null, 'USD 0.00'],
@@ -132,7 +132,7 @@ class MoneyTest extends AbstractTestCase
      * @param int     $roundingMode
      * @param string  $expected
      */
-    public function testTo(array $money, Context $context, $roundingMode, $expected)
+    public function testTo(array $money, Context $context, int $roundingMode, string $expected) : void
     {
         $money = Money::of(...$money);
 
@@ -150,7 +150,7 @@ class MoneyTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerTo()
+    public function providerTo() : array
     {
         return [
             [['1.234', 'USD', new AutoContext()], new DefaultContext(), RoundingMode::DOWN, 'USD 1.23'],
@@ -174,7 +174,7 @@ class MoneyTest extends AbstractTestCase
      * @param int    $roundingMode The rounding mode to use.
      * @param string $expected     The expected money value, or an exception class name.
      */
-    public function testPlus(array $money, $plus, $roundingMode, $expected)
+    public function testPlus(array $money, $plus, int $roundingMode, string $expected) : void
     {
         $money = Money::of(...$money);
 
@@ -196,7 +196,7 @@ class MoneyTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerPlus()
+    public function providerPlus() : array
     {
         return [
             [['12.34', 'USD'], 1, RoundingMode::UNNECESSARY, 'USD 13.34'],
@@ -221,7 +221,7 @@ class MoneyTest extends AbstractTestCase
     /**
      * @expectedException \Brick\Money\Exception\MoneyMismatchException
      */
-    public function testPlusDifferentContextThrowsException()
+    public function testPlusDifferentContextThrowsException() : void
     {
         $a = Money::of(50, 'CHF', new CashContext(5));
         $b = Money::of(20, 'CHF');
@@ -237,7 +237,7 @@ class MoneyTest extends AbstractTestCase
      * @param int    $roundingMode The rounding mode to use.
      * @param string $expected     The expected money value, or an exception class name.
      */
-    public function testMinus(array $money, $minus, $roundingMode, $expected)
+    public function testMinus(array $money, $minus, int $roundingMode, string $expected) : void
     {
         $money = Money::of(...$money);
 
@@ -259,7 +259,7 @@ class MoneyTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerMinus()
+    public function providerMinus() : array
     {
         return [
             [['12.34', 'USD'], 1, RoundingMode::UNNECESSARY, 'USD 11.34'],
@@ -284,7 +284,7 @@ class MoneyTest extends AbstractTestCase
      * @param int                 $roundingMode The rounding mode to use.
      * @param string              $expected     The expected money value, or an exception class name.
      */
-    public function testMultipliedBy(array $money, $multiplier, $roundingMode, $expected)
+    public function testMultipliedBy(array $money, $multiplier, int $roundingMode, string $expected) : void
     {
         $money = Money::of(...$money);
 
@@ -302,7 +302,7 @@ class MoneyTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerMultipliedBy()
+    public function providerMultipliedBy() : array
     {
         return [
             [['12.34', 'USD'], 2,     RoundingMode::UNNECESSARY, 'USD 24.68'],
@@ -326,7 +326,7 @@ class MoneyTest extends AbstractTestCase
      * @param int    $roundingMode The rounding mode to use.
      * @param string $expected     The expected money value, or an exception class name.
      */
-    public function testDividedBy(array $money, $divisor, $roundingMode, $expected)
+    public function testDividedBy(array $money, string $divisor, int $roundingMode, string $expected) : void
     {
         $money = Money::of(...$money);
 
@@ -344,7 +344,7 @@ class MoneyTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerDividedBy()
+    public function providerDividedBy() : array
     {
         return [
             [['12.34', 'USD'], 0, RoundingMode::DOWN, DivisionByZeroException::class],
@@ -370,7 +370,7 @@ class MoneyTest extends AbstractTestCase
      * @param string $expectedQuotient
      * @param string $expectedRemainder
      */
-    public function testQuotientAndRemainder(array $money, $divisor, $expectedQuotient, $expectedRemainder)
+    public function testQuotientAndRemainder(array $money, int $divisor, string $expectedQuotient, string $expectedRemainder) : void
     {
         $money = Money::of(...$money);
         list ($quotient, $remainder) = $money->quotientAndRemainder($divisor);
@@ -382,7 +382,7 @@ class MoneyTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerQuotientAndRemainder()
+    public function providerQuotientAndRemainder() : array
     {
         return [
             [['10', 'USD'], 3, 'USD 3.33', 'USD 0.01'],
@@ -395,7 +395,7 @@ class MoneyTest extends AbstractTestCase
     /**
      * @expectedException \Brick\Math\Exception\RoundingNecessaryException
      */
-    public function testQuotientAndRemainderThrowExceptionOnDecimal()
+    public function testQuotientAndRemainderThrowExceptionOnDecimal() : void
     {
         $money = Money::of(50, 'USD');
         $money->quotientAndRemainder('1.1');
@@ -408,7 +408,7 @@ class MoneyTest extends AbstractTestCase
      * @param array $ratios
      * @param array $expected
      */
-    public function testAllocate(array $money, array $ratios, array $expected)
+    public function testAllocate(array $money, array $ratios, array $expected) : void
     {
         $money = Money::of(...$money);
         $monies = $money->allocate(...$ratios);
@@ -418,7 +418,7 @@ class MoneyTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerAllocate()
+    public function providerAllocate() : array
     {
         return [
             [['99.99', 'USD'], [100], ['USD 99.99']],
@@ -437,7 +437,7 @@ class MoneyTest extends AbstractTestCase
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Cannot allocate() an empty list of ratios.
      */
-    public function testAllocateEmptyList()
+    public function testAllocateEmptyList() : void
     {
         $money = Money::of(50, 'USD');
         $money->allocate();
@@ -447,7 +447,7 @@ class MoneyTest extends AbstractTestCase
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Cannot allocate() negative ratios.
      */
-    public function testAllocateNegativeRatios()
+    public function testAllocateNegativeRatios() : void
     {
         $money = Money::of(50, 'USD');
         $money->allocate(1, 2, -1);
@@ -457,7 +457,7 @@ class MoneyTest extends AbstractTestCase
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Cannot allocate() to zero ratios only.
      */
-    public function testAllocateZeroRatios()
+    public function testAllocateZeroRatios() : void
     {
         $money = Money::of(50, 'USD');
         $money->allocate(0, 0, 0, 0, 0);
@@ -470,7 +470,7 @@ class MoneyTest extends AbstractTestCase
      * @param int   $targets
      * @param array $expected
      */
-    public function testSplit(array $money, $targets, array $expected)
+    public function testSplit(array $money, int $targets, array $expected) : void
     {
         $money = Money::of(...$money);
         $monies = $money->split($targets);
@@ -480,7 +480,7 @@ class MoneyTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerSplit()
+    public function providerSplit() : array
     {
         return [
             [['99.99', 'USD'], 1, ['USD 99.99']],
@@ -502,7 +502,7 @@ class MoneyTest extends AbstractTestCase
      *
      * @param int $parts
      */
-    public function testSplitIntoLessThanOnePart($parts)
+    public function testSplitIntoLessThanOnePart(int $parts) : void
     {
         $money = Money::of(50, 'USD');
         $money->split($parts);
@@ -511,7 +511,7 @@ class MoneyTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerSplitIntoLessThanOnePart()
+    public function providerSplitIntoLessThanOnePart() : array
     {
         return [
             [-1],
@@ -525,7 +525,7 @@ class MoneyTest extends AbstractTestCase
      * @param array  $money
      * @param string $abs
      */
-    public function testAbs(array $money, $abs)
+    public function testAbs(array $money, string $abs) : void
     {
         $this->assertMoneyIs($abs, Money::of(...$money)->abs());
     }
@@ -533,7 +533,7 @@ class MoneyTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerAbs()
+    public function providerAbs() : array
     {
         return [
             [['-1', 'EUR'], 'EUR 1.00'],
@@ -548,7 +548,7 @@ class MoneyTest extends AbstractTestCase
      * @param array  $money
      * @param string $negated
      */
-    public function testNegated(array $money, $negated)
+    public function testNegated(array $money, string $negated) : void
     {
         $this->assertMoneyIs($negated, Money::of(...$money)->negated());
     }
@@ -556,7 +556,7 @@ class MoneyTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerNegated()
+    public function providerNegated() : array
     {
         return [
             [['1.234', 'EUR', new AutoContext()], 'EUR -1.234'],
@@ -570,7 +570,7 @@ class MoneyTest extends AbstractTestCase
      * @param array $money
      * @param int   $sign
      */
-    public function testGetSign(array $money, $sign)
+    public function testGetSign(array $money, int $sign) : void
     {
         $this->assertSame($sign, Money::of(...$money)->getSign());
     }
@@ -581,7 +581,7 @@ class MoneyTest extends AbstractTestCase
      * @param array $money
      * @param int   $sign
      */
-    public function testIsZero(array $money, $sign)
+    public function testIsZero(array $money, int $sign) : void
     {
         $this->assertSame($sign === 0, Money::of(...$money)->isZero());
     }
@@ -592,7 +592,7 @@ class MoneyTest extends AbstractTestCase
      * @param array $money
      * @param int   $sign
      */
-    public function testIsPositive(array $money, $sign)
+    public function testIsPositive(array $money, int $sign) : void
     {
         $this->assertSame($sign > 0, Money::of(...$money)->isPositive());
     }
@@ -603,7 +603,7 @@ class MoneyTest extends AbstractTestCase
      * @param array $money
      * @param int   $sign
      */
-    public function testIsPositiveOrZero(array $money, $sign)
+    public function testIsPositiveOrZero(array $money, int $sign) : void
     {
         $this->assertSame($sign >= 0, Money::of(...$money)->isPositiveOrZero());
     }
@@ -614,7 +614,7 @@ class MoneyTest extends AbstractTestCase
      * @param array $money
      * @param int   $sign
      */
-    public function testIsNegative(array $money, $sign)
+    public function testIsNegative(array $money, int $sign) : void
     {
         $this->assertSame($sign < 0, Money::of(...$money)->isNegative());
     }
@@ -625,7 +625,7 @@ class MoneyTest extends AbstractTestCase
      * @param array $money
      * @param int   $sign
      */
-    public function testIsNegativeOrZero(array $money, $sign)
+    public function testIsNegativeOrZero(array $money, int $sign) : void
     {
         $this->assertSame($sign <= 0, Money::of(...$money)->isNegativeOrZero());
     }
@@ -633,7 +633,7 @@ class MoneyTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerSign()
+    public function providerSign() : array
     {
         return [
             [['-0.001', 'USD', new AutoContext()], -1],
@@ -662,7 +662,7 @@ class MoneyTest extends AbstractTestCase
      * @param array $b The second money.
      * @param int   $c The comparison value.
      */
-    public function testCompareTo(array $a, array $b, $c)
+    public function testCompareTo(array $a, array $b, int $c) : void
     {
         $this->assertSame($c, Money::of(...$a)->compareTo(Money::of(...$b)));
     }
@@ -670,7 +670,7 @@ class MoneyTest extends AbstractTestCase
     /**
      * @expectedException \Brick\Money\Exception\MoneyMismatchException
      */
-    public function testCompareToOtherCurrency()
+    public function testCompareToOtherCurrency() : void
     {
         Money::of('1.00', 'EUR')->compareTo(Money::of('1.00', 'USD'));
     }
@@ -682,7 +682,7 @@ class MoneyTest extends AbstractTestCase
      * @param array $b The second money.
      * @param int   $c The comparison value.
      */
-    public function testIsEqualTo(array $a, array $b, $c)
+    public function testIsEqualTo(array $a, array $b, int $c) : void
     {
         $this->assertSame($c === 0, Money::of(...$a)->isEqualTo(Money::of(...$b)));
     }
@@ -690,7 +690,7 @@ class MoneyTest extends AbstractTestCase
     /**
      * @expectedException \Brick\Money\Exception\MoneyMismatchException
      */
-    public function testIsEqualToOtherCurrency()
+    public function testIsEqualToOtherCurrency() : void
     {
         Money::of('1.00', 'EUR')->isEqualTo(Money::of('1.00', 'USD'));
     }
@@ -702,7 +702,7 @@ class MoneyTest extends AbstractTestCase
      * @param array $b The second money.
      * @param int   $c The comparison value.
      */
-    public function testIsLessThan(array $a, array $b, $c)
+    public function testIsLessThan(array $a, array $b, int $c) : void
     {
         $this->assertSame($c < 0, Money::of(...$a)->isLessThan(Money::of(...$b)));
     }
@@ -710,7 +710,7 @@ class MoneyTest extends AbstractTestCase
     /**
      * @expectedException \Brick\Money\Exception\MoneyMismatchException
      */
-    public function testIsLessThanOtherCurrency()
+    public function testIsLessThanOtherCurrency() : void
     {
         Money::of('1.00', 'EUR')->isLessThan(Money::of('1.00', 'USD'));
     }
@@ -722,7 +722,7 @@ class MoneyTest extends AbstractTestCase
      * @param array $b The second money.
      * @param int   $c The comparison value.
      */
-    public function testIsLessThanOrEqualTo(array $a, array $b, $c)
+    public function testIsLessThanOrEqualTo(array $a, array $b, int $c) : void
     {
         $this->assertSame($c <= 0, Money::of(...$a)->isLessThanOrEqualTo(Money::of(...$b)));
     }
@@ -730,7 +730,7 @@ class MoneyTest extends AbstractTestCase
     /**
      * @expectedException \Brick\Money\Exception\MoneyMismatchException
      */
-    public function testIsLessThanOrEqualToOtherCurrency()
+    public function testIsLessThanOrEqualToOtherCurrency() : void
     {
         Money::of('1.00', 'EUR')->isLessThanOrEqualTo(Money::of('1.00', 'USD'));
     }
@@ -742,7 +742,7 @@ class MoneyTest extends AbstractTestCase
      * @param array $b The second money.
      * @param int   $c The comparison value.
      */
-    public function testIsGreaterThan(array $a, array $b, $c)
+    public function testIsGreaterThan(array $a, array $b, int $c) : void
     {
         $this->assertSame($c > 0, Money::of(...$a)->isGreaterThan(Money::of(...$b)));
     }
@@ -750,7 +750,7 @@ class MoneyTest extends AbstractTestCase
     /**
      * @expectedException \Brick\Money\Exception\MoneyMismatchException
      */
-    public function testIsGreaterThanOtherCurrency()
+    public function testIsGreaterThanOtherCurrency() : void
     {
         Money::of('1.00', 'EUR')->isGreaterThan(Money::of('1.00', 'USD'));
     }
@@ -762,7 +762,7 @@ class MoneyTest extends AbstractTestCase
      * @param array $b The second money.
      * @param int   $c The comparison value.
      */
-    public function testIsGreaterThanOrEqualTo(array $a, array $b, $c)
+    public function testIsGreaterThanOrEqualTo(array $a, array $b, int $c) : void
     {
         $this->assertSame($c >= 0, Money::of(...$a)->isGreaterThanOrEqualTo(Money::of(...$b)));
     }
@@ -770,7 +770,7 @@ class MoneyTest extends AbstractTestCase
     /**
      * @expectedException \Brick\Money\Exception\MoneyMismatchException
      */
-    public function testIsGreaterThanOrEqualToOtherCurrency()
+    public function testIsGreaterThanOrEqualToOtherCurrency() : void
     {
         Money::of('1.00', 'EUR')->isGreaterThanOrEqualTo(Money::of('1.00', 'USD'));
     }
@@ -778,7 +778,7 @@ class MoneyTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerCompare()
+    public function providerCompare() : array
     {
         return [
             [['1', 'EUR', new AutoContext()], ['1.00', 'EUR'], 0],
@@ -798,7 +798,7 @@ class MoneyTest extends AbstractTestCase
      * @param array  $money
      * @param string $expected
      */
-    public function testGetMinorAmount(array $money, $expected)
+    public function testGetMinorAmount(array $money, string $expected) : void
     {
         $actual = Money::of(...$money)->getMinorAmount();
 
@@ -809,7 +809,7 @@ class MoneyTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerGetMinorAmount()
+    public function providerGetMinorAmount() : array
     {
         return [
             [[50, 'USD'], '5000'],
@@ -820,7 +820,7 @@ class MoneyTest extends AbstractTestCase
         ];
     }
 
-    public function testGetUnscaledAmount()
+    public function testGetUnscaledAmount() : void
     {
         $actual = Money::of('123.45', 'USD')->getUnscaledAmount();
 
@@ -835,7 +835,7 @@ class MoneyTest extends AbstractTestCase
      * @param array  $parameters
      * @param string $expected
      */
-    public function testConvertedTo(array $money, array $parameters, $expected)
+    public function testConvertedTo(array $money, array $parameters, string $expected) : void
     {
         $actual = Money::of(...$money)->convertedTo(...$parameters);
         $this->assertMoneyIs($expected, $actual);
@@ -844,7 +844,7 @@ class MoneyTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerConvertedTo()
+    public function providerConvertedTo() : array
     {
         return [
             [['1.23', 'USD'], ['JPY', '125', new CustomContext(2)], 'JPY 153.75'],
@@ -861,7 +861,7 @@ class MoneyTest extends AbstractTestCase
      * @param string $symbol   A decimal symbol to apply to the NumberFormatter.
      * @param string $expected The expected output.
      */
-    public function testFormatWith(array $money, $locale, $symbol, $expected)
+    public function testFormatWith(array $money, string $locale, string $symbol, string $expected) : void
     {
         $formatter = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
         $formatter->setSymbol(\NumberFormatter::MONETARY_SEPARATOR_SYMBOL, $symbol);
@@ -873,7 +873,7 @@ class MoneyTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerFormatWith()
+    public function providerFormatWith() : array
     {
         return [
             [['1.23', 'USD'], 'en_US', ';', '$1;23'],
@@ -889,7 +889,7 @@ class MoneyTest extends AbstractTestCase
      * @param bool   $allowWholeNumber Whether to allow formatting as a whole number if the amount has no fraction.
      * @param string $expected         The expected output.
      */
-    public function testFormatTo(array $money, $locale, $allowWholeNumber, $expected)
+    public function testFormatTo(array $money, string $locale, bool $allowWholeNumber, string $expected) : void
     {
         $this->assertSame($expected, Money::of(...$money)->formatTo($locale, $allowWholeNumber));
     }
@@ -897,7 +897,7 @@ class MoneyTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerFormatTo()
+    public function providerFormatTo() : array
     {
         return [
             [['1.23', 'USD'], 'en_US', false, '$1.23'],
@@ -915,7 +915,7 @@ class MoneyTest extends AbstractTestCase
         ];
     }
 
-    public function testToRational()
+    public function testToRational() : void
     {
         $money = Money::of('12.3456', 'EUR', new AutoContext());
         $this->assertRationalMoneyEquals('EUR 123456/10000', $money->toRational());
@@ -927,7 +927,7 @@ class MoneyTest extends AbstractTestCase
      * @param array  $monies         The monies to compare.
      * @param string $expectedResult The expected money result, or an exception class.
      */
-    public function testMin(array $monies, $expectedResult)
+    public function testMin(array $monies, string $expectedResult) : void
     {
         foreach ($monies as $key => $money) {
             $monies[$key] = Money::of(...$money);
@@ -947,7 +947,7 @@ class MoneyTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerMin()
+    public function providerMin() : array
     {
         return [
             [[['1.0', 'USD', new AutoContext()], ['3.50', 'USD'], ['4.00', 'USD']], 'USD 1'],
@@ -963,7 +963,7 @@ class MoneyTest extends AbstractTestCase
      * @param array  $monies         The monies to compare.
      * @param string $expectedResult The expected money result, or an exception class.
      */
-    public function testMax(array $monies, $expectedResult)
+    public function testMax(array $monies, string $expectedResult) : void
     {
         foreach ($monies as $key => $money) {
             $monies[$key] = Money::of(...$money);
@@ -983,7 +983,7 @@ class MoneyTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerMax()
+    public function providerMax() : array
     {
         return [
             [[['5.50', 'USD'], ['3.50', 'USD'], ['4.90', 'USD']], 'USD 5.50'],
@@ -993,7 +993,7 @@ class MoneyTest extends AbstractTestCase
         ];
     }
 
-    public function testTotal()
+    public function testTotal() : void
     {
         $total = Money::total(
             Money::of('5.50', 'USD'),
@@ -1007,7 +1007,7 @@ class MoneyTest extends AbstractTestCase
     /**
      * @expectedException \Brick\Money\Exception\MoneyMismatchException
      */
-    public function testTotalOfDifferentCurrenciesThrowsException()
+    public function testTotalOfDifferentCurrenciesThrowsException() : void
     {
         Money::total(
             Money::of('1.00', 'EUR'),

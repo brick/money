@@ -18,7 +18,7 @@ class BaseCurrencyProviderTest extends AbstractTestCase
     /**
      * @return ExchangeRateProvider
      */
-    private function getExchangeRateProvider()
+    private function getExchangeRateProvider() : ExchangeRateProvider
     {
         $provider = new ConfigurableProvider();
 
@@ -36,7 +36,7 @@ class BaseCurrencyProviderTest extends AbstractTestCase
      * @param string $targetCurrencyCode The code of the target currency.
      * @param string $exchangeRate       The expected exchange rate, rounded DOWN to 6 decimals.
      */
-    public function testGetExchangeRate($sourceCurrencyCode, $targetCurrencyCode, $exchangeRate)
+    public function testGetExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode, string $exchangeRate) : void
     {
         $rate = $this->getExchangeRateProvider()->getExchangeRate($sourceCurrencyCode, $targetCurrencyCode);
         $this->assertSame($exchangeRate, (string) BigRational::of($rate)->toScale(6, RoundingMode::DOWN));
@@ -45,7 +45,7 @@ class BaseCurrencyProviderTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerGetExchangeRate()
+    public function providerGetExchangeRate() : array
     {
         return [
             ['USD', 'EUR', '0.900000'],

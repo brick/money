@@ -18,7 +18,7 @@ class CurrencyTest extends AbstractTestCase
      * @param int    $fractionDigits The currency's default fraction digits.
      * @param string $name           The currency's name.
      */
-    public function testOf($currencyCode, $numericCode, $fractionDigits, $name)
+    public function testOf(string $currencyCode, int $numericCode, int $fractionDigits, string $name) : void
     {
         $currency = Currency::of($currencyCode);
         $this->assertCurrencyEquals($currencyCode, $numericCode, $name, $fractionDigits, $currency);
@@ -30,7 +30,7 @@ class CurrencyTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerOf()
+    public function providerOf() : array
     {
         return [
             ['USD', 840, 2, 'US Dollar'],
@@ -47,7 +47,7 @@ class CurrencyTest extends AbstractTestCase
      *
      * @param string|int $currencyCode
      */
-    public function testOfUnknownCurrencyCode($currencyCode)
+    public function testOfUnknownCurrencyCode($currencyCode) : void
     {
         Currency::of($currencyCode);
     }
@@ -55,7 +55,7 @@ class CurrencyTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerOfUnknownCurrencyCode()
+    public function providerOfUnknownCurrencyCode() : array
     {
         return [
             ['XXX'],
@@ -63,13 +63,13 @@ class CurrencyTest extends AbstractTestCase
         ];
     }
 
-    public function testConstructor()
+    public function testConstructor() : void
     {
         $bitCoin = new Currency('BTC', -1, 'BitCoin', 8);
         $this->assertCurrencyEquals('BTC', -1, 'BitCoin', 8, $bitCoin);
     }
 
-    public function testOfReturnsSameInstance()
+    public function testOfReturnsSameInstance() : void
     {
         $this->assertSame(Currency::of('EUR'), Currency::of('EUR'));
     }
@@ -80,7 +80,7 @@ class CurrencyTest extends AbstractTestCase
      * @param string $countryCode
      * @param string $expected
      */
-    public function testOfCountry($countryCode, $expected)
+    public function testOfCountry(string $countryCode, string $expected) : void
     {
         if ($this->isExceptionClass($expected)) {
             $this->expectException($expected);
@@ -97,7 +97,7 @@ class CurrencyTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerOfCountry()
+    public function providerOfCountry() : array
     {
         return [
             ['CA', 'CAD'],
@@ -117,12 +117,12 @@ class CurrencyTest extends AbstractTestCase
     /**
      * @expectedException \InvalidArgumentException
      */
-    public function testCreateWithNegativeFractionDigits()
+    public function testCreateWithNegativeFractionDigits() : void
     {
         new Currency('BTC', 0, 'BitCoin', -1);
     }
 
-    public function testIs()
+    public function testIs() : void
     {
         $currency = Currency::of('EUR');
 

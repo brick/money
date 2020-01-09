@@ -20,7 +20,7 @@ class PDOProviderTest extends AbstractTestCase
      * @param PDOProviderConfiguration $configuration
      * @param string                   $exceptionMessage
      */
-    public function testConstructorWithInvalidConfiguration(PDOProviderConfiguration $configuration, $exceptionMessage)
+    public function testConstructorWithInvalidConfiguration(PDOProviderConfiguration $configuration, string $exceptionMessage) : void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage($exceptionMessage);
@@ -33,7 +33,7 @@ class PDOProviderTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerConstructorWithInvalidConfiguration()
+    public function providerConstructorWithInvalidConfiguration() : array
     {
         $noTableName = new PDOProviderConfiguration();
 
@@ -65,7 +65,7 @@ class PDOProviderTest extends AbstractTestCase
      * @param string       $targetCurrencyCode The code of the target currency.
      * @param float|string $expectedResult     The expected exchange rate, or an exception class if expected.
      */
-    public function testGetExchangeRate($sourceCurrencyCode, $targetCurrencyCode, $expectedResult)
+    public function testGetExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode, $expectedResult) : void
     {
         $pdo = new \PDO('sqlite::memory:');
 
@@ -106,7 +106,7 @@ class PDOProviderTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerGetExchangeRate()
+    public function providerGetExchangeRate() : array
     {
         return [
             ['USD', 'EUR', 0.9],
@@ -124,7 +124,7 @@ class PDOProviderTest extends AbstractTestCase
      * @param string       $targetCurrencyCode The code of the target currency.
      * @param float|string $expectedResult     The expected exchange rate, or an exception class if expected.
      */
-    public function testWithFixedSourceCurrency($sourceCurrencyCode, $targetCurrencyCode, $expectedResult)
+    public function testWithFixedSourceCurrency(string $sourceCurrencyCode, string $targetCurrencyCode, $expectedResult) : void
     {
         $pdo = new \PDO('sqlite::memory:');
 
@@ -163,7 +163,7 @@ class PDOProviderTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerWithFixedSourceCurrency()
+    public function providerWithFixedSourceCurrency() : array
     {
         return [
             ['EUR', 'USD', 1.1],
@@ -181,7 +181,7 @@ class PDOProviderTest extends AbstractTestCase
      * @param string       $targetCurrencyCode The code of the target currency.
      * @param float|string $expectedResult     The expected exchange rate, or an exception class if expected.
      */
-    public function testWithFixedTargetCurrency($sourceCurrencyCode, $targetCurrencyCode, $expectedResult)
+    public function testWithFixedTargetCurrency(string $sourceCurrencyCode, string $targetCurrencyCode, $expectedResult) : void
     {
         $pdo = new \PDO('sqlite::memory:');
 
@@ -220,7 +220,7 @@ class PDOProviderTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerWithFixedTargetCurrency()
+    public function providerWithFixedTargetCurrency() : array
     {
         return [
             ['USD', 'EUR', 0.9],
@@ -239,7 +239,7 @@ class PDOProviderTest extends AbstractTestCase
      * @param array        $parameters         The parameters to resolve the extra query placeholders.
      * @param float|string $expectedResult     The expected exchange rate, or an exception class if expected.
      */
-    public function testWithParameters($sourceCurrencyCode, $targetCurrencyCode, $parameters, $expectedResult)
+    public function testWithParameters(string $sourceCurrencyCode, string $targetCurrencyCode, array $parameters, $expectedResult) : void
     {
         $pdo = new \PDO('sqlite::memory:');
 
@@ -285,7 +285,7 @@ class PDOProviderTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerWithParameters()
+    public function providerWithParameters() : array
     {
         return [
             ['EUR', 'USD', [2017, 8], 1.1],

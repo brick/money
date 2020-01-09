@@ -22,10 +22,11 @@ abstract class AbstractTestCase extends TestCase
     /**
      * @param string     $expected
      * @param BigDecimal $actual
+     *
+     * @return void
      */
-    final protected function assertBigDecimalIs($expected, $actual)
+    final protected function assertBigDecimalIs(string $expected, BigDecimal $actual) : void
     {
-        $this->assertInstanceOf(BigDecimal::class, $actual);
         $this->assertSame($expected, (string) $actual);
     }
 
@@ -33,10 +34,11 @@ abstract class AbstractTestCase extends TestCase
      * @param string $expectedAmount   The expected decimal amount.
      * @param string $expectedCurrency The expected currency code.
      * @param Money  $actual           The money to test.
+     *
+     * @return void
      */
-    final protected function assertMoneyEquals($expectedAmount, $expectedCurrency, $actual)
+    final protected function assertMoneyEquals(string $expectedAmount, string $expectedCurrency, Money $actual) : void
     {
-        $this->assertInstanceOf(Money::class, $actual);
         $this->assertSame($expectedCurrency, (string) $actual->getCurrency());
         $this->assertSame($expectedAmount, (string) $actual->getAmount());
     }
@@ -45,11 +47,12 @@ abstract class AbstractTestCase extends TestCase
      * @param string       $expected The expected string representation of the Money.
      * @param Money        $actual   The money to test.
      * @param Context|null $context  An optional context to check against the Money.
+     *
+     * @return void
      */
-    final protected function assertMoneyIs($expected, $actual, Context $context = null)
+    final protected function assertMoneyIs(string $expected, Money $actual, Context $context = null) : void
     {
-        $this->assertInstanceOf(Money::class, $actual);
-        $this->assertSame((string) $expected, (string) $actual);
+        $this->assertSame($expected, (string) $actual);
 
         if ($context !== null) {
             $this->assertEquals($context, $actual->getContext());
@@ -59,8 +62,10 @@ abstract class AbstractTestCase extends TestCase
     /**
      * @param string[] $expected
      * @param Money[]  $actual
+     *
+     * @return void
      */
-    final protected function assertMoniesAre(array $expected, array $actual)
+    final protected function assertMoniesAre(array $expected, array $actual) : void
     {
         foreach ($actual as $key => $money) {
             $this->assertInstanceOf(Money::class, $money);
@@ -73,8 +78,10 @@ abstract class AbstractTestCase extends TestCase
     /**
      * @param string    $expected
      * @param BigNumber $actual
+     *
+     * @return void
      */
-    final protected function assertBigNumberEquals($expected, BigNumber $actual)
+    final protected function assertBigNumberEquals(string $expected, BigNumber $actual) : void
     {
         $this->assertTrue($actual->isEqualTo($expected), $actual . ' != ' . $expected);
     }
@@ -82,11 +89,11 @@ abstract class AbstractTestCase extends TestCase
     /**
      * @param array    $expectedAmounts
      * @param MoneyBag $moneyBag
+     *
+     * @return void
      */
-    final protected function assertMoneyBagContains(array $expectedAmounts, $moneyBag)
+    final protected function assertMoneyBagContains(array $expectedAmounts, MoneyBag $moneyBag) : void
     {
-        $this->assertInstanceOf(MoneyBag::class, $moneyBag);
-
         // Test get() on each currency
         foreach ($expectedAmounts as $currencyCode => $expectedAmount) {
             $actualAmount = $moneyBag->getAmount($currencyCode);
@@ -107,10 +114,11 @@ abstract class AbstractTestCase extends TestCase
     /**
      * @param string        $expected
      * @param RationalMoney $actual
+     *
+     * @return void
      */
-    final protected function assertRationalMoneyEquals($expected, $actual)
+    final protected function assertRationalMoneyEquals(string $expected, RationalMoney $actual) : void
     {
-        $this->assertInstanceOf(RationalMoney::class, $actual);
         $this->assertSame($expected, (string) $actual);
     }
 
@@ -120,10 +128,11 @@ abstract class AbstractTestCase extends TestCase
      * @param string   $name
      * @param int      $defaultFractionDigits
      * @param Currency $currency
+     *
+     * @return void
      */
-    final protected function assertCurrencyEquals($currencyCode, $numericCode, $name, $defaultFractionDigits, $currency)
+    final protected function assertCurrencyEquals(string $currencyCode, int $numericCode, string $name, int $defaultFractionDigits, Currency $currency) : void
     {
-        $this->assertInstanceOf(Currency::class, $currency);
         $this->assertSame($currencyCode, $currency->getCurrencyCode());
         $this->assertSame($numericCode, $currency->getNumericCode());
         $this->assertSame($name, $currency->getName());
@@ -135,7 +144,7 @@ abstract class AbstractTestCase extends TestCase
      *
      * @return bool
      */
-    final protected function isExceptionClass($value)
+    final protected function isExceptionClass(string $value) : bool
     {
         return is_string($value) && substr($value, -9) === 'Exception';
     }

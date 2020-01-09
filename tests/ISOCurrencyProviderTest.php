@@ -17,7 +17,7 @@ class ISOCurrencyProviderTest extends AbstractTestCase
      * another class internally resolving an ISO currency code using ISOCurrencyProvider, and this can originate from
      * code outside test methods (for example in data providers).
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass() : void
     {
         $reflection = new \ReflectionProperty(ISOCurrencyProvider::class, 'instance');
         $reflection->setAccessible(true);
@@ -32,7 +32,7 @@ class ISOCurrencyProviderTest extends AbstractTestCase
      * @param string $name
      * @param int    $defaultFractionDigits
      */
-    public function testGetCurrency($currencyCode, $numericCode, $name, $defaultFractionDigits)
+    public function testGetCurrency(string $currencyCode, int $numericCode, string $name, int $defaultFractionDigits) : void
     {
         $provider = ISOCurrencyProvider::getInstance();
 
@@ -46,7 +46,7 @@ class ISOCurrencyProviderTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerGetCurrency()
+    public function providerGetCurrency() : array
     {
         return [
             ['EUR', 978, 'Euro', 2],
@@ -68,7 +68,7 @@ class ISOCurrencyProviderTest extends AbstractTestCase
      *
      * @param string|int $currencyCode
      */
-    public function testGetUnknownCurrency($currencyCode)
+    public function testGetUnknownCurrency($currencyCode) : void
     {
         ISOCurrencyProvider::getInstance()->getCurrency($currencyCode);
     }
@@ -76,7 +76,7 @@ class ISOCurrencyProviderTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerUnknownCurrency()
+    public function providerUnknownCurrency() : array
     {
         return [
             ['XXX'],
@@ -84,7 +84,7 @@ class ISOCurrencyProviderTest extends AbstractTestCase
         ];
     }
 
-    public function testGetAvailableCurrencies()
+    public function testGetAvailableCurrencies() : void
     {
         $provider = ISOCurrencyProvider::getInstance();
 

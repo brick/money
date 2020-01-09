@@ -12,7 +12,7 @@ use Brick\Money\RationalMoney;
  */
 class MoneyBagTest extends AbstractTestCase
 {
-    public function testEmptyMoneyBag()
+    public function testEmptyMoneyBag() : void
     {
         $moneyBag = new MoneyBag();
 
@@ -23,7 +23,7 @@ class MoneyBagTest extends AbstractTestCase
         }
     }
 
-    public function testAddSubtractMoney()
+    public function testAddSubtractMoney() : void
     {
         $moneyBag = new MoneyBag();
 

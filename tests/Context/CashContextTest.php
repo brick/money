@@ -24,7 +24,7 @@ class CashContextTest extends AbstractTestCase
      * @param int    $roundingMode
      * @param string $expected
      */
-    public function testApplyTo($step, $amount, $currency, $roundingMode, $expected)
+    public function testApplyTo(int $step, string $amount, string $currency, int $roundingMode, string $expected) : void
     {
         $amount = BigNumber::of($amount);
         $currency = Currency::of($currency);
@@ -45,7 +45,7 @@ class CashContextTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerApplyTo()
+    public function providerApplyTo() : array
     {
         return [
             [1, '1', 'USD', RoundingMode::UNNECESSARY, '1.00'],
@@ -72,7 +72,7 @@ class CashContextTest extends AbstractTestCase
         ];
     }
 
-    public function testGetStep()
+    public function testGetStep() : void
     {
         $context = new CashContext(5);
         $this->assertSame(5, $context->getStep());

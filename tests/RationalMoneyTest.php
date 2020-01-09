@@ -21,7 +21,7 @@ use Brick\Math\RoundingMode;
  */
 class RationalMoneyTest extends AbstractTestCase
 {
-    public function testGetters()
+    public function testGetters() : void
     {
         $amount = BigRational::of('123/456');
         $currency = Currency::of('EUR');
@@ -39,7 +39,7 @@ class RationalMoneyTest extends AbstractTestCase
      * @param mixed  $amount
      * @param string $expected
      */
-    public function testPlus(array $rationalMoney, $amount, $expected)
+    public function testPlus(array $rationalMoney, $amount, string $expected) : void
     {
         $rationalMoney = RationalMoney::of(...$rationalMoney);
 
@@ -57,7 +57,7 @@ class RationalMoneyTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerPlus()
+    public function providerPlus() : array
     {
         return [
             [['1.1234', 'USD'], '987.65', 'USD 988773400/1000000'],
@@ -77,7 +77,7 @@ class RationalMoneyTest extends AbstractTestCase
      * @param mixed  $amount
      * @param string $expected
      */
-    public function testMinus(array $rationalMoney, $amount, $expected)
+    public function testMinus(array $rationalMoney, $amount, string $expected) : void
     {
         $rationalMoney = RationalMoney::of(...$rationalMoney);
 
@@ -95,7 +95,7 @@ class RationalMoneyTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerMinus()
+    public function providerMinus() : array
     {
         return [
             [['987.65', 'USD'], '1.1234', 'USD 986526600/1000000'],
@@ -115,7 +115,7 @@ class RationalMoneyTest extends AbstractTestCase
      * @param mixed  $operand
      * @param string $expected
      */
-    public function testMultipliedBy(array $rationalMoney, $operand, $expected)
+    public function testMultipliedBy(array $rationalMoney, $operand, string $expected) : void
     {
         $rationalMoney = RationalMoney::of(...$rationalMoney);
 
@@ -133,7 +133,7 @@ class RationalMoneyTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerMultipliedBy()
+    public function providerMultipliedBy() : array
     {
         return [
             [['987.65', 'USD'], '1.123456', 'USD 110958131840/100000000'],
@@ -149,7 +149,7 @@ class RationalMoneyTest extends AbstractTestCase
      * @param mixed  $operand
      * @param string $expected
      */
-    public function testDividedBy(array $rationalMoney, $operand, $expected)
+    public function testDividedBy(array $rationalMoney, $operand, string $expected) : void
     {
         $rationalMoney = RationalMoney::of(...$rationalMoney);
 
@@ -167,7 +167,7 @@ class RationalMoneyTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerDividedBy()
+    public function providerDividedBy() : array
     {
         return [
             [['987.65', 'USD'], '1.123456', 'USD 98765000000/112345600'],
@@ -183,7 +183,7 @@ class RationalMoneyTest extends AbstractTestCase
      * @param array  $rationalMoney
      * @param string $expected
      */
-    public function testSimplified(array $rationalMoney, $expected)
+    public function testSimplified(array $rationalMoney, string $expected) : void
     {
         $rationalMoney = RationalMoney::of(...$rationalMoney);
 
@@ -212,7 +212,7 @@ class RationalMoneyTest extends AbstractTestCase
      * @param int     $roundingMode
      * @param string  $expected
      */
-    public function testTo(array $rationalMoney, $context, $roundingMode, $expected)
+    public function testTo(array $rationalMoney, Context $context, int $roundingMode, string $expected) : void
     {
         $rationalMoney = RationalMoney::of(...$rationalMoney);
 
@@ -230,7 +230,7 @@ class RationalMoneyTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerTo()
+    public function providerTo() : array
     {
         return [
             [['987.65', 'USD'], new DefaultContext(), RoundingMode::UNNECESSARY, 'USD 987.65'],

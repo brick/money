@@ -24,7 +24,7 @@ class CurrencyConverterTest extends AbstractTestCase
     /**
      * @return CurrencyConverter
      */
-    private function createCurrencyConverter()
+    private function createCurrencyConverter() : CurrencyConverter
     {
         $exchangeRateProvider = new ConfigurableProvider();
         $exchangeRateProvider->setExchangeRate('EUR', 'USD', '1.1');
@@ -42,7 +42,7 @@ class CurrencyConverterTest extends AbstractTestCase
      * @param int    $roundingMode   The rounding mode to use.
      * @param string $expectedResult The expected money's string representation, or an exception class name.
      */
-    public function testConvertMoney(array $money, $toCurrency, $roundingMode, $expectedResult)
+    public function testConvertMoney(array $money, string $toCurrency, int $roundingMode, string $expectedResult) : void
     {
         $money = Money::of(...$money);
         $currencyConverter = $this->createCurrencyConverter();
@@ -61,7 +61,7 @@ class CurrencyConverterTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerConvertMoney()
+    public function providerConvertMoney() : array
     {
         return [
             [['1.23', 'EUR'], 'USD', RoundingMode::DOWN, 'USD 1.35'],
@@ -88,7 +88,7 @@ class CurrencyConverterTest extends AbstractTestCase
      * @param int     $roundingMode The rounding mode to use.
      * @param string  $total        The expected total.
      */
-    public function testConvertMoneyBag(array $monies, $currency, Context $context, $roundingMode, $total)
+    public function testConvertMoneyBag(array $monies, string $currency, Context $context, int $roundingMode, string $total) : void
     {
         $exchangeRateProvider = new ConfigurableProvider();
         $exchangeRateProvider->setExchangeRate('EUR', 'USD', '1.23456789');
@@ -164,7 +164,7 @@ class CurrencyConverterTest extends AbstractTestCase
      * @param int    $roundingMode   The rounding mode to use.
      * @param string $expectedResult The expected money's string representation, or an exception class name.
      */
-    public function testConvertRationalMoney(array $money, $toCurrency, $roundingMode, $expectedResult)
+    public function testConvertRationalMoney(array $money, string $toCurrency, int $roundingMode, string $expectedResult) : void
     {
         $currencyConverter = $this->createCurrencyConverter();
 
@@ -184,7 +184,7 @@ class CurrencyConverterTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerConvertRationalMoney()
+    public function providerConvertRationalMoney() : array
     {
         return [
             [['7/9', 'USD'], 'EUR', RoundingMode::DOWN, 'EUR 0.70'],

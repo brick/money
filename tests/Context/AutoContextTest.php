@@ -24,7 +24,7 @@ class AutoContextTest extends AbstractTestCase
      * @param int    $roundingMode
      * @param string $expected
      */
-    public function testApplyTo($amount, $currency, $roundingMode, $expected)
+    public function testApplyTo(string $amount, string $currency, int $roundingMode, string $expected) : void
     {
         $amount = BigNumber::of($amount);
         $currency = Currency::of($currency);
@@ -45,7 +45,7 @@ class AutoContextTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerApplyTo()
+    public function providerApplyTo() : array
     {
         return [
             ['1', 'USD', RoundingMode::UNNECESSARY, '1'],
@@ -56,7 +56,7 @@ class AutoContextTest extends AbstractTestCase
         ];
     }
 
-    public function testGetStep()
+    public function testGetStep() : void
     {
         $context = new CashContext(5);
         $this->assertSame(5, $context->getStep());
