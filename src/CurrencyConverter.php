@@ -13,6 +13,10 @@ use Brick\Math\RoundingMode;
 
 /**
  * Converts monies into different currencies, using an exchange rate provider.
+ *
+ * @todo Now that this class provides methods to convert to both Money and RationalMoney, it makes little sense to
+ *       provide the context in the constructor, as this only applies to convert() and not convertToRational().
+ *       This should probably be a parameter to convert().
  */
 final class CurrencyConverter
 {
@@ -33,6 +37,7 @@ final class CurrencyConverter
     /**
      * @param ExchangeRateProvider $exchangeRateProvider The exchange rate provider.
      * @param Context|null         $context              A context to create the monies in, or null to use the default.
+     *                                                   The context only applies to convert(), not convertToRational().
      */
     public function __construct(ExchangeRateProvider $exchangeRateProvider, Context $context = null)
     {
@@ -58,6 +63,21 @@ final class CurrencyConverter
      */
     public function convert(MoneyContainer $moneyContainer, $currency, int $roundingMode = RoundingMode::UNNECESSARY) : Money
     {
+        return $this->convertToRational($moneyContainer, $currency)->to($this->context, $roundingMode);
+    }
+
+    /**
+     * Converts the given money to the given currency, and returns the result as a RationalMoney with no rounding.
+     *
+     * @param MoneyContainer      $moneyContainer The Money, RationalMoney or MoneyBag to convert.
+     * @param Currency|string|int $currency       The Currency instance, ISO currency code or ISO numeric currency code.
+     *
+     * @return RationalMoney
+     *
+     * @throws CurrencyConversionException If the exchange rate is not available.
+     */
+    public function convertToRational(MoneyContainer $moneyContainer, $currency) : RationalMoney
+    {
         if (! $currency instanceof Currency) {
             $currency = Currency::of($currency);
         }
@@ -75,6 +95,6 @@ final class CurrencyConverter
             $total = $total->plus($amount);
         }
 
-        return Money::create($total, $currency, $this->context, $roundingMode);
+        return new RationalMoney($total, $currency);
     }
 }

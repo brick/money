@@ -86,7 +86,7 @@ class CurrencyConverterTest extends AbstractTestCase
      * @param string  $currency     The target currency code.
      * @param Context $context      The target context.
      * @param int     $roundingMode The rounding mode to use.
-     * @param string  $total        The expected total
+     * @param string  $total        The expected total.
      */
     public function testConvertMoneyBag(array $monies, $currency, Context $context, $roundingMode, $total)
     {
@@ -108,7 +108,7 @@ class CurrencyConverterTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerConvertMoneyBag()
+    public function providerConvertMoneyBag() : array
     {
         return [
             [[['354.40005', 'EUR'], ['3.1234', 'JPY']], 'USD', new DefaultContext(), RoundingMode::DOWN, 'USD 437.56'],
@@ -116,6 +116,43 @@ class CurrencyConverterTest extends AbstractTestCase
 
             [[['1234.56', 'EUR'], ['31562', 'JPY']], 'USD', new CustomContext(6), RoundingMode::DOWN, 'USD 1835.871591'],
             [[['1234.56', 'EUR'], ['31562', 'JPY']], 'USD', new CustomContext(6), RoundingMode::UP, 'USD 1835.871592']
+        ];
+    }
+
+    /**
+     * @dataProvider providerConvertMoneyBagToRational
+     *
+     * @param array   $monies        The mixed monies to add.
+     * @param string  $currency      The target currency code.
+     * @param string  $expectedTotal The expected total.
+     */
+    public function testConvertMoneyBagToRational(array $monies, string $currency, string $expectedTotal) : void
+    {
+        $exchangeRateProvider = new ConfigurableProvider();
+        $exchangeRateProvider->setExchangeRate('EUR', 'USD', '1.123456789');
+        $exchangeRateProvider->setExchangeRate('JPY', 'USD', '0.0098765432123456789');
+
+        $moneyBag = new MoneyBag();
+
+        foreach ($monies as $money) {
+            $money = Money::of($money[0], $money[1], new AutoContext());
+            $moneyBag->add($money);
+        }
+
+        $currencyConverter = new CurrencyConverter($exchangeRateProvider);
+        $actualTotal = $currencyConverter->convertToRational($moneyBag, $currency)->simplified();
+
+        $this->assertRationalMoneyEquals($expectedTotal, $actualTotal);
+    }
+
+    /**
+     * @return array
+     */
+    public function providerConvertMoneyBagToRational() : array
+    {
+        return [
+            [[['354.40005', 'EUR'], ['3.1234', 'JPY']], 'USD', 'USD 19909199529475444524673813/50000000000000000000000'],
+            [[['1234.56', 'EUR'], ['31562', 'JPY']], 'USD', 'USD 8493491351479471587209/5000000000000000000']
         ];
     }
 
