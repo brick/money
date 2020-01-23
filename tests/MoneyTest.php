@@ -778,6 +778,23 @@ class MoneyTest extends AbstractTestCase
     }
 
     /**
+     * @dataProvider providerIsAmountAndCurrencyEqualTo
+     */
+    public function testIsAmountAndCurrencyEqualTo(array $a, array $b, bool $c) : void
+    {
+        $this->assertSame($c, Money::of(...$a)->isAmountAndCurrencyEqualTo(Money::of(...$b)));
+    }
+
+    public function providerIsAmountAndCurrencyEqualTo() : \Generator
+    {
+        foreach ($this->providerCompare() as [$a, $b, $c]) {
+            yield [$a, $b, $c === 0];
+        }
+
+        yield [[1, 'EUR'], [1, 'USD'], false];
+    }
+
+    /**
      * @return array
      */
     public function providerCompare() : array

@@ -204,6 +204,22 @@ abstract class AbstractMoney implements MoneyContainer
     }
 
     /**
+     * Returns whether this money's amount and currency are equal to those of the given money.
+     *
+     * Unlike isEqualTo(), this method only accepts a money, and returns false if the given money is in another
+     * currency, instead of throwing a MoneyMismatchException.
+     *
+     * @param AbstractMoney $that
+     *
+     * @return bool
+     */
+    final public function isAmountAndCurrencyEqualTo(AbstractMoney $that) : bool
+    {
+        return $this->getAmount()->isEqualTo($that->getAmount())
+            && $this->getCurrency()->is($that->getCurrency());
+    }
+
+    /**
      * Returns the amount of the given parameter.
      *
      * If the parameter is a money, its currency is checked against this money's currency.
