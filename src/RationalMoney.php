@@ -43,8 +43,8 @@ final class RationalMoney extends AbstractMoney
     /**
      * Convenience factory method.
      *
-     * @param BigNumber|number|string $amount   The monetary amount.
-     * @param Currency|string|int     $currency The Currency instance, ISO currency code or ISO numeric currency code.
+     * @param BigNumber|int|float|string $amount   The monetary amount.
+     * @param Currency|string|int        $currency The Currency instance, ISO currency code or ISO numeric currency code.
      *
      * @return RationalMoney
      */
@@ -78,7 +78,7 @@ final class RationalMoney extends AbstractMoney
     /**
      * Returns the sum of this RationalMoney and the given amount.
      *
-     * @param AbstractMoney|BigNumber|number|string $that The money or amount to add.
+     * @param AbstractMoney|BigNumber|int|float|string $that The money or amount to add.
      *
      * @return RationalMoney
      *
@@ -96,7 +96,7 @@ final class RationalMoney extends AbstractMoney
     /**
      * Returns the difference of this RationalMoney and the given amount.
      *
-     * @param AbstractMoney|BigNumber|number|string $that The money or amount to subtract.
+     * @param AbstractMoney|BigNumber|int|float|string $that The money or amount to subtract.
      *
      * @return RationalMoney
      *
@@ -114,7 +114,7 @@ final class RationalMoney extends AbstractMoney
     /**
      * Returns the product of this RationalMoney and the given number.
      *
-     * @param BigNumber|number|string $that The multiplier.
+     * @param BigNumber|int|float|string $that The multiplier.
      *
      * @return RationalMoney
      *
@@ -130,7 +130,7 @@ final class RationalMoney extends AbstractMoney
     /**
      * Returns the result of the division of this RationalMoney by the given number.
      *
-     * @param BigNumber|number|string $that The divisor.
+     * @param BigNumber|int|float|string $that The divisor.
      *
      * @return RationalMoney
      *

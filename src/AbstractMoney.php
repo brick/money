@@ -116,7 +116,7 @@ abstract class AbstractMoney implements MoneyContainer
     /**
      * Compares this money to the given amount.
      *
-     * @param AbstractMoney|BigNumber|number|string $that
+     * @param AbstractMoney|BigNumber|int|float|string $that
      *
      * @return int [-1, 0, 1] if `$this` is less than, equal to, or greater than `$that`.
      *
@@ -131,7 +131,7 @@ abstract class AbstractMoney implements MoneyContainer
     /**
      * Returns whether this money is equal to the given amount.
      *
-     * @param AbstractMoney|BigNumber|number|string $that
+     * @param AbstractMoney|BigNumber|int|float|string $that
      *
      * @return bool
      *
@@ -146,7 +146,7 @@ abstract class AbstractMoney implements MoneyContainer
     /**
      * Returns whether this money is less than the given amount.
      *
-     * @param AbstractMoney|BigNumber|number|string $that
+     * @param AbstractMoney|BigNumber|int|float|string $that
      *
      * @return bool
      *
@@ -161,7 +161,7 @@ abstract class AbstractMoney implements MoneyContainer
     /**
      * Returns whether this money is less than or equal to the given amount.
      *
-     * @param AbstractMoney|BigNumber|number|string $that
+     * @param AbstractMoney|BigNumber|int|float|string $that
      *
      * @return bool
      *
@@ -176,7 +176,7 @@ abstract class AbstractMoney implements MoneyContainer
     /**
      * Returns whether this money is greater than the given amount.
      *
-     * @param AbstractMoney|BigNumber|number|string $that
+     * @param AbstractMoney|BigNumber|int|float|string $that
      *
      * @return bool
      *
@@ -191,7 +191,7 @@ abstract class AbstractMoney implements MoneyContainer
     /**
      * Returns whether this money is greater than or equal to the given amount.
      *
-     * @param AbstractMoney|BigNumber|number|string $that
+     * @param AbstractMoney|BigNumber|int|float|string $that
      *
      * @return bool
      *
@@ -224,9 +224,9 @@ abstract class AbstractMoney implements MoneyContainer
      *
      * If the parameter is a money, its currency is checked against this money's currency.
      *
-     * @param AbstractMoney|BigNumber|number|string $that A money or amount.
+     * @param AbstractMoney|BigNumber|int|float|string $that A money or amount.
      *
-     * @return BigNumber|number|string
+     * @return BigNumber|int|float|string
      *
      * @throws MoneyMismatchException If currencies don't match.
      */

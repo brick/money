@@ -17,7 +17,7 @@ interface ExchangeRateProvider
      * @param string $sourceCurrencyCode The source currency code.
      * @param string $targetCurrencyCode The target currency code.
      *
-     * @return BigNumber|number|string The exchange rate.
+     * @return BigNumber|int|float|string The exchange rate.
      *
      * @throws CurrencyConversionException If the exchange rate is not available.
      */

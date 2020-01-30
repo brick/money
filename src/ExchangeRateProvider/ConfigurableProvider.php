@@ -20,9 +20,9 @@ final class ConfigurableProvider implements ExchangeRateProvider
     private $exchangeRates = [];
 
     /**
-     * @param string                  $sourceCurrencyCode
-     * @param string                  $targetCurrencyCode
-     * @param BigNumber|number|string $exchangeRate
+     * @param string                     $sourceCurrencyCode
+     * @param string                     $targetCurrencyCode
+     * @param BigNumber|int|float|string $exchangeRate
      *
      * @return ConfigurableProvider This instance, for chaining.
      */

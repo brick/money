@@ -281,10 +281,10 @@ class MoneyTest extends AbstractTestCase
     /**
      * @dataProvider providerMultipliedBy
      *
-     * @param array               $money        The base money.
-     * @param Money|number|string $multiplier   The multiplier.
-     * @param int                 $roundingMode The rounding mode to use.
-     * @param string              $expected     The expected money value, or an exception class name.
+     * @param array                  $money        The base money.
+     * @param Money|int|float|string $multiplier   The multiplier.
+     * @param int                    $roundingMode The rounding mode to use.
+     * @param string                 $expected     The expected money value, or an exception class name.
      */
     public function testMultipliedBy(array $money, $multiplier, int $roundingMode, string $expected) : void
     {
