@@ -9,7 +9,6 @@ A money and currency library for PHP.
 [![Latest Stable Version](https://poser.pugx.org/brick/money/v/stable)](https://packagist.org/packages/brick/money)
 [![Total Downloads](https://poser.pugx.org/brick/money/downloads)](https://packagist.org/packages/brick/money)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
-[![Gitter](https://badges.gitter.im/brick/money.svg)](https://gitter.im/brick/money?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 ## Introduction
 
