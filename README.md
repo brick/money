@@ -382,3 +382,9 @@ echo $money->formatWith($formatter); // US$5·000.00
 ```
 
 *Important note: because formatting is performed using `NumberFormatter`, the amount is converted to floating point in the process; so discrepancies can appear when formatting very large monetary values.*
+
+## brick/money for enterprise
+
+Available as part of the Tidelift Subscription.
+
+The maintainers of brick/money and thousands of other packages are working with Tidelift to deliver commercial support and maintenance for the open source dependencies you use to build your applications. Save time, reduce risk, and improve code health, while paying the maintainers of the exact dependencies you use. [Learn more.](https://tidelift.com/subscription/pkg/packagist-brick-money?utm_source=packagist-brick-money&utm_medium=referral&utm_campaign=enterprise&utm_term=repo)
