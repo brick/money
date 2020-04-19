@@ -383,6 +383,56 @@ echo $money->formatWith($formatter); // US$5·000.00
 
 *Important note: because formatting is performed using `NumberFormatter`, the amount is converted to floating point in the process; so discrepancies can appear when formatting very large monetary values.*
 
+## Storing the monies in the database
+
+### Persisting the amount
+
+- **As an integer**: in many applications, monies are only ever used with their default scale (e.g. 2 decimal places for `USD`, 0 for `JPY`). In this case, the best practice is to store minor units (cents) as an integer field:
+  
+  ```php
+  $integerAmount = $money->getMinorAmount()->toInt();
+  ```
+  
+  And later retrieve it as:
+  
+  ```php
+  Money::ofMinor($integerAmount, $currencyCode);
+  ```
+  
+  This approach works perfectly with all currencies, without having to worry about the scale.
+  
+- **As a decimal**: for most other cases, storing the amount string as a decimal type is advised:
+  
+  ```php
+  $decimalAmount = (string) $money->getAmount();
+  ```
+  
+  And later retrieve it as:
+  
+  ```php
+  Money::of($decimalAmount, $currencyCode);
+  ```
+
+### Persisting the currency
+
+- **As a string**: if you only deal with ISO currencies, or custom currencies having a 3-letter currency code, you can store the currency in a `CHAR(3)`. Otherwise, you'll most likely need a `VARCHAR`. You may also use an `ENUM` if your application uses a fixed list of currencies.
+  
+  ```php
+  $currencyCode = $money->getCurrency()->getCurrencyCode();
+  ```
+  
+  When retrieving the currency: you can use ISO currency codes directly in `Money::of()` and `Money::ofMinor()`. For custom currencies, you'll need to convert them to `Currency` instances first.
+  
+- **As an integer**: if you only deal with ISO currencies, or custom currencies with a numeric code that doesn't conflict with ISO currencies, you may store the currency code as an integer:
+  
+  ```php
+  $numericCode = $money->getCurrency()->getNumericCode();
+  ```
+
+  When retrieving the currency: you can use numeric codes of ISO currencies directly in `Money::of()` and `Money::ofMinor()`. For custom currencies, you'll need to convert them to `Currency` instances first.
+  
+- **Hardcoded**: if your application only ever deals with one currency, you may very well hardcode the currency code and not store it in your database at all.
+
 ## brick/money for enterprise
 
 Available as part of the Tidelift Subscription.
