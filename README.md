@@ -399,7 +399,7 @@ echo $money->formatWith($formatter); // US$5·000.00
   Money::ofMinor($integerAmount, $currencyCode);
   ```
   
-  This approach works perfectly with all currencies, without having to worry about the scale.
+  This approach works well with all currencies, without having to worry about the scale. You only have to worry about not overflowing an integer (which would throw an exception), but this is unlikely to happen unless you're dealing with huge amounts of money.
   
 - **As a decimal**: for most other cases, storing the amount string as a decimal type is advised:
   
