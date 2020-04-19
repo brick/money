@@ -423,7 +423,7 @@ echo $money->formatWith($formatter); // US$5·000.00
   
   When retrieving the currency: you can use ISO currency codes directly in `Money::of()` and `Money::ofMinor()`. For custom currencies, you'll need to convert them to `Currency` instances first.
   
-- **As an integer**: if you only deal with ISO currencies, or custom currencies with a numeric code that doesn't conflict with ISO currencies, you may store the currency code as an integer:
+- **As an integer**: if you only deal with ISO currencies, or custom currencies with a numeric code, you may store the currency code as an integer:
   
   ```php
   $numericCode = $money->getCurrency()->getNumericCode();
