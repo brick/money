@@ -433,6 +433,29 @@ echo $money->formatWith($formatter); // US$5·000.00
   
 - **Hardcoded**: if your application only ever deals with one currency, you may very well hardcode the currency code and not store it in your database at all.
 
+### Using an ORM
+
+If you're using an ORM such as Doctrine, it is advised to store the amount and currency separately, and perform conversion in the getters/setters:
+
+  ```php
+  class Entity
+  {
+      private int $price;
+      private string $currencyCode;
+
+      public function getPrice() : Money
+      {
+          return Money::ofMinor($this->price, $this->currencyCode);
+      }
+
+      public function setPrice(Money $price) : void
+      {
+          $this->price = $price->getMinorAmount()->toInt();
+          $this->currencyCode = $price->getCurrency()->getCurrencyCode();
+      }
+  }
+  ```
+
 ## brick/money for enterprise
 
 Available as part of the Tidelift Subscription.
