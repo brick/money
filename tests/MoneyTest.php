@@ -375,7 +375,7 @@ class MoneyTest extends AbstractTestCase
     public function testQuotientAndRemainder(array $money, int $divisor, string $expectedQuotient, string $expectedRemainder) : void
     {
         $money = Money::of(...$money);
-        list ($quotient, $remainder) = $money->quotientAndRemainder($divisor);
+        [$quotient, $remainder] = $money->quotientAndRemainder($divisor);
 
         $this->assertMoneyIs($expectedQuotient, $quotient);
         $this->assertMoneyIs($expectedRemainder, $remainder);
