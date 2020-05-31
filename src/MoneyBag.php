@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Brick\Money;
 
 use Brick\Math\BigRational;
+use Brick\Money\Tests\CurrencyTest;
 
 /**
  * Container for monies in different currencies.
@@ -29,11 +30,11 @@ final class MoneyBag implements MoneyContainer
      */
     public function getAmount($currency) : BigRational
     {
-        if (! $currency instanceof Currency) {
-            $currency = Currency::of($currency);
+        if (is_int($currency)) {
+            $currencyCode = (string) Currency::of($currency);
+        } else {
+            $currencyCode = (string) $currency;
         }
-
-        $currencyCode = (string) $currency;
 
         return isset($this->amounts[$currencyCode])
             ? $this->amounts[$currencyCode]
