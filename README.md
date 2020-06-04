@@ -373,7 +373,7 @@ Alternatively, you can format Money objects with your own instance of [NumberFor
 
 ```php
 $formatter = new \NumberFormatter('en_US', \NumberFormatter::CURRENCY);
-$formatter->setSymbol(\NumberFormatter::CURRENCY_SYMBOL , 'US$');
+$formatter->setSymbol(\NumberFormatter::CURRENCY_SYMBOL, 'US$');
 $formatter->setSymbol(\NumberFormatter::MONETARY_GROUPING_SEPARATOR_SYMBOL, '·');
 $formatter->setAttribute(\NumberFormatter::MIN_FRACTION_DIGITS, 2);
 
