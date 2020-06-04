@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Brick\Money;
 
 use Brick\Math\BigRational;
-use Brick\Money\Tests\CurrencyTest;
 
 /**
  * Container for monies in different currencies.
