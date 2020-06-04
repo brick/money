@@ -24,7 +24,9 @@ final class MoneyBag implements MoneyContainer
     /**
      * Returns the amount in the given currency contained in the bag, as a rational number.
      *
-     * @param Currency|string|int $currency The Currency instance, ISO currency code or ISO numeric currency code.
+     * Non-ISO (non-numeric) currency codes are accepted.
+     *
+     * @param Currency|string|int $currency The Currency instance, currency code or ISO numeric currency code.
      *
      * @return BigRational
      */
