@@ -52,12 +52,12 @@ class MoneyComparatorTest extends AbstractTestCase
             $this->expectException($cmp);
         }
 
-        $this->assertSame($cmp, $comparator->compare($a, $b));
-        $this->assertSame($cmp < 0, $comparator->isLess($a, $b));
-        $this->assertSame($cmp > 0, $comparator->isGreater($a, $b));
-        $this->assertSame($cmp <= 0, $comparator->isLessOrEqual($a, $b));
-        $this->assertSame($cmp >= 0, $comparator->isGreaterOrEqual($a, $b));
-        $this->assertSame($cmp === 0, $comparator->isEqual($a, $b));
+        self::assertSame($cmp, $comparator->compare($a, $b));
+        self::assertSame($cmp < 0, $comparator->isLess($a, $b));
+        self::assertSame($cmp > 0, $comparator->isGreater($a, $b));
+        self::assertSame($cmp <= 0, $comparator->isLessOrEqual($a, $b));
+        self::assertSame($cmp >= 0, $comparator->isGreaterOrEqual($a, $b));
+        self::assertSame($cmp === 0, $comparator->isEqual($a, $b));
     }
 
     /**

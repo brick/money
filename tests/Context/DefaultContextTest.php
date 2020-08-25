@@ -64,6 +64,6 @@ class DefaultContextTest extends AbstractTestCase
     public function testGetStep() : void
     {
         $context = new DefaultContext();
-        $this->assertSame(1, $context->getStep());
+        self::assertSame(1, $context->getStep());
     }
 }

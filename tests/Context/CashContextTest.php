@@ -77,6 +77,6 @@ class CashContextTest extends AbstractTestCase
     public function testGetStep() : void
     {
         $context = new CashContext(5);
-        $this->assertSame(5, $context->getStep());
+        self::assertSame(5, $context->getStep());
     }
 }

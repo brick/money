@@ -97,14 +97,14 @@ class ISOCurrencyProviderTest extends AbstractTestCase
 
         $availableCurrencies = $provider->getAvailableCurrencies();
 
-        $this->assertGreaterThan(100, count($availableCurrencies));
+        self::assertGreaterThan(100, count($availableCurrencies));
 
         foreach ($availableCurrencies as $currency) {
-            $this->assertInstanceOf(Currency::class, $currency);
+            self::assertInstanceOf(Currency::class, $currency);
         }
 
-        $this->assertSame($eur, $availableCurrencies['EUR']);
-        $this->assertSame($gbp, $availableCurrencies['GBP']);
-        $this->assertSame($usd, $availableCurrencies['USD']);
+        self::assertSame($eur, $availableCurrencies['EUR']);
+        self::assertSame($gbp, $availableCurrencies['GBP']);
+        self::assertSame($usd, $availableCurrencies['USD']);
     }
 }

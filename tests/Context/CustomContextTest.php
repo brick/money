@@ -99,7 +99,7 @@ class CustomContextTest extends AbstractTestCase
     public function testGetScaleGetStep() : void
     {
         $context = new CustomContext(8, 50);
-        $this->assertSame(8, $context->getScale());
-        $this->assertSame(50, $context->getStep());
+        self::assertSame(8, $context->getScale());
+        self::assertSame(50, $context->getStep());
     }
 }

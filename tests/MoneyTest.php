@@ -572,7 +572,7 @@ class MoneyTest extends AbstractTestCase
      */
     public function testGetSign(array $money, int $sign) : void
     {
-        $this->assertSame($sign, Money::of(...$money)->getSign());
+        self::assertSame($sign, Money::of(...$money)->getSign());
     }
 
     /**
@@ -583,7 +583,7 @@ class MoneyTest extends AbstractTestCase
      */
     public function testIsZero(array $money, int $sign) : void
     {
-        $this->assertSame($sign === 0, Money::of(...$money)->isZero());
+        self::assertSame($sign === 0, Money::of(...$money)->isZero());
     }
 
     /**
@@ -594,7 +594,7 @@ class MoneyTest extends AbstractTestCase
      */
     public function testIsPositive(array $money, int $sign) : void
     {
-        $this->assertSame($sign > 0, Money::of(...$money)->isPositive());
+        self::assertSame($sign > 0, Money::of(...$money)->isPositive());
     }
 
     /**
@@ -605,7 +605,7 @@ class MoneyTest extends AbstractTestCase
      */
     public function testIsPositiveOrZero(array $money, int $sign) : void
     {
-        $this->assertSame($sign >= 0, Money::of(...$money)->isPositiveOrZero());
+        self::assertSame($sign >= 0, Money::of(...$money)->isPositiveOrZero());
     }
 
     /**
@@ -616,7 +616,7 @@ class MoneyTest extends AbstractTestCase
      */
     public function testIsNegative(array $money, int $sign) : void
     {
-        $this->assertSame($sign < 0, Money::of(...$money)->isNegative());
+        self::assertSame($sign < 0, Money::of(...$money)->isNegative());
     }
 
     /**
@@ -627,7 +627,7 @@ class MoneyTest extends AbstractTestCase
      */
     public function testIsNegativeOrZero(array $money, int $sign) : void
     {
-        $this->assertSame($sign <= 0, Money::of(...$money)->isNegativeOrZero());
+        self::assertSame($sign <= 0, Money::of(...$money)->isNegativeOrZero());
     }
 
     /**
@@ -664,7 +664,7 @@ class MoneyTest extends AbstractTestCase
      */
     public function testCompareTo(array $a, array $b, int $c) : void
     {
-        $this->assertSame($c, Money::of(...$a)->compareTo(Money::of(...$b)));
+        self::assertSame($c, Money::of(...$a)->compareTo(Money::of(...$b)));
     }
 
     public function testCompareToOtherCurrency() : void
@@ -682,7 +682,7 @@ class MoneyTest extends AbstractTestCase
      */
     public function testIsEqualTo(array $a, array $b, int $c) : void
     {
-        $this->assertSame($c === 0, Money::of(...$a)->isEqualTo(Money::of(...$b)));
+        self::assertSame($c === 0, Money::of(...$a)->isEqualTo(Money::of(...$b)));
     }
 
     public function testIsEqualToOtherCurrency() : void
@@ -700,7 +700,7 @@ class MoneyTest extends AbstractTestCase
      */
     public function testIsLessThan(array $a, array $b, int $c) : void
     {
-        $this->assertSame($c < 0, Money::of(...$a)->isLessThan(Money::of(...$b)));
+        self::assertSame($c < 0, Money::of(...$a)->isLessThan(Money::of(...$b)));
     }
 
     public function testIsLessThanOtherCurrency() : void
@@ -718,7 +718,7 @@ class MoneyTest extends AbstractTestCase
      */
     public function testIsLessThanOrEqualTo(array $a, array $b, int $c) : void
     {
-        $this->assertSame($c <= 0, Money::of(...$a)->isLessThanOrEqualTo(Money::of(...$b)));
+        self::assertSame($c <= 0, Money::of(...$a)->isLessThanOrEqualTo(Money::of(...$b)));
     }
 
     public function testIsLessThanOrEqualToOtherCurrency() : void
@@ -736,7 +736,7 @@ class MoneyTest extends AbstractTestCase
      */
     public function testIsGreaterThan(array $a, array $b, int $c) : void
     {
-        $this->assertSame($c > 0, Money::of(...$a)->isGreaterThan(Money::of(...$b)));
+        self::assertSame($c > 0, Money::of(...$a)->isGreaterThan(Money::of(...$b)));
     }
 
     public function testIsGreaterThanOtherCurrency() : void
@@ -754,7 +754,7 @@ class MoneyTest extends AbstractTestCase
      */
     public function testIsGreaterThanOrEqualTo(array $a, array $b, int $c) : void
     {
-        $this->assertSame($c >= 0, Money::of(...$a)->isGreaterThanOrEqualTo(Money::of(...$b)));
+        self::assertSame($c >= 0, Money::of(...$a)->isGreaterThanOrEqualTo(Money::of(...$b)));
     }
 
     public function testIsGreaterThanOrEqualToOtherCurrency() : void
@@ -768,7 +768,7 @@ class MoneyTest extends AbstractTestCase
      */
     public function testIsAmountAndCurrencyEqualTo(array $a, array $b, bool $c) : void
     {
-        $this->assertSame($c, Money::of(...$a)->isAmountAndCurrencyEqualTo(Money::of(...$b)));
+        self::assertSame($c, Money::of(...$a)->isAmountAndCurrencyEqualTo(Money::of(...$b)));
     }
 
     public function providerIsAmountAndCurrencyEqualTo() : \Generator
@@ -807,8 +807,8 @@ class MoneyTest extends AbstractTestCase
     {
         $actual = Money::of(...$money)->getMinorAmount();
 
-        $this->assertInstanceOf(BigDecimal::class, $actual);
-        $this->assertSame($expected, (string) $actual);
+        self::assertInstanceOf(BigDecimal::class, $actual);
+        self::assertSame($expected, (string) $actual);
     }
 
     /**
@@ -829,8 +829,8 @@ class MoneyTest extends AbstractTestCase
     {
         $actual = Money::of('123.45', 'USD')->getUnscaledAmount();
 
-        $this->assertInstanceOf(BigInteger::class, $actual);
-        $this->assertSame('12345', (string) $actual);
+        self::assertInstanceOf(BigInteger::class, $actual);
+        self::assertSame('12345', (string) $actual);
     }
 
     /**
@@ -872,7 +872,7 @@ class MoneyTest extends AbstractTestCase
         $formatter->setSymbol(\NumberFormatter::MONETARY_SEPARATOR_SYMBOL, $symbol);
 
         $actual = Money::of(...$money)->formatWith($formatter);
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -896,7 +896,7 @@ class MoneyTest extends AbstractTestCase
      */
     public function testFormatTo(array $money, string $locale, bool $allowWholeNumber, string $expected) : void
     {
-        $this->assertSame($expected, Money::of(...$money)->formatTo($locale, $allowWholeNumber));
+        self::assertSame($expected, Money::of(...$money)->formatTo($locale, $allowWholeNumber));
     }
 
     /**

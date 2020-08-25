@@ -41,7 +41,7 @@ class ConfigurableProviderTest extends AbstractTestCase
     public function testGetExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode, string $exchangeRate) : void
     {
         $rate = $this->getExchangeRateProvider()->getExchangeRate($sourceCurrencyCode, $targetCurrencyCode);
-        $this->assertSame($exchangeRate, (string) BigRational::of($rate)->toScale(3, RoundingMode::DOWN));
+        self::assertSame($exchangeRate, (string) BigRational::of($rate)->toScale(3, RoundingMode::DOWN));
     }
 
     /**
@@ -61,8 +61,8 @@ class ConfigurableProviderTest extends AbstractTestCase
         try {
             $this->getExchangeRateProvider()->getExchangeRate('EUR', 'USD');
         } catch (CurrencyConversionException $e) {
-            $this->assertSame('EUR', $e->getSourceCurrencyCode());
-            $this->assertSame('USD', $e->getTargetCurrencyCode());
+            self::assertSame('EUR', $e->getSourceCurrencyCode());
+            self::assertSame('USD', $e->getTargetCurrencyCode());
 
             return;
         }

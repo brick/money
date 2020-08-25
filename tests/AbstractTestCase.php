@@ -29,7 +29,7 @@ abstract class AbstractTestCase extends TestCase
      */
     final protected function assertBigDecimalIs(string $expected, BigDecimal $actual) : void
     {
-        $this->assertSame($expected, (string) $actual);
+        self::assertSame($expected, (string) $actual);
     }
 
     /**
@@ -41,8 +41,8 @@ abstract class AbstractTestCase extends TestCase
      */
     final protected function assertMoneyEquals(string $expectedAmount, string $expectedCurrency, Money $actual) : void
     {
-        $this->assertSame($expectedCurrency, (string) $actual->getCurrency());
-        $this->assertSame($expectedAmount, (string) $actual->getAmount());
+        self::assertSame($expectedCurrency, (string) $actual->getCurrency());
+        self::assertSame($expectedAmount, (string) $actual->getAmount());
     }
 
     /**
@@ -54,10 +54,10 @@ abstract class AbstractTestCase extends TestCase
      */
     final protected function assertMoneyIs(string $expected, Money $actual, ?Context $context = null) : void
     {
-        $this->assertSame($expected, (string) $actual);
+        self::assertSame($expected, (string) $actual);
 
         if ($context !== null) {
-            $this->assertEquals($context, $actual->getContext());
+            self::assertEquals($context, $actual->getContext());
         }
     }
 
@@ -70,11 +70,11 @@ abstract class AbstractTestCase extends TestCase
     final protected function assertMoniesAre(array $expected, array $actual) : void
     {
         foreach ($actual as $key => $money) {
-            $this->assertInstanceOf(Money::class, $money);
+            self::assertInstanceOf(Money::class, $money);
             $actual[$key] = (string) $money;
         }
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -85,7 +85,7 @@ abstract class AbstractTestCase extends TestCase
      */
     final protected function assertBigNumberEquals(string $expected, BigNumber $actual) : void
     {
-        $this->assertTrue($actual->isEqualTo($expected), $actual . ' != ' . $expected);
+        self::assertTrue($actual->isEqualTo($expected), $actual . ' != ' . $expected);
     }
 
     /**
@@ -100,7 +100,7 @@ abstract class AbstractTestCase extends TestCase
         foreach ($expectedAmounts as $currencyCode => $expectedAmount) {
             $actualAmount = $moneyBag->getAmount($currencyCode);
 
-            $this->assertInstanceOf(BigRational::class, $actualAmount);
+            self::assertInstanceOf(BigRational::class, $actualAmount);
             $this->assertBigNumberEquals($expectedAmount, $actualAmount);
         }
 
@@ -108,7 +108,7 @@ abstract class AbstractTestCase extends TestCase
         $actualAmounts = $moneyBag->getAmounts();
 
         foreach ($actualAmounts as $currencyCode => $actualAmount) {
-            $this->assertInstanceOf(BigRational::class, $actualAmount);
+            self::assertInstanceOf(BigRational::class, $actualAmount);
             $this->assertBigNumberEquals($expectedAmounts[$currencyCode], $actualAmount);
         }
     }
@@ -121,7 +121,7 @@ abstract class AbstractTestCase extends TestCase
      */
     final protected function assertRationalMoneyEquals(string $expected, RationalMoney $actual) : void
     {
-        $this->assertSame($expected, (string) $actual);
+        self::assertSame($expected, (string) $actual);
     }
 
     /**
@@ -135,10 +135,10 @@ abstract class AbstractTestCase extends TestCase
      */
     final protected function assertCurrencyEquals(string $currencyCode, int $numericCode, string $name, int $defaultFractionDigits, Currency $currency) : void
     {
-        $this->assertSame($currencyCode, $currency->getCurrencyCode());
-        $this->assertSame($numericCode, $currency->getNumericCode());
-        $this->assertSame($name, $currency->getName());
-        $this->assertSame($defaultFractionDigits, $currency->getDefaultFractionDigits());
+        self::assertSame($currencyCode, $currency->getCurrencyCode());
+        self::assertSame($numericCode, $currency->getNumericCode());
+        self::assertSame($name, $currency->getName());
+        self::assertSame($defaultFractionDigits, $currency->getDefaultFractionDigits());
     }
 
     /**

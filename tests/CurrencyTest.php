@@ -73,7 +73,7 @@ class CurrencyTest extends AbstractTestCase
 
     public function testOfReturnsSameInstance() : void
     {
-        $this->assertSame(Currency::of('EUR'), Currency::of('EUR'));
+        self::assertSame(Currency::of('EUR'), Currency::of('EUR'));
     }
 
     /**
@@ -91,8 +91,8 @@ class CurrencyTest extends AbstractTestCase
         $actual = Currency::ofCountry($countryCode);
 
         if (! $this->isExceptionClass($expected)) {
-            $this->assertInstanceOf(Currency::class, $actual);
-            $this->assertSame($expected, $actual->getCurrencyCode());
+            self::assertInstanceOf(Currency::class, $actual);
+            self::assertSame($expected, $actual->getCurrencyCode());
         }
     }
 
@@ -126,15 +126,15 @@ class CurrencyTest extends AbstractTestCase
     {
         $currency = Currency::of('EUR');
 
-        $this->assertTrue($currency->is('EUR'));
-        $this->assertTrue($currency->is(978));
+        self::assertTrue($currency->is('EUR'));
+        self::assertTrue($currency->is(978));
 
-        $this->assertFalse($currency->is('USD'));
-        $this->assertFalse($currency->is(840));
+        self::assertFalse($currency->is('USD'));
+        self::assertFalse($currency->is(840));
 
         $clone = clone $currency;
 
-        $this->assertNotSame($currency, $clone);
-        $this->assertTrue($clone->is($currency));
+        self::assertNotSame($currency, $clone);
+        self::assertTrue($clone->is($currency));
     }
 }

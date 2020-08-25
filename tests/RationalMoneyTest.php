@@ -30,8 +30,8 @@ class RationalMoneyTest extends AbstractTestCase
 
         $money = new RationalMoney($amount, $currency);
 
-        $this->assertSame($amount, $money->getAmount());
-        $this->assertSame($currency, $money->getCurrency());
+        self::assertSame($amount, $money->getAmount());
+        self::assertSame($currency, $money->getCurrency());
     }
 
     /**
