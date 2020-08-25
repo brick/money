@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Brick\Money\Tests;
+namespace Brick\Money\Tests\ExchangeRateProvider;
 
 use Brick\Money\Exception\CurrencyConversionException;
 use Brick\Money\ExchangeRateProvider;
 use Brick\Money\ExchangeRateProvider\ConfigurableProvider;
 use Brick\Money\ExchangeRateProvider\ProviderChain;
+use Brick\Money\Tests\AbstractTestCase;
 
 /**
  * Tests for class ProviderChain.

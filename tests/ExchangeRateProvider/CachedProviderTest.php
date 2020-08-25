@@ -19,21 +19,21 @@ class CachedProviderTest extends AbstractTestCase
         $provider = new CachedProvider($mock);
 
         self::assertSame(1.1, $provider->getExchangeRate('EUR', 'USD'));
-        self::assertEquals(1, $mock->getCalls());
+        self::assertSame(1, $mock->getCalls());
 
         self::assertSame(1.1, $provider->getExchangeRate('EUR', 'USD'));
-        self::assertEquals(1, $mock->getCalls());
+        self::assertSame(1, $mock->getCalls());
 
         self::assertSame(0.9, $provider->getExchangeRate('EUR', 'GBP'));
-        self::assertEquals(2, $mock->getCalls());
+        self::assertSame(2, $mock->getCalls());
 
         self::assertSame(0.9, $provider->getExchangeRate('EUR', 'GBP'));
-        self::assertEquals(2, $mock->getCalls());
+        self::assertSame(2, $mock->getCalls());
 
         $provider->invalidate();
 
         self::assertSame(0.9, $provider->getExchangeRate('EUR', 'GBP'));
-        self::assertEquals(3, $mock->getCalls());
+        self::assertSame(3, $mock->getCalls());
     }
 
     public function testGetExchangeRateOfUnknownCurrencyPair() : void
