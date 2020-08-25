@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Brick\Money\Tests;
 
 use Brick\Money\Currency;
+use Brick\Money\Exception\UnknownCurrencyException;
 use Brick\Money\ISOCurrencyProvider;
 
 /**
@@ -66,12 +67,12 @@ class ISOCurrencyProviderTest extends AbstractTestCase
 
     /**
      * @dataProvider providerUnknownCurrency
-     * @expectedException \Brick\Money\Exception\UnknownCurrencyException
      *
      * @param string|int $currencyCode
      */
     public function testGetUnknownCurrency($currencyCode) : void
     {
+        $this->expectException(UnknownCurrencyException::class);
         ISOCurrencyProvider::getInstance()->getCurrency($currencyCode);
     }
 

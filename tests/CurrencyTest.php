@@ -45,12 +45,12 @@ class CurrencyTest extends AbstractTestCase
 
     /**
      * @dataProvider providerOfUnknownCurrencyCode
-     * @expectedException \Brick\Money\Exception\UnknownCurrencyException
      *
      * @param string|int $currencyCode
      */
     public function testOfUnknownCurrencyCode($currencyCode) : void
     {
+        $this->expectException(UnknownCurrencyException::class);
         Currency::of($currencyCode);
     }
 
@@ -116,11 +116,9 @@ class CurrencyTest extends AbstractTestCase
         ];
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testCreateWithNegativeFractionDigits() : void
     {
+        $this->expectException(\InvalidArgumentException::class);
         new Currency('BTC', 0, 'BitCoin', -1);
     }
 

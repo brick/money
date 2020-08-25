@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Brick\Money\Tests;
 
+use Brick\Money\Exception\CurrencyConversionException;
 use Brick\Money\ExchangeRateProvider;
 use Brick\Money\ExchangeRateProvider\ConfigurableProvider;
 use Brick\Money\ExchangeRateProvider\ProviderChain;
@@ -38,12 +39,11 @@ class ProviderChainTest extends AbstractTestCase
         self::$provider2 = $provider;
     }
 
-    /**
-     * @expectedException \Brick\Money\Exception\CurrencyConversionException
-     */
     public function testUnknownExchangeRate() : void
     {
         $providerChain = new ProviderChain();
+
+        $this->expectException(CurrencyConversionException::class);
         $providerChain->getExchangeRate('USD', 'GBP');
     }
 

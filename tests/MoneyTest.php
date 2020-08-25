@@ -220,14 +220,12 @@ class MoneyTest extends AbstractTestCase
         ];
     }
 
-    /**
-     * @expectedException \Brick\Money\Exception\MoneyMismatchException
-     */
     public function testPlusDifferentContextThrowsException() : void
     {
         $a = Money::of(50, 'CHF', new CashContext(5));
         $b = Money::of(20, 'CHF');
 
+        $this->expectException(MoneyMismatchException::class);
         $a->plus($b);
     }
 
@@ -394,12 +392,11 @@ class MoneyTest extends AbstractTestCase
         ];
     }
 
-    /**
-     * @expectedException \Brick\Math\Exception\RoundingNecessaryException
-     */
     public function testQuotientAndRemainderThrowExceptionOnDecimal() : void
     {
         $money = Money::of(50, 'USD');
+
+        $this->expectException(RoundingNecessaryException::class);
         $money->quotientAndRemainder('1.1');
     }
 
@@ -435,33 +432,33 @@ class MoneyTest extends AbstractTestCase
         ];
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Cannot allocate() an empty list of ratios.
-     */
     public function testAllocateEmptyList() : void
     {
         $money = Money::of(50, 'USD');
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Cannot allocate() an empty list of ratios.');
+
         $money->allocate();
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Cannot allocate() negative ratios.
-     */
     public function testAllocateNegativeRatios() : void
     {
         $money = Money::of(50, 'USD');
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Cannot allocate() negative ratios.');
+
         $money->allocate(1, 2, -1);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Cannot allocate() to zero ratios only.
-     */
     public function testAllocateZeroRatios() : void
     {
         $money = Money::of(50, 'USD');
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Cannot allocate() to zero ratios only.');
+
         $money->allocate(0, 0, 0, 0, 0);
     }
 
@@ -499,14 +496,15 @@ class MoneyTest extends AbstractTestCase
     /**
      * @dataProvider providerSplitIntoLessThanOnePart
      *
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Cannot split() into less than 1 part.
-     *
      * @param int $parts
      */
     public function testSplitIntoLessThanOnePart(int $parts) : void
     {
         $money = Money::of(50, 'USD');
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Cannot split() into less than 1 part.');
+
         $money->split($parts);
     }
 
@@ -669,11 +667,9 @@ class MoneyTest extends AbstractTestCase
         $this->assertSame($c, Money::of(...$a)->compareTo(Money::of(...$b)));
     }
 
-    /**
-     * @expectedException \Brick\Money\Exception\MoneyMismatchException
-     */
     public function testCompareToOtherCurrency() : void
     {
+        $this->expectException(MoneyMismatchException::class);
         Money::of('1.00', 'EUR')->compareTo(Money::of('1.00', 'USD'));
     }
 
@@ -689,11 +685,9 @@ class MoneyTest extends AbstractTestCase
         $this->assertSame($c === 0, Money::of(...$a)->isEqualTo(Money::of(...$b)));
     }
 
-    /**
-     * @expectedException \Brick\Money\Exception\MoneyMismatchException
-     */
     public function testIsEqualToOtherCurrency() : void
     {
+        $this->expectException(MoneyMismatchException::class);
         Money::of('1.00', 'EUR')->isEqualTo(Money::of('1.00', 'USD'));
     }
 
@@ -709,11 +703,9 @@ class MoneyTest extends AbstractTestCase
         $this->assertSame($c < 0, Money::of(...$a)->isLessThan(Money::of(...$b)));
     }
 
-    /**
-     * @expectedException \Brick\Money\Exception\MoneyMismatchException
-     */
     public function testIsLessThanOtherCurrency() : void
     {
+        $this->expectException(MoneyMismatchException::class);
         Money::of('1.00', 'EUR')->isLessThan(Money::of('1.00', 'USD'));
     }
 
@@ -729,11 +721,9 @@ class MoneyTest extends AbstractTestCase
         $this->assertSame($c <= 0, Money::of(...$a)->isLessThanOrEqualTo(Money::of(...$b)));
     }
 
-    /**
-     * @expectedException \Brick\Money\Exception\MoneyMismatchException
-     */
     public function testIsLessThanOrEqualToOtherCurrency() : void
     {
+        $this->expectException(MoneyMismatchException::class);
         Money::of('1.00', 'EUR')->isLessThanOrEqualTo(Money::of('1.00', 'USD'));
     }
 
@@ -749,11 +739,9 @@ class MoneyTest extends AbstractTestCase
         $this->assertSame($c > 0, Money::of(...$a)->isGreaterThan(Money::of(...$b)));
     }
 
-    /**
-     * @expectedException \Brick\Money\Exception\MoneyMismatchException
-     */
     public function testIsGreaterThanOtherCurrency() : void
     {
+        $this->expectException(MoneyMismatchException::class);
         Money::of('1.00', 'EUR')->isGreaterThan(Money::of('1.00', 'USD'));
     }
 
@@ -769,11 +757,9 @@ class MoneyTest extends AbstractTestCase
         $this->assertSame($c >= 0, Money::of(...$a)->isGreaterThanOrEqualTo(Money::of(...$b)));
     }
 
-    /**
-     * @expectedException \Brick\Money\Exception\MoneyMismatchException
-     */
     public function testIsGreaterThanOrEqualToOtherCurrency() : void
     {
+        $this->expectException(MoneyMismatchException::class);
         Money::of('1.00', 'EUR')->isGreaterThanOrEqualTo(Money::of('1.00', 'USD'));
     }
 
@@ -1023,11 +1009,10 @@ class MoneyTest extends AbstractTestCase
         $this->assertMoneyEquals('13.90', 'USD', $total);
     }
 
-    /**
-     * @expectedException \Brick\Money\Exception\MoneyMismatchException
-     */
     public function testTotalOfDifferentCurrenciesThrowsException() : void
     {
+        $this->expectException(MoneyMismatchException::class);
+
         Money::total(
             Money::of('1.00', 'EUR'),
             Money::of('1.00', 'USD')
