@@ -175,7 +175,9 @@ final class Money extends AbstractMoney
      * @return Money
      *
      * @throws NumberFormatException      If the amount is a string in a non-supported format.
-     * @throws RoundingNecessaryException If the rounding was necessary to represent the amount at the requested scale.
+     * @throws UnknownCurrencyException   If the currency is an unknown currency code.
+     * @throws RoundingNecessaryException If the rounding mode is RoundingMode::UNNECESSARY, and rounding is necessary
+     *                                    to represent the amount at the requested scale.
      */
     public static function of($amount, $currency, ?Context $context = null, int $roundingMode = RoundingMode::UNNECESSARY) : Money
     {
@@ -206,8 +208,10 @@ final class Money extends AbstractMoney
      *
      * @return Money
      *
-     * @throws UnknownCurrencyException If the currency is an unknown currency code.
-     * @throws MathException            If the amount cannot be converted to a BigInteger.
+     * @throws NumberFormatException      If the amount is a string in a non-supported format.
+     * @throws UnknownCurrencyException   If the currency is an unknown currency code.
+     * @throws RoundingNecessaryException If the rounding mode is RoundingMode::UNNECESSARY, and rounding is necessary
+     *                                    to represent the amount at the requested scale.
      */
     public static function ofMinor($minorAmount, $currency, ?Context $context = null, int $roundingMode = RoundingMode::UNNECESSARY) : Money
     {
