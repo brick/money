@@ -456,6 +456,12 @@ If you're using an ORM such as Doctrine, it is advised to store the amount and c
   }
   ```
 
+## FAQ
+
+> How does this project compare with [moneyphp/money](https://github.com/moneyphp/money)?
+
+Please see [this discussion](https://github.com/brick/money/issues/28).
+
 ## brick/money for enterprise
 
 Available as part of the Tidelift Subscription.
