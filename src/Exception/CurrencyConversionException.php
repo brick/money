@@ -11,7 +11,7 @@ use function sprintf;
 /**
  * Exception thrown when an exchange rate is not available.
  */
-final class CurrencyConversionException extends MoneyException
+final class CurrencyConversionException extends \RuntimeException implements MoneyException
 {
     public function __construct(
         string $message,
