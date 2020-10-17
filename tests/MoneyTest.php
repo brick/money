@@ -852,6 +852,7 @@ class MoneyTest extends AbstractTestCase
 
     /**
      * @dataProvider providerFormatWith
+     * @requires extension intl
      *
      * @param array  $money    The money to test.
      * @param string $locale   The target locale.
@@ -877,6 +878,7 @@ class MoneyTest extends AbstractTestCase
 
     /**
      * @dataProvider providerFormatTo
+     * @requires extension intl
      *
      * @param array  $money            The money to test.
      * @param string $locale           The target locale.
