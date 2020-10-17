@@ -58,7 +58,7 @@ final class Currency
     private $defaultFractionDigits;
 
     /**
-     * Private constructor. Use getInstance() to obtain an instance.
+     * Class constructor.
      *
      * @param string $currencyCode          The currency code.
      * @param int    $numericCode           The numeric currency code.
