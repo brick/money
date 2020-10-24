@@ -5,3 +5,5 @@ import-currencies.php export-ignore
 phpunit.xml           export-ignore
 README.md             export-ignore
 tests/                export-ignore
+
+*.php diff=php
