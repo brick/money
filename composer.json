@@ -13,11 +13,11 @@
         "brick/math": "~0.7.3 || ~0.8.0 || ~0.9.0"
     },
     "require-dev": {
-        "brick/varexporter": "~0.2.1",
-        "phpunit/phpunit": "^7.5.15",
-        "php-coveralls/php-coveralls": "^2.2",
+        "ext-dom": "*",
         "ext-pdo": "*",
-        "ext-dom": "*"
+        "brick/varexporter": "~0.2.1",
+        "php-coveralls/php-coveralls": "^2.2",
+        "phpunit/phpunit": "^7.5.15"
     },
     "suggest": {
         "ext-intl": "Required to format Money objects"
@@ -31,5 +31,8 @@
         "psr-4": {
             "Brick\\Money\\Tests\\": "tests/"
         }
+    },
+    "config": {
+        "sort-packages": true
     }
 }
