@@ -321,12 +321,12 @@ class MoneyTest extends AbstractTestCase
     /**
      * @dataProvider providerDividedBy
      *
-     * @param array  $money        The base money.
-     * @param string $divisor      The divisor.
-     * @param int    $roundingMode The rounding mode to use.
-     * @param string $expected     The expected money value, or an exception class name.
+     * @param array            $money        The base money.
+     * @param int|float|string $divisor      The divisor.
+     * @param int              $roundingMode The rounding mode to use.
+     * @param string           $expected     The expected money value, or an exception class name.
      */
-    public function testDividedBy(array $money, string $divisor, int $roundingMode, string $expected) : void
+    public function testDividedBy(array $money, $divisor, int $roundingMode, string $expected) : void
     {
         $money = Money::of(...$money);
 
