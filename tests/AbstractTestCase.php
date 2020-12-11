@@ -21,12 +21,6 @@ use PHPUnit\Framework\TestCase;
  */
 abstract class AbstractTestCase extends TestCase
 {
-    /**
-     * @param string     $expected
-     * @param BigDecimal $actual
-     *
-     * @return void
-     */
     final protected function assertBigDecimalIs(string $expected, BigDecimal $actual) : void
     {
         self::assertSame($expected, (string) $actual);
@@ -36,8 +30,6 @@ abstract class AbstractTestCase extends TestCase
      * @param string $expectedAmount   The expected decimal amount.
      * @param string $expectedCurrency The expected currency code.
      * @param Money  $actual           The money to test.
-     *
-     * @return void
      */
     final protected function assertMoneyEquals(string $expectedAmount, string $expectedCurrency, Money $actual) : void
     {
@@ -49,8 +41,6 @@ abstract class AbstractTestCase extends TestCase
      * @param string       $expected The expected string representation of the Money.
      * @param Money        $actual   The money to test.
      * @param Context|null $context  An optional context to check against the Money.
-     *
-     * @return void
      */
     final protected function assertMoneyIs(string $expected, Money $actual, ?Context $context = null) : void
     {
@@ -64,8 +54,6 @@ abstract class AbstractTestCase extends TestCase
     /**
      * @param string[] $expected
      * @param Money[]  $actual
-     *
-     * @return void
      */
     final protected function assertMoniesAre(array $expected, array $actual) : void
     {
@@ -77,23 +65,11 @@ abstract class AbstractTestCase extends TestCase
         self::assertSame($expected, $actual);
     }
 
-    /**
-     * @param string    $expected
-     * @param BigNumber $actual
-     *
-     * @return void
-     */
     final protected function assertBigNumberEquals(string $expected, BigNumber $actual) : void
     {
         self::assertTrue($actual->isEqualTo($expected), $actual . ' != ' . $expected);
     }
 
-    /**
-     * @param array    $expectedAmounts
-     * @param MoneyBag $moneyBag
-     *
-     * @return void
-     */
     final protected function assertMoneyBagContains(array $expectedAmounts, MoneyBag $moneyBag) : void
     {
         // Test get() on each currency
@@ -113,26 +89,11 @@ abstract class AbstractTestCase extends TestCase
         }
     }
 
-    /**
-     * @param string        $expected
-     * @param RationalMoney $actual
-     *
-     * @return void
-     */
     final protected function assertRationalMoneyEquals(string $expected, RationalMoney $actual) : void
     {
         self::assertSame($expected, (string) $actual);
     }
 
-    /**
-     * @param string   $currencyCode
-     * @param int      $numericCode
-     * @param string   $name
-     * @param int      $defaultFractionDigits
-     * @param Currency $currency
-     *
-     * @return void
-     */
     final protected function assertCurrencyEquals(string $currencyCode, int $numericCode, string $name, int $defaultFractionDigits, Currency $currency) : void
     {
         self::assertSame($currencyCode, $currency->getCurrencyCode());
@@ -143,8 +104,6 @@ abstract class AbstractTestCase extends TestCase
 
     /**
      * @param mixed $value
-     *
-     * @return bool
      */
     final protected function isExceptionClass($value) : bool
     {

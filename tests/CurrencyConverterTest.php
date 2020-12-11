@@ -23,9 +23,6 @@ use Brick\Money\RationalMoney;
  */
 class CurrencyConverterTest extends AbstractTestCase
 {
-    /**
-     * @return CurrencyConverter
-     */
     private function createCurrencyConverter() : CurrencyConverter
     {
         $exchangeRateProvider = new ConfigurableProvider();
@@ -60,9 +57,6 @@ class CurrencyConverterTest extends AbstractTestCase
         }
     }
 
-    /**
-     * @return array
-     */
     public function providerConvertMoney() : array
     {
         return [
@@ -84,7 +78,7 @@ class CurrencyConverterTest extends AbstractTestCase
     /**
      * @dataProvider providerConvertMoneyBag
      *
-     * @param array   $monies       The mixed monies to add.
+     * @param array   $monies       The mixed currency monies to add.
      * @param string  $currency     The target currency code.
      * @param Context $context      The target context.
      * @param int     $roundingMode The rounding mode to use.
@@ -107,9 +101,6 @@ class CurrencyConverterTest extends AbstractTestCase
         $this->assertMoneyIs($total, $currencyConverter->convert($moneyBag, $currency, $roundingMode));
     }
 
-    /**
-     * @return array
-     */
     public function providerConvertMoneyBag() : array
     {
         return [
@@ -124,9 +115,9 @@ class CurrencyConverterTest extends AbstractTestCase
     /**
      * @dataProvider providerConvertMoneyBagToRational
      *
-     * @param array   $monies        The mixed monies to add.
-     * @param string  $currency      The target currency code.
-     * @param string  $expectedTotal The expected total.
+     * @param array  $monies        The mixed monies to add.
+     * @param string $currency      The target currency code.
+     * @param string $expectedTotal The expected total.
      */
     public function testConvertMoneyBagToRational(array $monies, string $currency, string $expectedTotal) : void
     {
@@ -147,9 +138,6 @@ class CurrencyConverterTest extends AbstractTestCase
         $this->assertRationalMoneyEquals($expectedTotal, $actualTotal);
     }
 
-    /**
-     * @return array
-     */
     public function providerConvertMoneyBagToRational() : array
     {
         return [
@@ -183,9 +171,6 @@ class CurrencyConverterTest extends AbstractTestCase
         }
     }
 
-    /**
-     * @return array
-     */
     public function providerConvertRationalMoney() : array
     {
         return [

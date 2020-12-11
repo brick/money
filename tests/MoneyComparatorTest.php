@@ -15,9 +15,6 @@ use Brick\Money\MoneyComparator;
  */
 class MoneyComparatorTest extends AbstractTestCase
 {
-    /**
-     * @return ConfigurableProvider
-     */
     private function getExchangeRateProvider() : ConfigurableProvider
     {
         $provider = new ConfigurableProvider();
@@ -37,8 +34,8 @@ class MoneyComparatorTest extends AbstractTestCase
     /**
      * @dataProvider providerCompare
      *
-     * @param array $a        The money to compare.
-     * @param array $b        The money to compare to.
+     * @param array      $a   The money to compare.
+     * @param array      $b   The money to compare to.
      * @param int|string $cmp The expected comparison value, or an exception class.
      */
     public function testCompare(array $a, array $b, $cmp) : void
@@ -60,9 +57,6 @@ class MoneyComparatorTest extends AbstractTestCase
         self::assertSame($cmp === 0, $comparator->isEqual($a, $b));
     }
 
-    /**
-     * @return array
-     */
     public function providerCompare() : array
     {
         return [
@@ -116,9 +110,6 @@ class MoneyComparatorTest extends AbstractTestCase
         }
     }
 
-    /**
-     * @return array
-     */
     public function providerMin() : array
     {
         return [
@@ -156,9 +147,6 @@ class MoneyComparatorTest extends AbstractTestCase
         }
     }
 
-    /**
-     * @return array
-     */
     public function providerMax() : array
     {
         return [

@@ -29,11 +29,6 @@ class ISOCurrencyProviderTest extends AbstractTestCase
 
     /**
      * @dataProvider providerGetCurrency
-     *
-     * @param string $currencyCode
-     * @param int    $numericCode
-     * @param string $name
-     * @param int    $defaultFractionDigits
      */
     public function testGetCurrency(string $currencyCode, int $numericCode, string $name, int $defaultFractionDigits) : void
     {
@@ -46,9 +41,6 @@ class ISOCurrencyProviderTest extends AbstractTestCase
         $this->assertCurrencyEquals($currencyCode, $numericCode, $name, $defaultFractionDigits, $currency);
     }
 
-    /**
-     * @return array
-     */
     public function providerGetCurrency() : array
     {
         return [
@@ -76,9 +68,6 @@ class ISOCurrencyProviderTest extends AbstractTestCase
         ISOCurrencyProvider::getInstance()->getCurrency($currencyCode);
     }
 
-    /**
-     * @return array
-     */
     public function providerUnknownCurrency() : array
     {
         return [

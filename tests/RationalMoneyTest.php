@@ -37,9 +37,7 @@ class RationalMoneyTest extends AbstractTestCase
     /**
      * @dataProvider providerPlus
      *
-     * @param array  $rationalMoney
-     * @param mixed  $amount
-     * @param string $expected
+     * @param mixed $amount
      */
     public function testPlus(array $rationalMoney, $amount, string $expected) : void
     {
@@ -56,9 +54,6 @@ class RationalMoneyTest extends AbstractTestCase
         }
     }
 
-    /**
-     * @return array
-     */
     public function providerPlus() : array
     {
         return [
@@ -75,9 +70,7 @@ class RationalMoneyTest extends AbstractTestCase
     /**
      * @dataProvider providerMinus
      *
-     * @param array  $rationalMoney
-     * @param mixed  $amount
-     * @param string $expected
+     * @param mixed $amount
      */
     public function testMinus(array $rationalMoney, $amount, string $expected) : void
     {
@@ -94,9 +87,6 @@ class RationalMoneyTest extends AbstractTestCase
         }
     }
 
-    /**
-     * @return array
-     */
     public function providerMinus() : array
     {
         return [
@@ -113,9 +103,7 @@ class RationalMoneyTest extends AbstractTestCase
     /**
      * @dataProvider providerMultipliedBy
      *
-     * @param array  $rationalMoney
-     * @param mixed  $operand
-     * @param string $expected
+     * @param mixed $operand
      */
     public function testMultipliedBy(array $rationalMoney, $operand, string $expected) : void
     {
@@ -132,9 +120,6 @@ class RationalMoneyTest extends AbstractTestCase
         }
     }
 
-    /**
-     * @return array
-     */
     public function providerMultipliedBy() : array
     {
         return [
@@ -147,9 +132,7 @@ class RationalMoneyTest extends AbstractTestCase
     /**
      * @dataProvider providerDividedBy
      *
-     * @param array  $rationalMoney
-     * @param mixed  $operand
-     * @param string $expected
+     * @param mixed $operand
      */
     public function testDividedBy(array $rationalMoney, $operand, string $expected) : void
     {
@@ -166,9 +149,6 @@ class RationalMoneyTest extends AbstractTestCase
         }
     }
 
-    /**
-     * @return array
-     */
     public function providerDividedBy() : array
     {
         return [
@@ -181,9 +161,6 @@ class RationalMoneyTest extends AbstractTestCase
 
     /**
      * @dataProvider providerSimplified
-     *
-     * @param array  $rationalMoney
-     * @param string $expected
      */
     public function testSimplified(array $rationalMoney, string $expected) : void
     {
@@ -193,9 +170,6 @@ class RationalMoneyTest extends AbstractTestCase
         $this->assertRationalMoneyEquals($expected, $actual);
     }
 
-    /**
-     * @return array
-     */
     public function providerSimplified() : array
     {
         return [
@@ -208,11 +182,6 @@ class RationalMoneyTest extends AbstractTestCase
 
     /**
      * @dataProvider providerTo
-     *
-     * @param array   $rationalMoney
-     * @param Context $context
-     * @param int     $roundingMode
-     * @param string  $expected
      */
     public function testTo(array $rationalMoney, Context $context, int $roundingMode, string $expected) : void
     {
@@ -229,9 +198,6 @@ class RationalMoneyTest extends AbstractTestCase
         }
     }
 
-    /**
-     * @return array
-     */
     public function providerTo() : array
     {
         return [

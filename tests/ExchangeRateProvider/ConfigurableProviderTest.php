@@ -17,9 +17,6 @@ use Brick\Math\RoundingMode;
  */
 class ConfigurableProviderTest extends AbstractTestCase
 {
-    /**
-     * @return ExchangeRateProvider
-     */
     private function getExchangeRateProvider() : ExchangeRateProvider
     {
         $provider = new ConfigurableProvider();
@@ -44,9 +41,6 @@ class ConfigurableProviderTest extends AbstractTestCase
         self::assertSame($exchangeRate, (string) BigRational::of($rate)->toScale(3, RoundingMode::DOWN));
     }
 
-    /**
-     * @return array
-     */
     public function providerGetExchangeRate() : array
     {
         return [

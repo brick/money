@@ -19,13 +19,6 @@ class CustomContextTest extends AbstractTestCase
 {
     /**
      * @dataProvider providerApplyTo
-     *
-     * @param int    $scale
-     * @param int    $step
-     * @param string $amount
-     * @param string $currency
-     * @param int    $roundingMode
-     * @param string $expected
      */
     public function testApplyTo(int $scale, int $step, string $amount, string $currency, int $roundingMode, string $expected) : void
     {
@@ -45,9 +38,6 @@ class CustomContextTest extends AbstractTestCase
         }
     }
 
-    /**
-     * @return array
-     */
     public function providerApplyTo() : array
     {
         return [

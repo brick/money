@@ -20,11 +20,6 @@ class AutoContextTest extends AbstractTestCase
 {
     /**
      * @dataProvider providerApplyTo
-     *
-     * @param string $amount
-     * @param string $currency
-     * @param int    $roundingMode
-     * @param string $expected
      */
     public function testApplyTo(string $amount, string $currency, int $roundingMode, string $expected) : void
     {
@@ -44,9 +39,6 @@ class AutoContextTest extends AbstractTestCase
         }
     }
 
-    /**
-     * @return array
-     */
     public function providerApplyTo() : array
     {
         return [

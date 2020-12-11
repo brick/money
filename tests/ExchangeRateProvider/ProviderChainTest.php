@@ -48,9 +48,6 @@ class ProviderChainTest extends AbstractTestCase
         $providerChain->getExchangeRate('USD', 'GBP');
     }
 
-    /**
-     * @return ProviderChain
-     */
     public function testAddFirstProvider() : ProviderChain
     {
         $provider = new ProviderChain();
@@ -64,10 +61,6 @@ class ProviderChainTest extends AbstractTestCase
 
     /**
      * @depends testAddFirstProvider
-     *
-     * @param ProviderChain $provider
-     *
-     * @return ProviderChain
      */
     public function testAddSecondProvider(ProviderChain $provider) : ProviderChain
     {
@@ -82,8 +75,6 @@ class ProviderChainTest extends AbstractTestCase
 
     /**
      * @depends testAddSecondProvider
-     *
-     * @param ProviderChain $provider
      */
     public function testRemoveProvider(ProviderChain $provider) : void
     {

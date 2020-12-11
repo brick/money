@@ -29,9 +29,6 @@ class ProviderMock implements ExchangeRateProvider
      */
     private $calls = 0;
 
-    /**
-     * @return int
-     */
     public function getCalls() : int
     {
         return $this->calls;

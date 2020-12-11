@@ -18,9 +18,6 @@ class PDOProviderTest extends AbstractTestCase
 {
     /**
      * @dataProvider providerConstructorWithInvalidConfiguration
-     *
-     * @param PDOProviderConfiguration $configuration
-     * @param string                   $exceptionMessage
      */
     public function testConstructorWithInvalidConfiguration(PDOProviderConfiguration $configuration, string $exceptionMessage) : void
     {
@@ -32,9 +29,6 @@ class PDOProviderTest extends AbstractTestCase
         new PDOProvider($pdo, $configuration);
     }
 
-    /**
-     * @return array
-     */
     public function providerConstructorWithInvalidConfiguration() : array
     {
         $noTableName = new PDOProviderConfiguration();
@@ -105,9 +99,6 @@ class PDOProviderTest extends AbstractTestCase
         }
     }
 
-    /**
-     * @return array
-     */
     public function providerGetExchangeRate() : array
     {
         return [
@@ -162,9 +153,6 @@ class PDOProviderTest extends AbstractTestCase
         }
     }
 
-    /**
-     * @return array
-     */
     public function providerWithFixedSourceCurrency() : array
     {
         return [
@@ -219,9 +207,6 @@ class PDOProviderTest extends AbstractTestCase
         }
     }
 
-    /**
-     * @return array
-     */
     public function providerWithFixedTargetCurrency() : array
     {
         return [
@@ -284,9 +269,6 @@ class PDOProviderTest extends AbstractTestCase
         }
     }
 
-    /**
-     * @return array
-     */
     public function providerWithParameters() : array
     {
         return [

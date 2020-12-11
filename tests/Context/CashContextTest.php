@@ -19,12 +19,6 @@ class CashContextTest extends AbstractTestCase
 {
     /**
      * @dataProvider providerApplyTo
-     *
-     * @param int    $step
-     * @param string $amount
-     * @param string $currency
-     * @param int    $roundingMode
-     * @param string $expected
      */
     public function testApplyTo(int $step, string $amount, string $currency, int $roundingMode, string $expected) : void
     {
@@ -44,9 +38,6 @@ class CashContextTest extends AbstractTestCase
         }
     }
 
-    /**
-     * @return array
-     */
     public function providerApplyTo() : array
     {
         return [
