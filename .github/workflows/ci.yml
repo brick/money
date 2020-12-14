@@ -19,10 +19,10 @@ jobs:
           - "7.4"
           - "8.0"
         deps:
-          - "high"
+          - "highest"
         include:
           - php-version: "7.1"
-            deps: "low"
+            deps: "lowest"
 
     steps:
       - name: Checkout
@@ -35,12 +35,9 @@ jobs:
           coverage: xdebug
 
       - name: Install composer dependencies
-        run: composer install --no-interaction --no-progress --no-suggest
-        if: ${{ matrix.deps == 'high' }}
-
-      - name: Install lowest composer dependencies
-        run: composer update --no-interaction --no-progress --no-suggest --prefer-lowest
-        if: ${{ matrix.deps == 'low' }}
+        uses: "ramsey/composer-install@v1"
+        with:
+          dependency-versions: ${{ matrix.deps }}
 
       - name: Run PHPUnit
         run: vendor/bin/phpunit
