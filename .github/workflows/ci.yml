@@ -8,6 +8,7 @@ on:
 
 jobs:
   phpunit:
+    name: PHPUnit
     runs-on: ubuntu-latest
 
     strategy:
