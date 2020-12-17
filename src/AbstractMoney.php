@@ -44,6 +44,8 @@ abstract class AbstractMoney implements MoneyContainer
     /**
      * Required by interface MoneyContainer.
      *
+     * @psalm-return array<string, BigNumber>
+     *
      * @return BigNumber[]
      */
     final public function getAmounts() : array

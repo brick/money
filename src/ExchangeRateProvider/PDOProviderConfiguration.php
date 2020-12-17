@@ -6,6 +6,8 @@ namespace Brick\Money\ExchangeRateProvider;
 
 /**
  * Configuration for the PDOExchangeRateProvider.
+ *
+ * @psalm-suppress MissingConstructor
  */
 final class PDOProviderConfiguration
 {

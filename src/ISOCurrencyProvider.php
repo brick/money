@@ -19,6 +19,8 @@ final class ISOCurrencyProvider
     /**
      * The raw currency data, indexed by currency code.
      *
+     * @psalm-var array<string, array{string, int, string, int}>
+     *
      * @var array
      */
     private $currencyData;
@@ -27,6 +29,8 @@ final class ISOCurrencyProvider
      * An associative array of currency numeric code to currency code.
      *
      * This property is set on-demand, as soon as required.
+     *
+     * @psalm-var array<int, string>|null
      *
      * @var array|null
      */
@@ -37,6 +41,8 @@ final class ISOCurrencyProvider
      *
      * This property is set on-demand, as soon as required.
      *
+     * @psalm-var array<string, list<string>>|null
+     *
      * @var array|null
      */
     private $countryToCurrency;
@@ -45,6 +51,8 @@ final class ISOCurrencyProvider
      * The Currency instances.
      *
      * The instances are created on-demand, as soon as they are requested.
+     *
+     * @psalm-var array<string, Currency>
      *
      * @var Currency[]
      */
@@ -92,11 +100,7 @@ final class ISOCurrencyProvider
      */
     public function getCurrency($currencyCode) : Currency
     {
-        if (isset($this->currencies[$currencyCode])) {
-            return $this->currencies[$currencyCode];
-        }
-
-        if (! isset($this->currencyData[$currencyCode])) {
+        if (is_int($currencyCode)) {
             if ($this->numericToCurrency === null) {
                 $this->numericToCurrency = require __DIR__ . '/../data/numeric-to-currency.php';
             }
@@ -105,6 +109,14 @@ final class ISOCurrencyProvider
                 return $this->getCurrency($this->numericToCurrency[$currencyCode]);
             }
 
+            throw UnknownCurrencyException::unknownCurrency($currencyCode);
+        }
+
+        if (isset($this->currencies[$currencyCode])) {
+            return $this->currencies[$currencyCode];
+        }
+
+        if (! isset($this->currencyData[$currencyCode])) {
             throw UnknownCurrencyException::unknownCurrency($currencyCode);
         }
 

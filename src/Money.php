@@ -663,6 +663,7 @@ final class Money extends AbstractMoney
      */
     public function formatTo(string $locale, bool $allowWholeNumber = false) : string
     {
+        /** @var \NumberFormatter|null $lastFormatter */
         static $lastFormatter = null;
         static $lastFormatterLocale;
         static $lastFormatterScale;

@@ -14,6 +14,8 @@ interface MoneyContainer
     /**
      * Returns the amounts contained in this money container, indexed by currency code.
      *
+     * @psalm-return array<string, BigNumber>
+     *
      * @return BigNumber[]
      */
     public function getAmounts() : array;

@@ -16,6 +16,8 @@ final class MoneyBag implements MoneyContainer
     /**
      * The amounts in this bag, indexed by currency code.
      *
+     * @psalm-var array<string, BigRational>
+     *
      * @var BigRational[]
      */
     private $amounts = [];
@@ -44,6 +46,8 @@ final class MoneyBag implements MoneyContainer
 
     /**
      * Returns the amounts contained in this bag, as rational numbers, indexed by currency code.
+     *
+     * @psalm-return array<string, BigRational>
      *
      * @return BigRational[]
      */
