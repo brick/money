@@ -176,8 +176,7 @@ You may occasionally need to chain several operations on a Money, and only apply
 use Brick\Money\Money;
 use Brick\Math\RoundingMode;
 
-$money = Money::of('9.5', 'EUR'); // EUR 9.50
-$money
+$money = Money::of('9.5', 'EUR') // EUR 9.50
   ->toRational() // EUR 950/100
   ->dividedBy(3) // EUR 950/300
   ->plus('17.795') // EUR 6288500/300000
