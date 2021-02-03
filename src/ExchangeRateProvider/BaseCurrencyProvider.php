@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Brick\Money\ExchangeRateProvider;
 
+use Brick\Math\BigNumber;
 use Brick\Money\ExchangeRateProvider;
 
 use Brick\Math\BigRational;
@@ -49,7 +50,7 @@ final class BaseCurrencyProvider implements ExchangeRateProvider
     public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode)
     {
         if ($sourceCurrencyCode === $this->baseCurrencyCode) {
-            return $this->provider->getExchangeRate($sourceCurrencyCode, $targetCurrencyCode);
+            return BigNumber::of($this->provider->getExchangeRate($sourceCurrencyCode, $targetCurrencyCode));
         }
 
         if ($targetCurrencyCode === $this->baseCurrencyCode) {

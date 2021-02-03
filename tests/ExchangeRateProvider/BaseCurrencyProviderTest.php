@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Brick\Money\Tests\ExchangeRateProvider;
 
+use Brick\Math\BigNumber;
 use Brick\Money\ExchangeRateProvider;
 use Brick\Money\ExchangeRateProvider\BaseCurrencyProvider;
 use Brick\Money\ExchangeRateProvider\ConfigurableProvider;
@@ -38,7 +39,7 @@ class BaseCurrencyProviderTest extends AbstractTestCase
     public function testGetExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode, string $exchangeRate) : void
     {
         $rate = $this->getExchangeRateProvider()->getExchangeRate($sourceCurrencyCode, $targetCurrencyCode);
-        self::assertSame($exchangeRate, (string) BigRational::of($rate)->toScale(6, RoundingMode::DOWN));
+        self::assertSame($exchangeRate, (string) $rate->toScale(6, RoundingMode::DOWN));
     }
 
     public function providerGetExchangeRate() : array
@@ -59,5 +60,26 @@ class BaseCurrencyProviderTest extends AbstractTestCase
             ['CAD', 'EUR', '0.818181'],
             ['CAD', 'GBP', '0.727272'],
         ];
+    }
+
+    /**
+     * @dataProvider providerExchangeRateType
+     *
+     * @param  BigNumber|float|int|string      $rate
+     */
+    public function testReturnBigNumber($rate)
+    {
+        $configurableProvider = new ConfigurableProvider();
+        $configurableProvider->setExchangeRate('USD', 'EUR', $rate);
+        $baseProvider = new BaseCurrencyProvider($configurableProvider, 'USD');
+
+        $rate = $baseProvider->getExchangeRate('USD', 'EUR');
+
+        $this->assertEquals(BigNumber::of($rate), $rate);
+    }
+
+    public function providerExchangeRateType()
+    {
+        return [[1], [1.1], ['1.0'], [BigNumber::of('1')]];
     }
 }
