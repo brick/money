@@ -47,7 +47,7 @@ final class BaseCurrencyProvider implements ExchangeRateProvider
     /**
      * {@inheritdoc}
      */
-    public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode)
+    public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode): BigNumber
     {
         if ($sourceCurrencyCode === $this->baseCurrencyCode) {
             return BigNumber::of($this->provider->getExchangeRate($sourceCurrencyCode, $targetCurrencyCode));
