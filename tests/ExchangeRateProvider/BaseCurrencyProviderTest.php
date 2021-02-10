@@ -63,7 +63,7 @@ class BaseCurrencyProviderTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider providerExchangeRateType
+     * @dataProvider providerReturnBigNumber
      *
      * @param  BigNumber|float|int|string      $rate
      */
@@ -78,7 +78,7 @@ class BaseCurrencyProviderTest extends AbstractTestCase
         $this->assertEquals(BigNumber::of($rate), $rate);
     }
 
-    public function providerExchangeRateType()
+    public function providerReturnBigNumber()
     {
         return [[1], [1.1], ['1.0'], [BigNumber::of('1')]];
     }
