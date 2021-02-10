@@ -65,7 +65,7 @@ class BaseCurrencyProviderTest extends AbstractTestCase
     /**
      * @dataProvider providerReturnBigNumber
      *
-     * @param  BigNumber|float|int|string $rate
+     * @param BigNumber|float|int|string $rate
      */
     public function testReturnBigNumber($rate) : void
     {
