@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.5.1](https://github.com/brick/money/releases/tag/0.5.1) - 2021-02-10
+
+👌 **Improvement**
+
+`BaseCurrencyProvider` now always returns a `BigNumber` for convenience (#37).
+This is useful if you're using `BaseCurrencyProvider` on its own, not just in `CurrencyConverter`.
+
+Thanks @rdarcy1!
+
 ## [0.5.0](https://github.com/brick/money/releases/tag/0.5.0) - 2020-08-19
 
 👌 **Improvements**
