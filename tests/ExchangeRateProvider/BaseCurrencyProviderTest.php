@@ -75,7 +75,7 @@ class BaseCurrencyProviderTest extends AbstractTestCase
 
         $rate = $baseProvider->getExchangeRate('USD', 'EUR');
 
-        $this->assertEquals(BigNumber::of($rate), $rate);
+        $this->assertInstanceOf(BigNumber::class, $rate);
     }
 
     public function providerReturnBigNumber() : array
