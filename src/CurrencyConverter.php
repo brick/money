@@ -52,6 +52,8 @@ final class CurrencyConverter
     /**
      * Converts the given money to the given currency.
      *
+     * @psalm-param RoundingMode::* $roundingMode
+     *
      * @param MoneyContainer      $moneyContainer The Money, RationalMoney or MoneyBag to convert.
      * @param Currency|string|int $currency       The Currency instance, ISO currency code or ISO numeric currency code.
      * @param int                 $roundingMode   The rounding mode, if necessary.

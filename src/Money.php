@@ -141,6 +141,8 @@ final class Money extends AbstractMoney
     /**
      * Creates a Money from a rational amount, a currency, and a context.
      *
+     * @psalm-param RoundingMode::* $roundingMode
+     *
      * @param BigNumber $amount       The amount.
      * @param Currency  $currency     The currency.
      * @param Context   $context      The context.
@@ -166,6 +168,8 @@ final class Money extends AbstractMoney
      *
      * To override this behaviour, a Context instance can be provided.
      * Operations on this Money return a Money with the same context.
+     *
+     * @psalm-param RoundingMode::* $roundingMode
      *
      * @param BigNumber|int|float|string $amount       The monetary amount.
      * @param Currency|string|int        $currency     The Currency instance, ISO currency code or ISO numeric currency code.
@@ -200,6 +204,8 @@ final class Money extends AbstractMoney
      * By default, the money is created with a DefaultContext. This means that the amount is scaled to match the
      * currency's default fraction digits. For example, `Money::ofMinor(1234, 'USD')` will yield `USD 12.34`.
      * If the amount cannot be safely converted to this scale, an exception is thrown.
+     *
+     * @psalm-param RoundingMode::* $roundingMode
      *
      * @param BigNumber|int|float|string $minorAmount  The amount, in minor currency units.
      * @param Currency|string|int        $currency     The Currency instance, ISO currency code or ISO numeric currency code.
@@ -322,6 +328,8 @@ final class Money extends AbstractMoney
      * rounding mode can be provided. If a rounding mode is not provided and rounding is necessary, an exception is
      * thrown.
      *
+     * @psalm-param RoundingMode::* $roundingMode
+     *
      * @param AbstractMoney|BigNumber|int|float|string $that         The money or amount to add.
      * @param int                                      $roundingMode An optional RoundingMode constant.
      *
@@ -358,6 +366,8 @@ final class Money extends AbstractMoney
      * rounding mode can be provided. If a rounding mode is not provided and rounding is necessary, an exception is
      * thrown.
      *
+     * @psalm-param RoundingMode::* $roundingMode
+     *
      * @param AbstractMoney|BigNumber|int|float|string $that         The money or amount to subtract.
      * @param int                                      $roundingMode An optional RoundingMode constant.
      *
@@ -390,6 +400,8 @@ final class Money extends AbstractMoney
      * rounding mode can be provided. If a rounding mode is not provided and rounding is necessary, an exception is
      * thrown.
      *
+     * @psalm-param RoundingMode::* $roundingMode
+     *
      * @param BigNumber|int|float|string $that         The multiplier.
      * @param int                        $roundingMode An optional RoundingMode constant.
      *
@@ -410,6 +422,8 @@ final class Money extends AbstractMoney
      * The resulting Money has the same context as this Money. If the result needs rounding to fit this context, a
      * rounding mode can be provided. If a rounding mode is not provided and rounding is necessary, an exception is
      * thrown.
+     *
+     * @psalm-param RoundingMode::* $roundingMode
      *
      * @param BigNumber|int|float|string $that         The divisor.
      * @param int                        $roundingMode An optional RoundingMode constant.
@@ -606,6 +620,8 @@ final class Money extends AbstractMoney
      *
      * For example, converting a default money of `USD 1.23` to `EUR` with an exchange rate of `0.91` and
      * RoundingMode::UP will yield `EUR 1.12`.
+     *
+     * @psalm-param RoundingMode::* $roundingMode
      *
      * @param Currency|string|int        $currency     The Currency instance, ISO currency code or ISO numeric currency code.
      * @param BigNumber|int|float|string $exchangeRate The exchange rate to multiply by.

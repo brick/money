@@ -29,6 +29,8 @@ abstract class AbstractMoney implements MoneyContainer
     /**
      * Converts this money to a Money in the given Context.
      *
+     * @psalm-param RoundingMode::* $roundingMode
+     *
      * @param Context $context      The context.
      * @param int     $roundingMode The rounding mode, if necessary.
      *
