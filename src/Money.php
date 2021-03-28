@@ -563,6 +563,55 @@ final class Money extends AbstractMoney
     }
 
     /**
+     * Allocates this Money according to a list of ratios.
+     *
+     * The remainder is also present, appended at the end of the list.
+     *
+     * For example, given a `USD 49.99` money in the default context,
+     * `allocateWithRemainder(1, 2, 3, 4)` returns [`USD 4.99`, `USD 9.99`, `USD 14.99`, `USD 19.99`, `USD 0.03`]
+     *
+     * The resulting monies have the same context as this Money.
+     *
+     * @param int[] $ratios The ratios.
+     *
+     * @return Money[]
+     *
+     * @throws \InvalidArgumentException If called with invalid parameters.
+     */
+    public function allocateWithRemainder(int ...$ratios) : array
+    {
+        if (! $ratios) {
+            throw new \InvalidArgumentException('Cannot allocate() an empty list of ratios.');
+        }
+
+        foreach ($ratios as $ratio) {
+            if ($ratio < 0) {
+                throw new \InvalidArgumentException('Cannot allocate() negative ratios.');
+            }
+        }
+
+        $total = array_sum($ratios);
+
+        if ($total === 0) {
+            throw new \InvalidArgumentException('Cannot allocate() to zero ratios only.');
+        }
+
+        $monies = [];
+
+        $remainder = $this;
+
+        foreach ($ratios as $ratio) {
+            $money = $this->multipliedBy($ratio)->quotient($total);
+            $remainder = $remainder->minus($money);
+            $monies[] = $money;
+        }
+      
+        $monies[]   = $remainder;
+
+        return $monies;
+    }
+
+    /**
      * Splits this Money into a number of parts.
      *
      * If the division of this Money by the number of parts yields a remainder, its amount is split over the first
@@ -586,6 +635,29 @@ final class Money extends AbstractMoney
         }
 
         return $this->allocate(...array_fill(0, $parts, 1));
+    }
+
+    /**
+     * Splits this Money into a number of parts and it's respective remainder.
+     * 
+     * For example, given a `USD 100.00` money in the default context,
+     * `splitWithRemainder(3)` returns [`USD 33.33`, `USD 33.33`, `USD 33.33`, `USD 0.01`]
+     * 
+     * The resulting monies have the same context as this Money.
+     * 
+     * @param int $parts The number of parts
+     * 
+     * @return Money[]
+     * 
+     * @throws \InvalidArgumentException If called with invalid parameters.
+     */
+    public function splitWithRemainder(int $parts) : array
+    {
+        if ($parts < 1) {
+            throw new \InvalidArgumentException('Cannot splitWithRemainder() into less than 1 part.');
+        }
+
+        return $this->allocateWithRemainder(...array_fill(0, $parts, 1));
     }
 
     /**
