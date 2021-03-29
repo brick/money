@@ -444,7 +444,7 @@ class MoneyTest extends AbstractTestCase
         $money = Money::of(50, 'USD');
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Cannot allocate() an empty list of ratios.');
+        $this->expectExceptionMessage('Cannot allocateWithRemainder() an empty list of ratios.');
 
         $money->allocateWithRemainder();
     }
@@ -454,7 +454,7 @@ class MoneyTest extends AbstractTestCase
         $money = Money::of(50, 'USD');
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Cannot allocate() negative ratios.');
+        $this->expectExceptionMessage('Cannot allocateWithRemainder() negative ratios.');
 
         $money->allocateWithRemainder(1, 2, -1);
     }
@@ -464,7 +464,7 @@ class MoneyTest extends AbstractTestCase
         $money = Money::of(50, 'USD');
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Cannot allocate() to zero ratios only.');
+        $this->expectExceptionMessage('Cannot allocateWithRemainder() to zero ratios only.');
 
         $money->allocateWithRemainder(0, 0, 0, 0, 0);
     }
@@ -537,6 +537,28 @@ class MoneyTest extends AbstractTestCase
             [0]
         ];
     }
+
+    /**
+     * @dataProvider providerSplitWithRemainderIntoLessThanOnePart
+     */
+    public function testSplitWithRemainderIntoLessThanOnePart(int $parts) : void
+    {
+        $money = Money::of(50, 'USD');
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Cannot splitWithRemainder() into less than 1 part.');
+
+        $money->splitWithRemainder($parts);
+    }
+
+    public function providerSplitWithRemainderIntoLessThanOnePart() : array
+    {
+        return [
+            [-1],
+            [0]
+        ];
+    }
+
 
     /**
      * @dataProvider providerAbs

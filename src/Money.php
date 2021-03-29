@@ -581,19 +581,19 @@ final class Money extends AbstractMoney
     public function allocateWithRemainder(int ...$ratios) : array
     {
         if (! $ratios) {
-            throw new \InvalidArgumentException('Cannot allocate() an empty list of ratios.');
+            throw new \InvalidArgumentException('Cannot allocateWithRemainder() an empty list of ratios.');
         }
 
         foreach ($ratios as $ratio) {
             if ($ratio < 0) {
-                throw new \InvalidArgumentException('Cannot allocate() negative ratios.');
+                throw new \InvalidArgumentException('Cannot allocateWithRemainder() negative ratios.');
             }
         }
 
         $total = array_sum($ratios);
 
         if ($total === 0) {
-            throw new \InvalidArgumentException('Cannot allocate() to zero ratios only.');
+            throw new \InvalidArgumentException('Cannot allocateWithRemainder() to zero ratios only.');
         }
 
         $monies = [];
