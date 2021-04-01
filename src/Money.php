@@ -606,7 +606,7 @@ final class Money extends AbstractMoney
             $monies[] = $money;
         }
       
-        $monies[]   = $remainder;
+        $monies[] = $remainder;
 
         return $monies;
     }
