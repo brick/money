@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.5.2](https://github.com/brick/money/releases/tag/0.5.2) - 2021-04-03
+
+✨ **New methods**
+
+- `Money::allocateWithRemainder()`
+- `Money::splitWithRemainder()`
+
+These methods perform like their `allocate()` and `split()` counterparts, but append the remainder at the end of the returned array instead of spreading it over the first monies.
+
+Thanks @NCatalani!
+
 ## [0.5.1](https://github.com/brick/money/releases/tag/0.5.1) - 2021-02-10
 
 👌 **Improvement**
