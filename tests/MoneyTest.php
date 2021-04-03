@@ -415,6 +415,61 @@ class MoneyTest extends AbstractTestCase
     }
 
     /**
+     * @dataProvider providerAllocateWithRemainder
+     */
+    public function testAllocateWithRemainder(array $money, array $ratios, array $expected) : void
+    {
+        $money = Money::of(...$money);
+        $monies = $money->allocateWithRemainder(...$ratios);
+        $this->assertMoniesAre($expected, $monies);
+    }
+
+    public function providerAllocateWithRemainder() : array
+    {
+        return [
+            [['99.99', 'USD'], [100], ['USD 99.99', 'USD 0.00']],
+            [['99.99', 'USD'], [100, 100], ['USD 49.99', 'USD 49.99', 'USD 0.01']],
+            [[100, 'USD'], [30, 20, 40], ['USD 33.33', 'USD 22.22', 'USD 44.44', 'USD 0.01']],
+            [[100, 'USD'], [30, 20, 40, 40], ['USD 23.07', 'USD 15.38', 'USD 30.76', 'USD 30.76', 'USD 0.03']],
+            [[100, 'CHF', new CashContext(5)], [1, 2, 3, 7], ['CHF 7.65', 'CHF 15.35', 'CHF 23.05', 'CHF 53.80', 'CHF 0.15']],
+            [['100.123', 'EUR', new AutoContext()], [2, 3, 1, 1], ['EUR 28.606', 'EUR 42.909', 'EUR 14.303', 'EUR 14.303', 'EUR 0.002']],
+            [['0.02', 'EUR'], [1, 1, 1, 1], ['EUR 0.00', 'EUR 0.00', 'EUR 0.00', 'EUR 0.00', 'EUR 0.02']],
+            [['0.02', 'EUR'], [1, 1, 3, 1], ['EUR 0.00', 'EUR 0.00', 'EUR 0.01', 'EUR 0.00', 'EUR 0.01']],
+            [[-100, 'USD'], [30, 20, 40, 40], ['USD -23.07', 'USD -15.38', 'USD -30.76', 'USD -30.76', 'USD -0.03']],
+        ];
+    }
+
+    public function testAllocateWithRemainderEmptyList() : void
+    {
+        $money = Money::of(50, 'USD');
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Cannot allocateWithRemainder() an empty list of ratios.');
+
+        $money->allocateWithRemainder();
+    }
+
+    public function testAllocateWithRemainderNegativeRatios() : void
+    {
+        $money = Money::of(50, 'USD');
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Cannot allocateWithRemainder() negative ratios.');
+
+        $money->allocateWithRemainder(1, 2, -1);
+    }
+
+    public function testAllocateWithRemainderZeroRatios() : void
+    {
+        $money = Money::of(50, 'USD');
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Cannot allocateWithRemainder() to zero ratios only.');
+
+        $money->allocateWithRemainder(0, 0, 0, 0, 0);
+    }
+
+    /**
      * @dataProvider providerSplit
      */
     public function testSplit(array $money, int $targets, array $expected) : void
@@ -439,6 +494,30 @@ class MoneyTest extends AbstractTestCase
     }
 
     /**
+     * @dataProvider providerSplitWithRemainder
+     */
+    public function testSplitWithRemainder(array $money, int $targets, array $expected) : void
+    {
+        $money = Money::of(...$money);
+        $monies = $money->splitWithRemainder($targets);
+        $this->assertMoniesAre($expected, $monies);
+    }
+
+    public function providerSplitWithRemainder() : array
+    {
+        return [
+            [['99.99', 'USD'], 1, ['USD 99.99', 'USD 0.00']],
+            [['99.99', 'USD'], 2, ['USD 49.99', 'USD 49.99', 'USD 0.01']],
+            [['99.99', 'USD'], 3, ['USD 33.33', 'USD 33.33', 'USD 33.33', 'USD 0.00']],
+            [['99.99', 'USD'], 4, ['USD 24.99', 'USD 24.99', 'USD 24.99', 'USD 24.99', 'USD 0.03']],
+            [[100, 'CHF', new CashContext(5)], 3, ['CHF 33.30', 'CHF 33.30', 'CHF 33.30', 'CHF 0.10']],
+            [[100, 'CHF', new CashContext(5)], 7, ['CHF 14.25','CHF 14.25', 'CHF 14.25', 'CHF 14.25', 'CHF 14.25', 'CHF 14.25', 'CHF 14.25', 'CHF 0.25']],
+            [['100.123', 'EUR', new AutoContext()], 4, ['EUR 25.030', 'EUR 25.030', 'EUR 25.030', 'EUR 25.030', 'EUR 0.003']],
+            [['0.02', 'EUR'], 4, ['EUR 0.00', 'EUR 0.00', 'EUR 0.00', 'EUR 0.00', 'EUR 0.02']],
+        ];
+    }
+
+    /**
      * @dataProvider providerSplitIntoLessThanOnePart
      */
     public function testSplitIntoLessThanOnePart(int $parts) : void
@@ -458,6 +537,28 @@ class MoneyTest extends AbstractTestCase
             [0]
         ];
     }
+
+    /**
+     * @dataProvider providerSplitWithRemainderIntoLessThanOnePart
+     */
+    public function testSplitWithRemainderIntoLessThanOnePart(int $parts) : void
+    {
+        $money = Money::of(50, 'USD');
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Cannot splitWithRemainder() into less than 1 part.');
+
+        $money->splitWithRemainder($parts);
+    }
+
+    public function providerSplitWithRemainderIntoLessThanOnePart() : array
+    {
+        return [
+            [-1],
+            [0]
+        ];
+    }
+
 
     /**
      * @dataProvider providerAbs
