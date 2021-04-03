@@ -605,7 +605,7 @@ final class Money extends AbstractMoney
             $remainder = $remainder->minus($money);
             $monies[] = $money;
         }
-      
+
         $monies[] = $remainder;
 
         return $monies;
@@ -638,17 +638,17 @@ final class Money extends AbstractMoney
     }
 
     /**
-     * Splits this Money into a number of parts and it's respective remainder.
-     * 
+     * Splits this Money into a number of parts and a remainder.
+     *
      * For example, given a `USD 100.00` money in the default context,
      * `splitWithRemainder(3)` returns [`USD 33.33`, `USD 33.33`, `USD 33.33`, `USD 0.01`]
-     * 
+     *
      * The resulting monies have the same context as this Money.
-     * 
+     *
      * @param int $parts The number of parts
-     * 
+     *
      * @return Money[]
-     * 
+     *
      * @throws \InvalidArgumentException If called with invalid parameters.
      */
     public function splitWithRemainder(int $parts) : array
