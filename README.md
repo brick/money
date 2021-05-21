@@ -439,7 +439,10 @@ If you're using an ORM such as Doctrine, it is advised to store the amount and c
   ```php
   class Entity
   {
-      private int $price;
+      /** @ORM\Column(type="bigint") */
+      private string $price;
+
+      /** @ORM\Column(type="string", length=3) */
       private string $currencyCode;
 
       public function getPrice() : Money
@@ -449,7 +452,7 @@ If you're using an ORM such as Doctrine, it is advised to store the amount and c
 
       public function setPrice(Money $price) : void
       {
-          $this->price = $price->getMinorAmount()->toInt();
+          $this->price = (string) $price->getMinorAmount();
           $this->currencyCode = $price->getCurrency()->getCurrencyCode();
       }
   }
