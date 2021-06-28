@@ -7,7 +7,7 @@ namespace Brick\Money\Exception;
 /**
  * Exception thrown when an exchange rate is not available.
  */
-class CurrencyConversionException extends MoneyException
+class CurrencyConversionException extends \RuntimeException implements MoneyException
 {
     /**
      * @var string

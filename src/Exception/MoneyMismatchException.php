@@ -9,7 +9,7 @@ use Brick\Money\Currency;
 /**
  * Exception thrown when a money is not in the expected currency or context.
  */
-class MoneyMismatchException extends MoneyException
+class MoneyMismatchException extends \DomainException implements MoneyException
 {
     /**
      * @param Currency $expected

@@ -7,7 +7,7 @@ namespace Brick\Money\Exception;
 /**
  * Exception thrown when attempting to create a Currency from an unknown currency code.
  */
-class UnknownCurrencyException extends MoneyException
+class UnknownCurrencyException extends \DomainException implements MoneyException
 {
     /**
      * @param string|int $currencyCode
