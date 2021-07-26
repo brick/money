@@ -272,10 +272,15 @@ $countryCodes= [
     'ZIMBABWE' => 'ZW',
 ];
 
-$data = file_get_contents('https://www.currency-iso.org/dam/downloads/lists/list_one.xml');
+$data = file_get_contents('https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/amendments/lists/list_one.xml');
 
 $document = new DOMDocument();
-$document->loadXML($data);
+$success = $document->loadXML($data);
+
+if (! $success) {
+    echo "Failed to load XML file.\n";
+    exit(1);
+}
 
 $countries = $document->getElementsByTagName('CcyNtry');
 $currencies = [];
