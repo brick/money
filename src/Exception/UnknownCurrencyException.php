@@ -30,8 +30,8 @@ class UnknownCurrencyException extends MoneyException
     }
 
     /**
-     * @param string $countryCode
-     * @param array  $currencyCodes
+     * @param string   $countryCode
+     * @param string[] $currencyCodes
      *
      * @return UnknownCurrencyException
      */
