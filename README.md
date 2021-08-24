@@ -14,7 +14,7 @@ A money and currency library for PHP.
 
 Working with financial data is a serious matter, and small rounding mistakes in an application may lead to serious consequences in real life. That's why floating-point arithmetic is not suited for monetary calculations.
 
-This component is based on the [Math](https://github.com/brick/math) component and handles exact calculations on monies of any size.
+This library is based on [brick/math](https://github.com/brick/math) and handles exact calculations on monies of any size.
 
 ### Installation
 
