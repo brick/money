@@ -34,13 +34,13 @@ abstract class AbstractMoney implements MoneyContainer
      * @param Context $context      The context.
      * @param int     $roundingMode The rounding mode, if necessary.
      *
-     * @return Money
+     * @return static
      *
      * @throws RoundingNecessaryException If RoundingMode::UNNECESSARY is used but rounding is necessary.
      */
-    final public function to(Context $context, int $roundingMode = RoundingMode::UNNECESSARY) : Money
+    final public function to(Context $context, int $roundingMode = RoundingMode::UNNECESSARY) : self
     {
-        return Money::create($this->getAmount(), $this->getCurrency(), $context, $roundingMode);
+        return static::create($this->getAmount(), $this->getCurrency(), $context, $roundingMode);
     }
 
     /**
