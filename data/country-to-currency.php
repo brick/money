@@ -233,7 +233,7 @@
     'UZ' => ['UZS'],
     'VA' => ['EUR'],
     'VC' => ['XCD'],
-    'VE' => ['VES'],
+    'VE' => ['VES', 'VED'],
     'VG' => ['USD'],
     'VI' => ['USD'],
     'VN' => ['VND'],
