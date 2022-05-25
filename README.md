@@ -460,9 +460,3 @@ If you're using an ORM such as Doctrine, it is advised to store the amount and c
 > How does this project compare with [moneyphp/money](https://github.com/moneyphp/money)?
 
 Please see [this discussion](https://github.com/brick/money/issues/28).
-
-## brick/money for enterprise
-
-Available as part of the Tidelift Subscription.
-
-The maintainers of brick/money and thousands of other packages are working with Tidelift to deliver commercial support and maintenance for the open source dependencies you use to build your applications. Save time, reduce risk, and improve code health, while paying the maintainers of the exact dependencies you use. [Learn more.](https://tidelift.com/subscription/pkg/packagist-brick-money?utm_source=packagist-brick-money&utm_medium=referral&utm_campaign=enterprise&utm_term=repo)
