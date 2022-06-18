@@ -117,6 +117,8 @@ final class ISOCurrencyProvider
     /**
      * Returns all the available currencies.
      *
+     * @psalm-return array<string, Currency>
+     *
      * @return Currency[] The currencies, indexed by currency code.
      */
     public function getAvailableCurrencies() : array
