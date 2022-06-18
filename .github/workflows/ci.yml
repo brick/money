@@ -56,13 +56,13 @@ jobs:
           dependency-versions: ${{ matrix.deps }}
 
       - name: Run PHPUnit
-        run: vendor/bin/phpunit
+        run: vendor/bin/phpunit --fail-on-skipped
         if: ${{ matrix.php-version != '8.0' }}
 
       - name: Run PHPUnit with coverage
         run: |
           mkdir -p build/logs
-          vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+          vendor/bin/phpunit --fail-on-skipped --coverage-clover build/logs/clover.xml
         if: ${{ matrix.php-version == '8.0' }}
 
       - name: Upload coverage report to Coveralls
