@@ -6,6 +6,8 @@
 
 - Minimum PHP version is now 7.4
 - `AbstractMoney::getAmount()` now has a return type
+- `CurrencyConverter`'s constructor does not accept a default `$context` anymore
+- `CurrencyConverter::convert()` now requires the `$context` previously accepted by the constructor as third parameter
 
 ✨ **New ISO currencies**
 
