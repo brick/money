@@ -128,6 +128,7 @@
     'SEK' => ['SEK', 752, 'Swedish Krona', 2],
     'SGD' => ['SGD', 702, 'Singapore Dollar', 2],
     'SHP' => ['SHP', 654, 'Saint Helena Pound', 2],
+    'SLE' => ['SLE', 925, 'Leone', 2],
     'SLL' => ['SLL', 694, 'Leone', 2],
     'SOS' => ['SOS', 706, 'Somali Shilling', 2],
     'SRD' => ['SRD', 968, 'Surinam Dollar', 2],
