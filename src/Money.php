@@ -34,24 +34,18 @@ final class Money extends AbstractMoney
 {
     /**
      * The amount.
-     *
-     * @var \Brick\Math\BigDecimal
      */
-    private $amount;
+    private BigDecimal $amount;
 
     /**
      * The currency.
-     *
-     * @var \Brick\Money\Currency
      */
-    private $currency;
+    private Currency $currency;
 
     /**
      * The context that defines the capability of this Money.
-     *
-     * @var Context
      */
-    private $context;
+    private Context $context;
 
     /**
      * @param BigDecimal $amount

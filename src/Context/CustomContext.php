@@ -17,19 +17,15 @@ final class CustomContext implements Context
 {
     /**
      * The scale of the monies using this context.
-     *
-     * @var int
      */
-    private $scale;
+    private int $scale;
 
     /**
      * An optional cash rounding step. Must be a multiple of 2 and/or 5.
      *
      * For example, scale=4 and step=5 would allow amounts of 0.0000, 0.0005, 0.0010, etc.
-     *
-     * @var int
      */
-    private $step;
+    private int $step;
 
     /**
      * @param int $scale The scale of the monies using this context.

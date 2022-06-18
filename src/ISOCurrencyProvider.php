@@ -11,19 +11,14 @@ use Brick\Money\Exception\UnknownCurrencyException;
  */
 final class ISOCurrencyProvider
 {
-    /**
-     * @var ISOCurrencyProvider|null
-     */
-    private static $instance;
+    private static ?ISOCurrencyProvider $instance = null;
 
     /**
      * The raw currency data, indexed by currency code.
      *
      * @psalm-var array<string, array{string, int, string, int}>
-     *
-     * @var array
      */
-    private $currencyData;
+    private array $currencyData;
 
     /**
      * An associative array of currency numeric code to currency code.
@@ -31,10 +26,8 @@ final class ISOCurrencyProvider
      * This property is set on-demand, as soon as required.
      *
      * @psalm-var array<int, string>|null
-     *
-     * @var array|null
      */
-    private $numericToCurrency;
+    private ?array $numericToCurrency = null;
 
     /**
      * An associative array of country code to currency codes.
@@ -42,10 +35,8 @@ final class ISOCurrencyProvider
      * This property is set on-demand, as soon as required.
      *
      * @psalm-var array<string, list<string>>|null
-     *
-     * @var array|null
      */
-    private $countryToCurrency;
+    private ?array $countryToCurrency = null;
 
     /**
      * The Currency instances.
@@ -56,16 +47,14 @@ final class ISOCurrencyProvider
      *
      * @var Currency[]
      */
-    private $currencies = [];
+    private array $currencies = [];
 
     /**
      * Whether the provider is in a partial state.
      *
      * This is true as long as all the currencies have not been instantiated yet.
-     *
-     * @var bool
      */
-    private $isPartial = true;
+    private bool $isPartial = true;
 
     /**
      * Private constructor. Use `getInstance()` to obtain the singleton instance.

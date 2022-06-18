@@ -15,9 +15,11 @@ final class ProviderChain implements ExchangeRateProvider
     /**
      * The exchange rate providers, indexed by object hash.
      *
+     * @psalm-var array<string, ExchangeRateProvider>
+     *
      * @var ExchangeRateProvider[]
      */
-    private $providers = [];
+    private array $providers = [];
 
     /**
      * Adds an exchange rate provider to the chain.

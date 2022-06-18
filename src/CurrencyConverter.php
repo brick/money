@@ -22,17 +22,13 @@ final class CurrencyConverter
 {
     /**
      * The exchange rate provider.
-     *
-     * @var ExchangeRateProvider
      */
-    private $exchangeRateProvider;
+    private ExchangeRateProvider $exchangeRateProvider;
 
     /**
      * The context of the monies created by this currency converter.
-     *
-     * @var Context
      */
-    private $context;
+    private Context $context;
 
     /**
      * @param ExchangeRateProvider $exchangeRateProvider The exchange rate provider.

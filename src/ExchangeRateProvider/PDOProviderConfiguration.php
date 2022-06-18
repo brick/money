@@ -13,53 +13,41 @@ final class PDOProviderConfiguration
 {
     /**
      * The name of the table that holds the exchange rates. Required.
-     *
-     * @var string
      */
-    public $tableName;
+    public ?string $tableName = null;
 
     /**
      * The name of the column that holds the source currency code. Optional.
      *
      * If not set, $sourceCurrencyCode must be set.
-     *
-     * @var string|null
      */
-    public $sourceCurrencyColumnName;
+    public ?string $sourceCurrencyColumnName = null;
 
     /**
      * The source currency code, if it is fixed. Optional.
      *
      * If not set, $sourceCurrencyColumnName must be set.
-     *
-     * @var string|null
      */
-    public $sourceCurrencyCode;
+    public ?string $sourceCurrencyCode = null;
 
     /**
      * The name of the column that holds the target currency code. Optional.
      *
      * If not set, $targetCurrencyCode must be set.
-     *
-     * @var string|null
      */
-    public $targetCurrencyColumnName;
+    public ?string $targetCurrencyColumnName = null;
 
     /**
      * The target currency code, if it is fixed. Optional.
      *
      * If not set, $targetCurrencyColumnName must be set.
-     *
-     * @var string|null
      */
-    public $targetCurrencyCode;
+    public ?string $targetCurrencyCode = null;
 
     /**
      * The name of the column that holds the exchange rate for the currency pair. Required.
-     *
-     * @var string
      */
-    public $exchangeRateColumnName;
+    public ?string $exchangeRateColumnName = null;
 
     /**
      * Extra WHERE conditions that will be included in the database query. Optional.
@@ -69,8 +57,6 @@ final class PDOProviderConfiguration
      * provided to setParameters() must match the number of placeholders.
      *
      * This can be used, for example, to query an exchange rate for a particular date.
-     *
-     * @var string|null
      */
-    public $whereConditions;
+    public ?string $whereConditions = null;
 }
