@@ -39,9 +39,7 @@ final class MoneyBag implements MoneyContainer
             $currencyCode = (string) $currency;
         }
 
-        return isset($this->amounts[$currencyCode])
-            ? $this->amounts[$currencyCode]
-            : BigRational::zero();
+        return $this->amounts[$currencyCode] ?? BigRational::zero();
     }
 
     /**

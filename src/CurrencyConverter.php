@@ -37,12 +37,8 @@ final class CurrencyConverter
      */
     public function __construct(ExchangeRateProvider $exchangeRateProvider, ?Context $context = null)
     {
-        if ($context === null) {
-            $context = new DefaultContext();
-        }
-
         $this->exchangeRateProvider = $exchangeRateProvider;
-        $this->context              = $context;
+        $this->context              = $context ?? new DefaultContext();
     }
 
     /**
