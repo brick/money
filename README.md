@@ -26,7 +26,9 @@ composer require brick/money
 
 ### Requirements
 
-This library requires PHP 7.1 or later.
+This library requires PHP 7.4 or later.
+
+For PHP 7.1, 7.2 & 7.3 compatibility, you can use version `0.5`. Note that [these PHP versions are EOL](http://php.net/supported-versions.php) and not supported anymore. If you're still using one of these PHP versions, you should consider upgrading as soon as possible.
 
 Although not required, it is recommended that you **install the [GMP](http://php.net/manual/en/book.gmp.php) or [BCMath](http://php.net/manual/en/book.bc.php) extension** to speed up calculations.
 
