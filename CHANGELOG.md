@@ -5,6 +5,7 @@
 💥 **Breaking changes**
 
 - Minimum PHP version is now 7.4
+- `AbstractMoney::getAmount()` now has a return type
 
 ✨ **New ISO currencies**
 
