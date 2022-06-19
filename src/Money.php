@@ -469,6 +469,8 @@ final class Money extends AbstractMoney
      *
      * @return Money[] The quotient and the remainder.
      *
+     * @psalm-return array{Money, Money}
+     *
      * @throws MathException If the divisor cannot be converted to a BigInteger.
      */
     public function quotientAndRemainder($that) : array
