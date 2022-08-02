@@ -9,6 +9,7 @@
 - `CurrencyConverter`'s constructor does not accept a default `$context` anymore
 - `CurrencyConverter::convert()` now requires the `$context` previously accepted by the constructor as third parameter
 - `Money::allocateWithRemainder()` now refuses to allocate a portion of the amount that cannot be spread over all ratios, and instead adds that amount to the remainder (#55)
+- `Money::splitWithRemainder()` now behaves like `allocateWithRemainder()`
 
 ✨ **New ISO currencies**
 
