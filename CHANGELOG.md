@@ -1,5 +1,15 @@
 # Changelog
 
+## UNRELEASED (0.7.0)
+
+💥 **Breaking changes**
+
+- JSON extension is now required for PHP 7.4 (always available with PHP >= 8.0)
+
+✨ **New features**
+
+- `Money` and `RationalMoney` now implement `JsonSerializable`
+
 ## [0.6.0](https://github.com/brick/money/releases/tag/0.6.0) - 2022-08-02
 
 💥 **Breaking changes**

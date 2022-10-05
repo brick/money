@@ -209,4 +209,21 @@ class RationalMoneyTest extends AbstractTestCase
             [['123456789/256', 'CHF'], new AutoContext(), RoundingMode::UNNECESSARY, 'CHF 482253.08203125']
         ];
     }
+
+    /**
+     * @dataProvider providerJsonSerialize
+     */
+    public function testJsonSerialize(RationalMoney $money, array $expected): void
+    {
+        self::assertSame($expected, $money->jsonSerialize());
+        self::assertSame(json_encode($expected), json_encode($money));
+    }
+
+    public function providerJsonSerialize(): array
+    {
+        return [
+            [RationalMoney::of('3.5', 'EUR'), ['amount' => '35/10', 'currency' => 'EUR']],
+            [RationalMoney::of('3.888923', 'GBP'), ['amount' => '3888923/1000000', 'currency' => 'GBP']]
+        ];
+    }
 }

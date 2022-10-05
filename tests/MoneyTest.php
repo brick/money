@@ -1004,4 +1004,21 @@ class MoneyTest extends AbstractTestCase
             Money::of('1.00', 'USD')
         );
     }
+
+    /**
+     * @dataProvider providerJsonSerialize
+     */
+    public function testJsonSerialize(Money $money, array $expected): void
+    {
+        self::assertSame($expected, $money->jsonSerialize());
+        self::assertSame(json_encode($expected), json_encode($money));
+    }
+
+    public function providerJsonSerialize(): array
+    {
+        return [
+            [Money::of('3.5', 'EUR'), ['amount' => '3.50', 'currency' => 'EUR']],
+            [Money::of('3.888923', 'GBP', new CustomContext(8)), ['amount' => '3.88892300', 'currency' => 'GBP']]
+        ];
+    }
 }
