@@ -5,6 +5,7 @@
 💥 **Breaking changes**
 
 - JSON extension is now required for PHP 7.4 (always available with PHP >= 8.0)
+- `AbstractMoney` is now officially sealed, extending it yourself is not supported
 
 ✨ **New features**
 
