@@ -270,7 +270,7 @@ $exchangeRateProvider = ...;
 $converter = new CurrencyConverter($exchangeRateProvider); // optionally provide a Context here
 
 $money = Money::of('50', 'USD');
-$converter->convert($money, 'EUR', RoundingMode::DOWN);
+$converter->convert($money, 'EUR', null, RoundingMode::DOWN);
 ```
 
 The converter performs the most precise calculation possible, internally representing the result as a rational number until the very last step.
