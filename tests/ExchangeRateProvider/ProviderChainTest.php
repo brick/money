@@ -15,15 +15,9 @@ use Brick\Money\Tests\AbstractTestCase;
  */
 class ProviderChainTest extends AbstractTestCase
 {
-    /**
-     * @var ExchangeRateProvider
-     */
-    private static $provider1;
+    private static ExchangeRateProvider $provider1;
 
-    /**
-     * @var ExchangeRateProvider
-     */
-    private static $provider2;
+    private static ExchangeRateProvider $provider2;
 
     public static function setUpBeforeClass() : void
     {
