@@ -92,8 +92,8 @@ class CurrencyConverterTest extends AbstractTestCase
 
         $moneyBag = new MoneyBag();
 
-        foreach ($monies as $money) {
-            $money = Money::of($money[0], $money[1], new AutoContext());
+        foreach ($monies as [$amount, $currencyCode]) {
+            $money = Money::of($amount, $currencyCode, new AutoContext());
             $moneyBag->add($money);
         }
 
@@ -127,8 +127,8 @@ class CurrencyConverterTest extends AbstractTestCase
 
         $moneyBag = new MoneyBag();
 
-        foreach ($monies as $money) {
-            $money = Money::of($money[0], $money[1], new AutoContext());
+        foreach ($monies as [$amount, $currencyCode]) {
+            $money = Money::of($amount, $currencyCode, new AutoContext());
             $moneyBag->add($money);
         }
 
