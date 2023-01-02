@@ -102,10 +102,7 @@ abstract class AbstractTestCase extends TestCase
         self::assertSame($defaultFractionDigits, $currency->getDefaultFractionDigits());
     }
 
-    /**
-     * @param mixed $value
-     */
-    final protected function isExceptionClass($value) : bool
+    final protected function isExceptionClass(mixed $value) : bool
     {
         return is_string($value) && substr($value, -9) === 'Exception';
     }

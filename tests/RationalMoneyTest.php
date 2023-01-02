@@ -36,10 +36,8 @@ class RationalMoneyTest extends AbstractTestCase
 
     /**
      * @dataProvider providerPlus
-     *
-     * @param mixed $amount
      */
-    public function testPlus(array $rationalMoney, $amount, string $expected) : void
+    public function testPlus(array $rationalMoney, mixed $amount, string $expected) : void
     {
         $rationalMoney = RationalMoney::of(...$rationalMoney);
 
@@ -69,10 +67,8 @@ class RationalMoneyTest extends AbstractTestCase
 
     /**
      * @dataProvider providerMinus
-     *
-     * @param mixed $amount
      */
-    public function testMinus(array $rationalMoney, $amount, string $expected) : void
+    public function testMinus(array $rationalMoney, mixed $amount, string $expected) : void
     {
         $rationalMoney = RationalMoney::of(...$rationalMoney);
 
@@ -102,10 +98,8 @@ class RationalMoneyTest extends AbstractTestCase
 
     /**
      * @dataProvider providerMultipliedBy
-     *
-     * @param mixed $operand
      */
-    public function testMultipliedBy(array $rationalMoney, $operand, string $expected) : void
+    public function testMultipliedBy(array $rationalMoney, mixed $operand, string $expected) : void
     {
         $rationalMoney = RationalMoney::of(...$rationalMoney);
 
@@ -131,10 +125,8 @@ class RationalMoneyTest extends AbstractTestCase
 
     /**
      * @dataProvider providerDividedBy
-     *
-     * @param mixed $operand
      */
-    public function testDividedBy(array $rationalMoney, $operand, string $expected) : void
+    public function testDividedBy(array $rationalMoney, mixed $operand, string $expected) : void
     {
         $rationalMoney = RationalMoney::of(...$rationalMoney);
 

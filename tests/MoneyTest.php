@@ -32,7 +32,7 @@ class MoneyTest extends AbstractTestCase
      * @param string $expectedResult The resulting money as a string, or an exception class.
      * @param mixed  ...$args        The arguments to the of() method.
      */
-    public function testOf($expectedResult, ...$args) : void
+    public function testOf(string $expectedResult, mixed ...$args) : void
     {
         if ($this->isExceptionClass($expectedResult)) {
             $this->expectException($expectedResult);
@@ -68,7 +68,7 @@ class MoneyTest extends AbstractTestCase
      * @param string $expectedResult The resulting money as a string, or an exception class.
      * @param mixed  ...$args        The arguments to the ofMinor() method.
      */
-    public function testOfMinor($expectedResult, ...$args) : void
+    public function testOfMinor(string $expectedResult, mixed ...$args) : void
     {
         if ($this->isExceptionClass($expectedResult)) {
             $this->expectException($expectedResult);
@@ -155,7 +155,7 @@ class MoneyTest extends AbstractTestCase
      * @param int    $roundingMode The rounding mode to use.
      * @param string $expected     The expected money value, or an exception class name.
      */
-    public function testPlus(array $money, $plus, int $roundingMode, string $expected) : void
+    public function testPlus(array $money, mixed $plus, int $roundingMode, string $expected) : void
     {
         $money = Money::of(...$money);
 
@@ -213,7 +213,7 @@ class MoneyTest extends AbstractTestCase
      * @param int    $roundingMode The rounding mode to use.
      * @param string $expected     The expected money value, or an exception class name.
      */
-    public function testMinus(array $money, $minus, int $roundingMode, string $expected) : void
+    public function testMinus(array $money, mixed $minus, int $roundingMode, string $expected) : void
     {
         $money = Money::of(...$money);
 

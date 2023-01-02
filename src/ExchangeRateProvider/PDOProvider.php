@@ -75,12 +75,8 @@ final class PDOProvider implements ExchangeRateProvider
      *
      * This is used in conjunction with $whereConditions in the configuration class.
      * The number of parameters passed to this method must match the number of placeholders.
-     *
-     * @param mixed ...$parameters
-     *
-     * @return void
      */
-    public function setParameters(...$parameters) : void
+    public function setParameters(mixed ...$parameters) : void
     {
         $this->parameters = $parameters;
     }
