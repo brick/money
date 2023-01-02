@@ -44,8 +44,12 @@ final class CurrencyConverter
      * @throws CurrencyConversionException If the exchange rate is not available.
      * @throws RoundingNecessaryException  If rounding is necessary and RoundingMode::UNNECESSARY is used.
      */
-    public function convert(MoneyContainer $moneyContainer, $currency, ?Context $context = null, int $roundingMode = RoundingMode::UNNECESSARY) : Money
-    {
+    public function convert(
+        MoneyContainer $moneyContainer,
+        Currency|string|int $currency,
+        ?Context $context = null,
+        int $roundingMode = RoundingMode::UNNECESSARY,
+    ) : Money {
         return $this
             ->convertToRational($moneyContainer, $currency)
             ->to($context ?? new DefaultContext(), $roundingMode);
@@ -61,7 +65,7 @@ final class CurrencyConverter
      *
      * @throws CurrencyConversionException If the exchange rate is not available.
      */
-    public function convertToRational(MoneyContainer $moneyContainer, $currency) : RationalMoney
+    public function convertToRational(MoneyContainer $moneyContainer, Currency|string|int $currency) : RationalMoney
     {
         if (! $currency instanceof Currency) {
             $currency = Currency::of($currency);

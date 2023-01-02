@@ -257,7 +257,7 @@ class MoneyTest extends AbstractTestCase
      * @param int                    $roundingMode The rounding mode to use.
      * @param string                 $expected     The expected money value, or an exception class name.
      */
-    public function testMultipliedBy(array $money, $multiplier, int $roundingMode, string $expected) : void
+    public function testMultipliedBy(array $money, Money|int|float|string $multiplier, int $roundingMode, string $expected) : void
     {
         $money = Money::of(...$money);
 
@@ -296,7 +296,7 @@ class MoneyTest extends AbstractTestCase
      * @param int              $roundingMode The rounding mode to use.
      * @param string           $expected     The expected money value, or an exception class name.
      */
-    public function testDividedBy(array $money, $divisor, int $roundingMode, string $expected) : void
+    public function testDividedBy(array $money, int|float|string $divisor, int $roundingMode, string $expected) : void
     {
         $money = Money::of(...$money);
 

@@ -178,8 +178,12 @@ final class Money extends AbstractMoney
      * @throws RoundingNecessaryException If the rounding mode is RoundingMode::UNNECESSARY, and rounding is necessary
      *                                    to represent the amount at the requested scale.
      */
-    public static function of($amount, $currency, ?Context $context = null, int $roundingMode = RoundingMode::UNNECESSARY) : Money
-    {
+    public static function of(
+        BigNumber|int|float|string $amount,
+        Currency|string|int $currency,
+        ?Context $context = null,
+        int $roundingMode = RoundingMode::UNNECESSARY,
+    ) : Money {
         if (! $currency instanceof Currency) {
             $currency = Currency::of($currency);
         }
@@ -214,8 +218,12 @@ final class Money extends AbstractMoney
      * @throws RoundingNecessaryException If the rounding mode is RoundingMode::UNNECESSARY, and rounding is necessary
      *                                    to represent the amount at the requested scale.
      */
-    public static function ofMinor($minorAmount, $currency, ?Context $context = null, int $roundingMode = RoundingMode::UNNECESSARY) : Money
-    {
+    public static function ofMinor(
+        BigNumber|int|float|string $minorAmount,
+        Currency|string|int $currency,
+        ?Context $context = null,
+        int $roundingMode = RoundingMode::UNNECESSARY,
+    ) : Money {
         if (! $currency instanceof Currency) {
             $currency = Currency::of($currency);
         }
@@ -240,7 +248,7 @@ final class Money extends AbstractMoney
      *
      * @return Money
      */
-    public static function zero($currency, ?Context $context = null) : Money
+    public static function zero(Currency|string|int $currency, ?Context $context = null) : Money
     {
         if (! $currency instanceof Currency) {
             $currency = Currency::of($currency);
@@ -333,7 +341,7 @@ final class Money extends AbstractMoney
      * @throws MathException          If the argument is an invalid number or rounding is necessary.
      * @throws MoneyMismatchException If the argument is a money in a different currency or in a different context.
      */
-    public function plus($that, int $roundingMode = RoundingMode::UNNECESSARY) : Money
+    public function plus(AbstractMoney|BigNumber|int|float|string $that, int $roundingMode = RoundingMode::UNNECESSARY) : Money
     {
         $amount = $this->getAmountOf($that);
 
@@ -371,7 +379,7 @@ final class Money extends AbstractMoney
      * @throws MathException          If the argument is an invalid number or rounding is necessary.
      * @throws MoneyMismatchException If the argument is a money in a different currency or in a different context.
      */
-    public function minus($that, int $roundingMode = RoundingMode::UNNECESSARY) : Money
+    public function minus(AbstractMoney|BigNumber|int|float|string $that, int $roundingMode = RoundingMode::UNNECESSARY) : Money
     {
         $amount = $this->getAmountOf($that);
 
@@ -404,7 +412,7 @@ final class Money extends AbstractMoney
      *
      * @throws MathException If the argument is an invalid number or rounding is necessary.
      */
-    public function multipliedBy($that, int $roundingMode = RoundingMode::UNNECESSARY) : Money
+    public function multipliedBy(BigNumber|int|float|string $that, int $roundingMode = RoundingMode::UNNECESSARY) : Money
     {
         $amount = $this->amount->toBigRational()->multipliedBy($that);
 
@@ -427,7 +435,7 @@ final class Money extends AbstractMoney
      *
      * @throws MathException If the argument is an invalid number or is zero, or rounding is necessary.
      */
-    public function dividedBy($that, int $roundingMode = RoundingMode::UNNECESSARY) : Money
+    public function dividedBy(BigNumber|int|float|string $that, int $roundingMode = RoundingMode::UNNECESSARY) : Money
     {
         $amount = $this->amount->toBigRational()->dividedBy($that);
 
@@ -446,7 +454,7 @@ final class Money extends AbstractMoney
      *
      * @throws MathException If the divisor cannot be converted to a BigInteger.
      */
-    public function quotient($that) : Money
+    public function quotient(BigNumber|int|float|string $that) : Money
     {
         $that = BigInteger::of($that);
         $step = $this->context->getStep();
@@ -474,7 +482,7 @@ final class Money extends AbstractMoney
      *
      * @throws MathException If the divisor cannot be converted to a BigInteger.
      */
-    public function quotientAndRemainder($that) : array
+    public function quotientAndRemainder(BigNumber|int|float|string $that) : array
     {
         $that = BigInteger::of($that);
         $step = $this->context->getStep();
@@ -730,8 +738,12 @@ final class Money extends AbstractMoney
      * @throws UnknownCurrencyException If an unknown currency code is given.
      * @throws MathException            If the exchange rate or rounding mode is invalid, or rounding is necessary.
      */
-    public function convertedTo($currency, $exchangeRate, ?Context $context = null, int $roundingMode = RoundingMode::UNNECESSARY) : Money
-    {
+    public function convertedTo(
+        Currency|string|int $currency,
+        BigNumber|int|float|string $exchangeRate,
+        ?Context $context = null,
+        int $roundingMode = RoundingMode::UNNECESSARY,
+    ) : Money {
         if (! $currency instanceof Currency) {
             $currency = Currency::of($currency);
         }

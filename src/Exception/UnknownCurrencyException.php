@@ -9,31 +9,18 @@ namespace Brick\Money\Exception;
  */
 class UnknownCurrencyException extends MoneyException
 {
-    /**
-     * @param string|int $currencyCode
-     *
-     * @return UnknownCurrencyException
-     */
-    public static function unknownCurrency($currencyCode) : self
+    public static function unknownCurrency(string|int $currencyCode) : self
     {
         return new self('Unknown currency code: ' . $currencyCode);
     }
 
-    /**
-     * @param string $countryCode
-     *
-     * @return UnknownCurrencyException
-     */
     public static function noCurrencyForCountry(string $countryCode) : self
     {
         return new self('No currency found for country ' . $countryCode);
     }
 
     /**
-     * @param string   $countryCode
      * @param string[] $currencyCodes
-     *
-     * @return UnknownCurrencyException
      */
     public static function noSingleCurrencyForCountry(string $countryCode, array $currencyCodes) : self
     {

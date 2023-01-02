@@ -37,7 +37,7 @@ final class CachedProvider implements ExchangeRateProvider
     /**
      * {@inheritdoc}
      */
-    public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode)
+    public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode) : BigNumber|int|float|string
     {
         if (isset($this->exchangeRates[$sourceCurrencyCode][$targetCurrencyCode])) {
             return $this->exchangeRates[$sourceCurrencyCode][$targetCurrencyCode];

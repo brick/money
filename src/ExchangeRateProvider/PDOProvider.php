@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Brick\Money\ExchangeRateProvider;
 
+use Brick\Math\BigNumber;
 use Brick\Money\ExchangeRateProvider;
 use Brick\Money\Exception\CurrencyConversionException;
 
@@ -84,7 +85,7 @@ final class PDOProvider implements ExchangeRateProvider
     /**
      * {@inheritdoc}
      */
-    public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode)
+    public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode): int|float|string
     {
         $parameters = $this->parameters;
 

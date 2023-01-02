@@ -42,7 +42,7 @@ final class RationalMoney extends AbstractMoney
      *
      * @return RationalMoney
      */
-    public static function of($amount, $currency) : RationalMoney
+    public static function of(BigNumber|int|float|string $amount, Currency|string|int $currency) : RationalMoney
     {
         $amount = BigRational::of($amount);
 
@@ -79,7 +79,7 @@ final class RationalMoney extends AbstractMoney
      * @throws MathException          If the argument is not a valid number.
      * @throws MoneyMismatchException If the argument is a money in another currency.
      */
-    public function plus($that) : RationalMoney
+    public function plus(AbstractMoney|BigNumber|int|float|string $that) : RationalMoney
     {
         $that = $this->getAmountOf($that);
         $amount = $this->amount->plus($that);
@@ -97,7 +97,7 @@ final class RationalMoney extends AbstractMoney
      * @throws MathException          If the argument is not a valid number.
      * @throws MoneyMismatchException If the argument is a money in another currency.
      */
-    public function minus($that) : RationalMoney
+    public function minus(AbstractMoney|BigNumber|int|float|string $that) : RationalMoney
     {
         $that = $this->getAmountOf($that);
         $amount = $this->amount->minus($that);
@@ -114,7 +114,7 @@ final class RationalMoney extends AbstractMoney
      *
      * @throws MathException If the argument is not a valid number.
      */
-    public function multipliedBy($that) : RationalMoney
+    public function multipliedBy(BigNumber|int|float|string $that) : RationalMoney
     {
         $amount = $this->amount->multipliedBy($that);
 
@@ -130,7 +130,7 @@ final class RationalMoney extends AbstractMoney
      *
      * @throws MathException If the argument is not a valid number.
      */
-    public function dividedBy($that) : RationalMoney
+    public function dividedBy(BigNumber|int|float|string $that) : RationalMoney
     {
         $amount = $this->amount->dividedBy($that);
 

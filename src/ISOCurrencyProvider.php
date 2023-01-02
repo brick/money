@@ -87,7 +87,7 @@ final class ISOCurrencyProvider
      *
      * @throws UnknownCurrencyException If the currency code is not known.
      */
-    public function getCurrency($currencyCode) : Currency
+    public function getCurrency(string|int $currencyCode) : Currency
     {
         if (is_int($currencyCode)) {
             if ($this->numericToCurrency === null) {

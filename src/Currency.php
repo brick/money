@@ -75,11 +75,9 @@ final class Currency implements Stringable
      *
      * @param string|int $currencyCode The 3-letter or numeric ISO 4217 currency code.
      *
-     * @return Currency
-     *
      * @throws UnknownCurrencyException If an unknown currency code is given.
      */
-    public static function of($currencyCode) : Currency
+    public static function of(string|int $currencyCode) : Currency
     {
         return ISOCurrencyProvider::getInstance()->getCurrency($currencyCode);
     }
@@ -158,7 +156,7 @@ final class Currency implements Stringable
      *
      * @return bool
      */
-    public function is($currency) : bool
+    public function is(Currency|string|int $currency) : bool
     {
         if ($currency instanceof Currency) {
             return $this->currencyCode === $currency->currencyCode;

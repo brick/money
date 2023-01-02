@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Brick\Money\Tests\ExchangeRateProvider;
 
+use Brick\Math\BigNumber;
 use Brick\Money\Exception\CurrencyConversionException;
 use Brick\Money\ExchangeRateProvider;
 
@@ -13,9 +14,9 @@ use Brick\Money\ExchangeRateProvider;
 class ProviderMock implements ExchangeRateProvider
 {
     /**
-     * @var array
+     * @var array<string, array<string, float>>
      */
-    private $exchangeRates = [
+    private array $exchangeRates = [
         'EUR' => [
             'USD' => 1.1,
             'GBP' => 0.9
@@ -24,10 +25,8 @@ class ProviderMock implements ExchangeRateProvider
 
     /**
      * The number of calls to getExchangeRate().
-     *
-     * @var int
      */
-    private $calls = 0;
+    private int $calls = 0;
 
     public function getCalls() : int
     {
@@ -37,7 +36,7 @@ class ProviderMock implements ExchangeRateProvider
     /**
      * {@inheritdoc}
      */
-    public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode)
+    public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode): float
     {
         $this->calls++;
 

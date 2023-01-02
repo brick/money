@@ -38,7 +38,7 @@ class MoneyComparatorTest extends AbstractTestCase
      * @param array      $b   The money to compare to.
      * @param int|string $cmp The expected comparison value, or an exception class.
      */
-    public function testCompare(array $a, array $b, $cmp) : void
+    public function testCompare(array $a, array $b, int|string $cmp) : void
     {
         $comparator = new MoneyComparator($this->getExchangeRateProvider());
 

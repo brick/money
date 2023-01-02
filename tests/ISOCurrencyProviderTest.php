@@ -59,10 +59,8 @@ class ISOCurrencyProviderTest extends AbstractTestCase
 
     /**
      * @dataProvider providerUnknownCurrency
-     *
-     * @param string|int $currencyCode
      */
-    public function testGetUnknownCurrency($currencyCode) : void
+    public function testGetUnknownCurrency(string|int $currencyCode) : void
     {
         $this->expectException(UnknownCurrencyException::class);
         ISOCurrencyProvider::getInstance()->getCurrency($currencyCode);

@@ -73,7 +73,7 @@ class PDOProviderTest extends AbstractTestCase
      * @param string       $targetCurrencyCode The code of the target currency.
      * @param float|string $expectedResult     The expected exchange rate, or an exception class if expected.
      */
-    public function testGetExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode, $expectedResult) : void
+    public function testGetExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode, float|string $expectedResult) : void
     {
         $pdo = new \PDO('sqlite::memory:');
 
@@ -129,7 +129,7 @@ class PDOProviderTest extends AbstractTestCase
      * @param string       $targetCurrencyCode The code of the target currency.
      * @param float|string $expectedResult     The expected exchange rate, or an exception class if expected.
      */
-    public function testWithFixedSourceCurrency(string $sourceCurrencyCode, string $targetCurrencyCode, $expectedResult) : void
+    public function testWithFixedSourceCurrency(string $sourceCurrencyCode, string $targetCurrencyCode, float|string $expectedResult) : void
     {
         $pdo = new \PDO('sqlite::memory:');
 
@@ -183,7 +183,7 @@ class PDOProviderTest extends AbstractTestCase
      * @param string       $targetCurrencyCode The code of the target currency.
      * @param float|string $expectedResult     The expected exchange rate, or an exception class if expected.
      */
-    public function testWithFixedTargetCurrency(string $sourceCurrencyCode, string $targetCurrencyCode, $expectedResult) : void
+    public function testWithFixedTargetCurrency(string $sourceCurrencyCode, string $targetCurrencyCode, float|string $expectedResult) : void
     {
         $pdo = new \PDO('sqlite::memory:');
 
@@ -238,7 +238,7 @@ class PDOProviderTest extends AbstractTestCase
      * @param array        $parameters         The parameters to resolve the extra query placeholders.
      * @param float|string $expectedResult     The expected exchange rate, or an exception class if expected.
      */
-    public function testWithParameters(string $sourceCurrencyCode, string $targetCurrencyCode, array $parameters, $expectedResult) : void
+    public function testWithParameters(string $sourceCurrencyCode, string $targetCurrencyCode, array $parameters, float|string $expectedResult) : void
     {
         $pdo = new \PDO('sqlite::memory:');
 

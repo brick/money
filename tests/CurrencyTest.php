@@ -42,10 +42,8 @@ class CurrencyTest extends AbstractTestCase
 
     /**
      * @dataProvider providerOfUnknownCurrencyCode
-     *
-     * @param string|int $currencyCode
      */
-    public function testOfUnknownCurrencyCode($currencyCode) : void
+    public function testOfUnknownCurrencyCode(string|int $currencyCode) : void
     {
         $this->expectException(UnknownCurrencyException::class);
         Currency::of($currencyCode);
