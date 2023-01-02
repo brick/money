@@ -820,8 +820,6 @@ final class Money extends AbstractMoney
 
     /**
      * Returns a non-localized string representation of this Money, e.g. "EUR 23.00".
-     *
-     * @return string
      */
     public function __toString() : string
     {

@@ -11,6 +11,7 @@ use Brick\Math\RoundingMode;
 use Brick\Math\Exception\MathException;
 use Brick\Math\Exception\RoundingNecessaryException;
 use JsonSerializable;
+use Stringable;
 
 /**
  * Base class for Money and RationalMoney.
@@ -18,7 +19,7 @@ use JsonSerializable;
  * Please consider this class sealed: extending this class yourself is not supported, and breaking changes (such as
  * adding new abstract methods) can happen at any time, even in a minor version.
  */
-abstract class AbstractMoney implements MoneyContainer, JsonSerializable
+abstract class AbstractMoney implements MoneyContainer, Stringable, JsonSerializable
 {
     abstract public function getAmount() : BigNumber;
 

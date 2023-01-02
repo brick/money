@@ -147,9 +147,6 @@ final class RationalMoney extends AbstractMoney
         return new self($this->amount->simplified(), $this->currency);
     }
 
-    /**
-     * @return string
-     */
     public function __toString() : string
     {
         return $this->currency . ' ' . $this->amount;

@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace Brick\Money;
 
 use Brick\Money\Exception\UnknownCurrencyException;
+use Stringable;
 
 /**
  * A currency. This class is immutable.
  */
-final class Currency
+final class Currency implements Stringable
 {
     /**
      * The currency code.
@@ -169,8 +170,6 @@ final class Currency
 
     /**
      * Returns the currency code.
-     *
-     * @return string
      */
     public function __toString() : string
     {
