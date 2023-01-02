@@ -104,6 +104,6 @@ abstract class AbstractTestCase extends TestCase
 
     final protected function isExceptionClass(mixed $value) : bool
     {
-        return is_string($value) && substr($value, -9) === 'Exception';
+        return is_string($value) && str_ends_with($value, 'Exception');
     }
 }
