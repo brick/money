@@ -299,16 +299,17 @@ use Brick\Money\ExchangeRateProvider\PDOProviderConfiguration;
 
 $pdo = new \PDO(...);
 
-$configuration = new PDOProviderConfiguration;
-$configuration->tableName = 'exchange_rates';
-$configuration->sourceCurrencyColumnName = 'source_currency_code';
-$configuration->targetCurrencyColumnName = 'target_currency_code';
-$configuration->exchangeRateColumnName = 'exchange_rate';
+$configuration = new PDOProviderConfiguration(
+    tableName: 'exchange_rates',
+    exchangeRateColumnName: 'exchange_rate',
+    sourceCurrencyColumnName: 'source_currency_code',
+    targetCurrencyColumnName: 'target_currency_code',
+);
 
 $provider = new PDOProvider($pdo, $configuration);
 ```
 
-PDOProvider also supports fixed source or target currency, and dynamic WHERE conditions. Check the [PDOProviderConfiguration](https://github.com/brick/money/blob/0.4.0/src/ExchangeRateProvider/PDOProviderConfiguration.php) class for more information.
+PDOProvider also supports fixed source or target currency, and dynamic `WHERE` conditions. Check the [PDOProviderConfiguration](https://github.com/brick/money/blob/0.8.0/src/ExchangeRateProvider/PDOProviderConfiguration.php) class for more information.
 
 ### BaseCurrencyProvider
 

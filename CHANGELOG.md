@@ -5,6 +5,8 @@
 💥 **Breaking changes**
 
 - Minimum PHP version is now 8.0
+- `PDOProviderConfiguration` now has a proper constructor, and its properties are no longer public
+- `PDOProviderConfiguration` now throws exceptions in the constructor when configuration is invalid
 
 ## [0.7.1](https://github.com/brick/money/releases/tag/0.7.1) - 2023-01-16
 
