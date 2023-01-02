@@ -57,10 +57,10 @@ abstract class AbstractTestCase extends TestCase
      */
     final protected function assertMoniesAre(array $expected, array $actual) : void
     {
-        foreach ($actual as $key => $money) {
-            self::assertInstanceOf(Money::class, $money);
-            $actual[$key] = (string) $money;
-        }
+        $actual = array_map(
+            fn (Money $money) => (string) $money,
+            $actual,
+        );
 
         self::assertSame($expected, $actual);
     }

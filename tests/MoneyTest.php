@@ -926,9 +926,10 @@ class MoneyTest extends AbstractTestCase
      */
     public function testMin(array $monies, string $expectedResult) : void
     {
-        foreach ($monies as $key => $money) {
-            $monies[$key] = Money::of(...$money);
-        }
+        $monies = array_map(
+            fn (array $money) => Money::of(...$money),
+            $monies,
+        );
 
         if ($this->isExceptionClass($expectedResult)) {
             $this->expectException($expectedResult);
@@ -959,9 +960,10 @@ class MoneyTest extends AbstractTestCase
      */
     public function testMax(array $monies, string $expectedResult) : void
     {
-        foreach ($monies as $key => $money) {
-            $monies[$key] = Money::of(...$money);
-        }
+        $monies = array_map(
+            fn (array $money) => Money::of(...$money),
+            $monies,
+        );
 
         if ($this->isExceptionClass($expectedResult)) {
             $this->expectException($expectedResult);

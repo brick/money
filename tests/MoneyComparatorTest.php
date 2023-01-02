@@ -95,9 +95,10 @@ class MoneyComparatorTest extends AbstractTestCase
     {
         $comparator = new MoneyComparator($this->getExchangeRateProvider());
 
-        foreach ($monies as $key => $money) {
-            $monies[$key] = Money::of(...$money);
-        }
+        $monies = array_map(
+            fn (array $money) => Money::of(...$money),
+            $monies,
+        );
 
         if ($this->isExceptionClass($expectedMin)) {
             $this->expectException($expectedMin);
@@ -132,9 +133,10 @@ class MoneyComparatorTest extends AbstractTestCase
     {
         $comparator = new MoneyComparator($this->getExchangeRateProvider());
 
-        foreach ($monies as $key => $money) {
-            $monies[$key] = Money::of(...$money);
-        }
+        $monies = array_map(
+            fn (array $money) => Money::of(...$money),
+            $monies,
+        );
 
         if ($this->isExceptionClass($expectedMin)) {
             $this->expectException($expectedMin);
