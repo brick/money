@@ -1,5 +1,11 @@
 # Changelog
 
+## UNRELEASED (0.8.0)
+
+💥 **Breaking changes**
+
+- Minimum PHP version is now 8.0
+
 ## [0.7.1](https://github.com/brick/money/releases/tag/0.7.1) - 2023-01-16
 
 👌 **Improvements**
