@@ -10,7 +10,9 @@
   - the `HR` country (Croatia) is now mapped to `EUR` (Euro)
 - `PDOProviderConfiguration` now has a proper constructor, and its properties are no longer public
 - `PDOProviderConfiguration` now throws exceptions in the constructor when configuration is invalid
-- All documented union types are now strongly typed; you may only be affected if you have a custom `ExchangeRateProvider` implementation
+- All documented union types are now strongly typed:
+  - If you have a custom `ExchangeRateProvider` implementation, you will need to update your `getExchangeRate()` method signature
+  - If you were passing `Stringable` objects to `of()` or any of the methods internally calling `of()`, and have `strict_types` enabled, you will need to explicitly cast these objects to `string` first
 
 ## [0.7.1](https://github.com/brick/money/releases/tag/0.7.1) - 2023-01-16
 
