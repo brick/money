@@ -60,7 +60,6 @@
     'GYD' => ['GYD', 328, 'Guyana Dollar', 2],
     'HKD' => ['HKD', 344, 'Hong Kong Dollar', 2],
     'HNL' => ['HNL', 340, 'Lempira', 2],
-    'HRK' => ['HRK', 191, 'Kuna', 2],
     'HTG' => ['HTG', 332, 'Gourde', 2],
     'HUF' => ['HUF', 348, 'Forint', 2],
     'IDR' => ['IDR', 360, 'Rupiah', 2],

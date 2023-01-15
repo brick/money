@@ -94,7 +94,7 @@
     'HK' => ['HKD'],
     'HM' => ['AUD'],
     'HN' => ['HNL'],
-    'HR' => ['HRK'],
+    'HR' => ['EUR'],
     'HT' => ['HTG', 'USD'],
     'HU' => ['HUF'],
     'ID' => ['IDR'],

@@ -5,6 +5,9 @@
 💥 **Breaking changes**
 
 - Minimum PHP version is now 8.0
+- Due to Croatia's adoption of the Euro on January 1st, 2023:
+  - the `HRK` currency (Kuna) has been removed from the ISO currency provider
+  - the `HR` country (Croatia) is now mapped to `EUR` (Euro)
 - `PDOProviderConfiguration` now has a proper constructor, and its properties are no longer public
 - `PDOProviderConfiguration` now throws exceptions in the constructor when configuration is invalid
 - All documented union types are now strongly typed; you may only be affected if you have a custom `ExchangeRateProvider` implementation
