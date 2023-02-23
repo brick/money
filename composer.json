@@ -19,7 +19,7 @@
         "brick/varexporter": "~0.3.0",
         "php-coveralls/php-coveralls": "^2.2",
         "phpunit/phpunit": "^9.4.3",
-        "vimeo/psalm": "5.4.0"
+        "vimeo/psalm": "5.7.5"
     },
     "suggest": {
         "ext-intl": "Required to format Money objects"
