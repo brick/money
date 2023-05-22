@@ -18,6 +18,8 @@ use Stringable;
  *
  * Please consider this class sealed: extending this class yourself is not supported, and breaking changes (such as
  * adding new abstract methods) can happen at any time, even in a minor version.
+ *
+ * @psalm-immutable
  */
 abstract class AbstractMoney implements MoneyContainer, Stringable, JsonSerializable
 {

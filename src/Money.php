@@ -30,6 +30,8 @@ use InvalidArgumentException;
  * - CashContext is similar to DefaultContext, but supports a cash rounding step.
  * - CustomContext handles monies with a custom scale, and optionally step.
  * - AutoContext automatically adjusts the scale of the money to the minimum required.
+ *
+ * @psalm-immutable
  */
 final class Money extends AbstractMoney
 {
@@ -71,6 +73,8 @@ final class Money extends AbstractMoney
      * @return Money
      *
      * @throws MoneyMismatchException If all the monies are not in the same currency.
+     *
+     * @psalm-pure
      */
     public static function min(Money $money, Money ...$monies) : Money
     {
@@ -96,6 +100,8 @@ final class Money extends AbstractMoney
      * @return Money
      *
      * @throws MoneyMismatchException If all the monies are not in the same currency.
+     *
+     * @psalm-pure
      */
     public static function max(Money $money, Money ...$monies) : Money
     {
@@ -121,6 +127,8 @@ final class Money extends AbstractMoney
      * @return Money
      *
      * @throws MoneyMismatchException If all the monies are not in the same currency and context.
+     *
+     * @psalm-pure
      */
     public static function total(Money $money, Money ...$monies) : Money
     {
@@ -146,6 +154,8 @@ final class Money extends AbstractMoney
      * @return Money
      *
      * @throws RoundingNecessaryException If RoundingMode::UNNECESSARY is used but rounding is necessary.
+     *
+     * @psalm-pure
      */
     public static function create(BigNumber $amount, Currency $currency, Context $context, int $roundingMode = RoundingMode::UNNECESSARY) : Money
     {
@@ -641,6 +651,10 @@ final class Money extends AbstractMoney
     {
         $values = array_map(fn (int $value) => BigInteger::of($value), $values);
 
+        /**
+         * @psalm-suppress ImpureMethodCall
+         * FIXME: remove the suppression after BigInteger::gcdMultiple() is marked @psalm-pure
+         */
         return BigInteger::gcdMultiple(...$values)->toInt();
     }
 
@@ -745,6 +759,10 @@ final class Money extends AbstractMoney
         int $roundingMode = RoundingMode::UNNECESSARY,
     ) : Money {
         if (! $currency instanceof Currency) {
+            /**
+             * FIXME: dunno what to do here, Currency::of() uses ISOCurrencyProvider which is heavily "impure".
+             * @psalm-suppress ImpureMethodCall
+             */
             $currency = Currency::of($currency);
         }
 
@@ -769,6 +787,7 @@ final class Money extends AbstractMoney
      */
     public function formatWith(\NumberFormatter $formatter) : string
     {
+        /** @psalm-suppress ImpureMethodCall */
         return $formatter->formatCurrency(
             $this->amount->toFloat(),
             $this->currency->getCurrencyCode()
@@ -785,6 +804,9 @@ final class Money extends AbstractMoney
      * @param bool   $allowWholeNumber Whether to allow formatting as a whole number if the amount has no fraction.
      *
      * @return string
+     *
+     * @psalm-suppress ImpureMethodCall - \NumberFormatter is impure, but we use it here in a side effect free way
+     * @psalm-suppress ImpureStaticVariable - static variables are used for optimization reasons
      */
     public function formatTo(string $locale, bool $allowWholeNumber = false) : string
     {

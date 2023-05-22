@@ -12,6 +12,8 @@ use Brick\Math\BigNumber;
 
 /**
  * Adjusts a number to the default scale for the currency, respecting a cash rounding.
+ *
+ * @psalm-immutable
  */
 final class CashContext implements Context
 {

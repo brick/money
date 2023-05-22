@@ -9,6 +9,8 @@ use Stringable;
 
 /**
  * A currency. This class is immutable.
+ *
+ * @psalm-immutable
  */
 final class Currency implements Stringable
 {

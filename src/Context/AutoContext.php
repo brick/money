@@ -13,6 +13,8 @@ use Brick\Math\RoundingMode;
 
 /**
  * Automatically adjusts the scale of a number to the strict minimum.
+ *
+ * @psalm-immutable
  */
 final class AutoContext implements Context
 {
