@@ -39,6 +39,8 @@ use const E_USER_DEPRECATED;
  * - CashContext is similar to DefaultContext, but supports a cash rounding step.
  * - CustomContext handles monies with a custom scale and optionally step.
  * - AutoContext automatically adjusts the scale of the money to the minimum required.
+ *
+ * @psalm-immutable
  */
 final readonly class Money extends AbstractMoney
 {
@@ -63,6 +65,8 @@ final readonly class Money extends AbstractMoney
      * @param Money ...$monies The subsequent monies.
      *
      * @throws MoneyMismatchException If all the monies are not in the same currency.
+     *
+     * @psalm-pure
      */
     public static function min(Money $money, Money ...$monies): Money
     {
@@ -86,6 +90,8 @@ final readonly class Money extends AbstractMoney
      * @param Money ...$monies The subsequent monies.
      *
      * @throws MoneyMismatchException If all the monies are not in the same currency.
+     *
+     * @psalm-pure
      */
     public static function max(Money $money, Money ...$monies): Money
     {
@@ -132,6 +138,8 @@ final readonly class Money extends AbstractMoney
      * @param Money ...$monies The subsequent monies.
      *
      * @throws MoneyMismatchException If all the monies are not in the same currency and context.
+     *
+     * @psalm-pure
      */
     public static function total(Money $money, Money ...$monies): Money
     {
@@ -696,6 +704,10 @@ final readonly class Money extends AbstractMoney
         RoundingMode $roundingMode = RoundingMode::Unnecessary,
     ): Money {
         if (! $currency instanceof Currency) {
+            /**
+             * FIXME: dunno what to do here, Currency::of() uses ISOCurrencyProvider which is heavily "impure".
+             * @psalm-suppress ImpureMethodCall
+             */
             $currency = Currency::of($currency);
         }
 
@@ -722,6 +734,9 @@ final readonly class Money extends AbstractMoney
      *
      * @param string $locale           The locale to format to, for example 'fr_FR' or 'en_US'.
      * @param bool   $allowWholeNumber Whether to allow formatting as a whole number if the amount has no fraction.
+     *
+     * @psalm-suppress ImpureMethodCall - \NumberFormatter is impure, but we use it here in a side effect free way
+     * @psalm-suppress ImpureStaticVariable - static variables are used for optimization reasons
      */
     public function formatToLocale(string $locale, bool $allowWholeNumber = false): string
     {
@@ -752,6 +767,8 @@ final readonly class Money extends AbstractMoney
      * @param RoundingMode $roundingMode An optional rounding mode if the amount does not fit the context.
      *
      * @throws RoundingNecessaryException If RoundingMode::Unnecessary is used but rounding is necessary.
+     *
+     * @psalm-pure
      */
     protected static function create(BigNumber $amount, Currency $currency, Context $context, RoundingMode $roundingMode = RoundingMode::Unnecessary): Money
     {
