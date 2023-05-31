@@ -14,7 +14,7 @@ use Brick\Money\Exception\MoneyMismatchException;
  *
  * @author Ang3^ <https://github.com/Ang3>
  */
-interface Monetizable
+interface Monetizable extends MoneyInterface
 {
 	/**
 	 * Returns the sum of this Money and the given amount.
