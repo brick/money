@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Brick\Money;
 
 use Brick\Money\Context\DefaultContext;
+use Brick\Money\Contracts\MoneyInterface;
 use Brick\Money\Exception\MoneyMismatchException;
 use Brick\Money\Exception\UnknownCurrencyException;
-
 use Brick\Math\BigDecimal;
 use Brick\Math\BigInteger;
 use Brick\Math\BigNumber;
@@ -16,7 +16,6 @@ use Brick\Math\RoundingMode;
 use Brick\Math\Exception\MathException;
 use Brick\Math\Exception\NumberFormatException;
 use Brick\Math\Exception\RoundingNecessaryException;
-use InvalidArgumentException;
 
 /**
  * A monetary value in a given currency. This class is immutable.
@@ -333,7 +332,7 @@ final class Money extends AbstractMoney
      *
      * @psalm-param RoundingMode::* $roundingMode
      *
-     * @param AbstractMoney|BigNumber|int|float|string $that         The money or amount to add.
+     * @param MoneyInterface|BigNumber|int|float|string $that         The money or amount to add.
      * @param int                                      $roundingMode An optional RoundingMode constant.
      *
      * @return Money
@@ -341,7 +340,7 @@ final class Money extends AbstractMoney
      * @throws MathException          If the argument is an invalid number or rounding is necessary.
      * @throws MoneyMismatchException If the argument is a money in a different currency or in a different context.
      */
-    public function plus(AbstractMoney|BigNumber|int|float|string $that, int $roundingMode = RoundingMode::UNNECESSARY) : Money
+    public function plus(MoneyInterface|BigNumber|int|float|string $that, int $roundingMode = RoundingMode::UNNECESSARY) : Money
     {
         $amount = $this->getAmountOf($that);
 
@@ -371,7 +370,7 @@ final class Money extends AbstractMoney
      *
      * @psalm-param RoundingMode::* $roundingMode
      *
-     * @param AbstractMoney|BigNumber|int|float|string $that         The money or amount to subtract.
+     * @param MoneyInterface|BigNumber|int|float|string $that         The money or amount to subtract.
      * @param int                                      $roundingMode An optional RoundingMode constant.
      *
      * @return Money
@@ -379,7 +378,7 @@ final class Money extends AbstractMoney
      * @throws MathException          If the argument is an invalid number or rounding is necessary.
      * @throws MoneyMismatchException If the argument is a money in a different currency or in a different context.
      */
-    public function minus(AbstractMoney|BigNumber|int|float|string $that, int $roundingMode = RoundingMode::UNNECESSARY) : Money
+    public function minus(MoneyInterface|BigNumber|int|float|string $that, int $roundingMode = RoundingMode::UNNECESSARY) : Money
     {
         $amount = $this->getAmountOf($that);
 

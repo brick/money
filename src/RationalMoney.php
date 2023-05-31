@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Brick\Money;
 
+use Brick\Math\RoundingMode;
+use Brick\Money\Contracts\MoneyInterface;
 use Brick\Money\Exception\MoneyMismatchException;
-
 use Brick\Math\BigNumber;
 use Brick\Math\BigRational;
 use Brick\Math\Exception\MathException;
@@ -72,14 +73,14 @@ final class RationalMoney extends AbstractMoney
     /**
      * Returns the sum of this RationalMoney and the given amount.
      *
-     * @param AbstractMoney|BigNumber|int|float|string $that The money or amount to add.
+     * @param MoneyInterface|BigNumber|int|float|string $that The money or amount to add.
      *
      * @return RationalMoney
      *
      * @throws MathException          If the argument is not a valid number.
      * @throws MoneyMismatchException If the argument is a money in another currency.
      */
-    public function plus(AbstractMoney|BigNumber|int|float|string $that) : RationalMoney
+    public function plus(MoneyInterface|BigNumber|int|float|string $that, int $roundingMode = RoundingMode::UNNECESSARY) : RationalMoney
     {
         $that = $this->getAmountOf($that);
         $amount = $this->amount->plus($that);
@@ -90,14 +91,14 @@ final class RationalMoney extends AbstractMoney
     /**
      * Returns the difference of this RationalMoney and the given amount.
      *
-     * @param AbstractMoney|BigNumber|int|float|string $that The money or amount to subtract.
+     * @param MoneyInterface|BigNumber|int|float|string $that The money or amount to subtract.
      *
      * @return RationalMoney
      *
      * @throws MathException          If the argument is not a valid number.
      * @throws MoneyMismatchException If the argument is a money in another currency.
      */
-    public function minus(AbstractMoney|BigNumber|int|float|string $that) : RationalMoney
+    public function minus(MoneyInterface|BigNumber|int|float|string $that, int $roundingMode = RoundingMode::UNNECESSARY) : RationalMoney
     {
         $that = $this->getAmountOf($that);
         $amount = $this->amount->minus($that);
@@ -114,7 +115,7 @@ final class RationalMoney extends AbstractMoney
      *
      * @throws MathException If the argument is not a valid number.
      */
-    public function multipliedBy(BigNumber|int|float|string $that) : RationalMoney
+    public function multipliedBy(BigNumber|int|float|string $that, int $roundingMode = RoundingMode::UNNECESSARY) : RationalMoney
     {
         $amount = $this->amount->multipliedBy($that);
 
@@ -130,14 +131,42 @@ final class RationalMoney extends AbstractMoney
      *
      * @throws MathException If the argument is not a valid number.
      */
-    public function dividedBy(BigNumber|int|float|string $that) : RationalMoney
+    public function dividedBy(BigNumber|int|float|string $that, int $roundingMode = RoundingMode::UNNECESSARY) : RationalMoney
     {
         $amount = $this->amount->dividedBy($that);
 
         return new self($amount, $this->currency);
     }
 
-    /**
+	/**
+	 * Returns the absolute value of this money instance.
+	 *
+	 * @return RationalMoney
+	 */
+	public function abs(): RationalMoney
+	{
+		$amount = $this->getAmount();
+
+		if (!$amount->isNegative()) {
+			return $this;
+		}
+
+		$amount = $amount->multipliedBy(-1);
+
+		return new self($amount, $this->getCurrency());
+	}
+
+	/**
+	 * Returns a Money whose value is the negated value of this Money.
+	 *
+	 * @return RationalMoney
+	 */
+	public function negated() : RationalMoney
+	{
+		return new self($this->amount->negated(), $this->currency);
+	}
+
+	/**
      * Returns a copy of this BigRational, with the amount simplified.
      *
      * @return RationalMoney
