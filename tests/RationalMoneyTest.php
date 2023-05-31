@@ -151,6 +151,40 @@ class RationalMoneyTest extends AbstractTestCase
         ];
     }
 
+
+	/**
+	 * @dataProvider providerAbs
+	 */
+	public function testAbs(array $money, string $abs) : void
+	{
+		$this->assertRationalMoneyEquals($abs, RationalMoney::of(...$money)->abs());
+	}
+
+	public function providerAbs() : array
+	{
+		return [
+			[['-1', 'EUR'], 'EUR 1'],
+			[['-1', 'EUR', new AutoContext()], 'EUR 1'],
+			[['1.2', 'JPY', new AutoContext()], 'JPY 12/10'],
+		];
+	}
+
+	/**
+	 * @dataProvider providerNegated
+	 */
+	public function testNegated(array $money, string $negated) : void
+	{
+		$this->assertRationalMoneyEquals($negated, RationalMoney::of(...$money)->negated());
+	}
+
+	public function providerNegated() : array
+	{
+		return [
+			[['1.234', 'EUR', new AutoContext()], 'EUR -1234/1000'],
+			[['-2', 'JPY'], 'JPY 2'],
+		];
+	}
+
     /**
      * @dataProvider providerSimplified
      */
