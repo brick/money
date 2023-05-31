@@ -32,7 +32,7 @@ interface Monetizable
 	 * @param MoneyInterface|BigNumber|int|float|string $that         The money or amount to add.
 	 * @param int                                       $roundingMode An optional RoundingMode constant.
 	 *
-	 * @return $this
+	 * @return self
 	 *
 	 * @throws MathException          If the argument is an invalid number or rounding is necessary.
 	 * @throws MoneyMismatchException If the argument is a money in a different currency or in a different context.
@@ -56,7 +56,7 @@ interface Monetizable
 	 * @param MoneyInterface|BigNumber|int|float|string $that         The money or amount to subtract.
 	 * @param int                                       $roundingMode An optional RoundingMode constant.
 	 *
-	 * @return $this
+	 * @return self
 	 *
 	 * @throws MathException          If the argument is an invalid number or rounding is necessary.
 	 * @throws MoneyMismatchException If the argument is a money in a different currency or in a different context.
@@ -75,7 +75,7 @@ interface Monetizable
 	 * @param BigNumber|int|float|string $that         The multiplier.
 	 * @param int                        $roundingMode An optional RoundingMode constant.
 	 *
-	 * @return $this
+	 * @return self
 	 *
 	 * @throws MathException If the argument is an invalid number or rounding is necessary.
 	 */
@@ -93,7 +93,7 @@ interface Monetizable
 	 * @param BigNumber|int|float|string $that         The divisor.
 	 * @param int                        $roundingMode An optional RoundingMode constant.
 	 *
-	 * @return $this
+	 * @return self
 	 *
 	 * @throws MathException If the argument is an invalid number or is zero, or rounding is necessary.
 	 */
@@ -104,13 +104,13 @@ interface Monetizable
 	 *
 	 * The resulting Money has the same context as this Money.
 	 *
-	 * @return $this
+	 * @return self
 	 */
 	public function abs(): self;
 	/**
 	 * Returns a Money whose value is the negated value of this Money.
 	 *
-	 * @return $this
+	 * @return self
 	 */
 	public function negated() : self;
 
