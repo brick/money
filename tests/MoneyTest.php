@@ -695,6 +695,7 @@ class MoneyTest extends AbstractTestCase
     public function testIsEqualTo(array $a, array $b, int $c) : void
     {
         self::assertSame($c === 0, Money::of(...$a)->isEqualTo(Money::of(...$b)));
+        self::assertSame($c !== 0, Money::of(...$a)->isNotEqualTo(Money::of(...$b)));
     }
 
     public function testIsEqualToOtherCurrency() : void
@@ -781,6 +782,7 @@ class MoneyTest extends AbstractTestCase
     public function testIsAmountAndCurrencyEqualTo(array $a, array $b, bool $c) : void
     {
         self::assertSame($c, Money::of(...$a)->isAmountAndCurrencyEqualTo(Money::of(...$b)));
+        self::assertNotSame($c, Money::of(...$a)->isAmountAndCurrencyNotEqualTo(Money::of(...$b)));
     }
 
     public function providerIsAmountAndCurrencyEqualTo() : \Generator

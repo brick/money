@@ -141,6 +141,17 @@ abstract class AbstractMoney implements MoneyContainer, Stringable, JsonSerializ
     }
 
     /**
+     * Returns whether this money is not equal to the given amount.
+     *
+     * @throws MathException          If the argument is an invalid number.
+     * @throws MoneyMismatchException If the argument is a money in a different currency.
+     */
+    final public function isNotEqualTo(AbstractMoney|BigNumber|int|float|string $that) : bool
+    {
+        return ! $this->isEqualTo($that);
+    }
+
+    /**
      * Returns whether this money is less than the given amount.
      *
      * @throws MathException          If the argument is an invalid number.
@@ -198,6 +209,21 @@ abstract class AbstractMoney implements MoneyContainer, Stringable, JsonSerializ
     {
         return $this->getAmount()->isEqualTo($that->getAmount())
             && $this->getCurrency()->is($that->getCurrency());
+    }
+
+    /**
+     * Returns whether this money's amount and currency are not equal to those of the given money.
+     *
+     * Unlike isNotEqualTo(), this method only accepts a money, and returns true if the given money is in another
+     * currency, instead of throwing a MoneyMismatchException.
+     *
+     * @param AbstractMoney $that
+     *
+     * @return bool
+     */
+    final public function isAmountAndCurrencyNotEqualTo(AbstractMoney $that) : bool
+    {
+        return ! $this->isAmountAndCurrencyEqualTo($that);
     }
 
     /**
