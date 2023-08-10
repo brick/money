@@ -43,28 +43,28 @@ final class PDOProvider implements ExchangeRateProvider
     {
         $conditions = [];
 
-        if (null !== $whereConditions = $configuration->getWhereConditions()) {
-            $conditions[] = sprintf('(%s)', $whereConditions);
+        if ($configuration->whereConditions !== null) {
+            $conditions[] = sprintf('(%s)', $configuration->whereConditions);
         }
 
-        if (null !== $sourceCurrencyCode = $configuration->getSourceCurrencyCode()) {
-            $this->sourceCurrencyCode = $sourceCurrencyCode;
-        } elseif (null !== $sourceCurrencyColumnName = $configuration->getSourceCurrencyColumnName()) {
-            $conditions[] = sprintf('%s = ?', $sourceCurrencyColumnName);
+        if ($configuration->sourceCurrencyCode !== null) {
+            $this->sourceCurrencyCode = $configuration->sourceCurrencyCode;
+        } elseif ($configuration->sourceCurrencyColumnName !== null) {
+            $conditions[] = sprintf('%s = ?', $configuration->sourceCurrencyColumnName);
         }
 
-        if (null !== $targetCurrencyCode = $configuration->getTargetCurrencyCode()) {
-            $this->targetCurrencyCode = $targetCurrencyCode;
-        } elseif (null !== $targetCurrencyColumnName = $configuration->getTargetCurrencyColumnName()) {
-            $conditions[] = sprintf('%s = ?', $targetCurrencyColumnName);
+        if ($configuration->targetCurrencyCode !== null) {
+            $this->targetCurrencyCode = $configuration->targetCurrencyCode;
+        } elseif ($configuration->targetCurrencyColumnName !== null) {
+            $conditions[] = sprintf('%s = ?', $configuration->targetCurrencyColumnName);
         }
 
         $conditions = implode(' AND ' , $conditions);
 
         $query = sprintf(
             'SELECT %s FROM %s WHERE %s',
-            $configuration->getExchangeRateColumnName(),
-            $configuration->getTableName(),
+            $configuration->exchangeRateColumnName,
+            $configuration->tableName,
             $conditions
         );
 
