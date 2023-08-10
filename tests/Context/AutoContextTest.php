@@ -21,7 +21,7 @@ class AutoContextTest extends AbstractTestCase
     /**
      * @dataProvider providerApplyTo
      */
-    public function testApplyTo(string $amount, string $currency, int $roundingMode, string $expected) : void
+    public function testApplyTo(string $amount, string $currency, RoundingMode $roundingMode, string $expected) : void
     {
         $amount = BigNumber::of($amount);
         $currency = Currency::of($currency);

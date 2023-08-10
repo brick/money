@@ -28,16 +28,14 @@ abstract class AbstractMoney implements MoneyContainer, Stringable, JsonSerializ
     /**
      * Converts this money to a Money in the given Context.
      *
-     * @psalm-param RoundingMode::* $roundingMode
-     *
-     * @param Context $context      The context.
-     * @param int     $roundingMode The rounding mode, if necessary.
+     * @param Context      $context      The context.
+     * @param RoundingMode $roundingMode The rounding mode, if necessary.
      *
      * @return Money
      *
      * @throws RoundingNecessaryException If RoundingMode::UNNECESSARY is used but rounding is necessary.
      */
-    final public function to(Context $context, int $roundingMode = RoundingMode::UNNECESSARY) : Money
+    final public function to(Context $context, RoundingMode $roundingMode = RoundingMode::UNNECESSARY) : Money
     {
         return Money::create($this->getAmount(), $this->getCurrency(), $context, $roundingMode);
     }

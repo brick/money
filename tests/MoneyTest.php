@@ -116,7 +116,7 @@ class MoneyTest extends AbstractTestCase
     /**
      * @dataProvider providerTo
      */
-    public function testTo(array $money, Context $context, int $roundingMode, string $expected) : void
+    public function testTo(array $money, Context $context, RoundingMode $roundingMode, string $expected) : void
     {
         $money = Money::of(...$money);
 
@@ -150,12 +150,12 @@ class MoneyTest extends AbstractTestCase
     /**
      * @dataProvider providerPlus
      *
-     * @param array  $money        The base money.
-     * @param mixed  $plus         The amount to add.
-     * @param int    $roundingMode The rounding mode to use.
-     * @param string $expected     The expected money value, or an exception class name.
+     * @param array        $money        The base money.
+     * @param mixed        $plus         The amount to add.
+     * @param RoundingMode $roundingMode The rounding mode to use.
+     * @param string       $expected     The expected money value, or an exception class name.
      */
-    public function testPlus(array $money, mixed $plus, int $roundingMode, string $expected) : void
+    public function testPlus(array $money, mixed $plus, RoundingMode $roundingMode, string $expected) : void
     {
         $money = Money::of(...$money);
 
@@ -208,12 +208,12 @@ class MoneyTest extends AbstractTestCase
     /**
      * @dataProvider providerMinus
      *
-     * @param array  $money        The base money.
-     * @param mixed  $minus        The amount to subtract.
-     * @param int    $roundingMode The rounding mode to use.
-     * @param string $expected     The expected money value, or an exception class name.
+     * @param array        $money        The base money.
+     * @param mixed        $minus        The amount to subtract.
+     * @param RoundingMode $roundingMode The rounding mode to use.
+     * @param string       $expected     The expected money value, or an exception class name.
      */
-    public function testMinus(array $money, mixed $minus, int $roundingMode, string $expected) : void
+    public function testMinus(array $money, mixed $minus, RoundingMode $roundingMode, string $expected) : void
     {
         $money = Money::of(...$money);
 
@@ -254,10 +254,10 @@ class MoneyTest extends AbstractTestCase
      *
      * @param array                  $money        The base money.
      * @param Money|int|float|string $multiplier   The multiplier.
-     * @param int                    $roundingMode The rounding mode to use.
+     * @param RoundingMode           $roundingMode The rounding mode to use.
      * @param string                 $expected     The expected money value, or an exception class name.
      */
-    public function testMultipliedBy(array $money, Money|int|float|string $multiplier, int $roundingMode, string $expected) : void
+    public function testMultipliedBy(array $money, Money|int|float|string $multiplier, RoundingMode $roundingMode, string $expected) : void
     {
         $money = Money::of(...$money);
 
@@ -293,10 +293,10 @@ class MoneyTest extends AbstractTestCase
      *
      * @param array            $money        The base money.
      * @param int|float|string $divisor      The divisor.
-     * @param int              $roundingMode The rounding mode to use.
+     * @param RoundingMode     $roundingMode The rounding mode to use.
      * @param string           $expected     The expected money value, or an exception class name.
      */
-    public function testDividedBy(array $money, int|float|string $divisor, int $roundingMode, string $expected) : void
+    public function testDividedBy(array $money, int|float|string $divisor, RoundingMode $roundingMode, string $expected) : void
     {
         $money = Money::of(...$money);
 

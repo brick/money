@@ -32,12 +32,10 @@ final class CurrencyConverter
     /**
      * Converts the given money to the given currency.
      *
-     * @psalm-param RoundingMode::* $roundingMode
-     *
      * @param MoneyContainer      $moneyContainer The Money, RationalMoney or MoneyBag to convert.
      * @param Currency|string|int $currency       The Currency instance, ISO currency code or ISO numeric currency code.
      * @param Context|null        $context        A context to create the money in, or null to use the default.
-     * @param int                 $roundingMode   The rounding mode, if necessary.
+     * @param RoundingMode        $roundingMode   The rounding mode, if necessary.
      *
      * @return Money
      *
@@ -48,7 +46,7 @@ final class CurrencyConverter
         MoneyContainer $moneyContainer,
         Currency|string|int $currency,
         ?Context $context = null,
-        int $roundingMode = RoundingMode::UNNECESSARY,
+        RoundingMode $roundingMode = RoundingMode::UNNECESSARY,
     ) : Money {
         return $this
             ->convertToRational($moneyContainer, $currency)

@@ -9,6 +9,7 @@ use Brick\Money\Currency;
 
 use Brick\Math\BigDecimal;
 use Brick\Math\BigNumber;
+use Brick\Math\RoundingMode;
 
 /**
  * Adjusts a number to the default scale for the currency, respecting a cash rounding.
@@ -33,7 +34,7 @@ final class CashContext implements Context
     /**
      * {@inheritdoc}
      */
-    public function applyTo(BigNumber $amount, Currency $currency, int $roundingMode) : BigDecimal
+    public function applyTo(BigNumber $amount, Currency $currency, RoundingMode $roundingMode) : BigDecimal
     {
         $scale = $currency->getDefaultFractionDigits();
 

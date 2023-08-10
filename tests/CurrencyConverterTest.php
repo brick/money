@@ -36,12 +36,12 @@ class CurrencyConverterTest extends AbstractTestCase
     /**
      * @dataProvider providerConvertMoney
      *
-     * @param array  $money          The base money.
-     * @param string $toCurrency     The currency code to convert to.
-     * @param int    $roundingMode   The rounding mode to use.
-     * @param string $expectedResult The expected money's string representation, or an exception class name.
+     * @param array        $money          The base money.
+     * @param string       $toCurrency     The currency code to convert to.
+     * @param RoundingMode $roundingMode   The rounding mode to use.
+     * @param string       $expectedResult The expected money's string representation, or an exception class name.
      */
-    public function testConvertMoney(array $money, string $toCurrency, int $roundingMode, string $expectedResult) : void
+    public function testConvertMoney(array $money, string $toCurrency, RoundingMode $roundingMode, string $expectedResult) : void
     {
         $money = Money::of(...$money);
         $currencyConverter = $this->createCurrencyConverter();
@@ -78,13 +78,13 @@ class CurrencyConverterTest extends AbstractTestCase
     /**
      * @dataProvider providerConvertMoneyBag
      *
-     * @param array   $monies       The mixed currency monies to add.
-     * @param string  $currency     The target currency code.
-     * @param Context $context      The target context.
-     * @param int     $roundingMode The rounding mode to use.
-     * @param string  $total        The expected total.
+     * @param array        $monies       The mixed currency monies to add.
+     * @param string       $currency     The target currency code.
+     * @param Context      $context      The target context.
+     * @param RoundingMode $roundingMode The rounding mode to use.
+     * @param string       $total        The expected total.
      */
-    public function testConvertMoneyBag(array $monies, string $currency, Context $context, int $roundingMode, string $total) : void
+    public function testConvertMoneyBag(array $monies, string $currency, Context $context, RoundingMode $roundingMode, string $total) : void
     {
         $exchangeRateProvider = new ConfigurableProvider();
         $exchangeRateProvider->setExchangeRate('EUR', 'USD', '1.23456789');
@@ -149,12 +149,12 @@ class CurrencyConverterTest extends AbstractTestCase
     /**
      * @dataProvider providerConvertRationalMoney
      *
-     * @param array  $money          The original amount and currency.
-     * @param string $toCurrency     The currency code to convert to.
-     * @param int    $roundingMode   The rounding mode to use.
-     * @param string $expectedResult The expected money's string representation, or an exception class name.
+     * @param array        $money          The original amount and currency.
+     * @param string       $toCurrency     The currency code to convert to.
+     * @param RoundingMode $roundingMode   The rounding mode to use.
+     * @param string       $expectedResult The expected money's string representation, or an exception class name.
      */
-    public function testConvertRationalMoney(array $money, string $toCurrency, int $roundingMode, string $expectedResult) : void
+    public function testConvertRationalMoney(array $money, string $toCurrency, RoundingMode $roundingMode, string $expectedResult) : void
     {
         $currencyConverter = $this->createCurrencyConverter();
 

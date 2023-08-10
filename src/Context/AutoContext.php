@@ -19,7 +19,7 @@ final class AutoContext implements Context
     /**
      * {@inheritdoc}
      */
-    public function applyTo(BigNumber $amount, Currency $currency, int $roundingMode) : BigDecimal
+    public function applyTo(BigNumber $amount, Currency $currency, RoundingMode $roundingMode) : BigDecimal
     {
         if ($roundingMode !== RoundingMode::UNNECESSARY) {
             throw new \InvalidArgumentException('AutoContext only supports RoundingMode::UNNECESSARY');

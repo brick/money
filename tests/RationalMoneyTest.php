@@ -175,7 +175,7 @@ class RationalMoneyTest extends AbstractTestCase
     /**
      * @dataProvider providerTo
      */
-    public function testTo(array $rationalMoney, Context $context, int $roundingMode, string $expected) : void
+    public function testTo(array $rationalMoney, Context $context, RoundingMode $roundingMode, string $expected) : void
     {
         $rationalMoney = RationalMoney::of(...$rationalMoney);
 
