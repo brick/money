@@ -9,9 +9,9 @@ namespace Brick\Money\Exception;
  */
 class CurrencyConversionException extends MoneyException
 {
-    private string $sourceCurrencyCode;
+    private readonly string $sourceCurrencyCode;
 
-    private string $targetCurrencyCode;
+    private readonly string $targetCurrencyCode;
 
     /**
      * CurrencyConversionException constructor.

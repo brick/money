@@ -19,7 +19,7 @@ final class CurrencyConverter
     /**
      * The exchange rate provider.
      */
-    private ExchangeRateProvider $exchangeRateProvider;
+    private readonly ExchangeRateProvider $exchangeRateProvider;
 
     /**
      * @param ExchangeRateProvider $exchangeRateProvider The exchange rate provider.

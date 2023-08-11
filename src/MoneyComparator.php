@@ -21,7 +21,7 @@ final class MoneyComparator
     /**
      * The exchange rate provider.
      */
-    private ExchangeRateProvider $exchangeRateProvider;
+    private readonly ExchangeRateProvider $exchangeRateProvider;
 
     /**
      * Class constructor.

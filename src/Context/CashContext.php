@@ -21,7 +21,7 @@ final class CashContext implements Context
      *
      * For example, step 5 on CHF would allow CHF 0.00, CHF 0.05, CHF 0.10, etc.
      */
-    private int $step;
+    private readonly int $step;
 
     /**
      * @param int $step The cash rounding step, in minor units. Must be a multiple of 2 and/or 5.

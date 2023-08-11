@@ -15,7 +15,7 @@ final class CachedProvider implements ExchangeRateProvider
     /**
      * The underlying exchange rate provider.
      */
-    private ExchangeRateProvider $provider;
+    private readonly ExchangeRateProvider $provider;
 
     /**
      * The cached exchange rates.

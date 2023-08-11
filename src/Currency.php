@@ -20,7 +20,7 @@ final class Currency implements Stringable, JsonSerializable
      * For non ISO currencies no constraints are defined, but the code must be unique across an application, and must
      * not conflict with ISO currency codes.
      */
-    private string $currencyCode;
+    private readonly string $currencyCode;
 
     /**
      * The numeric currency code.
@@ -33,7 +33,7 @@ final class Currency implements Stringable, JsonSerializable
      *
      * The numeric code can be useful when storing monies in a database.
      */
-    private int $numericCode;
+    private readonly int $numericCode;
 
     /**
      * The name of the currency.
@@ -41,7 +41,7 @@ final class Currency implements Stringable, JsonSerializable
      * For ISO currencies this will be the official English name of the currency.
      * For non ISO currencies no constraints are defined.
      */
-    private string $name;
+    private readonly string $name;
 
     /**
      * The default number of fraction digits (typical scale) used with this currency.
@@ -49,7 +49,7 @@ final class Currency implements Stringable, JsonSerializable
      * For example, the default number of fraction digits for the Euro is 2, while for the Japanese Yen it is 0.
      * This cannot be a negative number.
      */
-    private int $defaultFractionDigits;
+    private readonly int $defaultFractionDigits;
 
     /**
      * Class constructor.

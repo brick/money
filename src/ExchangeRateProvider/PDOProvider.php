@@ -16,17 +16,17 @@ final class PDOProvider implements ExchangeRateProvider
     /**
      * The SELECT statement.
      */
-    private \PDOStatement $statement;
+    private readonly \PDOStatement $statement;
 
     /**
      * The source currency code if fixed, or null if dynamic.
      */
-    private ?string $sourceCurrencyCode = null;
+    private readonly ?string $sourceCurrencyCode;
 
     /**
      * The target currency code if fixed, or null if dynamic.
      */
-    private ?string $targetCurrencyCode = null;
+    private readonly ?string $targetCurrencyCode;
 
     /**
      * Extra parameters set dynamically to resolve the query placeholders.
@@ -47,17 +47,23 @@ final class PDOProvider implements ExchangeRateProvider
             $conditions[] = sprintf('(%s)', $configuration->whereConditions);
         }
 
+        $sourceCurrencyCode = null;
+        $targetCurrencyCode = null;
+
         if ($configuration->sourceCurrencyCode !== null) {
-            $this->sourceCurrencyCode = $configuration->sourceCurrencyCode;
+            $sourceCurrencyCode = $configuration->sourceCurrencyCode;
         } elseif ($configuration->sourceCurrencyColumnName !== null) {
             $conditions[] = sprintf('%s = ?', $configuration->sourceCurrencyColumnName);
         }
 
         if ($configuration->targetCurrencyCode !== null) {
-            $this->targetCurrencyCode = $configuration->targetCurrencyCode;
+            $targetCurrencyCode = $configuration->targetCurrencyCode;
         } elseif ($configuration->targetCurrencyColumnName !== null) {
             $conditions[] = sprintf('%s = ?', $configuration->targetCurrencyColumnName);
         }
+
+        $this->sourceCurrencyCode = $sourceCurrencyCode;
+        $this->targetCurrencyCode = $targetCurrencyCode;
 
         $conditions = implode(' AND ' , $conditions);
 

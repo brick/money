@@ -36,17 +36,17 @@ final class Money extends AbstractMoney
     /**
      * The amount.
      */
-    private BigDecimal $amount;
+    private readonly BigDecimal $amount;
 
     /**
      * The currency.
      */
-    private Currency $currency;
+    private readonly Currency $currency;
 
     /**
      * The context that defines the capability of this Money.
      */
-    private Context $context;
+    private readonly Context $context;
 
     /**
      * @param BigDecimal $amount
