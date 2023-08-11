@@ -38,7 +38,7 @@ class DefaultContextTest extends AbstractTestCase
         }
     }
 
-    public function providerApplyTo() : array
+    public static function providerApplyTo() : array
     {
         return [
             ['1', 'USD', RoundingMode::UNNECESSARY, '1.00'],

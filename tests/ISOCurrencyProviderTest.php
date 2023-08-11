@@ -41,7 +41,7 @@ class ISOCurrencyProviderTest extends AbstractTestCase
         $this->assertCurrencyEquals($currencyCode, $numericCode, $name, $defaultFractionDigits, $currency);
     }
 
-    public function providerGetCurrency() : array
+    public static function providerGetCurrency() : array
     {
         return [
             ['EUR', 978, 'Euro', 2],
@@ -66,7 +66,7 @@ class ISOCurrencyProviderTest extends AbstractTestCase
         ISOCurrencyProvider::getInstance()->getCurrency($currencyCode);
     }
 
-    public function providerUnknownCurrency() : array
+    public static function providerUnknownCurrency() : array
     {
         return [
             ['XXX'],

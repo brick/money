@@ -42,7 +42,7 @@ class BaseCurrencyProviderTest extends AbstractTestCase
         self::assertSame($exchangeRate, (string) $rate->toScale(6, RoundingMode::DOWN));
     }
 
-    public function providerGetExchangeRate() : array
+    public static function providerGetExchangeRate() : array
     {
         return [
             ['USD', 'EUR', '0.900000'],
@@ -76,7 +76,7 @@ class BaseCurrencyProviderTest extends AbstractTestCase
         $this->assertInstanceOf(BigNumber::class, $rate);
     }
 
-    public function providerReturnBigNumber() : array
+    public static function providerReturnBigNumber() : array
     {
         return [[1], [1.1], ['1.0'], [BigNumber::of('1')]];
     }

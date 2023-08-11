@@ -57,7 +57,7 @@ class CurrencyConverterTest extends AbstractTestCase
         }
     }
 
-    public function providerConvertMoney() : array
+    public static function providerConvertMoney() : array
     {
         return [
             [['1.23', 'EUR'], 'USD', RoundingMode::DOWN, 'USD 1.35'],
@@ -101,7 +101,7 @@ class CurrencyConverterTest extends AbstractTestCase
         $this->assertMoneyIs($total, $currencyConverter->convert($moneyBag, $currency, $context, $roundingMode));
     }
 
-    public function providerConvertMoneyBag() : array
+    public static function providerConvertMoneyBag() : array
     {
         return [
             [[['354.40005', 'EUR'], ['3.1234', 'JPY']], 'USD', new DefaultContext(), RoundingMode::DOWN, 'USD 437.56'],
@@ -138,7 +138,7 @@ class CurrencyConverterTest extends AbstractTestCase
         $this->assertRationalMoneyEquals($expectedTotal, $actualTotal);
     }
 
-    public function providerConvertMoneyBagToRational() : array
+    public static function providerConvertMoneyBagToRational() : array
     {
         return [
             [[['354.40005', 'EUR'], ['3.1234', 'JPY']], 'USD', 'USD 19909199529475444524673813/50000000000000000000000'],
@@ -171,7 +171,7 @@ class CurrencyConverterTest extends AbstractTestCase
         }
     }
 
-    public function providerConvertRationalMoney() : array
+    public static function providerConvertRationalMoney() : array
     {
         return [
             [['7/9', 'USD'], 'EUR', RoundingMode::DOWN, 'EUR 0.70'],

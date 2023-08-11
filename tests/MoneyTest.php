@@ -45,7 +45,7 @@ class MoneyTest extends AbstractTestCase
         }
     }
 
-    public function providerOf() : array
+    public static function providerOf() : array
     {
         return [
             ['USD 1.00', 1, 'USD'],
@@ -81,7 +81,7 @@ class MoneyTest extends AbstractTestCase
         }
     }
 
-    public function providerOfMinor() : array
+    public static function providerOfMinor() : array
     {
         return [
             ['EUR 0.01', 1, 'EUR'],
@@ -102,7 +102,7 @@ class MoneyTest extends AbstractTestCase
         $this->assertMoneyIs($expected, $actual, $context === null ? new DefaultContext() : $context);
     }
 
-    public function providerZero() : array
+    public static function providerZero() : array
     {
         return [
             ['USD', null, 'USD 0.00'],
@@ -131,7 +131,7 @@ class MoneyTest extends AbstractTestCase
         }
     }
 
-    public function providerTo() : array
+    public static function providerTo() : array
     {
         return [
             [['1.234', 'USD', new AutoContext()], new DefaultContext(), RoundingMode::DOWN, 'USD 1.23'],
@@ -174,7 +174,7 @@ class MoneyTest extends AbstractTestCase
         }
     }
 
-    public function providerPlus() : array
+    public static function providerPlus() : array
     {
         return [
             [['12.34', 'USD'], 1, RoundingMode::UNNECESSARY, 'USD 13.34'],
@@ -232,7 +232,7 @@ class MoneyTest extends AbstractTestCase
         }
     }
 
-    public function providerMinus() : array
+    public static function providerMinus() : array
     {
         return [
             [['12.34', 'USD'], 1, RoundingMode::UNNECESSARY, 'USD 11.34'],
@@ -272,7 +272,7 @@ class MoneyTest extends AbstractTestCase
         }
     }
 
-    public function providerMultipliedBy() : array
+    public static function providerMultipliedBy() : array
     {
         return [
             [['12.34', 'USD'], 2,     RoundingMode::UNNECESSARY, 'USD 24.68'],
@@ -311,7 +311,7 @@ class MoneyTest extends AbstractTestCase
         }
     }
 
-    public function providerDividedBy() : array
+    public static function providerDividedBy() : array
     {
         return [
             [['12.34', 'USD'], 0, RoundingMode::DOWN, DivisionByZeroException::class],
@@ -341,7 +341,7 @@ class MoneyTest extends AbstractTestCase
         $this->assertMoneyIs($expectedRemainder, $remainder);
     }
 
-    public function providerQuotientAndRemainder() : array
+    public static function providerQuotientAndRemainder() : array
     {
         return [
             [['10', 'USD'], 3, 'USD 3.33', 'USD 0.01'],
@@ -369,7 +369,7 @@ class MoneyTest extends AbstractTestCase
         $this->assertMoniesAre($expected, $monies);
     }
 
-    public function providerAllocate() : array
+    public static function providerAllocate() : array
     {
         return [
             [['99.99', 'USD'], [100], ['USD 99.99']],
@@ -426,7 +426,7 @@ class MoneyTest extends AbstractTestCase
         $this->assertMoniesAre($expected, $monies);
     }
 
-    public function providerAllocateWithRemainder() : array
+    public static function providerAllocateWithRemainder() : array
     {
         return [
             [['99.99', 'USD'], [100], ['USD 99.99', 'USD 0.00']],
@@ -483,7 +483,7 @@ class MoneyTest extends AbstractTestCase
         $this->assertMoniesAre($expected, $monies);
     }
 
-    public function providerSplit() : array
+    public static function providerSplit() : array
     {
         return [
             [['99.99', 'USD'], 1, ['USD 99.99']],
@@ -507,7 +507,7 @@ class MoneyTest extends AbstractTestCase
         $this->assertMoniesAre($expected, $monies);
     }
 
-    public function providerSplitWithRemainder() : array
+    public static function providerSplitWithRemainder() : array
     {
         return [
             [['99.99', 'USD'], 1, ['USD 99.99', 'USD 0.00']],
@@ -534,7 +534,7 @@ class MoneyTest extends AbstractTestCase
         $money->split($parts);
     }
 
-    public function providerSplitIntoLessThanOnePart() : array
+    public static function providerSplitIntoLessThanOnePart() : array
     {
         return [
             [-1],
@@ -555,7 +555,7 @@ class MoneyTest extends AbstractTestCase
         $money->splitWithRemainder($parts);
     }
 
-    public function providerSplitWithRemainderIntoLessThanOnePart() : array
+    public static function providerSplitWithRemainderIntoLessThanOnePart() : array
     {
         return [
             [-1],
@@ -572,7 +572,7 @@ class MoneyTest extends AbstractTestCase
         $this->assertMoneyIs($abs, Money::of(...$money)->abs());
     }
 
-    public function providerAbs() : array
+    public static function providerAbs() : array
     {
         return [
             [['-1', 'EUR'], 'EUR 1.00'],
@@ -589,7 +589,7 @@ class MoneyTest extends AbstractTestCase
         $this->assertMoneyIs($negated, Money::of(...$money)->negated());
     }
 
-    public function providerNegated() : array
+    public static function providerNegated() : array
     {
         return [
             [['1.234', 'EUR', new AutoContext()], 'EUR -1.234'],
@@ -645,7 +645,7 @@ class MoneyTest extends AbstractTestCase
         self::assertSame($sign <= 0, Money::of(...$money)->isNegativeOrZero());
     }
 
-    public function providerSign() : array
+    public static function providerSign() : array
     {
         return [
             [['-0.001', 'USD', new AutoContext()], -1],
@@ -783,16 +783,16 @@ class MoneyTest extends AbstractTestCase
         self::assertSame($c, Money::of(...$a)->isAmountAndCurrencyEqualTo(Money::of(...$b)));
     }
 
-    public function providerIsAmountAndCurrencyEqualTo() : \Generator
+    public static function providerIsAmountAndCurrencyEqualTo() : \Generator
     {
-        foreach ($this->providerCompare() as [$a, $b, $c]) {
+        foreach (self::providerCompare() as [$a, $b, $c]) {
             yield [$a, $b, $c === 0];
         }
 
         yield [[1, 'EUR'], [1, 'USD'], false];
     }
 
-    public function providerCompare() : array
+    public static function providerCompare() : array
     {
         return [
             [['1', 'EUR', new AutoContext()], ['1.00', 'EUR'], 0],
@@ -817,7 +817,7 @@ class MoneyTest extends AbstractTestCase
         self::assertSame($expected, (string) $actual);
     }
 
-    public function providerGetMinorAmount() : array
+    public static function providerGetMinorAmount() : array
     {
         return [
             [[50, 'USD'], '5000'],
@@ -845,7 +845,7 @@ class MoneyTest extends AbstractTestCase
         $this->assertMoneyIs($expected, $actual);
     }
 
-    public function providerConvertedTo() : array
+    public static function providerConvertedTo() : array
     {
         return [
             [['1.23', 'USD'], ['JPY', '125', new CustomContext(2)], 'JPY 153.75'],
@@ -872,7 +872,7 @@ class MoneyTest extends AbstractTestCase
         self::assertSame($expected, $actual);
     }
 
-    public function providerFormatWith() : array
+    public static function providerFormatWith() : array
     {
         return [
             [['1.23', 'USD'], 'en_US', ';', '$1;23'],
@@ -894,7 +894,7 @@ class MoneyTest extends AbstractTestCase
         self::assertSame($expected, Money::of(...$money)->formatTo($locale, $allowWholeNumber));
     }
 
-    public function providerFormatTo() : array
+    public static function providerFormatTo() : array
     {
         return [
             [['1.23', 'USD'], 'en_US', false, '$1.23'],
@@ -942,7 +942,7 @@ class MoneyTest extends AbstractTestCase
         }
     }
 
-    public function providerMin() : array
+    public static function providerMin() : array
     {
         return [
             [[['1.0', 'USD', new AutoContext()], ['3.50', 'USD'], ['4.00', 'USD']], 'USD 1'],
@@ -976,7 +976,7 @@ class MoneyTest extends AbstractTestCase
         }
     }
 
-    public function providerMax() : array
+    public static function providerMax() : array
     {
         return [
             [[['5.50', 'USD'], ['3.50', 'USD'], ['4.90', 'USD']], 'USD 5.50'],
@@ -1016,7 +1016,7 @@ class MoneyTest extends AbstractTestCase
         self::assertSame(json_encode($expected), json_encode($money));
     }
 
-    public function providerJsonSerialize(): array
+    public static function providerJsonSerialize(): array
     {
         return [
             [Money::of('3.5', 'EUR'), ['amount' => '3.50', 'currency' => 'EUR']],

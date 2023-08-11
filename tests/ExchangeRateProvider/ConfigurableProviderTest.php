@@ -41,7 +41,7 @@ class ConfigurableProviderTest extends AbstractTestCase
         self::assertSame($exchangeRate, (string) BigRational::of($rate)->toScale(3, RoundingMode::DOWN));
     }
 
-    public function providerGetExchangeRate() : array
+    public static function providerGetExchangeRate() : array
     {
         return [
             ['USD', 'EUR', '0.800'],

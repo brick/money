@@ -52,7 +52,7 @@ class RationalMoneyTest extends AbstractTestCase
         }
     }
 
-    public function providerPlus() : array
+    public static function providerPlus() : array
     {
         return [
             [['1.1234', 'USD'], '987.65', 'USD 988773400/1000000'],
@@ -83,7 +83,7 @@ class RationalMoneyTest extends AbstractTestCase
         }
     }
 
-    public function providerMinus() : array
+    public static function providerMinus() : array
     {
         return [
             [['987.65', 'USD'], '1.1234', 'USD 986526600/1000000'],
@@ -114,7 +114,7 @@ class RationalMoneyTest extends AbstractTestCase
         }
     }
 
-    public function providerMultipliedBy() : array
+    public static function providerMultipliedBy() : array
     {
         return [
             [['987.65', 'USD'], '1.123456', 'USD 110958131840/100000000'],
@@ -141,7 +141,7 @@ class RationalMoneyTest extends AbstractTestCase
         }
     }
 
-    public function providerDividedBy() : array
+    public static function providerDividedBy() : array
     {
         return [
             [['987.65', 'USD'], '1.123456', 'USD 98765000000/112345600'],
@@ -162,7 +162,7 @@ class RationalMoneyTest extends AbstractTestCase
         $this->assertRationalMoneyEquals($expected, $actual);
     }
 
-    public function providerSimplified() : array
+    public static function providerSimplified() : array
     {
         return [
             [['123456/10000', 'USD'], 'USD 7716/625'],
@@ -190,7 +190,7 @@ class RationalMoneyTest extends AbstractTestCase
         }
     }
 
-    public function providerTo() : array
+    public static function providerTo() : array
     {
         return [
             [['987.65', 'USD'], new DefaultContext(), RoundingMode::UNNECESSARY, 'USD 987.65'],
@@ -211,7 +211,7 @@ class RationalMoneyTest extends AbstractTestCase
         self::assertSame(json_encode($expected), json_encode($money));
     }
 
-    public function providerJsonSerialize(): array
+    public static function providerJsonSerialize(): array
     {
         return [
             [RationalMoney::of('3.5', 'EUR'), ['amount' => '35/10', 'currency' => 'EUR']],

@@ -30,7 +30,7 @@ class PDOProviderTest extends AbstractTestCase
         $getConfiguration();
     }
 
-    public function providerConstructorWithInvalidConfiguration() : array
+    public static function providerConstructorWithInvalidConfiguration() : array
     {
         return [
             [fn () => new PDOProviderConfiguration(
@@ -111,7 +111,7 @@ class PDOProviderTest extends AbstractTestCase
         }
     }
 
-    public function providerGetExchangeRate() : array
+    public static function providerGetExchangeRate() : array
     {
         return [
             ['USD', 'EUR', 0.9],
@@ -165,7 +165,7 @@ class PDOProviderTest extends AbstractTestCase
         }
     }
 
-    public function providerWithFixedSourceCurrency() : array
+    public static function providerWithFixedSourceCurrency() : array
     {
         return [
             ['EUR', 'USD', 1.1],
@@ -219,7 +219,7 @@ class PDOProviderTest extends AbstractTestCase
         }
     }
 
-    public function providerWithFixedTargetCurrency() : array
+    public static function providerWithFixedTargetCurrency() : array
     {
         return [
             ['USD', 'EUR', 0.9],
@@ -281,7 +281,7 @@ class PDOProviderTest extends AbstractTestCase
         }
     }
 
-    public function providerWithParameters() : array
+    public static function providerWithParameters() : array
     {
         return [
             ['EUR', 'USD', [2017, 8], 1.1],

@@ -57,7 +57,7 @@ class MoneyComparatorTest extends AbstractTestCase
         self::assertSame($cmp === 0, $comparator->isEqual($a, $b));
     }
 
-    public function providerCompare() : array
+    public static function providerCompare() : array
     {
         return [
             [['1.00', 'EUR'], ['1', 'EUR'], 0],
@@ -111,7 +111,7 @@ class MoneyComparatorTest extends AbstractTestCase
         }
     }
 
-    public function providerMin() : array
+    public static function providerMin() : array
     {
         return [
             [[['1.00', 'EUR'], ['1.09', 'USD']], 'USD 1.09'],
@@ -149,7 +149,7 @@ class MoneyComparatorTest extends AbstractTestCase
         }
     }
 
-    public function providerMax() : array
+    public static function providerMax() : array
     {
         return [
             [[['1.00', 'EUR'], ['1.09', 'USD']], 'EUR 1.00'],
