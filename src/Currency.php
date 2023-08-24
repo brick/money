@@ -167,7 +167,7 @@ final class Currency implements Stringable, JsonSerializable
             || ($this->numericCode !== 0 && $this->numericCode === (int) $currency);
     }
 
-    final public function jsonSerialize(): array
+    final public function jsonSerialize(): string
     {
         return $this->currencyCode;
     }
