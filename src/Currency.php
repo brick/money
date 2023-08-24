@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace Brick\Money;
 
 use Brick\Money\Exception\UnknownCurrencyException;
+use JsonSerializable;
 use Stringable;
 
 /**
  * A currency. This class is immutable.
  */
-final class Currency implements Stringable
+final class Currency implements Stringable, JsonSerializable
 {
     /**
      * The currency code.
@@ -164,6 +165,11 @@ final class Currency implements Stringable
 
         return $this->currencyCode === (string) $currency
             || ($this->numericCode !== 0 && $this->numericCode === (int) $currency);
+    }
+
+    final public function jsonSerialize(): array
+    {
+        return $this->currencyCode;
     }
 
     /**
