@@ -127,10 +127,10 @@ class CurrencyTest extends AbstractTestCase
     /**
      * @dataProvider providerJsonSerialize
      */
-    public function testJsonSerialize(Currency currency, array $expected): void
+    public function testJsonSerialize(Currency $currency, array $expected): void
     {
-        self::assertSame($expected, currency->jsonSerialize());
-        self::assertSame(json_encode($expected), json_encode(currency));
+        self::assertSame($expected, $currency->jsonSerialize());
+        self::assertSame(json_encode($expected), json_encode($currency));
     }
 
     public function providerJsonSerialize(): array
