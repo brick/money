@@ -123,4 +123,20 @@ class CurrencyTest extends AbstractTestCase
         self::assertNotSame($currency, $clone);
         self::assertTrue($clone->is($currency));
     }
+
+    /**
+     * @dataProvider providerJsonSerialize
+     */
+    public function testJsonSerialize(Currency $currency, string $expected): void
+    {
+        self::assertSame($expected, $currency->jsonSerialize());
+        self::assertSame(json_encode($expected), json_encode($currency));
+    }
+
+    public function providerJsonSerialize(): array
+    {
+        return [
+            [Currency::of('USD'), 'USD']
+        ];
+    }
 }

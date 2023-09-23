@@ -226,7 +226,7 @@ abstract class AbstractMoney implements MoneyContainer, Stringable, JsonSerializ
     {
         return [
             'amount' => (string) $this->getAmount(),
-            'currency' => (string) $this->getCurrency()
+            'currency' => $this->getCurrency()->jsonSerialize()
         ];
     }
 }
