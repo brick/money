@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.8.1](https://github.com/brick/money/releases/tag/0.8.1) - 2023-09-23
+
+👌 **Improvement**
+
+`Currency` now implements `JsonSerializable` ([#79](https://github.com/brick/money/pull/79)).
+
+Thanks [@joelvh](https://github.com/joelvh)!
+
 ## [0.8.0](https://github.com/brick/money/releases/tag/0.8.0) - 2023-01-16
 
 💥 **Breaking changes**
