@@ -187,6 +187,8 @@ final class Money extends AbstractMoney
      * @throws UnknownCurrencyException   If the currency is an unknown currency code.
      * @throws RoundingNecessaryException If the rounding mode is RoundingMode::UNNECESSARY, and rounding is necessary
      *                                    to represent the amount at the requested scale.
+     *
+     * @psalm-pure
      */
     public static function of(
         BigNumber|int|float|string $amount,
@@ -227,6 +229,8 @@ final class Money extends AbstractMoney
      * @throws UnknownCurrencyException   If the currency is an unknown currency code.
      * @throws RoundingNecessaryException If the rounding mode is RoundingMode::UNNECESSARY, and rounding is necessary
      *                                    to represent the amount at the requested scale.
+     *
+     * @psalm-pure
      */
     public static function ofMinor(
         BigNumber|int|float|string $minorAmount,
@@ -257,6 +261,8 @@ final class Money extends AbstractMoney
      * @param Context|null        $context  An optional context.
      *
      * @return Money
+     *
+     * @psalm-pure
      */
     public static function zero(Currency|string|int $currency, ?Context $context = null) : Money
     {
@@ -759,10 +765,6 @@ final class Money extends AbstractMoney
         int $roundingMode = RoundingMode::UNNECESSARY,
     ) : Money {
         if (! $currency instanceof Currency) {
-            /**
-             * FIXME: dunno what to do here, Currency::of() uses ISOCurrencyProvider which is heavily "impure".
-             * @psalm-suppress ImpureMethodCall
-             */
             $currency = Currency::of($currency);
         }
 

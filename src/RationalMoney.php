@@ -43,6 +43,8 @@ final class RationalMoney extends AbstractMoney
      * @param Currency|string|int        $currency The Currency instance, ISO currency code or ISO numeric currency code.
      *
      * @return RationalMoney
+     *
+     * @psalm-pure
      */
     public static function of(BigNumber|int|float|string $amount, Currency|string|int $currency) : RationalMoney
     {
