@@ -58,9 +58,15 @@ final readonly class Currency implements Stringable, JsonSerializable
      * @param string $currencyCode The 3-letter ISO 4217 currency code.
      *
      * @throws UnknownCurrencyException If an unknown currency code is given.
+     *
+     * @psalm-pure
      */
     public static function of(string $currencyCode): Currency
     {
+        /**
+         * @psalm-suppress ImpureMethodCall
+         * @see https://github.com/brick/money/pull/75
+         */
         return IsoCurrencyProvider::getInstance()->getCurrency($currencyCode);
     }
 
@@ -72,9 +78,15 @@ final readonly class Currency implements Stringable, JsonSerializable
      * @param string $countryCode The 2-letter ISO 3166-1 country code.
      *
      * @throws UnknownCurrencyException If the country code is unknown, or there is no single currency for the country.
+     *
+     * @psalm-pure
      */
     public static function ofCountry(string $countryCode): Currency
     {
+        /**
+         * @psalm-suppress ImpureMethodCall
+         * @see https://github.com/brick/money/pull/75
+         */
         return IsoCurrencyProvider::getInstance()->getCurrencyForCountry($countryCode);
     }
 
