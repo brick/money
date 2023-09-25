@@ -43,6 +43,8 @@ final readonly class RationalMoney extends AbstractMoney
      *
      * @throws MathException            If the amount is not a valid number.
      * @throws UnknownCurrencyException If an unknown currency code is given.
+     *
+     * @psalm-pure
      */
     public static function of(BigNumber|int|string $amount, Currency|string $currency): RationalMoney
     {
