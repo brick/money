@@ -42,10 +42,8 @@ class CurrencyTest extends AbstractTestCase
 
     /**
      * @dataProvider providerOfUnknownCurrencyCode
-     *
-     * @param string|int $currencyCode
      */
-    public function testOfUnknownCurrencyCode($currencyCode) : void
+    public function testOfUnknownCurrencyCode(string|int $currencyCode) : void
     {
         $this->expectException(UnknownCurrencyException::class);
         Currency::of($currencyCode);
@@ -124,5 +122,21 @@ class CurrencyTest extends AbstractTestCase
 
         self::assertNotSame($currency, $clone);
         self::assertTrue($clone->is($currency));
+    }
+
+    /**
+     * @dataProvider providerJsonSerialize
+     */
+    public function testJsonSerialize(Currency $currency, string $expected): void
+    {
+        self::assertSame($expected, $currency->jsonSerialize());
+        self::assertSame(json_encode($expected), json_encode($currency));
+    }
+
+    public function providerJsonSerialize(): array
+    {
+        return [
+            [Currency::of('USD'), 'USD']
+        ];
     }
 }

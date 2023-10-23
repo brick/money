@@ -16,10 +16,8 @@ final class ConfigurableProvider implements ExchangeRateProvider
 {
     /**
      * @psalm-var array<string, array<string, BigNumber|int|float|string>>
-     *
-     * @var array
      */
-    private $exchangeRates = [];
+    private array $exchangeRates = [];
 
     /**
      * @param string                     $sourceCurrencyCode
@@ -38,7 +36,7 @@ final class ConfigurableProvider implements ExchangeRateProvider
     /**
      * {@inheritdoc}
      */
-    public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode)
+    public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode): BigNumber|int|float|string
     {
         if (isset($this->exchangeRates[$sourceCurrencyCode][$targetCurrencyCode])) {
             return $this->exchangeRates[$sourceCurrencyCode][$targetCurrencyCode];

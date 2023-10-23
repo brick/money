@@ -50,7 +50,7 @@ class CurrencyConverterTest extends AbstractTestCase
             $this->expectException($expectedResult);
         }
 
-        $actualResult = $currencyConverter->convert($money, $toCurrency, $roundingMode);
+        $actualResult = $currencyConverter->convert($money, $toCurrency, null, $roundingMode);
 
         if (! $this->isExceptionClass($expectedResult)) {
             $this->assertMoneyIs($expectedResult, $actualResult);
@@ -92,13 +92,13 @@ class CurrencyConverterTest extends AbstractTestCase
 
         $moneyBag = new MoneyBag();
 
-        foreach ($monies as $money) {
-            $money = Money::of($money[0], $money[1], new AutoContext());
+        foreach ($monies as [$amount, $currencyCode]) {
+            $money = Money::of($amount, $currencyCode, new AutoContext());
             $moneyBag->add($money);
         }
 
-        $currencyConverter = new CurrencyConverter($exchangeRateProvider, $context);
-        $this->assertMoneyIs($total, $currencyConverter->convert($moneyBag, $currency, $roundingMode));
+        $currencyConverter = new CurrencyConverter($exchangeRateProvider);
+        $this->assertMoneyIs($total, $currencyConverter->convert($moneyBag, $currency, $context, $roundingMode));
     }
 
     public function providerConvertMoneyBag() : array
@@ -127,8 +127,8 @@ class CurrencyConverterTest extends AbstractTestCase
 
         $moneyBag = new MoneyBag();
 
-        foreach ($monies as $money) {
-            $money = Money::of($money[0], $money[1], new AutoContext());
+        foreach ($monies as [$amount, $currencyCode]) {
+            $money = Money::of($amount, $currencyCode, new AutoContext());
             $moneyBag->add($money);
         }
 
@@ -164,7 +164,7 @@ class CurrencyConverterTest extends AbstractTestCase
             $this->expectException($expectedResult);
         }
 
-        $actualResult = $currencyConverter->convert($rationalMoney, $toCurrency, $roundingMode);
+        $actualResult = $currencyConverter->convert($rationalMoney, $toCurrency, null, $roundingMode);
 
         if (! $this->isExceptionClass($expectedResult)) {
             $this->assertMoneyIs($expectedResult, $actualResult);

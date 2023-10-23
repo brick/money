@@ -26,7 +26,9 @@ composer require brick/money
 
 ### Requirements
 
-This library requires PHP 7.1 or later.
+This library requires PHP 8.0 or later.
+
+For PHP 7.4 compatibility, you can use version `0.7`. For PHP 7.1, 7.2 & 7.3, you can use version `0.5`. Note that [these PHP versions are EOL](http://php.net/supported-versions.php) and not supported anymore. If you're still using one of these PHP versions, you should consider upgrading as soon as possible.
 
 Although not required, it is recommended that you **install the [GMP](http://php.net/manual/en/book.gmp.php) or [BCMath](http://php.net/manual/en/book.bc.php) extension** to speed up calculations.
 
@@ -38,7 +40,7 @@ The current releases are numbered `0.x.y`. When a non-breaking change is introdu
 
 **When a breaking change is introduced, a new `0.x` version cycle is always started.**
 
-It is therefore safe to lock your project to a given release cycle, such as `0.5.*`.
+It is therefore safe to lock your project to a given release cycle, such as `0.8.*`.
 
 If you need to upgrade to a newer release cycle, check the [release history](https://github.com/brick/money/releases) for a list of changes introduced by each further `0.x.0` version.
 
@@ -268,7 +270,7 @@ $exchangeRateProvider = ...;
 $converter = new CurrencyConverter($exchangeRateProvider); // optionally provide a Context here
 
 $money = Money::of('50', 'USD');
-$converter->convert($money, 'EUR', RoundingMode::DOWN);
+$converter->convert($money, 'EUR', null, RoundingMode::DOWN);
 ```
 
 The converter performs the most precise calculation possible, internally representing the result as a rational number until the very last step.
@@ -297,16 +299,17 @@ use Brick\Money\ExchangeRateProvider\PDOProviderConfiguration;
 
 $pdo = new \PDO(...);
 
-$configuration = new PDOProviderConfiguration;
-$configuration->tableName = 'exchange_rates';
-$configuration->sourceCurrencyColumnName = 'source_currency_code';
-$configuration->targetCurrencyColumnName = 'target_currency_code';
-$configuration->exchangeRateColumnName = 'exchange_rate';
+$configuration = new PDOProviderConfiguration(
+    tableName: 'exchange_rates',
+    exchangeRateColumnName: 'exchange_rate',
+    sourceCurrencyColumnName: 'source_currency_code',
+    targetCurrencyColumnName: 'target_currency_code',
+);
 
 $provider = new PDOProvider($pdo, $configuration);
 ```
 
-PDOProvider also supports fixed source or target currency, and dynamic WHERE conditions. Check the [PDOProviderConfiguration](https://github.com/brick/money/blob/0.4.0/src/ExchangeRateProvider/PDOProviderConfiguration.php) class for more information.
+PDOProvider also supports fixed source or target currency, and dynamic `WHERE` conditions. Check the [PDOProviderConfiguration](https://github.com/brick/money/blob/0.8.0/src/ExchangeRateProvider/PDOProviderConfiguration.php) class for more information.
 
 ### BaseCurrencyProvider
 
@@ -460,9 +463,3 @@ If you're using an ORM such as Doctrine, it is advised to store the amount and c
 > How does this project compare with [moneyphp/money](https://github.com/moneyphp/money)?
 
 Please see [this discussion](https://github.com/brick/money/issues/28).
-
-## brick/money for enterprise
-
-Available as part of the Tidelift Subscription.
-
-The maintainers of brick/money and thousands of other packages are working with Tidelift to deliver commercial support and maintenance for the open source dependencies you use to build your applications. Save time, reduce risk, and improve code health, while paying the maintainers of the exact dependencies you use. [Learn more.](https://tidelift.com/subscription/pkg/packagist-brick-money?utm_source=packagist-brick-money&utm_medium=referral&utm_campaign=enterprise&utm_term=repo)

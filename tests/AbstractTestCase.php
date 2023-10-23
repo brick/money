@@ -57,10 +57,10 @@ abstract class AbstractTestCase extends TestCase
      */
     final protected function assertMoniesAre(array $expected, array $actual) : void
     {
-        foreach ($actual as $key => $money) {
-            self::assertInstanceOf(Money::class, $money);
-            $actual[$key] = (string) $money;
-        }
+        $actual = array_map(
+            fn (Money $money) => (string) $money,
+            $actual,
+        );
 
         self::assertSame($expected, $actual);
     }
@@ -102,11 +102,8 @@ abstract class AbstractTestCase extends TestCase
         self::assertSame($defaultFractionDigits, $currency->getDefaultFractionDigits());
     }
 
-    /**
-     * @param mixed $value
-     */
-    final protected function isExceptionClass($value) : bool
+    final protected function isExceptionClass(mixed $value) : bool
     {
-        return is_string($value) && substr($value, -9) === 'Exception';
+        return is_string($value) && str_ends_with($value, 'Exception');
     }
 }

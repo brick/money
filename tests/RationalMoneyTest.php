@@ -36,10 +36,8 @@ class RationalMoneyTest extends AbstractTestCase
 
     /**
      * @dataProvider providerPlus
-     *
-     * @param mixed $amount
      */
-    public function testPlus(array $rationalMoney, $amount, string $expected) : void
+    public function testPlus(array $rationalMoney, mixed $amount, string $expected) : void
     {
         $rationalMoney = RationalMoney::of(...$rationalMoney);
 
@@ -69,10 +67,8 @@ class RationalMoneyTest extends AbstractTestCase
 
     /**
      * @dataProvider providerMinus
-     *
-     * @param mixed $amount
      */
-    public function testMinus(array $rationalMoney, $amount, string $expected) : void
+    public function testMinus(array $rationalMoney, mixed $amount, string $expected) : void
     {
         $rationalMoney = RationalMoney::of(...$rationalMoney);
 
@@ -102,10 +98,8 @@ class RationalMoneyTest extends AbstractTestCase
 
     /**
      * @dataProvider providerMultipliedBy
-     *
-     * @param mixed $operand
      */
-    public function testMultipliedBy(array $rationalMoney, $operand, string $expected) : void
+    public function testMultipliedBy(array $rationalMoney, mixed $operand, string $expected) : void
     {
         $rationalMoney = RationalMoney::of(...$rationalMoney);
 
@@ -131,10 +125,8 @@ class RationalMoneyTest extends AbstractTestCase
 
     /**
      * @dataProvider providerDividedBy
-     *
-     * @param mixed $operand
      */
-    public function testDividedBy(array $rationalMoney, $operand, string $expected) : void
+    public function testDividedBy(array $rationalMoney, mixed $operand, string $expected) : void
     {
         $rationalMoney = RationalMoney::of(...$rationalMoney);
 
@@ -207,6 +199,23 @@ class RationalMoneyTest extends AbstractTestCase
             [['123/456', 'GBP'], new CustomContext(4), RoundingMode::UP, 'GBP 0.2698'],
             [['123/456', 'GBP'], new AutoContext(), RoundingMode::UNNECESSARY, RoundingNecessaryException::class],
             [['123456789/256', 'CHF'], new AutoContext(), RoundingMode::UNNECESSARY, 'CHF 482253.08203125']
+        ];
+    }
+
+    /**
+     * @dataProvider providerJsonSerialize
+     */
+    public function testJsonSerialize(RationalMoney $money, array $expected): void
+    {
+        self::assertSame($expected, $money->jsonSerialize());
+        self::assertSame(json_encode($expected), json_encode($money));
+    }
+
+    public function providerJsonSerialize(): array
+    {
+        return [
+            [RationalMoney::of('3.5', 'EUR'), ['amount' => '35/10', 'currency' => 'EUR']],
+            [RationalMoney::of('3.888923', 'GBP'), ['amount' => '3888923/1000000', 'currency' => 'GBP']]
         ];
     }
 }

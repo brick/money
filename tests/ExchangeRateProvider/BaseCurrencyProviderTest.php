@@ -64,10 +64,8 @@ class BaseCurrencyProviderTest extends AbstractTestCase
 
     /**
      * @dataProvider providerReturnBigNumber
-     *
-     * @param BigNumber|float|int|string $rate
      */
-    public function testReturnBigNumber($rate) : void
+    public function testReturnBigNumber(BigNumber|float|int|string $rate) : void
     {
         $configurableProvider = new ConfigurableProvider();
         $configurableProvider->setExchangeRate('USD', 'EUR', $rate);

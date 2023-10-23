@@ -4,6 +4,10 @@ on:
   push:
   pull_request:
 
+env:
+  PSALM_PHP_VERSION: "8.2"
+  COVERAGE_PHP_VERSION: "8.2"
+
 jobs:
   psalm:
     name: Psalm
@@ -16,7 +20,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "8.0"
+          php-version: ${{ env.PSALM_PHP_VERSION }}
 
       - name: Install composer dependencies
         uses: "ramsey/composer-install@v1"
@@ -31,15 +35,14 @@ jobs:
     strategy:
       matrix:
         php-version:
-          - "7.1"
-          - "7.2"
-          - "7.3"
-          - "7.4"
           - "8.0"
+          - "8.1"
+          - "8.2"
+          - "8.3"
         deps:
           - "highest"
         include:
-          - php-version: "7.1"
+          - php-version: "8.0"
             deps: "lowest"
 
     steps:
@@ -58,17 +61,17 @@ jobs:
           dependency-versions: ${{ matrix.deps }}
 
       - name: Run PHPUnit
-        run: vendor/bin/phpunit
-        if: ${{ matrix.php-version != '8.0' }}
+        run: vendor/bin/phpunit --fail-on-skipped
+        if: ${{ matrix.php-version != env.COVERAGE_PHP_VERSION }}
 
       - name: Run PHPUnit with coverage
         run: |
           mkdir -p build/logs
-          vendor/bin/phpunit --coverage-clover build/logs/clover.xml
-        if: ${{ matrix.php-version == '8.0' }}
+          vendor/bin/phpunit --fail-on-skipped --coverage-clover build/logs/clover.xml
+        if: ${{ matrix.php-version == env.COVERAGE_PHP_VERSION }}
 
       - name: Upload coverage report to Coveralls
         run: vendor/bin/php-coveralls --coverage_clover=build/logs/clover.xml -v
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        if: ${{ matrix.php-version == '8.0' }}
+        if: ${{ matrix.php-version == env.COVERAGE_PHP_VERSION }}

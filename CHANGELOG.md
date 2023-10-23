@@ -1,5 +1,63 @@
 # Changelog
 
+## [0.8.1](https://github.com/brick/money/releases/tag/0.8.1) - 2023-09-23
+
+👌 **Improvement**
+
+`Currency` now implements `JsonSerializable` ([#79](https://github.com/brick/money/pull/79)).
+
+Thanks [@joelvh](https://github.com/joelvh)!
+
+## [0.8.0](https://github.com/brick/money/releases/tag/0.8.0) - 2023-01-16
+
+💥 **Breaking changes**
+
+- Minimum PHP version is now 8.0
+- Due to Croatia's adoption of the Euro on January 1st, 2023:
+  - the `HRK` currency (Kuna) has been removed from the ISO currency provider
+  - the `HR` country (Croatia) is now mapped to `EUR` (Euro)
+- `PDOProviderConfiguration` now has a proper constructor, and its properties are no longer public
+- `PDOProviderConfiguration` now throws exceptions in the constructor when configuration is invalid
+- All documented union types are now strongly typed:
+  - If you have a custom `ExchangeRateProvider` implementation, you will need to update your `getExchangeRate()` method signature
+  - If you were passing `Stringable` objects to `of()` or any of the methods internally calling `of()`, and have `strict_types` enabled, you will need to explicitly cast these objects to `string` first
+
+## [0.7.1](https://github.com/brick/money/releases/tag/0.7.1) - 2023-01-16
+
+👌 **Improvements**
+
+- Compatibility with `brick/math` version `0.11`
+
+## [0.7.0](https://github.com/brick/money/releases/tag/0.7.0) - 2022-10-06
+
+💥 **Breaking changes**
+
+- JSON extension is now required for PHP 7.4 (always available with PHP >= 8.0)
+- `AbstractMoney` is now officially sealed, extending it yourself is not supported
+
+✨ **New features**
+
+- `Money` and `RationalMoney` now implement `JsonSerializable`
+
+## [0.6.0](https://github.com/brick/money/releases/tag/0.6.0) - 2022-08-02
+
+💥 **Breaking changes**
+
+- Minimum PHP version is now 7.4
+- `AbstractMoney::getAmount()` now has a return type
+- `CurrencyConverter`'s constructor does not accept a default `$context` anymore
+- `CurrencyConverter::convert()` now requires the `$context` previously accepted by the constructor as third parameter
+- `Money::allocateWithRemainder()` now refuses to allocate a portion of the amount that cannot be spread over all ratios, and instead adds that amount to the remainder (#55)
+- `Money::splitWithRemainder()` now behaves like `allocateWithRemainder()`
+
+✨ **New ISO currencies**
+
+- `SLE` (Leone) in Sierra Leone (`SL`)
+
+👌 **Improvements**
+
+- Compatibility with `brick/math` version `0.10`
+
 ## [0.5.2](https://github.com/brick/money/releases/tag/0.5.2) - 2021-04-03
 
 ✨ **New methods**

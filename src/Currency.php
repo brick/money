@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Brick\Money;
 
 use Brick\Money\Exception\UnknownCurrencyException;
+use JsonSerializable;
+use Stringable;
 
 /**
  * A currency. This class is immutable.
  */
-final class Currency
+final class Currency implements Stringable, JsonSerializable
 {
     /**
      * The currency code.
@@ -17,10 +19,8 @@ final class Currency
      * For ISO currencies this will be the 3-letter uppercase ISO 4217 currency code.
      * For non ISO currencies no constraints are defined, but the code must be unique across an application, and must
      * not conflict with ISO currency codes.
-     *
-     * @var string
      */
-    private $currencyCode;
+    private string $currencyCode;
 
     /**
      * The numeric currency code.
@@ -32,30 +32,24 @@ final class Currency
      * If set to zero, the currency is considered to not have a numeric code.
      *
      * The numeric code can be useful when storing monies in a database.
-     *
-     * @var int
      */
-    private $numericCode;
+    private int $numericCode;
 
     /**
      * The name of the currency.
      *
      * For ISO currencies this will be the official English name of the currency.
      * For non ISO currencies no constraints are defined.
-     *
-     * @var string
      */
-    private $name;
+    private string $name;
 
     /**
      * The default number of fraction digits (typical scale) used with this currency.
      *
      * For example, the default number of fraction digits for the Euro is 2, while for the Japanese Yen it is 0.
      * This cannot be a negative number.
-     *
-     * @var int
      */
-    private $defaultFractionDigits;
+    private int $defaultFractionDigits;
 
     /**
      * Class constructor.
@@ -82,11 +76,9 @@ final class Currency
      *
      * @param string|int $currencyCode The 3-letter or numeric ISO 4217 currency code.
      *
-     * @return Currency
-     *
      * @throws UnknownCurrencyException If an unknown currency code is given.
      */
-    public static function of($currencyCode) : Currency
+    public static function of(string|int $currencyCode) : Currency
     {
         return ISOCurrencyProvider::getInstance()->getCurrency($currencyCode);
     }
@@ -165,7 +157,7 @@ final class Currency
      *
      * @return bool
      */
-    public function is($currency) : bool
+    public function is(Currency|string|int $currency) : bool
     {
         if ($currency instanceof Currency) {
             return $this->currencyCode === $currency->currencyCode;
@@ -175,10 +167,13 @@ final class Currency
             || ($this->numericCode !== 0 && $this->numericCode === (int) $currency);
     }
 
+    final public function jsonSerialize(): string
+    {
+        return $this->currencyCode;
+    }
+
     /**
      * Returns the currency code.
-     *
-     * @return string
      */
     public function __toString() : string
     {

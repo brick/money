@@ -248,7 +248,7 @@ $countryCodes= [
     'TONGA' => 'TO',
     'TRINIDAD AND TOBAGO' => 'TT',
     'TUNISIA' => 'TN',
-    'TURKEY' => 'TR',
+    'TÜRKİYE' => 'TR',
     'TURKMENISTAN' => 'TM',
     'TURKS AND CAICOS ISLANDS (THE)' => 'TC',
     'TUVALU' => 'TV',
@@ -272,7 +272,7 @@ $countryCodes= [
     'ZIMBABWE' => 'ZW',
 ];
 
-$data = file_get_contents('https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/amendments/lists/list_one.xml');
+$data = file_get_contents('https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml');
 
 $document = new DOMDocument();
 $success = $document->loadXML($data);

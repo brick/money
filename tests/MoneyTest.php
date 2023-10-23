@@ -32,7 +32,7 @@ class MoneyTest extends AbstractTestCase
      * @param string $expectedResult The resulting money as a string, or an exception class.
      * @param mixed  ...$args        The arguments to the of() method.
      */
-    public function testOf($expectedResult, ...$args) : void
+    public function testOf(string $expectedResult, mixed ...$args) : void
     {
         if ($this->isExceptionClass($expectedResult)) {
             $this->expectException($expectedResult);
@@ -68,7 +68,7 @@ class MoneyTest extends AbstractTestCase
      * @param string $expectedResult The resulting money as a string, or an exception class.
      * @param mixed  ...$args        The arguments to the ofMinor() method.
      */
-    public function testOfMinor($expectedResult, ...$args) : void
+    public function testOfMinor(string $expectedResult, mixed ...$args) : void
     {
         if ($this->isExceptionClass($expectedResult)) {
             $this->expectException($expectedResult);
@@ -155,7 +155,7 @@ class MoneyTest extends AbstractTestCase
      * @param int    $roundingMode The rounding mode to use.
      * @param string $expected     The expected money value, or an exception class name.
      */
-    public function testPlus(array $money, $plus, int $roundingMode, string $expected) : void
+    public function testPlus(array $money, mixed $plus, int $roundingMode, string $expected) : void
     {
         $money = Money::of(...$money);
 
@@ -213,7 +213,7 @@ class MoneyTest extends AbstractTestCase
      * @param int    $roundingMode The rounding mode to use.
      * @param string $expected     The expected money value, or an exception class name.
      */
-    public function testMinus(array $money, $minus, int $roundingMode, string $expected) : void
+    public function testMinus(array $money, mixed $minus, int $roundingMode, string $expected) : void
     {
         $money = Money::of(...$money);
 
@@ -257,7 +257,7 @@ class MoneyTest extends AbstractTestCase
      * @param int                    $roundingMode The rounding mode to use.
      * @param string                 $expected     The expected money value, or an exception class name.
      */
-    public function testMultipliedBy(array $money, $multiplier, int $roundingMode, string $expected) : void
+    public function testMultipliedBy(array $money, Money|int|float|string $multiplier, int $roundingMode, string $expected) : void
     {
         $money = Money::of(...$money);
 
@@ -296,7 +296,7 @@ class MoneyTest extends AbstractTestCase
      * @param int              $roundingMode The rounding mode to use.
      * @param string           $expected     The expected money value, or an exception class name.
      */
-    public function testDividedBy(array $money, $divisor, int $roundingMode, string $expected) : void
+    public function testDividedBy(array $money, int|float|string $divisor, int $roundingMode, string $expected) : void
     {
         $money = Money::of(...$money);
 
@@ -376,11 +376,13 @@ class MoneyTest extends AbstractTestCase
             [['99.99', 'USD'], [100, 100], ['USD 50.00', 'USD 49.99']],
             [[100, 'USD'], [30, 20, 40], ['USD 33.34', 'USD 22.22', 'USD 44.44']],
             [[100, 'USD'], [30, 20, 40, 40], ['USD 23.08', 'USD 15.39', 'USD 30.77', 'USD 30.76']],
+            [[100, 'USD'], [30, 20, 40, 0, 40, 0], ['USD 23.08', 'USD 15.39', 'USD 30.77', 'USD 0.00', 'USD 30.76', 'USD 0.00']],
             [[100, 'CHF', new CashContext(5)], [1, 2, 3, 7], ['CHF 7.70', 'CHF 15.40', 'CHF 23.10', 'CHF 53.80']],
             [['100.123', 'EUR', new AutoContext()], [2, 3, 1, 1], ['EUR 28.607', 'EUR 42.91', 'EUR 14.303', 'EUR 14.303']],
             [['0.02', 'EUR'], [1, 1, 1, 1], ['EUR 0.01', 'EUR 0.01', 'EUR 0.00', 'EUR 0.00']],
             [['0.02', 'EUR'], [1, 1, 3, 1], ['EUR 0.01', 'EUR 0.00', 'EUR 0.01', 'EUR 0.00']],
             [[-100, 'USD'], [30, 20, 40, 40], ['USD -23.08', 'USD -15.39', 'USD -30.77', 'USD -30.76']],
+            [['0.03', 'GBP'], [75, 25], ['GBP 0.03', 'GBP 0.00']],
         ];
     }
 
@@ -431,11 +433,13 @@ class MoneyTest extends AbstractTestCase
             [['99.99', 'USD'], [100, 100], ['USD 49.99', 'USD 49.99', 'USD 0.01']],
             [[100, 'USD'], [30, 20, 40], ['USD 33.33', 'USD 22.22', 'USD 44.44', 'USD 0.01']],
             [[100, 'USD'], [30, 20, 40, 40], ['USD 23.07', 'USD 15.38', 'USD 30.76', 'USD 30.76', 'USD 0.03']],
-            [[100, 'CHF', new CashContext(5)], [1, 2, 3, 7], ['CHF 7.65', 'CHF 15.35', 'CHF 23.05', 'CHF 53.80', 'CHF 0.15']],
+            [[100, 'USD'], [30, 20, 40, 0, 0, 40], ['USD 23.07', 'USD 15.38', 'USD 30.76', 'USD 0.00', 'USD 0.00', 'USD 30.76', 'USD 0.03']],
+            [[100, 'CHF', new CashContext(5)], [1, 2, 3, 7], ['CHF 7.65', 'CHF 15.30', 'CHF 22.95', 'CHF 53.55', 'CHF 0.55']],
             [['100.123', 'EUR', new AutoContext()], [2, 3, 1, 1], ['EUR 28.606', 'EUR 42.909', 'EUR 14.303', 'EUR 14.303', 'EUR 0.002']],
             [['0.02', 'EUR'], [1, 1, 1, 1], ['EUR 0.00', 'EUR 0.00', 'EUR 0.00', 'EUR 0.00', 'EUR 0.02']],
-            [['0.02', 'EUR'], [1, 1, 3, 1], ['EUR 0.00', 'EUR 0.00', 'EUR 0.01', 'EUR 0.00', 'EUR 0.01']],
+            [['0.02', 'EUR'], [1, 1, 3, 1], ['EUR 0.00', 'EUR 0.00', 'EUR 0.00', 'EUR 0.00', 'EUR 0.02']],
             [[-100, 'USD'], [30, 20, 40, 40], ['USD -23.07', 'USD -15.38', 'USD -30.76', 'USD -30.76', 'USD -0.03']],
+            [['0.03', 'GBP'], [75, 25], ['GBP 0.00', 'GBP 0.00', 'GBP 0.03']],
         ];
     }
 
@@ -512,7 +516,7 @@ class MoneyTest extends AbstractTestCase
             [['99.99', 'USD'], 4, ['USD 24.99', 'USD 24.99', 'USD 24.99', 'USD 24.99', 'USD 0.03']],
             [[100, 'CHF', new CashContext(5)], 3, ['CHF 33.30', 'CHF 33.30', 'CHF 33.30', 'CHF 0.10']],
             [[100, 'CHF', new CashContext(5)], 7, ['CHF 14.25','CHF 14.25', 'CHF 14.25', 'CHF 14.25', 'CHF 14.25', 'CHF 14.25', 'CHF 14.25', 'CHF 0.25']],
-            [['100.123', 'EUR', new AutoContext()], 4, ['EUR 25.030', 'EUR 25.030', 'EUR 25.030', 'EUR 25.030', 'EUR 0.003']],
+            [['100.123', 'EUR', new AutoContext()], 4, ['EUR 25.03', 'EUR 25.03', 'EUR 25.03', 'EUR 25.03', 'EUR 0.003']],
             [['0.02', 'EUR'], 4, ['EUR 0.00', 'EUR 0.00', 'EUR 0.00', 'EUR 0.00', 'EUR 0.02']],
         ];
     }
@@ -852,6 +856,7 @@ class MoneyTest extends AbstractTestCase
 
     /**
      * @dataProvider providerFormatWith
+     * @requires extension intl
      *
      * @param array  $money    The money to test.
      * @param string $locale   The target locale.
@@ -877,6 +882,7 @@ class MoneyTest extends AbstractTestCase
 
     /**
      * @dataProvider providerFormatTo
+     * @requires extension intl
      *
      * @param array  $money            The money to test.
      * @param string $locale           The target locale.
@@ -920,9 +926,10 @@ class MoneyTest extends AbstractTestCase
      */
     public function testMin(array $monies, string $expectedResult) : void
     {
-        foreach ($monies as $key => $money) {
-            $monies[$key] = Money::of(...$money);
-        }
+        $monies = array_map(
+            fn (array $money) => Money::of(...$money),
+            $monies,
+        );
 
         if ($this->isExceptionClass($expectedResult)) {
             $this->expectException($expectedResult);
@@ -953,9 +960,10 @@ class MoneyTest extends AbstractTestCase
      */
     public function testMax(array $monies, string $expectedResult) : void
     {
-        foreach ($monies as $key => $money) {
-            $monies[$key] = Money::of(...$money);
-        }
+        $monies = array_map(
+            fn (array $money) => Money::of(...$money),
+            $monies,
+        );
 
         if ($this->isExceptionClass($expectedResult)) {
             $this->expectException($expectedResult);
@@ -997,5 +1005,22 @@ class MoneyTest extends AbstractTestCase
             Money::of('1.00', 'EUR'),
             Money::of('1.00', 'USD')
         );
+    }
+
+    /**
+     * @dataProvider providerJsonSerialize
+     */
+    public function testJsonSerialize(Money $money, array $expected): void
+    {
+        self::assertSame($expected, $money->jsonSerialize());
+        self::assertSame(json_encode($expected), json_encode($money));
+    }
+
+    public function providerJsonSerialize(): array
+    {
+        return [
+            [Money::of('3.5', 'EUR'), ['amount' => '3.50', 'currency' => 'EUR']],
+            [Money::of('3.888923', 'GBP', new CustomContext(8)), ['amount' => '3.88892300', 'currency' => 'GBP']]
+        ];
     }
 }
