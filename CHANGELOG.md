@@ -1,6 +1,6 @@
 # Changelog
 
-## UNRELEASED (0.9.0)
+## [0.9.0](https://github.com/brick/money/releases/tag/0.9.0) - 2023-11-26
 
 💥 **Breaking changes**
 
