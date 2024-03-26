@@ -46,6 +46,8 @@ If you need to upgrade to a newer release cycle, check the [release history](htt
 
 ## Creating a Money
 
+### From a regular currency value
+
 To create a Money, call the `of()` factory method:
 
 ```php
@@ -54,6 +56,17 @@ use Brick\Money\Money;
 $money = Money::of(50, 'USD'); // USD 50.00
 $money = Money::of('19.9', 'USD'); // USD 19.90
 ```
+
+If the given amount does not fit in the currency's default number of decimal places (2 for `USD`), you can pass a `RoundingMode`:
+
+```php
+$money = Money::of('123.456', 'USD'); // RoundingNecessaryException
+$money = Money::of('123.456', 'USD', roundingMode: RoundingMode::UP); // USD 123.46
+```
+
+**Note that the rounding mode is only used once**, for the value provided in `of()`; it is not stored in the `Money` object, and any subsequent operation will still need to be passed a `RoundingMode` when necessary.
+
+### From minor units (cents)
 
 Alternatively, you can create a Money from a number of "minor units" (cents), using the `ofMinor()` method:
 
