@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Brick\Money\Tests;
 
+use Brick\Math\Exception\RoundingNecessaryException;
+use Brick\Math\RoundingMode;
 use Brick\Money\Context;
-use Brick\Money\Context\DefaultContext;
 use Brick\Money\Context\AutoContext;
 use Brick\Money\Context\CustomContext;
+use Brick\Money\Context\DefaultContext;
 use Brick\Money\CurrencyConverter;
 use Brick\Money\Exception\CurrencyConversionException;
 use Brick\Money\ExchangeRateProvider\ConfigurableProvider;
 use Brick\Money\Money;
 use Brick\Money\MoneyBag;
-
-use Brick\Math\Exception\RoundingNecessaryException;
-use Brick\Math\RoundingMode;
 use Brick\Money\RationalMoney;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Tests for class CurrencyConverter.
@@ -34,13 +34,12 @@ class CurrencyConverterTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider providerConvertMoney
-     *
      * @param array        $money          The base money.
      * @param string       $toCurrency     The currency code to convert to.
      * @param RoundingMode $roundingMode   The rounding mode to use.
      * @param string       $expectedResult The expected money's string representation, or an exception class name.
      */
+    #[DataProvider('providerConvertMoney')]
     public function testConvertMoney(array $money, string $toCurrency, RoundingMode $roundingMode, string $expectedResult) : void
     {
         $money = Money::of(...$money);
@@ -76,14 +75,13 @@ class CurrencyConverterTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider providerConvertMoneyBag
-     *
      * @param array        $monies       The mixed currency monies to add.
      * @param string       $currency     The target currency code.
      * @param Context      $context      The target context.
      * @param RoundingMode $roundingMode The rounding mode to use.
      * @param string       $total        The expected total.
      */
+    #[DataProvider('providerConvertMoneyBag')]
     public function testConvertMoneyBag(array $monies, string $currency, Context $context, RoundingMode $roundingMode, string $total) : void
     {
         $exchangeRateProvider = new ConfigurableProvider();
@@ -113,12 +111,11 @@ class CurrencyConverterTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider providerConvertMoneyBagToRational
-     *
      * @param array  $monies        The mixed monies to add.
      * @param string $currency      The target currency code.
      * @param string $expectedTotal The expected total.
      */
+    #[DataProvider('providerConvertMoneyBagToRational')]
     public function testConvertMoneyBagToRational(array $monies, string $currency, string $expectedTotal) : void
     {
         $exchangeRateProvider = new ConfigurableProvider();
@@ -147,13 +144,12 @@ class CurrencyConverterTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider providerConvertRationalMoney
-     *
      * @param array        $money          The original amount and currency.
      * @param string       $toCurrency     The currency code to convert to.
      * @param RoundingMode $roundingMode   The rounding mode to use.
      * @param string       $expectedResult The expected money's string representation, or an exception class name.
      */
+    #[DataProvider('providerConvertRationalMoney')]
     public function testConvertRationalMoney(array $money, string $toCurrency, RoundingMode $roundingMode, string $expectedResult) : void
     {
         $currencyConverter = $this->createCurrencyConverter();

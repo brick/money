@@ -4,22 +4,23 @@ declare(strict_types=1);
 
 namespace Brick\Money\Tests;
 
-use Brick\Money\Currency;
-use Brick\Money\Exception\MoneyMismatchException;
-use Brick\Money\Money;
-use Brick\Money\Context;
-use Brick\Money\Context\CashContext;
-use Brick\Money\Context\DefaultContext;
-use Brick\Money\Context\AutoContext;
-use Brick\Money\Context\CustomContext;
-
 use Brick\Math\BigDecimal;
 use Brick\Math\BigInteger;
 use Brick\Math\BigRational;
-use Brick\Math\RoundingMode;
 use Brick\Math\Exception\DivisionByZeroException;
 use Brick\Math\Exception\NumberFormatException;
 use Brick\Math\Exception\RoundingNecessaryException;
+use Brick\Math\RoundingMode;
+use Brick\Money\Context;
+use Brick\Money\Context\AutoContext;
+use Brick\Money\Context\CashContext;
+use Brick\Money\Context\CustomContext;
+use Brick\Money\Context\DefaultContext;
+use Brick\Money\Currency;
+use Brick\Money\Exception\MoneyMismatchException;
+use Brick\Money\Money;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 
 /**
  * Unit tests for class Money.
@@ -27,11 +28,10 @@ use Brick\Math\Exception\RoundingNecessaryException;
 class MoneyTest extends AbstractTestCase
 {
     /**
-     * @dataProvider providerOf
-     *
      * @param string $expectedResult The resulting money as a string, or an exception class.
      * @param mixed  ...$args        The arguments to the of() method.
      */
+    #[DataProvider('providerOf')]
     public function testOf(string $expectedResult, mixed ...$args) : void
     {
         if ($this->isExceptionClass($expectedResult)) {
@@ -63,11 +63,10 @@ class MoneyTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider providerOfMinor
-     *
      * @param string $expectedResult The resulting money as a string, or an exception class.
      * @param mixed  ...$args        The arguments to the ofMinor() method.
      */
+    #[DataProvider('providerOfMinor')]
     public function testOfMinor(string $expectedResult, mixed ...$args) : void
     {
         if ($this->isExceptionClass($expectedResult)) {
@@ -93,9 +92,7 @@ class MoneyTest extends AbstractTestCase
         ];
     }
 
-    /**
-     * @dataProvider providerZero
-     */
+    #[DataProvider('providerZero')]
     public function testZero(string $currency, ?Context $context, string $expected) : void
     {
         $actual = Money::zero($currency, $context);
@@ -113,9 +110,7 @@ class MoneyTest extends AbstractTestCase
         ];
     }
 
-    /**
-     * @dataProvider providerTo
-     */
+    #[DataProvider('providerTo')]
     public function testTo(array $money, Context $context, RoundingMode $roundingMode, string $expected) : void
     {
         $money = Money::of(...$money);
@@ -148,13 +143,12 @@ class MoneyTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider providerPlus
-     *
      * @param array        $money        The base money.
      * @param mixed        $plus         The amount to add.
      * @param RoundingMode $roundingMode The rounding mode to use.
      * @param string       $expected     The expected money value, or an exception class name.
      */
+    #[DataProvider('providerPlus')]
     public function testPlus(array $money, mixed $plus, RoundingMode $roundingMode, string $expected) : void
     {
         $money = Money::of(...$money);
@@ -206,13 +200,12 @@ class MoneyTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider providerMinus
-     *
      * @param array        $money        The base money.
      * @param mixed        $minus        The amount to subtract.
      * @param RoundingMode $roundingMode The rounding mode to use.
      * @param string       $expected     The expected money value, or an exception class name.
      */
+    #[DataProvider('providerMinus')]
     public function testMinus(array $money, mixed $minus, RoundingMode $roundingMode, string $expected) : void
     {
         $money = Money::of(...$money);
@@ -250,13 +243,12 @@ class MoneyTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider providerMultipliedBy
-     *
      * @param array                  $money        The base money.
      * @param Money|int|float|string $multiplier   The multiplier.
      * @param RoundingMode           $roundingMode The rounding mode to use.
      * @param string                 $expected     The expected money value, or an exception class name.
      */
+    #[DataProvider('providerMultipliedBy')]
     public function testMultipliedBy(array $money, Money|int|float|string $multiplier, RoundingMode $roundingMode, string $expected) : void
     {
         $money = Money::of(...$money);
@@ -289,13 +281,12 @@ class MoneyTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider providerDividedBy
-     *
      * @param array            $money        The base money.
      * @param int|float|string $divisor      The divisor.
      * @param RoundingMode     $roundingMode The rounding mode to use.
      * @param string           $expected     The expected money value, or an exception class name.
      */
+    #[DataProvider('providerDividedBy')]
     public function testDividedBy(array $money, int|float|string $divisor, RoundingMode $roundingMode, string $expected) : void
     {
         $money = Money::of(...$money);
@@ -329,9 +320,7 @@ class MoneyTest extends AbstractTestCase
         ];
     }
 
-    /**
-     * @dataProvider providerQuotientAndRemainder
-     */
+    #[DataProvider('providerQuotientAndRemainder')]
     public function testQuotientAndRemainder(array $money, int $divisor, string $expectedQuotient, string $expectedRemainder) : void
     {
         $money = Money::of(...$money);
@@ -359,9 +348,7 @@ class MoneyTest extends AbstractTestCase
         $money->quotientAndRemainder('1.1');
     }
 
-    /**
-     * @dataProvider providerAllocate
-     */
+    #[DataProvider('providerAllocate')]
     public function testAllocate(array $money, array $ratios, array $expected) : void
     {
         $money = Money::of(...$money);
@@ -416,9 +403,7 @@ class MoneyTest extends AbstractTestCase
         $money->allocate(0, 0, 0, 0, 0);
     }
 
-    /**
-     * @dataProvider providerAllocateWithRemainder
-     */
+    #[DataProvider('providerAllocateWithRemainder')]
     public function testAllocateWithRemainder(array $money, array $ratios, array $expected) : void
     {
         $money = Money::of(...$money);
@@ -473,9 +458,7 @@ class MoneyTest extends AbstractTestCase
         $money->allocateWithRemainder(0, 0, 0, 0, 0);
     }
 
-    /**
-     * @dataProvider providerSplit
-     */
+    #[DataProvider('providerSplit')]
     public function testSplit(array $money, int $targets, array $expected) : void
     {
         $money = Money::of(...$money);
@@ -497,9 +480,7 @@ class MoneyTest extends AbstractTestCase
         ];
     }
 
-    /**
-     * @dataProvider providerSplitWithRemainder
-     */
+    #[DataProvider('providerSplitWithRemainder')]
     public function testSplitWithRemainder(array $money, int $targets, array $expected) : void
     {
         $money = Money::of(...$money);
@@ -521,9 +502,7 @@ class MoneyTest extends AbstractTestCase
         ];
     }
 
-    /**
-     * @dataProvider providerSplitIntoLessThanOnePart
-     */
+    #[DataProvider('providerSplitIntoLessThanOnePart')]
     public function testSplitIntoLessThanOnePart(int $parts) : void
     {
         $money = Money::of(50, 'USD');
@@ -542,9 +521,7 @@ class MoneyTest extends AbstractTestCase
         ];
     }
 
-    /**
-     * @dataProvider providerSplitWithRemainderIntoLessThanOnePart
-     */
+    #[DataProvider('providerSplitWithRemainderIntoLessThanOnePart')]
     public function testSplitWithRemainderIntoLessThanOnePart(int $parts) : void
     {
         $money = Money::of(50, 'USD');
@@ -564,9 +541,7 @@ class MoneyTest extends AbstractTestCase
     }
 
 
-    /**
-     * @dataProvider providerAbs
-     */
+    #[DataProvider('providerAbs')]
     public function testAbs(array $money, string $abs) : void
     {
         $this->assertMoneyIs($abs, Money::of(...$money)->abs());
@@ -581,9 +556,7 @@ class MoneyTest extends AbstractTestCase
         ];
     }
 
-    /**
-     * @dataProvider providerNegated
-     */
+    #[DataProvider('providerNegated')]
     public function testNegated(array $money, string $negated) : void
     {
         $this->assertMoneyIs($negated, Money::of(...$money)->negated());
@@ -597,49 +570,37 @@ class MoneyTest extends AbstractTestCase
         ];
     }
 
-    /**
-     * @dataProvider providerSign
-     */
+    #[DataProvider('providerSign')]
     public function testGetSign(array $money, int $sign) : void
     {
         self::assertSame($sign, Money::of(...$money)->getSign());
     }
 
-    /**
-     * @dataProvider providerSign
-     */
+    #[DataProvider('providerSign')]
     public function testIsZero(array $money, int $sign) : void
     {
         self::assertSame($sign === 0, Money::of(...$money)->isZero());
     }
 
-    /**
-     * @dataProvider providerSign
-     */
+    #[DataProvider('providerSign')]
     public function testIsPositive(array $money, int $sign) : void
     {
         self::assertSame($sign > 0, Money::of(...$money)->isPositive());
     }
 
-    /**
-     * @dataProvider providerSign
-     */
+    #[DataProvider('providerSign')]
     public function testIsPositiveOrZero(array $money, int $sign) : void
     {
         self::assertSame($sign >= 0, Money::of(...$money)->isPositiveOrZero());
     }
 
-    /**
-     * @dataProvider providerSign
-     */
+    #[DataProvider('providerSign')]
     public function testIsNegative(array $money, int $sign) : void
     {
         self::assertSame($sign < 0, Money::of(...$money)->isNegative());
     }
 
-    /**
-     * @dataProvider providerSign
-     */
+    #[DataProvider('providerSign')]
     public function testIsNegativeOrZero(array $money, int $sign) : void
     {
         self::assertSame($sign <= 0, Money::of(...$money)->isNegativeOrZero());
@@ -668,12 +629,11 @@ class MoneyTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider providerCompare
-     *
      * @param array $a The first money.
      * @param array $b The second money.
      * @param int   $c The comparison value.
      */
+    #[DataProvider('providerCompare')]
     public function testCompareTo(array $a, array $b, int $c) : void
     {
         self::assertSame($c, Money::of(...$a)->compareTo(Money::of(...$b)));
@@ -686,12 +646,11 @@ class MoneyTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider providerCompare
-     *
      * @param array $a The first money.
      * @param array $b The second money.
      * @param int   $c The comparison value.
      */
+    #[DataProvider('providerCompare')]
     public function testIsEqualTo(array $a, array $b, int $c) : void
     {
         self::assertSame($c === 0, Money::of(...$a)->isEqualTo(Money::of(...$b)));
@@ -704,12 +663,11 @@ class MoneyTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider providerCompare
-     *
      * @param array $a The first money.
      * @param array $b The second money.
      * @param int   $c The comparison value.
      */
+    #[DataProvider('providerCompare')]
     public function testIsLessThan(array $a, array $b, int $c) : void
     {
         self::assertSame($c < 0, Money::of(...$a)->isLessThan(Money::of(...$b)));
@@ -722,12 +680,11 @@ class MoneyTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider providerCompare
-     *
      * @param array $a The first money.
      * @param array $b The second money.
      * @param int   $c The comparison value.
      */
+    #[DataProvider('providerCompare')]
     public function testIsLessThanOrEqualTo(array $a, array $b, int $c) : void
     {
         self::assertSame($c <= 0, Money::of(...$a)->isLessThanOrEqualTo(Money::of(...$b)));
@@ -740,12 +697,11 @@ class MoneyTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider providerCompare
-     *
      * @param array $a The first money.
      * @param array $b The second money.
      * @param int   $c The comparison value.
      */
+    #[DataProvider('providerCompare')]
     public function testIsGreaterThan(array $a, array $b, int $c) : void
     {
         self::assertSame($c > 0, Money::of(...$a)->isGreaterThan(Money::of(...$b)));
@@ -758,12 +714,11 @@ class MoneyTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider providerCompare
-     *
      * @param array $a The first money.
      * @param array $b The second money.
      * @param int   $c The comparison value.
      */
+    #[DataProvider('providerCompare')]
     public function testIsGreaterThanOrEqualTo(array $a, array $b, int $c) : void
     {
         self::assertSame($c >= 0, Money::of(...$a)->isGreaterThanOrEqualTo(Money::of(...$b)));
@@ -775,9 +730,7 @@ class MoneyTest extends AbstractTestCase
         Money::of('1.00', 'EUR')->isGreaterThanOrEqualTo(Money::of('1.00', 'USD'));
     }
 
-    /**
-     * @dataProvider providerIsAmountAndCurrencyEqualTo
-     */
+    #[DataProvider('providerIsAmountAndCurrencyEqualTo')]
     public function testIsAmountAndCurrencyEqualTo(array $a, array $b, bool $c) : void
     {
         self::assertSame($c, Money::of(...$a)->isAmountAndCurrencyEqualTo(Money::of(...$b)));
@@ -806,9 +759,7 @@ class MoneyTest extends AbstractTestCase
         ];
     }
 
-    /**
-     * @dataProvider providerGetMinorAmount
-     */
+    #[DataProvider('providerGetMinorAmount')]
     public function testGetMinorAmount(array $money, string $expected) : void
     {
         $actual = Money::of(...$money)->getMinorAmount();
@@ -836,9 +787,7 @@ class MoneyTest extends AbstractTestCase
         self::assertSame('12345', (string) $actual);
     }
 
-    /**
-     * @dataProvider providerConvertedTo
-     */
+    #[DataProvider('providerConvertedTo')]
     public function testConvertedTo(array $money, array $parameters, string $expected) : void
     {
         $actual = Money::of(...$money)->convertedTo(...$parameters);
@@ -855,14 +804,13 @@ class MoneyTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider providerFormatWith
-     * @requires extension intl
-     *
      * @param array  $money    The money to test.
      * @param string $locale   The target locale.
      * @param string $symbol   A decimal symbol to apply to the NumberFormatter.
      * @param string $expected The expected output.
      */
+    #[RequiresPhpExtension('intl')]
+    #[DataProvider('providerFormatWith')]
     public function testFormatWith(array $money, string $locale, string $symbol, string $expected) : void
     {
         $formatter = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
@@ -881,14 +829,13 @@ class MoneyTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider providerFormatTo
-     * @requires extension intl
-     *
      * @param array  $money            The money to test.
      * @param string $locale           The target locale.
      * @param bool   $allowWholeNumber Whether to allow formatting as a whole number if the amount has no fraction.
      * @param string $expected         The expected output.
      */
+    #[RequiresPhpExtension('intl')]
+    #[DataProvider('providerFormatTo')]
     public function testFormatTo(array $money, string $locale, bool $allowWholeNumber, string $expected) : void
     {
         self::assertSame($expected, Money::of(...$money)->formatTo($locale, $allowWholeNumber));
@@ -919,11 +866,10 @@ class MoneyTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider providerMin
-     *
      * @param array  $monies         The monies to compare.
      * @param string $expectedResult The expected money result, or an exception class.
      */
+    #[DataProvider('providerMin')]
     public function testMin(array $monies, string $expectedResult) : void
     {
         $monies = array_map(
@@ -953,11 +899,10 @@ class MoneyTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider providerMax
-     *
      * @param array  $monies         The monies to compare.
      * @param string $expectedResult The expected money result, or an exception class.
      */
+    #[DataProvider('providerMax')]
     public function testMax(array $monies, string $expectedResult) : void
     {
         $monies = array_map(
@@ -1007,9 +952,7 @@ class MoneyTest extends AbstractTestCase
         );
     }
 
-    /**
-     * @dataProvider providerJsonSerialize
-     */
+    #[DataProvider('providerJsonSerialize')]
     public function testJsonSerialize(Money $money, array $expected): void
     {
         self::assertSame($expected, $money->jsonSerialize());

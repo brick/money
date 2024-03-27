@@ -7,6 +7,7 @@ namespace Brick\Money\Tests;
 use Brick\Money\Currency;
 use Brick\Money\Exception\UnknownCurrencyException;
 use Brick\Money\ISOCurrencyProvider;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Tests for class ISOCurrencyProvider.
@@ -27,9 +28,7 @@ class ISOCurrencyProviderTest extends AbstractTestCase
         $reflection->setValue(null);
     }
 
-    /**
-     * @dataProvider providerGetCurrency
-     */
+    #[DataProvider('providerGetCurrency')]
     public function testGetCurrency(string $currencyCode, int $numericCode, string $name, int $defaultFractionDigits) : void
     {
         $provider = ISOCurrencyProvider::getInstance();
@@ -57,9 +56,7 @@ class ISOCurrencyProviderTest extends AbstractTestCase
         ];
     }
 
-    /**
-     * @dataProvider providerUnknownCurrency
-     */
+    #[DataProvider('providerUnknownCurrency')]
     public function testGetUnknownCurrency(string|int $currencyCode) : void
     {
         $this->expectException(UnknownCurrencyException::class);

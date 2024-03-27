@@ -6,6 +6,7 @@ namespace Brick\Money\Tests;
 
 use Brick\Money\Currency;
 use Brick\Money\Exception\UnknownCurrencyException;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Unit tests for class Currency.
@@ -13,13 +14,12 @@ use Brick\Money\Exception\UnknownCurrencyException;
 class CurrencyTest extends AbstractTestCase
 {
     /**
-     * @dataProvider providerOf
-     *
      * @param string $currencyCode   The currency code.
      * @param int    $numericCode    The currency's numeric code.
      * @param int    $fractionDigits The currency's default fraction digits.
      * @param string $name           The currency's name.
      */
+    #[DataProvider('providerOf')]
     public function testOf(string $currencyCode, int $numericCode, int $fractionDigits, string $name) : void
     {
         $currency = Currency::of($currencyCode);
@@ -40,9 +40,7 @@ class CurrencyTest extends AbstractTestCase
         ];
     }
 
-    /**
-     * @dataProvider providerOfUnknownCurrencyCode
-     */
+    #[DataProvider('providerOfUnknownCurrencyCode')]
     public function testOfUnknownCurrencyCode(string|int $currencyCode) : void
     {
         $this->expectException(UnknownCurrencyException::class);
@@ -68,9 +66,7 @@ class CurrencyTest extends AbstractTestCase
         self::assertSame(Currency::of('EUR'), Currency::of('EUR'));
     }
 
-    /**
-     * @dataProvider providerOfCountry
-     */
+    #[DataProvider('providerOfCountry')]
     public function testOfCountry(string $countryCode, string $expected) : void
     {
         if ($this->isExceptionClass($expected)) {
@@ -124,9 +120,7 @@ class CurrencyTest extends AbstractTestCase
         self::assertTrue($clone->is($currency));
     }
 
-    /**
-     * @dataProvider providerJsonSerialize
-     */
+    #[DataProvider('providerJsonSerialize')]
     public function testJsonSerialize(Currency $currency, string $expected): void
     {
         self::assertSame($expected, $currency->jsonSerialize());

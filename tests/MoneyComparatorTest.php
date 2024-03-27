@@ -9,6 +9,7 @@ use Brick\Money\Exception\CurrencyConversionException;
 use Brick\Money\ExchangeRateProvider\ConfigurableProvider;
 use Brick\Money\Money;
 use Brick\Money\MoneyComparator;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Tests for class MoneyComparator.
@@ -32,12 +33,11 @@ class MoneyComparatorTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider providerCompare
-     *
      * @param array      $a   The money to compare.
      * @param array      $b   The money to compare to.
      * @param int|string $cmp The expected comparison value, or an exception class.
      */
+    #[DataProvider('providerCompare')]
     public function testCompare(array $a, array $b, int|string $cmp) : void
     {
         $comparator = new MoneyComparator($this->getExchangeRateProvider());
@@ -86,11 +86,10 @@ class MoneyComparatorTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider providerMin
-     *
      * @param array  $monies      The monies to compare.
      * @param string $expectedMin The expected minimum money, or an exception class.
      */
+    #[DataProvider('providerMin')]
     public function testMin(array $monies, string $expectedMin) : void
     {
         $comparator = new MoneyComparator($this->getExchangeRateProvider());
@@ -124,11 +123,10 @@ class MoneyComparatorTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider providerMax
-     *
      * @param array  $monies      The monies to compare.
      * @param string $expectedMin The expected maximum money, or an exception class.
      */
+    #[DataProvider('providerMax')]
     public function testMax(array $monies, string $expectedMin) : void
     {
         $comparator = new MoneyComparator($this->getExchangeRateProvider());

@@ -4,22 +4,20 @@ declare(strict_types=1);
 
 namespace Brick\Money\Tests\Context;
 
+use Brick\Math\BigNumber;
 use Brick\Math\Exception\RoundingNecessaryException;
 use Brick\Math\RoundingMode;
 use Brick\Money\Context\CashContext;
 use Brick\Money\Currency;
 use Brick\Money\Tests\AbstractTestCase;
-
-use Brick\Math\BigNumber;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Tests for class CashContext.
  */
 class CashContextTest extends AbstractTestCase
 {
-    /**
-     * @dataProvider providerApplyTo
-     */
+    #[DataProvider('providerApplyTo')]
     public function testApplyTo(int $step, string $amount, string $currency, RoundingMode $roundingMode, string $expected) : void
     {
         $amount = BigNumber::of($amount);

@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace Brick\Money\Tests\ExchangeRateProvider;
 
 use Brick\Math\BigNumber;
+use Brick\Math\RoundingMode;
 use Brick\Money\ExchangeRateProvider;
 use Brick\Money\ExchangeRateProvider\BaseCurrencyProvider;
 use Brick\Money\ExchangeRateProvider\ConfigurableProvider;
 use Brick\Money\Tests\AbstractTestCase;
-
-use Brick\Math\BigRational;
-use Brick\Math\RoundingMode;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Tests for class BaseCurrencyProvider.
@@ -30,12 +29,11 @@ class BaseCurrencyProviderTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider providerGetExchangeRate
-     *
      * @param string $sourceCurrencyCode The code of the source currency.
      * @param string $targetCurrencyCode The code of the target currency.
      * @param string $exchangeRate       The expected exchange rate, rounded DOWN to 6 decimals.
      */
+    #[DataProvider('providerGetExchangeRate')]
     public function testGetExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode, string $exchangeRate) : void
     {
         $rate = $this->getExchangeRateProvider()->getExchangeRate($sourceCurrencyCode, $targetCurrencyCode);
@@ -62,9 +60,7 @@ class BaseCurrencyProviderTest extends AbstractTestCase
         ];
     }
 
-    /**
-     * @dataProvider providerReturnBigNumber
-     */
+    #[DataProvider('providerReturnBigNumber')]
     public function testReturnBigNumber(BigNumber|float|int|string $rate) : void
     {
         $configurableProvider = new ConfigurableProvider();

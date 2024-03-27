@@ -9,19 +9,19 @@ use Brick\Money\ExchangeRateProvider\PDOProvider;
 use Brick\Money\ExchangeRateProvider\PDOProviderConfiguration;
 use Brick\Money\Tests\AbstractTestCase;
 use Closure;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 
 /**
  * Tests for class PDOProvider.
- *
- * @requires extension pdo_sqlite
  */
+#[RequiresPhpExtension('pdo_sqlite')]
 class PDOProviderTest extends AbstractTestCase
 {
     /**
-     * @dataProvider providerConstructorWithInvalidConfiguration
-     *
      * @param Closure(): PDOProviderConfiguration $getConfiguration
      */
+    #[DataProvider('providerConstructorWithInvalidConfiguration')]
     public function testConfigurationConstructorThrows(Closure $getConfiguration, string $exceptionMessage) : void
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -67,12 +67,11 @@ class PDOProviderTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider providerGetExchangeRate
-     *
      * @param string       $sourceCurrencyCode The code of the source currency.
      * @param string       $targetCurrencyCode The code of the target currency.
      * @param float|string $expectedResult     The expected exchange rate, or an exception class if expected.
      */
+    #[DataProvider('providerGetExchangeRate')]
     public function testGetExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode, float|string $expectedResult) : void
     {
         $pdo = new \PDO('sqlite::memory:');
@@ -123,12 +122,11 @@ class PDOProviderTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider providerWithFixedSourceCurrency
-     *
      * @param string       $sourceCurrencyCode The code of the source currency.
      * @param string       $targetCurrencyCode The code of the target currency.
      * @param float|string $expectedResult     The expected exchange rate, or an exception class if expected.
      */
+    #[DataProvider('providerWithFixedSourceCurrency')]
     public function testWithFixedSourceCurrency(string $sourceCurrencyCode, string $targetCurrencyCode, float|string $expectedResult) : void
     {
         $pdo = new \PDO('sqlite::memory:');
@@ -177,12 +175,11 @@ class PDOProviderTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider providerWithFixedTargetCurrency
-     *
      * @param string       $sourceCurrencyCode The code of the source currency.
      * @param string       $targetCurrencyCode The code of the target currency.
      * @param float|string $expectedResult     The expected exchange rate, or an exception class if expected.
      */
+    #[DataProvider('providerWithFixedTargetCurrency')]
     public function testWithFixedTargetCurrency(string $sourceCurrencyCode, string $targetCurrencyCode, float|string $expectedResult) : void
     {
         $pdo = new \PDO('sqlite::memory:');
@@ -231,13 +228,12 @@ class PDOProviderTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider providerWithParameters
-     *
      * @param string       $sourceCurrencyCode The code of the source currency.
      * @param string       $targetCurrencyCode The code of the target currency.
      * @param array        $parameters         The parameters to resolve the extra query placeholders.
      * @param float|string $expectedResult     The expected exchange rate, or an exception class if expected.
      */
+    #[DataProvider('providerWithParameters')]
     public function testWithParameters(string $sourceCurrencyCode, string $targetCurrencyCode, array $parameters, float|string $expectedResult) : void
     {
         $pdo = new \PDO('sqlite::memory:');
