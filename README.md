@@ -150,7 +150,7 @@ use Brick\Money\Money;
 use Brick\Money\Context\CashContext;
 use Brick\Math\RoundingMode;
 
-$money = Money::of(10, 'CHF', new CashContext(5)); // CHF 10.00
+$money = Money::of(10, 'CHF', new CashContext(step: 5)); // CHF 10.00
 $money->dividedBy(3, RoundingMode::DOWN); // CHF 3.30
 $money->dividedBy(3, RoundingMode::UP); // CHF 3.35
 ```
@@ -164,7 +164,7 @@ use Brick\Money\Money;
 use Brick\Money\Context\CustomContext;
 use Brick\Math\RoundingMode;
 
-$money = Money::of(10, 'USD', new CustomContext(4)); // USD 10.0000
+$money = Money::of(10, 'USD', new CustomContext(scale: 4)); // USD 10.0000
 $money->dividedBy(7, RoundingMode::UP); // USD 1.4286
 ```
 
@@ -203,7 +203,7 @@ As you can see, the intermediate results are represented as fractions, and no ro
 
 ```php
 ...
-  ->to(new CustomContext(8), RoundingMode::UP); // EUR 25.07015334
+  ->to(new CustomContext(scale: 8), RoundingMode::UP); // EUR 25.07015334
 ```
 
 Note: as you can see in the example above, the numbers in the fractions can quickly get very large.
@@ -242,7 +242,7 @@ It plays well with cash roundings, too:
 use Brick\Money\Money;
 use Brick\Money\Context\CashContext;
 
-$profit = Money::of('987.65', 'CHF', new CashContext(5));
+$profit = Money::of('987.65', 'CHF', new CashContext(step: 5));
 [$a, $b, $c] = $profit->allocate(48, 41, 11); // CHF 474.10, CHF 404.95, CHF 108.60
 ```
 
@@ -283,7 +283,7 @@ $exchangeRateProvider = ...;
 $converter = new CurrencyConverter($exchangeRateProvider); // optionally provide a Context here
 
 $money = Money::of('50', 'USD');
-$converter->convert($money, 'EUR', null, RoundingMode::DOWN);
+$converter->convert($money, 'EUR', roundingMode: RoundingMode::DOWN);
 ```
 
 The converter performs the most precise calculation possible, internally representing the result as a rational number until the very last step.
