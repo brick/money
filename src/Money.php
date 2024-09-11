@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Brick\Money;
 
+use Brick\Math\Doctrine\Type\BigDecimalType;
 use Brick\Money\Context\DefaultContext;
+use Brick\Money\Doctrine\Type\CurrencyType;
 use Brick\Money\Exception\MoneyMismatchException;
 use Brick\Money\Exception\UnknownCurrencyException;
 
@@ -16,6 +18,8 @@ use Brick\Math\RoundingMode;
 use Brick\Math\Exception\MathException;
 use Brick\Math\Exception\NumberFormatException;
 use Brick\Math\Exception\RoundingNecessaryException;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Embeddable;
 use InvalidArgumentException;
 
 /**
@@ -31,16 +35,19 @@ use InvalidArgumentException;
  * - CustomContext handles monies with a custom scale, and optionally step.
  * - AutoContext automatically adjusts the scale of the money to the minimum required.
  */
+#[Embeddable]
 final class Money extends AbstractMoney
 {
     /**
      * The amount.
      */
+    #[Column(BigDecimalType::NAME)]
     private readonly BigDecimal $amount;
 
     /**
      * The currency.
      */
+    #[Column(CurrencyType::NAME)]
     private readonly Currency $currency;
 
     /**
