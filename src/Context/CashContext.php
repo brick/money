@@ -13,6 +13,8 @@ use Brick\Math\RoundingMode;
 
 /**
  * Adjusts a number to the default scale for the currency, respecting a cash rounding.
+ *
+ * @psalm-immutable
  */
 final class CashContext implements Context
 {

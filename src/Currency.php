@@ -10,6 +10,8 @@ use Stringable;
 
 /**
  * A currency. This class is immutable.
+ *
+ * @psalm-immutable
  */
 final class Currency implements Stringable, JsonSerializable
 {
@@ -77,9 +79,15 @@ final class Currency implements Stringable, JsonSerializable
      * @param string|int $currencyCode The 3-letter or numeric ISO 4217 currency code.
      *
      * @throws UnknownCurrencyException If an unknown currency code is given.
+     *
+     * @psalm-pure
      */
     public static function of(string|int $currencyCode) : Currency
     {
+        /**
+         * @psalm-suppress ImpureMethodCall
+         * @see https://github.com/brick/money/pull/75
+         */
         return ISOCurrencyProvider::getInstance()->getCurrency($currencyCode);
     }
 
@@ -91,9 +99,15 @@ final class Currency implements Stringable, JsonSerializable
      * @return Currency
      *
      * @throws UnknownCurrencyException If the country code is unknown, or there is no single currency for the country.
+     *
+     * @psalm-pure
      */
     public static function ofCountry(string $countryCode) : Currency
     {
+        /**
+         * @psalm-suppress ImpureMethodCall
+         * @see https://github.com/brick/money/pull/75
+         */
         return ISOCurrencyProvider::getInstance()->getCurrencyForCountry($countryCode);
     }
 
