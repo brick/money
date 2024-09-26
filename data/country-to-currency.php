@@ -45,7 +45,7 @@
     'CK' => ['NZD'],
     'CL' => ['CLP'],
     'CM' => ['XAF'],
-    'CN' => ['CNY'],
+    'CN' => ['CNH', 'CNY'],
     'CO' => ['COP'],
     'CR' => ['CRC'],
     'CU' => ['CUP', 'CUC'],

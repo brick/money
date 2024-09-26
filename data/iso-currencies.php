@@ -32,6 +32,7 @@
     'CHW' => ['CHW', 948, 'WIR Franc', 2],
     'CLF' => ['CLF', 990, 'Unidad de Fomento', 4],
     'CLP' => ['CLP', 152, 'Chilean Peso', 0],
+    'CNH' => ['CNH', 999, 'Yuan Renminbi (OffShore)', 0],
     'CNY' => ['CNY', 156, 'Yuan Renminbi', 2],
     'COP' => ['COP', 170, 'Colombian Peso', 2],
     'COU' => ['COU', 970, 'Unidad de Valor Real', 2],
