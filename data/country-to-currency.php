@@ -1,4 +1,5 @@
-<?php return [
+<?php
+return [
     'AD' => ['EUR'],
     'AE' => ['AED'],
     'AF' => ['AFN'],
@@ -54,7 +55,7 @@
     'CX' => ['AUD'],
     'CY' => ['EUR'],
     'CZ' => ['CZK'],
-    'DE' => ['EUR'],
+    'DE' => ['EUR', 'DEM'],
     'DJ' => ['DJF'],
     'DK' => ['DKK'],
     'DM' => ['XCD'],
@@ -197,7 +198,7 @@
     'SH' => ['SHP'],
     'SI' => ['EUR'],
     'SJ' => ['NOK'],
-    'SK' => ['EUR'],
+    'SK' => ['EUR', 'SKK'],
     'SL' => ['SLL', 'SLE'],
     'SM' => ['EUR'],
     'SN' => ['XOF'],
