@@ -11,7 +11,7 @@ use Stringable;
 /**
  * A currency. This class is immutable.
  */
-final class Currency implements Stringable, JsonSerializable
+class Currency implements Stringable, JsonSerializable
 {
     /**
      * The currency code.
@@ -167,7 +167,7 @@ final class Currency implements Stringable, JsonSerializable
             || ($this->numericCode !== 0 && $this->numericCode === (int) $currency);
     }
 
-    final public function jsonSerialize(): string
+    public function jsonSerialize(): string
     {
         return $this->currencyCode;
     }
