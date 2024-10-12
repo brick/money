@@ -40,7 +40,7 @@ The current releases are numbered `0.x.y`. When a non-breaking change is introdu
 
 **When a breaking change is introduced, a new `0.x` version cycle is always started.**
 
-It is therefore safe to lock your project to a given release cycle, such as `0.9.*`.
+It is therefore safe to lock your project to a given release cycle, such as `0.10.*`.
 
 If you need to upgrade to a newer release cycle, check the [release history](https://github.com/brick/money/releases) for a list of changes introduced by each further `0.x.0` version.
 
@@ -322,7 +322,7 @@ $configuration = new PDOProviderConfiguration(
 $provider = new PDOProvider($pdo, $configuration);
 ```
 
-PDOProvider also supports fixed source or target currency, and dynamic `WHERE` conditions. Check the [PDOProviderConfiguration](https://github.com/brick/money/blob/0.9.0/src/ExchangeRateProvider/PDOProviderConfiguration.php) class for more information.
+PDOProvider also supports fixed source or target currency, and dynamic `WHERE` conditions. Check the [PDOProviderConfiguration](https://github.com/brick/money/blob/0.10.0/src/ExchangeRateProvider/PDOProviderConfiguration.php) class for more information.
 
 ### BaseCurrencyProvider
 
