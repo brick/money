@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.10.0](https://github.com/brick/money/releases/tag/0.10.0) - 2024-10-12
+
+💥 **ISO currency changes**
+
+- `ZWG` (Zimbabwe Gold) has been added
+- `ZWL` (Zimbabwean Dollar) has been removed
+- `SLL` (Sierra Leonean Leone) has been removed
+- The currency of Zimbabwe (`ZW`) has been changed to `ZWG` (Zimbabwe Gold)
+- The `SLL` currency has been removed from Sierra Leone (`SL`), which only has `SLE` now
+
 ## [0.9.0](https://github.com/brick/money/releases/tag/0.9.0) - 2023-11-26
 
 💥 **Breaking changes**
