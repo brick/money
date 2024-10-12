@@ -10,7 +10,6 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
-        "ext-json": "*",
         "brick/math": "~0.12.0"
     },
     "require-dev": {
