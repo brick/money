@@ -128,7 +128,6 @@
     'SGD' => ['SGD', 702, 'Singapore Dollar', 2],
     'SHP' => ['SHP', 654, 'Saint Helena Pound', 2],
     'SLE' => ['SLE', 925, 'Leone', 2],
-    'SLL' => ['SLL', 694, 'Leone', 2],
     'SOS' => ['SOS', 706, 'Somali Shilling', 2],
     'SRD' => ['SRD', 968, 'Surinam Dollar', 2],
     'SSP' => ['SSP', 728, 'South Sudanese Pound', 2],
@@ -165,5 +164,5 @@
     'YER' => ['YER', 886, 'Yemeni Rial', 2],
     'ZAR' => ['ZAR', 710, 'Rand', 2],
     'ZMW' => ['ZMW', 967, 'Zambian Kwacha', 2],
-    'ZWL' => ['ZWL', 932, 'Zimbabwe Dollar', 2]
+    'ZWG' => ['ZWG', 924, 'Zimbabwe Gold', 2]
 ];
