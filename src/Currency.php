@@ -11,7 +11,7 @@ use Stringable;
 /**
  * A currency. This class is immutable.
  */
-final class Currency implements Stringable, JsonSerializable
+class Currency implements Stringable, JsonSerializable
 {
     /**
      * The currency code.
@@ -71,6 +71,11 @@ final class Currency implements Stringable, JsonSerializable
         $this->defaultFractionDigits = $defaultFractionDigits;
     }
 
+    protected static function getCurrencyProvider() : CurrencyProviderInterface
+    {
+        return ISOCurrencyProvider::getInstance();
+    }
+
     /**
      * Returns a Currency instance matching the given ISO currency code.
      *
@@ -80,7 +85,7 @@ final class Currency implements Stringable, JsonSerializable
      */
     public static function of(string|int $currencyCode) : Currency
     {
-        return ISOCurrencyProvider::getInstance()->getCurrency($currencyCode);
+        return static::getCurrencyProvider()->getCurrency($currencyCode);
     }
 
     /**
@@ -94,7 +99,7 @@ final class Currency implements Stringable, JsonSerializable
      */
     public static function ofCountry(string $countryCode) : Currency
     {
-        return ISOCurrencyProvider::getInstance()->getCurrencyForCountry($countryCode);
+        return static::getCurrencyProvider()->getCurrencyForCountry($countryCode);
     }
 
     /**
