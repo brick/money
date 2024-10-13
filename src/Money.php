@@ -31,7 +31,7 @@ use InvalidArgumentException;
  * - CustomContext handles monies with a custom scale, and optionally step.
  * - AutoContext automatically adjusts the scale of the money to the minimum required.
  */
-final class Money extends AbstractMoney
+class Money extends AbstractMoney
 {
     /**
      * The amount.
@@ -181,7 +181,7 @@ final class Money extends AbstractMoney
         RoundingMode $roundingMode = RoundingMode::UNNECESSARY,
     ) : Money {
         if (! $currency instanceof Currency) {
-            $currency = Currency::of($currency);
+            $currency = static::getCurrencyProvider()->getCurrency($currency);
         }
 
         if ($context === null) {
@@ -191,6 +191,11 @@ final class Money extends AbstractMoney
         $amount = BigNumber::of($amount);
 
         return self::create($amount, $currency, $context, $roundingMode);
+    }
+
+    protected static function getCurrencyProvider() : CurrencyProviderInterface
+    {
+        return ISOCurrencyProvider::getInstance();
     }
 
     /**
@@ -219,7 +224,7 @@ final class Money extends AbstractMoney
         RoundingMode $roundingMode = RoundingMode::UNNECESSARY,
     ) : Money {
         if (! $currency instanceof Currency) {
-            $currency = Currency::of($currency);
+            $currency = static::getCurrencyProvider()->getCurrency($currency);
         }
 
         if ($context === null) {
@@ -245,7 +250,7 @@ final class Money extends AbstractMoney
     public static function zero(Currency|string|int $currency, ?Context $context = null) : Money
     {
         if (! $currency instanceof Currency) {
-            $currency = Currency::of($currency);
+            $currency = static::getCurrencyProvider()->getCurrency($currency);
         }
 
         if ($context === null) {
@@ -729,7 +734,7 @@ final class Money extends AbstractMoney
         RoundingMode $roundingMode = RoundingMode::UNNECESSARY,
     ) : Money {
         if (! $currency instanceof Currency) {
-            $currency = Currency::of($currency);
+            $currency = static::getCurrencyProvider()->getCurrency($currency);
         }
 
         if ($context === null) {
