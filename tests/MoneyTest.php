@@ -16,7 +16,6 @@ use Brick\Money\Context\AutoContext;
 use Brick\Money\Context\CashContext;
 use Brick\Money\Context\CustomContext;
 use Brick\Money\Context\DefaultContext;
-use Brick\Money\Currency;
 use Brick\Money\Exception\MoneyMismatchException;
 use Brick\Money\Money;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -55,8 +54,8 @@ class MoneyTest extends AbstractTestCase
             ['EUR 9.00', 9, 978],
             ['EUR 0.42', BigRational::of('3/7'), 'EUR', null, RoundingMode::DOWN],
             ['EUR 0.43', BigRational::of('3/7'), 'EUR', null, RoundingMode::UP],
-            ['CUSTOM 0.428', BigRational::of('3/7'), new Currency('CUSTOM', 0, '', 3), null, RoundingMode::DOWN],
-            ['CUSTOM 0.4286', BigRational::of('3/7'), new Currency('CUSTOM', 0, '', 3), new CustomContext(4, 1), RoundingMode::UP],
+            ['CUSTOM 0.428', BigRational::of('3/7'), new CustomCurrency(), null, RoundingMode::DOWN],
+            ['CUSTOM 0.4286', BigRational::of('3/7'), new CustomCurrency(), new CustomContext(4, 1), RoundingMode::UP],
             [RoundingNecessaryException::class, '1.2', 'JPY'],
             [NumberFormatException::class, '1..', 'JPY'],
         ];

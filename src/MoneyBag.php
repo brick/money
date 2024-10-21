@@ -25,19 +25,13 @@ final class MoneyBag implements MoneyContainer
     /**
      * Returns the amount in the given currency contained in the bag, as a rational number.
      *
-     * Non-ISO (non-numeric) currency codes are accepted.
-     *
-     * @param Currency|string|int $currency The Currency instance, currency code or ISO numeric currency code.
+     * @param Currency|string $currency The Currency instance or currency code.
      *
      * @return BigRational
      */
-    public function getAmount(Currency|string|int $currency) : BigRational
+    public function getAmount(Currency|string $currency) : BigRational
     {
-        if (is_int($currency)) {
-            $currencyCode = (string) Currency::of($currency);
-        } else {
-            $currencyCode = (string) $currency;
-        }
+        $currencyCode = $currency instanceof Currency ? $currency->getCode() : $currency;
 
         return $this->amounts[$currencyCode] ?? BigRational::zero();
     }

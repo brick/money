@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Brick\Money;
 
-use Brick\Money\Exception\UnknownCurrencyException;
+use Brick\Money\Exception\UnknownIsoCurrencyException;
 
 /**
  * Provides ISO 4217 currencies.
  */
-final class ISOCurrencyProvider
+final class IsoCurrencyProvider implements CurrencyProvider
 {
-    private static ?ISOCurrencyProvider $instance = null;
+    private static ?IsoCurrencyProvider $instance = null;
 
     /**
      * The raw currency data, indexed by currency code.
@@ -25,27 +25,27 @@ final class ISOCurrencyProvider
      *
      * This property is set on-demand, as soon as required.
      *
-     * @psalm-var array<int, string>|null
+     * @psalm-var array<int, string>
      */
-    private ?array $numericToCurrency = null;
+    private array $numericToCurrency = [];
 
     /**
      * An associative array of country code to currency codes.
      *
      * This property is set on-demand, as soon as required.
      *
-     * @psalm-var array<string, list<string>>|null
+     * @psalm-var array<string, list<string>>
      */
-    private ?array $countryToCurrency = null;
+    private array $countryToCurrency = [];
 
     /**
      * The Currency instances.
      *
      * The instances are created on-demand, as soon as they are requested.
      *
-     * @psalm-var array<string, Currency>
+     * @psalm-var array<string, IsoCurrency>
      *
-     * @var Currency[]
+     * @var IsoCurrency[]
      */
     private array $currencies = [];
 
@@ -67,12 +67,12 @@ final class ISOCurrencyProvider
     /**
      * Returns the singleton instance of ISOCurrencyProvider.
      *
-     * @return ISOCurrencyProvider
+     * @return IsoCurrencyProvider
      */
-    public static function getInstance() : ISOCurrencyProvider
+    public static function getInstance() : IsoCurrencyProvider
     {
         if (self::$instance === null) {
-            self::$instance = new ISOCurrencyProvider();
+            self::$instance = new IsoCurrencyProvider();
         }
 
         return self::$instance;
@@ -81,52 +81,95 @@ final class ISOCurrencyProvider
     /**
      * Returns the currency matching the given currency code.
      *
-     * @param string|int $currencyCode The 3-letter or numeric ISO 4217 currency code.
+     * @param string|int $code The 3-letter or numeric ISO 4217 currency code.
      *
-     * @return Currency The currency.
+     * @return IsoCurrency The currency.
      *
-     * @throws UnknownCurrencyException If the currency code is not known.
+     * @throws UnknownIsoCurrencyException If the currency code is not known.
      */
-    public function getCurrency(string|int $currencyCode) : Currency
+    public function getByCode(string|int $code) : IsoCurrency
     {
-        if (is_int($currencyCode)) {
-            if ($this->numericToCurrency === null) {
+        $currency = $this->findByCode($code);
+
+        if ($currency === null) {
+            if (is_int($code)) {
+                throw UnknownIsoCurrencyException::unknownCurrency(null, $code);
+            }
+
+            throw UnknownIsoCurrencyException::unknownCurrency($code);
+        }
+
+        return $currency;
+    }
+
+    public function hasCode(?string $currencyCode = null, ?int $numericCode = null) : bool
+    {
+        if ($currencyCode === null && $numericCode === null) {
+            throw new \InvalidArgumentException('At least one of currency code or numeric code passed must be provided');
+        }
+
+        if ($numericCode !== null) {
+            if ($this->numericToCurrency === []) {
                 $this->numericToCurrency = require __DIR__ . '/../data/numeric-to-currency.php';
             }
 
-            if (isset($this->numericToCurrency[$currencyCode])) {
-                return $this->getCurrency($this->numericToCurrency[$currencyCode]);
+            if (isset($this->numericToCurrency[$numericCode])) {
+                if ($currencyCode !== null) {
+                    return $currencyCode === $this->numericToCurrency[$numericCode] && $this->hasCode($this->numericToCurrency[$numericCode]);
+                }
+
+                return $this->hasCode($this->numericToCurrency[$numericCode]);
             }
 
-            throw UnknownCurrencyException::unknownCurrency($currencyCode);
+            return false;
+        }
+
+        if (isset($this->currencies[$currencyCode])) {
+            return true;
+        }
+
+        if (! isset($this->currencyData[$currencyCode])) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private function findByCode(string|int $currencyCode) : ?IsoCurrency {
+
+
+        if (is_int($currencyCode)) {
+            if (!$this->hasCode(null, $currencyCode)) {
+                return null;
+            }
+
+            $currencyCode = $this->numericToCurrency[$currencyCode];
+        }
+
+        if (!$this->hasCode($currencyCode)) {
+            return null;
         }
 
         if (isset($this->currencies[$currencyCode])) {
             return $this->currencies[$currencyCode];
         }
 
-        if (! isset($this->currencyData[$currencyCode])) {
-            throw UnknownCurrencyException::unknownCurrency($currencyCode);
-        }
-
-        $currency = new Currency(... $this->currencyData[$currencyCode]);
-
-        return $this->currencies[$currencyCode] = $currency;
+        return $this->currencies[$currencyCode] = new IsoCurrency(... $this->currencyData[$currencyCode]);
     }
 
     /**
      * Returns all the available currencies.
      *
-     * @psalm-return array<string, Currency>
+     * @psalm-return array<string, IsoCurrency>
      *
-     * @return Currency[] The currencies, indexed by currency code.
+     * @return IsoCurrency[] The currencies, indexed by currency code.
      */
     public function getAvailableCurrencies() : array
     {
         if ($this->isPartial) {
             foreach ($this->currencyData as $currencyCode => $data) {
                 if (! isset($this->currencies[$currencyCode])) {
-                    $this->currencies[$currencyCode] = new Currency(... $data);
+                    $this->currencies[$currencyCode] = new IsoCurrency(... $data);
                 }
             }
 
@@ -143,11 +186,11 @@ final class ISOCurrencyProvider
      *
      * @param string $countryCode The 2-letter ISO 3166-1 country code.
      *
-     * @return Currency
+     * @return IsoCurrency
      *
-     * @throws UnknownCurrencyException If the country code is not known, or the country has no single currency.
+     * @throws UnknownIsoCurrencyException If the country code is not known, or the country has no single currency.
      */
-    public function getCurrencyForCountry(string $countryCode) : Currency
+    public function getByCountryCode(string $countryCode) : IsoCurrency
     {
         $currencies = $this->getCurrenciesForCountry($countryCode);
 
@@ -158,16 +201,16 @@ final class ISOCurrencyProvider
         }
 
         if ($count === 0) {
-            throw UnknownCurrencyException::noCurrencyForCountry($countryCode);
+            throw UnknownIsoCurrencyException::noCurrencyForCountry($countryCode);
         }
 
         $currencyCodes = [];
 
         foreach ($currencies as $currency) {
-            $currencyCodes[] = $currency->getCurrencyCode();
+            $currencyCodes[] = $currency->getCode();
         }
 
-        throw UnknownCurrencyException::noSingleCurrencyForCountry($countryCode, $currencyCodes);
+        throw UnknownIsoCurrencyException::noSingleCurrencyForCountry($countryCode, $currencyCodes);
     }
 
     /**
@@ -177,11 +220,11 @@ final class ISOCurrencyProvider
      *
      * @param string $countryCode The 2-letter ISO 3166-1 country code.
      *
-     * @return Currency[]
+     * @return IsoCurrency[]
      */
     public function getCurrenciesForCountry(string $countryCode) : array
     {
-        if ($this->countryToCurrency === null) {
+        if ($this->countryToCurrency === []) {
             $this->countryToCurrency = require __DIR__ . '/../data/country-to-currency.php';
         }
 
@@ -189,7 +232,7 @@ final class ISOCurrencyProvider
 
         if (isset($this->countryToCurrency[$countryCode])) {
             foreach ($this->countryToCurrency[$countryCode] as $currencyCode) {
-                $result[] = $this->getCurrency($currencyCode);
+                $result[] = $this->getByCode($currencyCode);
             }
         }
 

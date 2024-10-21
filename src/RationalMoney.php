@@ -16,7 +16,7 @@ use Brick\Math\Exception\MathException;
  * This is used to represent intermediate calculation results, and may not be exactly convertible to a decimal amount
  * with a finite number of digits. The final conversion to a Money may require rounding.
  */
-final class RationalMoney extends AbstractMoney
+class RationalMoney extends AbstractMoney
 {
     private readonly BigRational $amount;
 
@@ -47,7 +47,7 @@ final class RationalMoney extends AbstractMoney
         $amount = BigRational::of($amount);
 
         if (! $currency instanceof Currency) {
-            $currency = Currency::of($currency);
+            $currency = static::getCurrencyProvider()->getByCode($currency);
         }
 
         return new RationalMoney($amount, $currency);

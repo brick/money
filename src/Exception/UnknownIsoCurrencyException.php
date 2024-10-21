@@ -7,11 +7,22 @@ namespace Brick\Money\Exception;
 /**
  * Exception thrown when attempting to create a Currency from an unknown currency code.
  */
-class UnknownCurrencyException extends MoneyException
+class UnknownIsoCurrencyException extends MoneyException
 {
-    public static function unknownCurrency(string|int $currencyCode) : self
+    public static function unknownCurrency(?string $currencyCode = null, ?int $numericCode = null) : self
     {
-        return new self('Unknown currency code: ' . $currencyCode);
+        $baseMessage = 'Unknown currency ';
+        $messageParts = [];
+        if ($currencyCode !== null) {
+            $messageParts[] = 'code: ' . $currencyCode;
+        }
+        if ($numericCode !== null) {
+            $messageParts[] = 'numeric code: ' . $numericCode;
+        }
+
+        $message = trim($baseMessage. implode(' and ', $messageParts));
+
+        return new self($message);
     }
 
     public static function noCurrencyForCountry(string $countryCode) : self

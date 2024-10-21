@@ -8,7 +8,7 @@ use Brick\Math\BigNumber;
 use Brick\Math\Exception\RoundingNecessaryException;
 use Brick\Math\RoundingMode;
 use Brick\Money\Context\CustomContext;
-use Brick\Money\Currency;
+use Brick\Money\IsoCurrency;
 use Brick\Money\Tests\AbstractTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -21,7 +21,7 @@ class CustomContextTest extends AbstractTestCase
     public function testApplyTo(int $scale, int $step, string $amount, string $currency, RoundingMode $roundingMode, string $expected) : void
     {
         $amount = BigNumber::of($amount);
-        $currency = Currency::of($currency);
+        $currency = IsoCurrency::of($currency);
 
         $context = new CustomContext($scale, $step);
 

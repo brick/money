@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Brick\Money\Tests;
 
-use Brick\Money\Currency;
-use Brick\Money\Exception\UnknownCurrencyException;
-use Brick\Money\ISOCurrencyProvider;
+use Brick\Money\IsoCurrency;
+use Brick\Money\Exception\UnknownIsoCurrencyException;
+use Brick\Money\IsoCurrencyProvider;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
@@ -23,7 +23,7 @@ class ISOCurrencyProviderTest extends AbstractTestCase
      */
     public static function setUpBeforeClass() : void
     {
-        $reflection = new \ReflectionProperty(ISOCurrencyProvider::class, 'instance');
+        $reflection = new \ReflectionProperty(IsoCurrencyProvider::class, 'instance');
         $reflection->setAccessible(true);
         $reflection->setValue(null);
     }
@@ -31,12 +31,12 @@ class ISOCurrencyProviderTest extends AbstractTestCase
     #[DataProvider('providerGetCurrency')]
     public function testGetCurrency(string $currencyCode, int $numericCode, string $name, int $defaultFractionDigits) : void
     {
-        $provider = ISOCurrencyProvider::getInstance();
+        $provider = IsoCurrencyProvider::getInstance();
 
-        $currency = $provider->getCurrency($currencyCode);
+        $currency = $provider->getByCode($currencyCode);
         $this->assertCurrencyEquals($currencyCode, $numericCode, $name, $defaultFractionDigits, $currency);
 
-        $currency = $provider->getCurrency($numericCode);
+        $currency = $provider->getByCode($numericCode);
         $this->assertCurrencyEquals($currencyCode, $numericCode, $name, $defaultFractionDigits, $currency);
     }
 
@@ -59,8 +59,8 @@ class ISOCurrencyProviderTest extends AbstractTestCase
     #[DataProvider('providerUnknownCurrency')]
     public function testGetUnknownCurrency(string|int $currencyCode) : void
     {
-        $this->expectException(UnknownCurrencyException::class);
-        ISOCurrencyProvider::getInstance()->getCurrency($currencyCode);
+        $this->expectException(UnknownIsoCurrencyException::class);
+        IsoCurrencyProvider::getInstance()->getByCode($currencyCode);
     }
 
     public static function providerUnknownCurrency() : array
@@ -73,18 +73,18 @@ class ISOCurrencyProviderTest extends AbstractTestCase
 
     public function testGetAvailableCurrencies() : void
     {
-        $provider = ISOCurrencyProvider::getInstance();
+        $provider = IsoCurrencyProvider::getInstance();
 
-        $eur = $provider->getCurrency('EUR');
-        $gbp = $provider->getCurrency('GBP');
-        $usd = $provider->getCurrency('USD');
+        $eur = $provider->getByCode('EUR');
+        $gbp = $provider->getByCode('GBP');
+        $usd = $provider->getByCode('USD');
 
         $availableCurrencies = $provider->getAvailableCurrencies();
 
         self::assertGreaterThan(100, count($availableCurrencies));
 
         foreach ($availableCurrencies as $currency) {
-            self::assertInstanceOf(Currency::class, $currency);
+            self::assertInstanceOf(IsoCurrency::class, $currency);
         }
 
         self::assertSame($eur, $availableCurrencies['EUR']);

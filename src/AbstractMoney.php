@@ -50,8 +50,13 @@ abstract class AbstractMoney implements MoneyContainer, Stringable, JsonSerializ
     final public function getAmounts() : array
     {
         return [
-            $this->getCurrency()->getCurrencyCode() => $this->getAmount()
+            $this->getCurrency()->getCode() => $this->getAmount()
         ];
+    }
+
+    public static function getCurrencyProvider(): CurrencyProvider
+    {
+        return IsoCurrencyProvider::getInstance();
     }
 
     /**

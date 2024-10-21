@@ -9,7 +9,7 @@ use Brick\Math\Exception\RoundingNecessaryException;
 use Brick\Math\RoundingMode;
 use Brick\Money\Context\AutoContext;
 use Brick\Money\Context\CashContext;
-use Brick\Money\Currency;
+use Brick\Money\IsoCurrency;
 use Brick\Money\Tests\AbstractTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -22,7 +22,7 @@ class AutoContextTest extends AbstractTestCase
     public function testApplyTo(string $amount, string $currency, RoundingMode $roundingMode, string $expected) : void
     {
         $amount = BigNumber::of($amount);
-        $currency = Currency::of($currency);
+        $currency = IsoCurrency::of($currency);
 
         $context = new AutoContext();
 

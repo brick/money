@@ -9,6 +9,7 @@ use Brick\Math\BigNumber;
 use Brick\Math\RoundingMode;
 use Brick\Money\Context;
 use Brick\Money\Currency;
+use Brick\Money\IsoCurrency;
 
 /**
  * Adjusts a number to a custom scale, and optionally step.

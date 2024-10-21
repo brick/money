@@ -52,8 +52,8 @@ final class MoneyComparator
      */
     public function compare(Money $a, Money $b) : int
     {
-        $aCurrencyCode = $a->getCurrency()->getCurrencyCode();
-        $bCurrencyCode = $b->getCurrency()->getCurrencyCode();
+        $aCurrencyCode = $a->getCurrency()->getCode();
+        $bCurrencyCode = $b->getCurrency()->getCode();
 
         if ($aCurrencyCode === $bCurrencyCode) {
             return $a->compareTo($b);

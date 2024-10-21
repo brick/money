@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Brick\Money\Tests;
 
 use Brick\Money\Context\AutoContext;
-use Brick\Money\Currency;
+use Brick\Money\IsoCurrencyProvider;
 use Brick\Money\Money;
 use Brick\Money\MoneyBag;
 use Brick\Money\RationalMoney;
@@ -23,7 +23,7 @@ class MoneyBagTest extends AbstractTestCase
         $this->assertMoneyBagContains([], $moneyBag);
 
         foreach (['USD', 'EUR', 'GBP', 'JPY'] as $currencyCode) {
-            self::assertTrue($moneyBag->getAmount($currencyCode)->isZero());
+            self::assertTrue($moneyBag->getAmount(IsoCurrencyProvider::getInstance()->getByCode($currencyCode))->isZero());
         }
     }
 
@@ -55,7 +55,7 @@ class MoneyBagTest extends AbstractTestCase
     #[Depends('testAddSubtractMoney')]
     public function testAddCustomCurrency(MoneyBag $moneyBag) : void
     {
-        $moneyBag->add(Money::of('0.1234', new Currency('BTC', 0, 'Bitcoin', 8)));
-        $this->assertMoneyBagContains(['EUR' => '21284003/60000', 'JPY' => '4.1234', 'BTC' => '0.1234'], $moneyBag);
+        $moneyBag->add(Money::of('0.123', new CustomCurrency()));
+        $this->assertMoneyBagContains(['EUR' => '21284003/60000', 'JPY' => '4.1234', 'CUSTOM' => '0.123'], $moneyBag);
     }
 }

@@ -6,6 +6,7 @@ namespace Brick\Money\Context;
 
 use Brick\Money\Context;
 use Brick\Money\Currency;
+use Brick\Money\IsoCurrency;
 
 use Brick\Math\BigDecimal;
 use Brick\Math\BigNumber;

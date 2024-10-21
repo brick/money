@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Brick\Money\Exception;
 
 use Brick\Money\Currency;
+use Brick\Money\IsoCurrency;
 
 /**
  * Exception thrown when a money is not in the expected currency or context.
@@ -21,8 +22,8 @@ class MoneyMismatchException extends MoneyException
     {
         return new self(sprintf(
             'The monies do not share the same currency: expected %s, got %s.',
-            $expected->getCurrencyCode(),
-            $actual->getCurrencyCode()
+            $expected->getCode(),
+            $actual->getCode()
         ));
     }
 
