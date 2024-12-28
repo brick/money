@@ -398,7 +398,7 @@ echo $money->formatWith($formatter); // US$5·000.00
 
 *Important note: because formatting is performed using `NumberFormatter`, the amount is converted to floating point in the process; so discrepancies can appear when formatting very large monetary values.*
 
-## Storing the monies in the database
+## Storing Money objects in the database
 
 ### Persisting the amount
 
