@@ -6,7 +6,7 @@ namespace Brick\Money;
 
 use Brick\Money\Context\DefaultContext;
 use Brick\Money\Exception\MoneyMismatchException;
-use Brick\Money\Exception\UnknownCurrencyException;
+use Brick\Money\Exception\UnknownIsoCurrencyException;
 
 use Brick\Math\BigDecimal;
 use Brick\Math\BigInteger;
@@ -16,7 +16,6 @@ use Brick\Math\RoundingMode;
 use Brick\Math\Exception\MathException;
 use Brick\Math\Exception\NumberFormatException;
 use Brick\Math\Exception\RoundingNecessaryException;
-use InvalidArgumentException;
 
 /**
  * A monetary value in a given currency. This class is immutable.
@@ -31,7 +30,7 @@ use InvalidArgumentException;
  * - CustomContext handles monies with a custom scale, and optionally step.
  * - AutoContext automatically adjusts the scale of the money to the minimum required.
  */
-final class Money extends AbstractMoney
+class Money extends AbstractMoney
 {
     /**
      * The amount.
@@ -170,7 +169,7 @@ final class Money extends AbstractMoney
      * @return Money
      *
      * @throws NumberFormatException      If the amount is a string in a non-supported format.
-     * @throws UnknownCurrencyException   If the currency is an unknown currency code.
+     * @throws UnknownIsoCurrencyException   If the currency is an unknown currency code.
      * @throws RoundingNecessaryException If the rounding mode is RoundingMode::UNNECESSARY, and rounding is necessary
      *                                    to represent the amount at the requested scale.
      */
@@ -181,7 +180,7 @@ final class Money extends AbstractMoney
         RoundingMode $roundingMode = RoundingMode::UNNECESSARY,
     ) : Money {
         if (! $currency instanceof Currency) {
-            $currency = Currency::of($currency);
+            $currency = static::getCurrencyProvider()->getByCode($currency);
         }
 
         if ($context === null) {
@@ -208,7 +207,7 @@ final class Money extends AbstractMoney
      * @return Money
      *
      * @throws NumberFormatException      If the amount is a string in a non-supported format.
-     * @throws UnknownCurrencyException   If the currency is an unknown currency code.
+     * @throws UnknownIsoCurrencyException   If the currency is an unknown currency code.
      * @throws RoundingNecessaryException If the rounding mode is RoundingMode::UNNECESSARY, and rounding is necessary
      *                                    to represent the amount at the requested scale.
      */
@@ -219,7 +218,7 @@ final class Money extends AbstractMoney
         RoundingMode $roundingMode = RoundingMode::UNNECESSARY,
     ) : Money {
         if (! $currency instanceof Currency) {
-            $currency = Currency::of($currency);
+            $currency = static::getCurrencyProvider()->getByCode($currency);
         }
 
         if ($context === null) {
@@ -245,7 +244,7 @@ final class Money extends AbstractMoney
     public static function zero(Currency|string|int $currency, ?Context $context = null) : Money
     {
         if (! $currency instanceof Currency) {
-            $currency = Currency::of($currency);
+            $currency = static::getCurrencyProvider()->getByCode($currency);
         }
 
         if ($context === null) {
@@ -719,7 +718,7 @@ final class Money extends AbstractMoney
      *
      * @return Money
      *
-     * @throws UnknownCurrencyException If an unknown currency code is given.
+     * @throws UnknownIsoCurrencyException If an unknown currency code is given.
      * @throws MathException            If the exchange rate or rounding mode is invalid, or rounding is necessary.
      */
     public function convertedTo(
@@ -729,7 +728,7 @@ final class Money extends AbstractMoney
         RoundingMode $roundingMode = RoundingMode::UNNECESSARY,
     ) : Money {
         if (! $currency instanceof Currency) {
-            $currency = Currency::of($currency);
+            $currency = static::getCurrencyProvider()->getByCode($currency);
         }
 
         if ($context === null) {
@@ -755,7 +754,7 @@ final class Money extends AbstractMoney
     {
         return $formatter->formatCurrency(
             $this->amount->toFloat(),
-            $this->currency->getCurrencyCode()
+            $this->currency->getCode()
         );
     }
 

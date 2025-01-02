@@ -352,24 +352,44 @@ Writing your own provider is easy: the `ExchangeRateProvider` interface has just
 
 ## Custom currencies
 
-Money supports ISO 4217 currencies by default. You can also use custom currencies by creating a `Currency` instance. Let's create a Bitcoin currency:
+Money supports ISO 4217 currencies by default. You can also use custom currencies by creating an object implementing a `Currency` interface. Let's create a Bitcoin currency:
 
 ```php
-use Brick\Money\Currency;
-use Brick\Money\Money;
+class BtcCurrency implements Currency
+{
+    public function __toString(): string
+    {
+        return $this->getCode();
+    }
 
-$bitcoin = new Currency(
-    'XBT',     // currency code
-    0,         // numeric currency code, useful when storing monies in a database; set to 0 if unused
-    'Bitcoin', // currency name
-    8          // default scale
-);
+    public function getCode(): string
+    {
+        return 'BTC';
+    }
+
+    public function getDefaultFractionDigits(): int
+    {
+        return 8;
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return $this->getCode();
+    }
+
+    public function is(Currency $currency): bool
+    {
+        return $currency->getCode() === $this->getCode();
+    }
+}
+
+$bitcoinCurrency = new BtcCurrency();
 ```
 
 You can now use this Currency instead of a currency code:
 
 ```php
-$money = Money::of('0.123', $bitcoin); // XBT 0.12300000
+$money = Money::of('0.123', $bitcoinCurrency); // BTC 0.12300000
 ```
 
 ## Formatting

@@ -12,7 +12,7 @@ use Brick\Money\Context\AutoContext;
 use Brick\Money\Context\CashContext;
 use Brick\Money\Context\CustomContext;
 use Brick\Money\Context\DefaultContext;
-use Brick\Money\Currency;
+use Brick\Money\IsoCurrency;
 use Brick\Money\Exception\MoneyMismatchException;
 use Brick\Money\Money;
 use Brick\Money\RationalMoney;
@@ -26,7 +26,7 @@ class RationalMoneyTest extends AbstractTestCase
     public function testGetters() : void
     {
         $amount = BigRational::of('123/456');
-        $currency = Currency::of('EUR');
+        $currency = IsoCurrency::of('EUR');
 
         $money = new RationalMoney($amount, $currency);
 

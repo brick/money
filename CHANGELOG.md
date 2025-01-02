@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.11.0](https://github.com/brick/money/releases/tag/0.11.0)
+💥 **Breaking changes**
+
+This release tackles significant issues ([#30](https://github.com/brick/money/issues/30), [#61](https://github.com/brick/money/issues/61)) identified by the community to enhance the flexibility of handling custom currencies.
+
+The update supports custom Money types extending the `Money` class, such as CryptoMoney and HistoricalIsoMoney, necessitating careful refactoring of the library's core concepts. For a comprehensive understanding of the design decisions and examples, please refer to the related pull requests.
+
+- `Currency` has been renamed to `IsoCurrency` to better reflect its role in representing ISO 4217 currencies
+- `Currency` is now an interface, with `IsoCurrency` serving as its concrete implementation
+- `Currency#getCurrencyCode()` is now `Currency#getCode()`
+- `UnknownCurrencyException` has been renamed to `UnknownIsoCurrencyException` to align with its specific use for `IsoCurrency` types
+- `ISOCurrencyProvider` has been renamed to `IsoCurrencyProvider` to adhere to the [upcoming PSR rules for capitalization of abbreviations](https://github.com/php-fig/per-coding-stylestyle/issues/95)
+
+Previously, allowing `string|int` as currency necessitated objects to identify the corresponding IsoCurrency, creating a tight coupling with a specific IsoCurrencyProvider implementation. To move towards a more currency-agnostic architecture, it is now advised to resolve the currency beforehand to ensure the correct currency is utilized.
+
+- The parameter `$currency` in `Brick\Money\Currency#is()` has been refined to accept only `Brick\Money\Currency`, removing support for `string|int`
+- The parameter `$currency` in `Brick\Money\CurrencyConverter#convert()` has been refined to accept only `Brick\Money\Currency`, removing support for `string|int`
+- The parameter `$currency` in `Brick\Money\CurrencyConverter#convertToRational()` has been refined to accept only `Brick\Money\Currency`, removing support for `string|int`
+
 ## [0.10.0](https://github.com/brick/money/releases/tag/0.10.0) - 2024-10-12
 
 💥 **ISO currency changes**

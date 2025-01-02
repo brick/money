@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Brick\Money\Tests;
 
-use Brick\Money\Currency;
-use Brick\Money\Exception\UnknownCurrencyException;
+use Brick\Money\IsoCurrency;
+use Brick\Money\Exception\UnknownIsoCurrencyException;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Unit tests for class Currency.
  */
-class CurrencyTest extends AbstractTestCase
+class IsoCurrencyTest extends AbstractTestCase
 {
     /**
      * @param string $currencyCode   The currency code.
@@ -22,10 +22,10 @@ class CurrencyTest extends AbstractTestCase
     #[DataProvider('providerOf')]
     public function testOf(string $currencyCode, int $numericCode, int $fractionDigits, string $name) : void
     {
-        $currency = Currency::of($currencyCode);
+        $currency = IsoCurrency::of($currencyCode);
         $this->assertCurrencyEquals($currencyCode, $numericCode, $name, $fractionDigits, $currency);
 
-        $currency = Currency::of($numericCode);
+        $currency = IsoCurrency::of($numericCode);
         $this->assertCurrencyEquals($currencyCode, $numericCode, $name, $fractionDigits, $currency);
     }
 
@@ -43,8 +43,8 @@ class CurrencyTest extends AbstractTestCase
     #[DataProvider('providerOfUnknownCurrencyCode')]
     public function testOfUnknownCurrencyCode(string|int $currencyCode) : void
     {
-        $this->expectException(UnknownCurrencyException::class);
-        Currency::of($currencyCode);
+        $this->expectException(UnknownIsoCurrencyException::class);
+        IsoCurrency::of($currencyCode);
     }
 
     public static function providerOfUnknownCurrencyCode() : array
@@ -57,13 +57,13 @@ class CurrencyTest extends AbstractTestCase
 
     public function testConstructor() : void
     {
-        $bitCoin = new Currency('BTC', -1, 'BitCoin', 8);
-        $this->assertCurrencyEquals('BTC', -1, 'BitCoin', 8, $bitCoin);
+        $euro = new IsoCurrency('EUR', 978, 'Euro', 8);
+        $this->assertCurrencyEquals('EUR', 978, 'Euro', 8, $euro);
     }
 
     public function testOfReturnsSameInstance() : void
     {
-        self::assertSame(Currency::of('EUR'), Currency::of('EUR'));
+        self::assertSame(IsoCurrency::of('EUR'), IsoCurrency::of('EUR'));
     }
 
     #[DataProvider('providerOfCountry')]
@@ -73,11 +73,11 @@ class CurrencyTest extends AbstractTestCase
             $this->expectException($expected);
         }
 
-        $actual = Currency::ofCountry($countryCode);
+        $actual = IsoCurrency::ofCountry($countryCode);
 
         if (! $this->isExceptionClass($expected)) {
-            self::assertInstanceOf(Currency::class, $actual);
-            self::assertSame($expected, $actual->getCurrencyCode());
+            self::assertInstanceOf(IsoCurrency::class, $actual);
+            self::assertSame($expected, $actual->getCode());
         }
     }
 
@@ -92,27 +92,27 @@ class CurrencyTest extends AbstractTestCase
             ['GB', 'GBP'],
             ['IT', 'EUR'],
             ['US', 'USD'],
-            ['AQ', UnknownCurrencyException::class], // no currency
-            ['CU', UnknownCurrencyException::class], // 2 currencies
-            ['XX', UnknownCurrencyException::class], // unknown
+            ['AQ', UnknownIsoCurrencyException::class], // no currency
+            ['CU', UnknownIsoCurrencyException::class], // 2 currencies
+            ['XX', UnknownIsoCurrencyException::class], // unknown
         ];
     }
 
     public function testCreateWithNegativeFractionDigits() : void
     {
         $this->expectException(\InvalidArgumentException::class);
-        new Currency('BTC', 0, 'BitCoin', -1);
+        new IsoCurrency('BTC', 0, 'BitCoin', -1);
     }
 
     public function testIs() : void
     {
-        $currency = Currency::of('EUR');
+        $currency = IsoCurrency::of('EUR');
 
-        self::assertTrue($currency->is('EUR'));
-        self::assertTrue($currency->is(978));
+        self::assertTrue($currency->is(IsoCurrency::of('EUR')));
+        self::assertTrue($currency->is(IsoCurrency::of(978)));
 
-        self::assertFalse($currency->is('USD'));
-        self::assertFalse($currency->is(840));
+        self::assertFalse($currency->is(IsoCurrency::of('USD')));
+        self::assertFalse($currency->is(IsoCurrency::of(840)));
 
         $clone = clone $currency;
 
@@ -121,7 +121,7 @@ class CurrencyTest extends AbstractTestCase
     }
 
     #[DataProvider('providerJsonSerialize')]
-    public function testJsonSerialize(Currency $currency, string $expected): void
+    public function testJsonSerialize(IsoCurrency $currency, string $expected): void
     {
         self::assertSame($expected, $currency->jsonSerialize());
         self::assertSame(json_encode($expected), json_encode($currency));
@@ -130,7 +130,7 @@ class CurrencyTest extends AbstractTestCase
     public static function providerJsonSerialize(): array
     {
         return [
-            [Currency::of('USD'), 'USD']
+            [IsoCurrency::of('USD'), 'USD']
         ];
     }
 }
