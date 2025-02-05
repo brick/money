@@ -23,9 +23,8 @@ class ISOCurrencyProviderTest extends AbstractTestCase
      */
     public static function setUpBeforeClass() : void
     {
-        $reflection = new \ReflectionProperty(ISOCurrencyProvider::class, 'instance');
-        $reflection->setAccessible(true);
-        $reflection->setValue(null);
+        $reflection = new \ReflectionClass(ISOCurrencyProvider::class);
+        $reflection->setStaticPropertyValue('instance', null);
     }
 
     #[DataProvider('providerGetCurrency')]
