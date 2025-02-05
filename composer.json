@@ -15,10 +15,10 @@
     "require-dev": {
         "ext-dom": "*",
         "ext-pdo": "*",
-        "brick/varexporter": "~0.4.0",
+        "brick/varexporter": "~0.5.0",
         "php-coveralls/php-coveralls": "^2.2",
         "phpunit/phpunit": "^10.1",
-        "vimeo/psalm": "5.26.1"
+        "vimeo/psalm": "6.3.0"
     },
     "suggest": {
         "ext-intl": "Required to format Money objects"

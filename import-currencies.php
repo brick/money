@@ -362,7 +362,7 @@ printf('Exported %d currencies in %d countries.' . PHP_EOL, count($currencies), 
  */
 function exportToFile(string $file, array $data) : void
 {
-    $data = '<?php ' . VarExporter::export($data, VarExporter::ADD_RETURN | VarExporter::INLINE_NUMERIC_SCALAR_ARRAY);
+    $data = '<?php ' . VarExporter::export($data, VarExporter::ADD_RETURN | VarExporter::INLINE_SCALAR_LIST);
 
     if (file_get_contents($file) === $data) {
         printf("%s: no change\n", $file);
