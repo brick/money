@@ -559,7 +559,7 @@ final class Money extends AbstractMoney
      * The remainder is also present, appended at the end of the list.
      *
      * For example, given a `USD 49.99` money in the default context,
-     * `allocateWithRemainder(1, 2, 3, 4)` returns [`USD 4.99`, `USD 9.99`, `USD 14.99`, `USD 19.99`, `USD 0.03`]
+     * `allocateWithRemainder(1, 2, 3, 4)` returns [`USD 4.99`, `USD 9.98`, `USD 14.97`, `USD 19.96`, `USD 0.09`]
      *
      * The resulting monies have the same context as this Money.
      *
