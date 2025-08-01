@@ -20,9 +20,9 @@ class CurrencyConversionException extends MoneyException
      * @param string $sourceCurrencyCode
      * @param string $targetCurrencyCode
      */
-    public function __construct(string $message, string $sourceCurrencyCode, string $targetCurrencyCode)
+    public function __construct(string $message, string $sourceCurrencyCode, string $targetCurrencyCode, ?\Throwable $previous = null)
     {
-        parent::__construct($message);
+        parent::__construct($message, 0, $previous);
 
         $this->sourceCurrencyCode = $sourceCurrencyCode;
         $this->targetCurrencyCode = $targetCurrencyCode;
@@ -35,7 +35,7 @@ class CurrencyConversionException extends MoneyException
      *
      * @return CurrencyConversionException
      */
-    public static function exchangeRateNotAvailable(string $sourceCurrencyCode, string $targetCurrencyCode, ?string $info = null) : self
+    public static function exchangeRateNotAvailable(string $sourceCurrencyCode, string $targetCurrencyCode, ?string $info = null, ?\Throwable $previous = null) : self
     {
         $message = sprintf(
             'No exchange rate available to convert %s to %s',
@@ -47,7 +47,7 @@ class CurrencyConversionException extends MoneyException
             $message .= ' (' . $info . ')';
         }
 
-        return new self($message, $sourceCurrencyCode, $targetCurrencyCode);
+        return new self($message, $sourceCurrencyCode, $targetCurrencyCode, $previous);
     }
 
     /**
