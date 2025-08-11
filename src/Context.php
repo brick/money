@@ -11,6 +11,8 @@ use Brick\Math\RoundingMode;
 
 /**
  * Adjusts a rational number to a decimal amount.
+ *
+ * @psalm-immutable
  */
 interface Context
 {

@@ -15,6 +15,8 @@ use Brick\Math\Exception\MathException;
  *
  * This is used to represent intermediate calculation results, and may not be exactly convertible to a decimal amount
  * with a finite number of digits. The final conversion to a Money may require rounding.
+ *
+ * @psalm-immutable
  */
 final class RationalMoney extends AbstractMoney
 {
@@ -41,6 +43,8 @@ final class RationalMoney extends AbstractMoney
      * @param Currency|string|int        $currency The Currency instance, ISO currency code or ISO numeric currency code.
      *
      * @return RationalMoney
+     *
+     * @psalm-pure
      */
     public static function of(BigNumber|int|float|string $amount, Currency|string|int $currency) : RationalMoney
     {

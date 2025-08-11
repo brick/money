@@ -12,6 +12,8 @@ use Brick\Money\Currency;
 
 /**
  * Adjusts a number to a custom scale, and optionally step.
+ *
+ * @psalm-immutable
  */
 final class CustomContext implements Context
 {
