@@ -13,7 +13,7 @@ use Brick\Money\Tests\AbstractTestCase;
  */
 class CachedProviderTest extends AbstractTestCase
 {
-    public function testGetExchangeRateAndInvalidate() : void
+    public function testGetExchangeRateAndInvalidate(): void
     {
         $mock = new ProviderMock();
         $provider = new CachedProvider($mock);
@@ -36,7 +36,7 @@ class CachedProviderTest extends AbstractTestCase
         self::assertSame(3, $mock->getCalls());
     }
 
-    public function testGetExchangeRateOfUnknownCurrencyPair() : void
+    public function testGetExchangeRateOfUnknownCurrencyPair(): void
     {
         $mock = new ProviderMock();
         $provider = new CachedProvider($mock);

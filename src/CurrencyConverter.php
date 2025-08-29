@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace Brick\Money;
 
-use Brick\Money\Context\DefaultContext;
-use Brick\Money\Exception\CurrencyConversionException;
-
 use Brick\Math\BigRational;
 use Brick\Math\Exception\RoundingNecessaryException;
 use Brick\Math\RoundingMode;
+use Brick\Money\Context\DefaultContext;
+use Brick\Money\Exception\CurrencyConversionException;
 
 /**
  * Converts monies into different currencies, using an exchange rate provider.
@@ -37,8 +36,6 @@ final class CurrencyConverter
      * @param Context|null        $context        A context to create the money in, or null to use the default.
      * @param RoundingMode        $roundingMode   The rounding mode, if necessary.
      *
-     * @return Money
-     *
      * @throws CurrencyConversionException If the exchange rate is not available.
      * @throws RoundingNecessaryException  If rounding is necessary and RoundingMode::UNNECESSARY is used.
      */
@@ -47,7 +44,7 @@ final class CurrencyConverter
         Currency|string|int $currency,
         ?Context $context = null,
         RoundingMode $roundingMode = RoundingMode::UNNECESSARY,
-    ) : Money {
+    ): Money {
         return $this
             ->convertToRational($moneyContainer, $currency)
             ->to($context ?? new DefaultContext(), $roundingMode);
@@ -59,11 +56,9 @@ final class CurrencyConverter
      * @param MoneyContainer      $moneyContainer The Money, RationalMoney or MoneyBag to convert.
      * @param Currency|string|int $currency       The Currency instance, ISO currency code or ISO numeric currency code.
      *
-     * @return RationalMoney
-     *
      * @throws CurrencyConversionException If the exchange rate is not available.
      */
-    public function convertToRational(MoneyContainer $moneyContainer, Currency|string|int $currency) : RationalMoney
+    public function convertToRational(MoneyContainer $moneyContainer, Currency|string|int $currency): RationalMoney
     {
         if (! $currency instanceof Currency) {
             $currency = Currency::of($currency);

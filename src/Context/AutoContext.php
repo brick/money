@@ -4,33 +4,33 @@ declare(strict_types=1);
 
 namespace Brick\Money\Context;
 
-use Brick\Money\Context;
-use Brick\Money\Currency;
-
 use Brick\Math\BigDecimal;
 use Brick\Math\BigNumber;
 use Brick\Math\RoundingMode;
+use Brick\Money\Context;
+use Brick\Money\Currency;
+use InvalidArgumentException;
 
 /**
  * Automatically adjusts the scale of a number to the strict minimum.
  */
 final class AutoContext implements Context
 {
-    public function applyTo(BigNumber $amount, Currency $currency, RoundingMode $roundingMode) : BigDecimal
+    public function applyTo(BigNumber $amount, Currency $currency, RoundingMode $roundingMode): BigDecimal
     {
         if ($roundingMode !== RoundingMode::UNNECESSARY) {
-            throw new \InvalidArgumentException('AutoContext only supports RoundingMode::UNNECESSARY');
+            throw new InvalidArgumentException('AutoContext only supports RoundingMode::UNNECESSARY');
         }
 
         return $amount->toBigDecimal()->stripTrailingZeros();
     }
 
-    public function getStep() : int
+    public function getStep(): int
     {
         return 1;
     }
 
-    public function isFixedScale() : bool
+    public function isFixedScale(): bool
     {
         return false;
     }

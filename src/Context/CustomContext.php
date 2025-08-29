@@ -34,10 +34,10 @@ final class CustomContext implements Context
     public function __construct(int $scale, int $step = 1)
     {
         $this->scale = $scale;
-        $this->step  = $step;
+        $this->step = $step;
     }
 
-    public function applyTo(BigNumber $amount, Currency $currency, RoundingMode $roundingMode) : BigDecimal
+    public function applyTo(BigNumber $amount, Currency $currency, RoundingMode $roundingMode): BigDecimal
     {
         if ($this->step === 1) {
             return $amount->toScale($this->scale, $roundingMode);
@@ -50,22 +50,20 @@ final class CustomContext implements Context
             ->multipliedBy($this->step);
     }
 
-    public function getStep() : int
+    public function getStep(): int
     {
         return $this->step;
     }
 
-    public function isFixedScale() : bool
+    public function isFixedScale(): bool
     {
         return true;
     }
 
     /**
      * Returns the scale used by this context.
-     *
-     * @return int
      */
-    public function getScale() : int
+    public function getScale(): int
     {
         return $this->scale;
     }

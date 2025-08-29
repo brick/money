@@ -18,12 +18,14 @@ use Brick\Money\Money;
 use Brick\Money\RationalMoney;
 use PHPUnit\Framework\Attributes\DataProvider;
 
+use function json_encode;
+
 /**
  * Unit tests for class RationalMoney.
  */
 class RationalMoneyTest extends AbstractTestCase
 {
-    public function testGetters() : void
+    public function testGetters(): void
     {
         $amount = BigRational::of('123/456');
         $currency = Currency::of('EUR');
@@ -35,7 +37,7 @@ class RationalMoneyTest extends AbstractTestCase
     }
 
     #[DataProvider('providerPlus')]
-    public function testPlus(array $rationalMoney, mixed $amount, string $expected) : void
+    public function testPlus(array $rationalMoney, mixed $amount, string $expected): void
     {
         $rationalMoney = RationalMoney::of(...$rationalMoney);
 
@@ -50,7 +52,7 @@ class RationalMoneyTest extends AbstractTestCase
         }
     }
 
-    public static function providerPlus() : array
+    public static function providerPlus(): array
     {
         return [
             [['1.1234', 'USD'], '987.65', 'USD 988773400/1000000'],
@@ -59,12 +61,12 @@ class RationalMoneyTest extends AbstractTestCase
             [['1.123', 'CHF'], RationalMoney::of('0.1', 'CHF'), 'CHF 12230/10000'],
             [['1.123', 'CHF'], RationalMoney::of('0.1', 'CAD'), MoneyMismatchException::class],
             [['9.876', 'CAD'], Money::of(3, 'CAD'), 'CAD 1287600/100000'],
-            [['9.876', 'CAD'], Money::of(3, 'USD'), MoneyMismatchException::class]
+            [['9.876', 'CAD'], Money::of(3, 'USD'), MoneyMismatchException::class],
         ];
     }
 
     #[DataProvider('providerMinus')]
-    public function testMinus(array $rationalMoney, mixed $amount, string $expected) : void
+    public function testMinus(array $rationalMoney, mixed $amount, string $expected): void
     {
         $rationalMoney = RationalMoney::of(...$rationalMoney);
 
@@ -79,7 +81,7 @@ class RationalMoneyTest extends AbstractTestCase
         }
     }
 
-    public static function providerMinus() : array
+    public static function providerMinus(): array
     {
         return [
             [['987.65', 'USD'], '1.1234', 'USD 986526600/1000000'],
@@ -88,12 +90,12 @@ class RationalMoneyTest extends AbstractTestCase
             [['1.123', 'CHF'], RationalMoney::of('0.1', 'CHF'), 'CHF 10230/10000'],
             [['1.123', 'CHF'], RationalMoney::of('0.1', 'CAD'), MoneyMismatchException::class],
             [['9.876', 'CAD'], Money::of(3, 'CAD'), 'CAD 687600/100000'],
-            [['9.876', 'CAD'], Money::of(3, 'USD'), MoneyMismatchException::class]
+            [['9.876', 'CAD'], Money::of(3, 'USD'), MoneyMismatchException::class],
         ];
     }
 
     #[DataProvider('providerMultipliedBy')]
-    public function testMultipliedBy(array $rationalMoney, mixed $operand, string $expected) : void
+    public function testMultipliedBy(array $rationalMoney, mixed $operand, string $expected): void
     {
         $rationalMoney = RationalMoney::of(...$rationalMoney);
 
@@ -108,7 +110,7 @@ class RationalMoneyTest extends AbstractTestCase
         }
     }
 
-    public static function providerMultipliedBy() : array
+    public static function providerMultipliedBy(): array
     {
         return [
             [['987.65', 'USD'], '1.123456', 'USD 110958131840/100000000'],
@@ -118,7 +120,7 @@ class RationalMoneyTest extends AbstractTestCase
     }
 
     #[DataProvider('providerDividedBy')]
-    public function testDividedBy(array $rationalMoney, mixed $operand, string $expected) : void
+    public function testDividedBy(array $rationalMoney, mixed $operand, string $expected): void
     {
         $rationalMoney = RationalMoney::of(...$rationalMoney);
 
@@ -133,7 +135,7 @@ class RationalMoneyTest extends AbstractTestCase
         }
     }
 
-    public static function providerDividedBy() : array
+    public static function providerDividedBy(): array
     {
         return [
             [['987.65', 'USD'], '1.123456', 'USD 98765000000/112345600'],
@@ -144,7 +146,7 @@ class RationalMoneyTest extends AbstractTestCase
     }
 
     #[DataProvider('providerSimplified')]
-    public function testSimplified(array $rationalMoney, string $expected) : void
+    public function testSimplified(array $rationalMoney, string $expected): void
     {
         $rationalMoney = RationalMoney::of(...$rationalMoney);
 
@@ -152,7 +154,7 @@ class RationalMoneyTest extends AbstractTestCase
         $this->assertRationalMoneyEquals($expected, $actual);
     }
 
-    public static function providerSimplified() : array
+    public static function providerSimplified(): array
     {
         return [
             [['123456/10000', 'USD'], 'USD 7716/625'],
@@ -163,7 +165,7 @@ class RationalMoneyTest extends AbstractTestCase
     }
 
     #[DataProvider('providerTo')]
-    public function testTo(array $rationalMoney, Context $context, RoundingMode $roundingMode, string $expected) : void
+    public function testTo(array $rationalMoney, Context $context, RoundingMode $roundingMode, string $expected): void
     {
         $rationalMoney = RationalMoney::of(...$rationalMoney);
 
@@ -178,7 +180,7 @@ class RationalMoneyTest extends AbstractTestCase
         }
     }
 
-    public static function providerTo() : array
+    public static function providerTo(): array
     {
         return [
             [['987.65', 'USD'], new DefaultContext(), RoundingMode::UNNECESSARY, 'USD 987.65'],
@@ -186,7 +188,7 @@ class RationalMoneyTest extends AbstractTestCase
             [['987.65', 'CZK'], new CashContext(100), RoundingMode::UP, 'CZK 988.00'],
             [['123/456', 'GBP'], new CustomContext(4), RoundingMode::UP, 'GBP 0.2698'],
             [['123/456', 'GBP'], new AutoContext(), RoundingMode::UNNECESSARY, RoundingNecessaryException::class],
-            [['123456789/256', 'CHF'], new AutoContext(), RoundingMode::UNNECESSARY, 'CHF 482253.08203125']
+            [['123456789/256', 'CHF'], new AutoContext(), RoundingMode::UNNECESSARY, 'CHF 482253.08203125'],
         ];
     }
 
@@ -201,7 +203,7 @@ class RationalMoneyTest extends AbstractTestCase
     {
         return [
             [RationalMoney::of('3.5', 'EUR'), ['amount' => '35/10', 'currency' => 'EUR']],
-            [RationalMoney::of('3.888923', 'GBP'), ['amount' => '3888923/1000000', 'currency' => 'GBP']]
+            [RationalMoney::of('3.888923', 'GBP'), ['amount' => '3888923/1000000', 'currency' => 'GBP']],
         ];
     }
 }

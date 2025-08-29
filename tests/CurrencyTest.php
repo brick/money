@@ -6,7 +6,10 @@ namespace Brick\Money\Tests;
 
 use Brick\Money\Currency;
 use Brick\Money\Exception\UnknownCurrencyException;
+use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
+
+use function json_encode;
 
 /**
  * Unit tests for class Currency.
@@ -20,7 +23,7 @@ class CurrencyTest extends AbstractTestCase
      * @param string $name           The currency's name.
      */
     #[DataProvider('providerOf')]
-    public function testOf(string $currencyCode, int $numericCode, int $fractionDigits, string $name) : void
+    public function testOf(string $currencyCode, int $numericCode, int $fractionDigits, string $name): void
     {
         $currency = Currency::of($currencyCode);
         $this->assertCurrencyEquals($currencyCode, $numericCode, $name, $fractionDigits, $currency);
@@ -29,7 +32,7 @@ class CurrencyTest extends AbstractTestCase
         $this->assertCurrencyEquals($currencyCode, $numericCode, $name, $fractionDigits, $currency);
     }
 
-    public static function providerOf() : array
+    public static function providerOf(): array
     {
         return [
             ['USD', 840, 2, 'US Dollar'],
@@ -41,13 +44,13 @@ class CurrencyTest extends AbstractTestCase
     }
 
     #[DataProvider('providerOfUnknownCurrencyCode')]
-    public function testOfUnknownCurrencyCode(string|int $currencyCode) : void
+    public function testOfUnknownCurrencyCode(string|int $currencyCode): void
     {
         $this->expectException(UnknownCurrencyException::class);
         Currency::of($currencyCode);
     }
 
-    public static function providerOfUnknownCurrencyCode() : array
+    public static function providerOfUnknownCurrencyCode(): array
     {
         return [
             ['XXX'],
@@ -55,19 +58,19 @@ class CurrencyTest extends AbstractTestCase
         ];
     }
 
-    public function testConstructor() : void
+    public function testConstructor(): void
     {
         $bitCoin = new Currency('BTC', -1, 'BitCoin', 8);
         $this->assertCurrencyEquals('BTC', -1, 'BitCoin', 8, $bitCoin);
     }
 
-    public function testOfReturnsSameInstance() : void
+    public function testOfReturnsSameInstance(): void
     {
         self::assertSame(Currency::of('EUR'), Currency::of('EUR'));
     }
 
     #[DataProvider('providerOfCountry')]
-    public function testOfCountry(string $countryCode, string $expected) : void
+    public function testOfCountry(string $countryCode, string $expected): void
     {
         if ($this->isExceptionClass($expected)) {
             $this->expectException($expected);
@@ -81,7 +84,7 @@ class CurrencyTest extends AbstractTestCase
         }
     }
 
-    public static function providerOfCountry() : array
+    public static function providerOfCountry(): array
     {
         return [
             ['CA', 'CAD'],
@@ -98,13 +101,13 @@ class CurrencyTest extends AbstractTestCase
         ];
     }
 
-    public function testCreateWithNegativeFractionDigits() : void
+    public function testCreateWithNegativeFractionDigits(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         new Currency('BTC', 0, 'BitCoin', -1);
     }
 
-    public function testIs() : void
+    public function testIs(): void
     {
         $currency = Currency::of('EUR');
 
@@ -130,7 +133,7 @@ class CurrencyTest extends AbstractTestCase
     public static function providerJsonSerialize(): array
     {
         return [
-            [Currency::of('USD'), 'USD']
+            [Currency::of('USD'), 'USD'],
         ];
     }
 }

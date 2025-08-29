@@ -6,6 +6,8 @@ namespace Brick\Money;
 
 use Brick\Math\BigRational;
 
+use function is_int;
+
 /**
  * Container for monies in different currencies.
  *
@@ -26,10 +28,8 @@ final class MoneyBag implements MoneyContainer
      * Non-ISO (non-numeric) currency codes are accepted.
      *
      * @param Currency|string|int $currency The Currency instance, currency code or ISO numeric currency code.
-     *
-     * @return BigRational
      */
-    public function getAmount(Currency|string|int $currency) : BigRational
+    public function getAmount(Currency|string|int $currency): BigRational
     {
         if (is_int($currency)) {
             $currencyCode = (string) Currency::of($currency);
@@ -43,7 +43,7 @@ final class MoneyBag implements MoneyContainer
     /**
      * Returns the amounts contained in this bag, as rational numbers, indexed by currency code.
      */
-    public function getAmounts() : array
+    public function getAmounts(): array
     {
         return $this->amounts;
     }
@@ -55,7 +55,7 @@ final class MoneyBag implements MoneyContainer
      *
      * @return MoneyBag This instance.
      */
-    public function add(MoneyContainer $money) : MoneyBag
+    public function add(MoneyContainer $money): MoneyBag
     {
         foreach ($money->getAmounts() as $currencyCode => $amount) {
             $this->amounts[$currencyCode] = $this->getAmount($currencyCode)->plus($amount);
@@ -71,7 +71,7 @@ final class MoneyBag implements MoneyContainer
      *
      * @return MoneyBag This instance.
      */
-    public function subtract(MoneyContainer $money) : MoneyBag
+    public function subtract(MoneyContainer $money): MoneyBag
     {
         foreach ($money->getAmounts() as $currencyCode => $amount) {
             $this->amounts[$currencyCode] = $this->getAmount($currencyCode)->minus($amount);

@@ -18,7 +18,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 class CashContextTest extends AbstractTestCase
 {
     #[DataProvider('providerApplyTo')]
-    public function testApplyTo(int $step, string $amount, string $currency, RoundingMode $roundingMode, string $expected) : void
+    public function testApplyTo(int $step, string $amount, string $currency, RoundingMode $roundingMode, string $expected): void
     {
         $amount = BigNumber::of($amount);
         $currency = Currency::of($currency);
@@ -36,7 +36,7 @@ class CashContextTest extends AbstractTestCase
         }
     }
 
-    public static function providerApplyTo() : array
+    public static function providerApplyTo(): array
     {
         return [
             [1, '1', 'USD', RoundingMode::UNNECESSARY, '1.00'],
@@ -63,7 +63,7 @@ class CashContextTest extends AbstractTestCase
         ];
     }
 
-    public function testGetStep() : void
+    public function testGetStep(): void
     {
         $context = new CashContext(5);
         self::assertSame(5, $context->getStep());

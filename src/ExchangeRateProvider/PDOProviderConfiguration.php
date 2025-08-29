@@ -74,7 +74,7 @@ final class PDOProviderConfiguration
         }
 
         if ($targetCurrencyCode === null && $targetCurrencyColumnName === null) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 'Invalid configuration: one of $targetCurrencyCode or $targetCurrencyColumnName must be set.',
             );
         }

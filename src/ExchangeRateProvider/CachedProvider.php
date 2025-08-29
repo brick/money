@@ -26,15 +26,13 @@ final class CachedProvider implements ExchangeRateProvider
 
     /**
      * Class constructor.
-     *
-     * @param ExchangeRateProvider $provider
      */
     public function __construct(ExchangeRateProvider $provider)
     {
         $this->provider = $provider;
     }
 
-    public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode) : BigNumber|int|float|string
+    public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode): BigNumber|int|float|string
     {
         if (isset($this->exchangeRates[$sourceCurrencyCode][$targetCurrencyCode])) {
             return $this->exchangeRates[$sourceCurrencyCode][$targetCurrencyCode];
@@ -51,10 +49,8 @@ final class CachedProvider implements ExchangeRateProvider
      * Invalidates the cache.
      *
      * This forces the exchange rates to be fetched again from the underlying provider.
-     *
-     * @return void
      */
-    public function invalidate() : void
+    public function invalidate(): void
     {
         $this->exchangeRates = [];
     }

@@ -16,7 +16,7 @@ use PHPUnit\Framework\Attributes\Depends;
  */
 class MoneyBagTest extends AbstractTestCase
 {
-    public function testEmptyMoneyBag() : void
+    public function testEmptyMoneyBag(): void
     {
         $moneyBag = new MoneyBag();
 
@@ -27,7 +27,7 @@ class MoneyBagTest extends AbstractTestCase
         }
     }
 
-    public function testAddSubtractMoney() : MoneyBag
+    public function testAddSubtractMoney(): MoneyBag
     {
         $moneyBag = new MoneyBag();
 
@@ -53,7 +53,7 @@ class MoneyBagTest extends AbstractTestCase
     }
 
     #[Depends('testAddSubtractMoney')]
-    public function testAddCustomCurrency(MoneyBag $moneyBag) : void
+    public function testAddCustomCurrency(MoneyBag $moneyBag): void
     {
         $moneyBag->add(Money::of('0.1234', new Currency('BTC', 0, 'Bitcoin', 8)));
         $this->assertMoneyBagContains(['EUR' => '21284003/60000', 'JPY' => '4.1234', 'BTC' => '0.1234'], $moneyBag);

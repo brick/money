@@ -11,34 +11,20 @@ use Brick\Money\Money;
 use Brick\Money\MoneyComparator;
 use PHPUnit\Framework\Attributes\DataProvider;
 
+use function array_map;
+
 /**
  * Tests for class MoneyComparator.
  */
 class MoneyComparatorTest extends AbstractTestCase
 {
-    private function getExchangeRateProvider() : ConfigurableProvider
-    {
-        $provider = new ConfigurableProvider();
-
-        $provider->setExchangeRate('EUR', 'USD', 1.1);
-        $provider->setExchangeRate('USD', 'EUR', 0.9);
-
-        $provider->setExchangeRate('USD', 'BSD', 1);
-        $provider->setExchangeRate('BSD', 'USD', 1);
-
-        $provider->setExchangeRate('EUR', 'GBP', 0.8);
-        $provider->setExchangeRate('GBP', 'EUR', 1.2);
-
-        return $provider;
-    }
-
     /**
      * @param array      $a   The money to compare.
      * @param array      $b   The money to compare to.
      * @param int|string $cmp The expected comparison value, or an exception class.
      */
     #[DataProvider('providerCompare')]
-    public function testCompare(array $a, array $b, int|string $cmp) : void
+    public function testCompare(array $a, array $b, int|string $cmp): void
     {
         $comparator = new MoneyComparator($this->getExchangeRateProvider());
 
@@ -57,7 +43,7 @@ class MoneyComparatorTest extends AbstractTestCase
         self::assertSame($cmp === 0, $comparator->isEqual($a, $b));
     }
 
-    public static function providerCompare() : array
+    public static function providerCompare(): array
     {
         return [
             [['1.00', 'EUR'], ['1', 'EUR'], 0],
@@ -90,7 +76,7 @@ class MoneyComparatorTest extends AbstractTestCase
      * @param string $expectedMin The expected minimum money, or an exception class.
      */
     #[DataProvider('providerMin')]
-    public function testMin(array $monies, string $expectedMin) : void
+    public function testMin(array $monies, string $expectedMin): void
     {
         $comparator = new MoneyComparator($this->getExchangeRateProvider());
 
@@ -110,7 +96,7 @@ class MoneyComparatorTest extends AbstractTestCase
         }
     }
 
-    public static function providerMin() : array
+    public static function providerMin(): array
     {
         return [
             [[['1.00', 'EUR'], ['1.09', 'USD']], 'USD 1.09'],
@@ -127,7 +113,7 @@ class MoneyComparatorTest extends AbstractTestCase
      * @param string $expectedMin The expected maximum money, or an exception class.
      */
     #[DataProvider('providerMax')]
-    public function testMax(array $monies, string $expectedMin) : void
+    public function testMax(array $monies, string $expectedMin): void
     {
         $comparator = new MoneyComparator($this->getExchangeRateProvider());
 
@@ -147,7 +133,7 @@ class MoneyComparatorTest extends AbstractTestCase
         }
     }
 
-    public static function providerMax() : array
+    public static function providerMax(): array
     {
         return [
             [[['1.00', 'EUR'], ['1.09', 'USD']], 'EUR 1.00'],
@@ -159,5 +145,21 @@ class MoneyComparatorTest extends AbstractTestCase
             [[['1.05', 'EUR'], ['1.00', 'GBP'], ['1.19', 'EUR']], 'GBP 1.00'],
             [[['1.05', 'EUR'], ['1.00', 'GBP'], ['1.2001', 'EUR', new AutoContext()]], 'EUR 1.2001'],
         ];
+    }
+
+    private function getExchangeRateProvider(): ConfigurableProvider
+    {
+        $provider = new ConfigurableProvider();
+
+        $provider->setExchangeRate('EUR', 'USD', 1.1);
+        $provider->setExchangeRate('USD', 'EUR', 0.9);
+
+        $provider->setExchangeRate('USD', 'BSD', 1);
+        $provider->setExchangeRate('BSD', 'USD', 1);
+
+        $provider->setExchangeRate('EUR', 'GBP', 0.8);
+        $provider->setExchangeRate('GBP', 'EUR', 1.2);
+
+        return $provider;
     }
 }

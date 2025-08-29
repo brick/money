@@ -18,7 +18,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 class CustomContextTest extends AbstractTestCase
 {
     #[DataProvider('providerApplyTo')]
-    public function testApplyTo(int $scale, int $step, string $amount, string $currency, RoundingMode $roundingMode, string $expected) : void
+    public function testApplyTo(int $scale, int $step, string $amount, string $currency, RoundingMode $roundingMode, string $expected): void
     {
         $amount = BigNumber::of($amount);
         $currency = Currency::of($currency);
@@ -36,7 +36,7 @@ class CustomContextTest extends AbstractTestCase
         }
     }
 
-    public static function providerApplyTo() : array
+    public static function providerApplyTo(): array
     {
         return [
             [2, 1, '1', 'USD', RoundingMode::UNNECESSARY, '1.00'],
@@ -84,7 +84,7 @@ class CustomContextTest extends AbstractTestCase
         ];
     }
 
-    public function testGetScaleGetStep() : void
+    public function testGetScaleGetStep(): void
     {
         $context = new CustomContext(8, 50);
         self::assertSame(8, $context->getScale());

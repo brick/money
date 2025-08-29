@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 use Brick\VarExporter\VarExporter;
 
+use const PHP_EOL;
+
 require __DIR__ . '/vendor/autoload.php';
 
 /**
@@ -19,7 +21,7 @@ require __DIR__ . '/vendor/autoload.php';
  * If country names present in the ISO currency file do not map to an actual country as defined by ISO 3166,
  * for example "EUROPEAN UNION", the corresponding value must be NULL.
  */
-$countryCodes= [
+$countryCodes = [
     'AFGHANISTAN' => 'AF',
     'ÅLAND ISLANDS' => 'AX',
     'ALBANIA' => 'AL',
@@ -310,7 +312,7 @@ foreach ($countries as $country) {
     }
 
     if (! array_key_exists($countryName, $countryCodes)) {
-        throw new \RuntimeException('No country code found for ' . $countryName);
+        throw new RuntimeException('No country code found for ' . $countryName);
     }
 
     $countryCode = $countryCodes[$countryName];
@@ -330,7 +332,7 @@ foreach ($countries as $country) {
 
     if (isset($currencies[$currencyCode])) {
         if ($currencies[$currencyCode] !== $value) {
-            throw new \RuntimeException('Inconsistent values found for currency code ' . $currencyCode);
+            throw new RuntimeException('Inconsistent values found for currency code ' . $currencyCode);
         }
     } else {
         $currencies[$currencyCode] = $value;
@@ -354,13 +356,7 @@ exportToFile(__DIR__ . '/data/country-to-currency.php', $countryToCurrency);
 
 printf('Exported %d currencies in %d countries.' . PHP_EOL, count($currencies), count($countryToCurrency));
 
-/**
- * @param string $file
- * @param array  $data
- *
- * @return void
- */
-function exportToFile(string $file, array $data) : void
+function exportToFile(string $file, array $data): void
 {
     $data = '<?php ' . VarExporter::export($data, VarExporter::ADD_RETURN | VarExporter::INLINE_SCALAR_LIST);
 
@@ -372,16 +368,10 @@ function exportToFile(string $file, array $data) : void
     }
 }
 
-/**
- * @param DOMElement $element
- * @param string     $name
- *
- * @return string|null
- */
-function getDomElementString(DOMElement $element, string $name) : ?string
+function getDomElementString(DOMElement $element, string $name): ?string
 {
     foreach ($element->getElementsByTagName($name) as $child) {
-        /** @var $child DOMElement */
+        /** @var DOMElement $child */
         return $child->textContent;
     }
 
@@ -389,64 +379,48 @@ function getDomElementString(DOMElement $element, string $name) : ?string
 }
 
 /**
- * @param string $name
- *
- * @return string
- *
  * @throws RuntimeException
  */
-function checkCurrencyName(string $name) : string
+function checkCurrencyName(string $name): string
 {
     if ($name === '' || ! mb_check_encoding($name, 'UTF-8')) {
-        throw new \RuntimeException('Invalid currency name: ' . $name);
+        throw new RuntimeException('Invalid currency name: ' . $name);
     }
 
     return $name;
 }
 
 /**
- * @param string $currencyCode
- *
- * @return string
- *
  * @throws RuntimeException
  */
-function checkCurrencyCode(string $currencyCode) : string
+function checkCurrencyCode(string $currencyCode): string
 {
     if (preg_match('/^[A-Z]{3}$/', $currencyCode) !== 1) {
-        throw new \RuntimeException('Invalid currency code: ' . $currencyCode);
+        throw new RuntimeException('Invalid currency code: ' . $currencyCode);
     }
 
     return $currencyCode;
 }
 
 /**
- * @param string $numericCode
- *
- * @return int
- *
  * @throws RuntimeException
  */
-function checkNumericCode(string $numericCode) : int
+function checkNumericCode(string $numericCode): int
 {
     if (preg_match('/^[0-9]{3}$/', $numericCode) !== 1) {
-        throw new \RuntimeException('Invalid numeric code: ' . $numericCode);
+        throw new RuntimeException('Invalid numeric code: ' . $numericCode);
     }
 
     return (int) ltrim($numericCode, '0');
 }
 
 /**
- * @param string $minorUnits
- *
- * @return int
- *
  * @throws RuntimeException
  */
-function checkMinorUnits(string $minorUnits) : int
+function checkMinorUnits(string $minorUnits): int
 {
     if (preg_match('/^[0-9]{1}$/', $minorUnits) !== 1) {
-        throw new \RuntimeException('Invalid minor unit: ' . $minorUnits);
+        throw new RuntimeException('Invalid minor unit: ' . $minorUnits);
     }
 
     return (int) $minorUnits;

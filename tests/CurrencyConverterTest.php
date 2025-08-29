@@ -23,16 +23,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
  */
 class CurrencyConverterTest extends AbstractTestCase
 {
-    private function createCurrencyConverter() : CurrencyConverter
-    {
-        $exchangeRateProvider = new ConfigurableProvider();
-        $exchangeRateProvider->setExchangeRate('EUR', 'USD', '1.1');
-        $exchangeRateProvider->setExchangeRate('USD', 'EUR', '10/11');
-        $exchangeRateProvider->setExchangeRate('BSD', 'USD', 1);
-
-        return new CurrencyConverter($exchangeRateProvider);
-    }
-
     /**
      * @param array        $money          The base money.
      * @param string       $toCurrency     The currency code to convert to.
@@ -40,7 +30,7 @@ class CurrencyConverterTest extends AbstractTestCase
      * @param string       $expectedResult The expected money's string representation, or an exception class name.
      */
     #[DataProvider('providerConvertMoney')]
-    public function testConvertMoney(array $money, string $toCurrency, RoundingMode $roundingMode, string $expectedResult) : void
+    public function testConvertMoney(array $money, string $toCurrency, RoundingMode $roundingMode, string $expectedResult): void
     {
         $money = Money::of(...$money);
         $currencyConverter = $this->createCurrencyConverter();
@@ -56,7 +46,7 @@ class CurrencyConverterTest extends AbstractTestCase
         }
     }
 
-    public static function providerConvertMoney() : array
+    public static function providerConvertMoney(): array
     {
         return [
             [['1.23', 'EUR'], 'USD', RoundingMode::DOWN, 'USD 1.35'],
@@ -82,7 +72,7 @@ class CurrencyConverterTest extends AbstractTestCase
      * @param string       $total        The expected total.
      */
     #[DataProvider('providerConvertMoneyBag')]
-    public function testConvertMoneyBag(array $monies, string $currency, Context $context, RoundingMode $roundingMode, string $total) : void
+    public function testConvertMoneyBag(array $monies, string $currency, Context $context, RoundingMode $roundingMode, string $total): void
     {
         $exchangeRateProvider = new ConfigurableProvider();
         $exchangeRateProvider->setExchangeRate('EUR', 'USD', '1.23456789');
@@ -99,14 +89,14 @@ class CurrencyConverterTest extends AbstractTestCase
         $this->assertMoneyIs($total, $currencyConverter->convert($moneyBag, $currency, $context, $roundingMode));
     }
 
-    public static function providerConvertMoneyBag() : array
+    public static function providerConvertMoneyBag(): array
     {
         return [
             [[['354.40005', 'EUR'], ['3.1234', 'JPY']], 'USD', new DefaultContext(), RoundingMode::DOWN, 'USD 437.56'],
             [[['354.40005', 'EUR'], ['3.1234', 'JPY']], 'USD', new DefaultContext(), RoundingMode::UP, 'USD 437.57'],
 
             [[['1234.56', 'EUR'], ['31562', 'JPY']], 'USD', new CustomContext(6), RoundingMode::DOWN, 'USD 1835.871591'],
-            [[['1234.56', 'EUR'], ['31562', 'JPY']], 'USD', new CustomContext(6), RoundingMode::UP, 'USD 1835.871592']
+            [[['1234.56', 'EUR'], ['31562', 'JPY']], 'USD', new CustomContext(6), RoundingMode::UP, 'USD 1835.871592'],
         ];
     }
 
@@ -116,7 +106,7 @@ class CurrencyConverterTest extends AbstractTestCase
      * @param string $expectedTotal The expected total.
      */
     #[DataProvider('providerConvertMoneyBagToRational')]
-    public function testConvertMoneyBagToRational(array $monies, string $currency, string $expectedTotal) : void
+    public function testConvertMoneyBagToRational(array $monies, string $currency, string $expectedTotal): void
     {
         $exchangeRateProvider = new ConfigurableProvider();
         $exchangeRateProvider->setExchangeRate('EUR', 'USD', '1.123456789');
@@ -135,11 +125,11 @@ class CurrencyConverterTest extends AbstractTestCase
         $this->assertRationalMoneyEquals($expectedTotal, $actualTotal);
     }
 
-    public static function providerConvertMoneyBagToRational() : array
+    public static function providerConvertMoneyBagToRational(): array
     {
         return [
             [[['354.40005', 'EUR'], ['3.1234', 'JPY']], 'USD', 'USD 19909199529475444524673813/50000000000000000000000'],
-            [[['1234.56', 'EUR'], ['31562', 'JPY']], 'USD', 'USD 8493491351479471587209/5000000000000000000']
+            [[['1234.56', 'EUR'], ['31562', 'JPY']], 'USD', 'USD 8493491351479471587209/5000000000000000000'],
         ];
     }
 
@@ -150,7 +140,7 @@ class CurrencyConverterTest extends AbstractTestCase
      * @param string       $expectedResult The expected money's string representation, or an exception class name.
      */
     #[DataProvider('providerConvertRationalMoney')]
-    public function testConvertRationalMoney(array $money, string $toCurrency, RoundingMode $roundingMode, string $expectedResult) : void
+    public function testConvertRationalMoney(array $money, string $toCurrency, RoundingMode $roundingMode, string $expectedResult): void
     {
         $currencyConverter = $this->createCurrencyConverter();
 
@@ -167,7 +157,7 @@ class CurrencyConverterTest extends AbstractTestCase
         }
     }
 
-    public static function providerConvertRationalMoney() : array
+    public static function providerConvertRationalMoney(): array
     {
         return [
             [['7/9', 'USD'], 'EUR', RoundingMode::DOWN, 'EUR 0.70'],
@@ -175,5 +165,15 @@ class CurrencyConverterTest extends AbstractTestCase
             [['4/3', 'EUR'], 'USD', RoundingMode::DOWN, 'USD 1.46'],
             [['4/3', 'EUR'], 'USD', RoundingMode::UP, 'USD 1.47'],
         ];
+    }
+
+    private function createCurrencyConverter(): CurrencyConverter
+    {
+        $exchangeRateProvider = new ConfigurableProvider();
+        $exchangeRateProvider->setExchangeRate('EUR', 'USD', '1.1');
+        $exchangeRateProvider->setExchangeRate('USD', 'EUR', '10/11');
+        $exchangeRateProvider->setExchangeRate('BSD', 'USD', 1);
+
+        return new CurrencyConverter($exchangeRateProvider);
     }
 }

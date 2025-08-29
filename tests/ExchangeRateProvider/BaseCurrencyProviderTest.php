@@ -17,30 +17,19 @@ use PHPUnit\Framework\Attributes\DataProvider;
  */
 class BaseCurrencyProviderTest extends AbstractTestCase
 {
-    private function getExchangeRateProvider() : ExchangeRateProvider
-    {
-        $provider = new ConfigurableProvider();
-
-        $provider->setExchangeRate('USD', 'EUR', 0.9);
-        $provider->setExchangeRate('USD', 'GBP', 0.8);
-        $provider->setExchangeRate('USD', 'CAD', 1.1);
-
-        return new BaseCurrencyProvider($provider, 'USD');
-    }
-
     /**
      * @param string $sourceCurrencyCode The code of the source currency.
      * @param string $targetCurrencyCode The code of the target currency.
      * @param string $exchangeRate       The expected exchange rate, rounded DOWN to 6 decimals.
      */
     #[DataProvider('providerGetExchangeRate')]
-    public function testGetExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode, string $exchangeRate) : void
+    public function testGetExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode, string $exchangeRate): void
     {
         $rate = $this->getExchangeRateProvider()->getExchangeRate($sourceCurrencyCode, $targetCurrencyCode);
         self::assertSame($exchangeRate, (string) $rate->toScale(6, RoundingMode::DOWN));
     }
 
-    public static function providerGetExchangeRate() : array
+    public static function providerGetExchangeRate(): array
     {
         return [
             ['USD', 'EUR', '0.900000'],
@@ -61,7 +50,7 @@ class BaseCurrencyProviderTest extends AbstractTestCase
     }
 
     #[DataProvider('providerReturnBigNumber')]
-    public function testReturnBigNumber(BigNumber|float|int|string $rate) : void
+    public function testReturnBigNumber(BigNumber|float|int|string $rate): void
     {
         $configurableProvider = new ConfigurableProvider();
         $configurableProvider->setExchangeRate('USD', 'EUR', $rate);
@@ -69,11 +58,22 @@ class BaseCurrencyProviderTest extends AbstractTestCase
 
         $rate = $baseProvider->getExchangeRate('USD', 'EUR');
 
-        $this->assertInstanceOf(BigNumber::class, $rate);
+        self::assertInstanceOf(BigNumber::class, $rate);
     }
 
-    public static function providerReturnBigNumber() : array
+    public static function providerReturnBigNumber(): array
     {
         return [[1], [1.1], ['1.0'], [BigNumber::of('1')]];
+    }
+
+    private function getExchangeRateProvider(): ExchangeRateProvider
+    {
+        $provider = new ConfigurableProvider();
+
+        $provider->setExchangeRate('USD', 'EUR', 0.9);
+        $provider->setExchangeRate('USD', 'GBP', 0.8);
+        $provider->setExchangeRate('USD', 'CAD', 1.1);
+
+        return new BaseCurrencyProvider($provider, 'USD');
     }
 }

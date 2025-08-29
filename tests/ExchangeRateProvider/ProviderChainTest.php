@@ -20,7 +20,7 @@ class ProviderChainTest extends AbstractTestCase
 
     private static ExchangeRateProvider $provider2;
 
-    public static function setUpBeforeClass() : void
+    public static function setUpBeforeClass(): void
     {
         $provider = new ConfigurableProvider();
         $provider->setExchangeRate('USD', 'GBP', 0.7);
@@ -35,7 +35,7 @@ class ProviderChainTest extends AbstractTestCase
         self::$provider2 = $provider;
     }
 
-    public function testUnknownExchangeRate() : void
+    public function testUnknownExchangeRate(): void
     {
         $providerChain = new ProviderChain();
 
@@ -43,7 +43,7 @@ class ProviderChainTest extends AbstractTestCase
         $providerChain->getExchangeRate('USD', 'GBP');
     }
 
-    public function testAddFirstProvider() : ProviderChain
+    public function testAddFirstProvider(): ProviderChain
     {
         $provider = new ProviderChain();
         $provider->addExchangeRateProvider(self::$provider1);
@@ -55,7 +55,7 @@ class ProviderChainTest extends AbstractTestCase
     }
 
     #[Depends('testAddFirstProvider')]
-    public function testAddSecondProvider(ProviderChain $provider) : ProviderChain
+    public function testAddSecondProvider(ProviderChain $provider): ProviderChain
     {
         $provider->addExchangeRateProvider(self::$provider2);
 
@@ -67,7 +67,7 @@ class ProviderChainTest extends AbstractTestCase
     }
 
     #[Depends('testAddSecondProvider')]
-    public function testRemoveProvider(ProviderChain $provider) : void
+    public function testRemoveProvider(ProviderChain $provider): void
     {
         $provider->removeExchangeRateProvider(self::$provider1);
 

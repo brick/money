@@ -11,6 +11,7 @@ use Brick\Money\Context\AutoContext;
 use Brick\Money\Context\CashContext;
 use Brick\Money\Currency;
 use Brick\Money\Tests\AbstractTestCase;
+use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
@@ -19,7 +20,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 class AutoContextTest extends AbstractTestCase
 {
     #[DataProvider('providerApplyTo')]
-    public function testApplyTo(string $amount, string $currency, RoundingMode $roundingMode, string $expected) : void
+    public function testApplyTo(string $amount, string $currency, RoundingMode $roundingMode, string $expected): void
     {
         $amount = BigNumber::of($amount);
         $currency = Currency::of($currency);
@@ -37,18 +38,18 @@ class AutoContextTest extends AbstractTestCase
         }
     }
 
-    public static function providerApplyTo() : array
+    public static function providerApplyTo(): array
     {
         return [
             ['1', 'USD', RoundingMode::UNNECESSARY, '1'],
             ['1.23', 'JPY', RoundingMode::UNNECESSARY, '1.23'],
             ['123/5000', 'EUR', RoundingMode::UNNECESSARY, '0.0246'],
             ['5/7', 'EUR', RoundingMode::UNNECESSARY, RoundingNecessaryException::class],
-            ['5/7', 'EUR', RoundingMode::DOWN, \InvalidArgumentException::class]
+            ['5/7', 'EUR', RoundingMode::DOWN, InvalidArgumentException::class],
         ];
     }
 
-    public function testGetStep() : void
+    public function testGetStep(): void
     {
         $context = new CashContext(5);
         self::assertSame(5, $context->getStep());

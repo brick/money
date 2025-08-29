@@ -9,6 +9,8 @@ use Brick\Money\ExchangeRateProvider\PDOProvider;
 use Brick\Money\ExchangeRateProvider\PDOProviderConfiguration;
 use Brick\Money\Tests\AbstractTestCase;
 use Closure;
+use InvalidArgumentException;
+use PDO;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 
@@ -22,15 +24,15 @@ class PDOProviderTest extends AbstractTestCase
      * @param Closure(): PDOProviderConfiguration $getConfiguration
      */
     #[DataProvider('providerConstructorWithInvalidConfiguration')]
-    public function testConfigurationConstructorThrows(Closure $getConfiguration, string $exceptionMessage) : void
+    public function testConfigurationConstructorThrows(Closure $getConfiguration, string $exceptionMessage): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage($exceptionMessage);
 
         $getConfiguration();
     }
 
-    public static function providerConstructorWithInvalidConfiguration() : array
+    public static function providerConstructorWithInvalidConfiguration(): array
     {
         return [
             [fn () => new PDOProviderConfiguration(
@@ -72,9 +74,9 @@ class PDOProviderTest extends AbstractTestCase
      * @param float|string $expectedResult     The expected exchange rate, or an exception class if expected.
      */
     #[DataProvider('providerGetExchangeRate')]
-    public function testGetExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode, float|string $expectedResult) : void
+    public function testGetExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode, float|string $expectedResult): void
     {
-        $pdo = new \PDO('sqlite::memory:');
+        $pdo = new PDO('sqlite::memory:');
 
         $pdo->query('
             CREATE TABLE exchange_rate (
@@ -106,11 +108,11 @@ class PDOProviderTest extends AbstractTestCase
         $actualRate = $provider->getExchangeRate($sourceCurrencyCode, $targetCurrencyCode);
 
         if (! $this->isExceptionClass($expectedResult)) {
-            self::assertEquals($expectedResult, $actualRate);
+            self::assertSame($expectedResult, $actualRate);
         }
     }
 
-    public static function providerGetExchangeRate() : array
+    public static function providerGetExchangeRate(): array
     {
         return [
             ['USD', 'EUR', 0.9],
@@ -127,9 +129,9 @@ class PDOProviderTest extends AbstractTestCase
      * @param float|string $expectedResult     The expected exchange rate, or an exception class if expected.
      */
     #[DataProvider('providerWithFixedSourceCurrency')]
-    public function testWithFixedSourceCurrency(string $sourceCurrencyCode, string $targetCurrencyCode, float|string $expectedResult) : void
+    public function testWithFixedSourceCurrency(string $sourceCurrencyCode, string $targetCurrencyCode, float|string $expectedResult): void
     {
-        $pdo = new \PDO('sqlite::memory:');
+        $pdo = new PDO('sqlite::memory:');
 
         $pdo->query('
             CREATE TABLE exchange_rate (
@@ -159,11 +161,11 @@ class PDOProviderTest extends AbstractTestCase
         $actualRate = $provider->getExchangeRate($sourceCurrencyCode, $targetCurrencyCode);
 
         if (! $this->isExceptionClass($expectedResult)) {
-            self::assertEquals($expectedResult, $actualRate);
+            self::assertSame($expectedResult, $actualRate);
         }
     }
 
-    public static function providerWithFixedSourceCurrency() : array
+    public static function providerWithFixedSourceCurrency(): array
     {
         return [
             ['EUR', 'USD', 1.1],
@@ -180,9 +182,9 @@ class PDOProviderTest extends AbstractTestCase
      * @param float|string $expectedResult     The expected exchange rate, or an exception class if expected.
      */
     #[DataProvider('providerWithFixedTargetCurrency')]
-    public function testWithFixedTargetCurrency(string $sourceCurrencyCode, string $targetCurrencyCode, float|string $expectedResult) : void
+    public function testWithFixedTargetCurrency(string $sourceCurrencyCode, string $targetCurrencyCode, float|string $expectedResult): void
     {
-        $pdo = new \PDO('sqlite::memory:');
+        $pdo = new PDO('sqlite::memory:');
 
         $pdo->query('
             CREATE TABLE exchange_rate (
@@ -212,11 +214,11 @@ class PDOProviderTest extends AbstractTestCase
         $actualRate = $provider->getExchangeRate($sourceCurrencyCode, $targetCurrencyCode);
 
         if (! $this->isExceptionClass($expectedResult)) {
-            self::assertEquals($expectedResult, $actualRate);
+            self::assertSame($expectedResult, $actualRate);
         }
     }
 
-    public static function providerWithFixedTargetCurrency() : array
+    public static function providerWithFixedTargetCurrency(): array
     {
         return [
             ['USD', 'EUR', 0.9],
@@ -234,9 +236,9 @@ class PDOProviderTest extends AbstractTestCase
      * @param float|string $expectedResult     The expected exchange rate, or an exception class if expected.
      */
     #[DataProvider('providerWithParameters')]
-    public function testWithParameters(string $sourceCurrencyCode, string $targetCurrencyCode, array $parameters, float|string $expectedResult) : void
+    public function testWithParameters(string $sourceCurrencyCode, string $targetCurrencyCode, array $parameters, float|string $expectedResult): void
     {
-        $pdo = new \PDO('sqlite::memory:');
+        $pdo = new PDO('sqlite::memory:');
 
         $pdo->query('
             CREATE TABLE exchange_rate (
@@ -273,11 +275,11 @@ class PDOProviderTest extends AbstractTestCase
         $actualRate = $provider->getExchangeRate($sourceCurrencyCode, $targetCurrencyCode);
 
         if (! $this->isExceptionClass($expectedResult)) {
-            self::assertEquals($expectedResult, $actualRate);
+            self::assertSame($expectedResult, $actualRate);
         }
     }
 
-    public static function providerWithParameters() : array
+    public static function providerWithParameters(): array
     {
         return [
             ['EUR', 'USD', [2017, 8], 1.1],
