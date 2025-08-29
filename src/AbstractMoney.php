@@ -42,10 +42,6 @@ abstract class AbstractMoney implements MoneyContainer, Stringable, JsonSerializ
 
     /**
      * Required by interface MoneyContainer.
-     *
-     * @psalm-return array<string, BigNumber>
-     *
-     * @return BigNumber[]
      */
     final public function getAmounts() : array
     {

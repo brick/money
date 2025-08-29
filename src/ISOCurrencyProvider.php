@@ -16,7 +16,7 @@ final class ISOCurrencyProvider
     /**
      * The raw currency data, indexed by currency code.
      *
-     * @psalm-var array<string, array{string, int, string, int}>
+     * @var array<string, array{string, int, string, int}>
      */
     private readonly array $currencyData;
 
@@ -25,7 +25,7 @@ final class ISOCurrencyProvider
      *
      * This property is set on-demand, as soon as required.
      *
-     * @psalm-var array<int, string>|null
+     * @var array<int, string>|null
      */
     private ?array $numericToCurrency = null;
 
@@ -34,7 +34,7 @@ final class ISOCurrencyProvider
      *
      * This property is set on-demand, as soon as required.
      *
-     * @psalm-var array<string, list<string>>|null
+     * @var array<string, list<string>>|null
      */
     private ?array $countryToCurrency = null;
 
@@ -43,9 +43,7 @@ final class ISOCurrencyProvider
      *
      * The instances are created on-demand, as soon as they are requested.
      *
-     * @psalm-var array<string, Currency>
-     *
-     * @var Currency[]
+     * @var array<string, Currency>
      */
     private array $currencies = [];
 
@@ -117,9 +115,7 @@ final class ISOCurrencyProvider
     /**
      * Returns all the available currencies.
      *
-     * @psalm-return array<string, Currency>
-     *
-     * @return Currency[] The currencies, indexed by currency code.
+     * @return array<string, Currency> The currencies, indexed by currency code.
      */
     public function getAvailableCurrencies() : array
     {

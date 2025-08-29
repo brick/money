@@ -462,9 +462,7 @@ final class Money extends AbstractMoney
      *
      * @param BigNumber|int|float|string $that The divisor. Must be convertible to a BigInteger.
      *
-     * @return Money[] The quotient and the remainder.
-     *
-     * @psalm-return array{Money, Money}
+     * @return array{Money, Money} The quotient and the remainder.
      *
      * @throws MathException If the divisor cannot be converted to a BigInteger.
      */
@@ -605,11 +603,9 @@ final class Money extends AbstractMoney
     }
 
     /**
-     * @param int[] $ratios
-     * @psalm-param non-empty-list<int> $ratios
+     * @param non-empty-list<int> $ratios
      *
-     * @return int[]
-     * @psalm-return non-empty-list<int>
+     * @return non-empty-list<int>
      */
     private function simplifyRatios(array $ratios): array
     {
@@ -619,9 +615,7 @@ final class Money extends AbstractMoney
     }
 
     /**
-     * @param int[] $values
-     *
-     * @psalm-param non-empty-list<int> $values
+     * @param non-empty-list<int> $values
      */
     private function gcdOfMultipleInt(array $values): int
     {
