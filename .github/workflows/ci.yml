@@ -28,6 +28,12 @@ jobs:
       - name: Run Psalm
         run: vendor/bin/psalm --show-info=false --find-unused-psalm-suppress --no-progress
 
+  coding-standard:
+    name: Coding Standard
+    uses: brick/coding-standard/.github/workflows/coding-standard.yml@v1
+    with:
+      working-directory: "tools/ecs"
+
   phpunit:
     name: PHPUnit
     runs-on: ubuntu-latest
