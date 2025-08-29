@@ -31,9 +31,6 @@ final class CashContext implements Context
         $this->step = $step;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function applyTo(BigNumber $amount, Currency $currency, RoundingMode $roundingMode) : BigDecimal
     {
         $scale = $currency->getDefaultFractionDigits();
@@ -49,17 +46,11 @@ final class CashContext implements Context
             ->multipliedBy($this->step);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getStep() : int
     {
         return $this->step;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isFixedScale() : bool
     {
         return true;

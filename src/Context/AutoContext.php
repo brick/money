@@ -16,9 +16,6 @@ use Brick\Math\RoundingMode;
  */
 final class AutoContext implements Context
 {
-    /**
-     * {@inheritdoc}
-     */
     public function applyTo(BigNumber $amount, Currency $currency, RoundingMode $roundingMode) : BigDecimal
     {
         if ($roundingMode !== RoundingMode::UNNECESSARY) {
@@ -28,17 +25,11 @@ final class AutoContext implements Context
         return $amount->toBigDecimal()->stripTrailingZeros();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getStep() : int
     {
         return 1;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isFixedScale() : bool
     {
         return false;

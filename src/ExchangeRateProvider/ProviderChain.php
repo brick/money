@@ -54,9 +54,6 @@ final class ProviderChain implements ExchangeRateProvider
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode): BigNumber|int|float|string
     {
         foreach ($this->providers as $provider) {

@@ -33,9 +33,6 @@ class ProviderMock implements ExchangeRateProvider
         return $this->calls;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode): float
     {
         $this->calls++;

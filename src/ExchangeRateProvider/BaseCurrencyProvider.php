@@ -40,9 +40,6 @@ final class BaseCurrencyProvider implements ExchangeRateProvider
         $this->baseCurrencyCode = $baseCurrencyCode;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode): BigNumber
     {
         if ($sourceCurrencyCode === $this->baseCurrencyCode) {

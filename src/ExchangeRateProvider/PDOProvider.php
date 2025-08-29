@@ -88,9 +88,6 @@ final class PDOProvider implements ExchangeRateProvider
         $this->parameters = $parameters;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode): int|float|string
     {
         $parameters = $this->parameters;

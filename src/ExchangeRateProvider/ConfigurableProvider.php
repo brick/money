@@ -33,9 +33,6 @@ final class ConfigurableProvider implements ExchangeRateProvider
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode): BigNumber|int|float|string
     {
         if (isset($this->exchangeRates[$sourceCurrencyCode][$targetCurrencyCode])) {

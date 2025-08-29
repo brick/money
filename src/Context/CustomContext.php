@@ -37,9 +37,6 @@ final class CustomContext implements Context
         $this->step  = $step;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function applyTo(BigNumber $amount, Currency $currency, RoundingMode $roundingMode) : BigDecimal
     {
         if ($this->step === 1) {
@@ -53,17 +50,11 @@ final class CustomContext implements Context
             ->multipliedBy($this->step);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getStep() : int
     {
         return $this->step;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isFixedScale() : bool
     {
         return true;
