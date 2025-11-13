@@ -836,9 +836,9 @@ class MoneyTest extends AbstractTestCase
     }
 
     /**
-     * @param array          $money The money to test.
+     * @param array          $money     The money to test.
      * @param MoneyFormatter $formatter The money formatter to test.
-     * @param string         $expected The expected output.
+     * @param string         $expected  The expected output.
      */
     #[RequiresPhpExtension('intl')]
     #[DataProvider('providerFormatWithMoneyFormatter')]
