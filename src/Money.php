@@ -684,14 +684,14 @@ final class Money extends AbstractMoney
      */
     public function formatWith(NumberFormatter|MoneyFormatter $formatter): string
     {
-        if ($formatter instanceof MoneyFormatter) {
-            return $formatter->format($this);
+        if ($formatter instanceof NumberFormatter) {
+            return $formatter->formatCurrency(
+                $this->amount->toFloat(),
+                $this->currency->getCurrencyCode(),
+            );
         }
 
-        return $formatter->formatCurrency(
-            $this->amount->toFloat(),
-            $this->currency->getCurrencyCode(),
-        );
+        return $formatter->format($this);
     }
 
     /**
