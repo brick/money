@@ -850,11 +850,13 @@ class MoneyTest extends AbstractTestCase
 
     public static function providerFormatWithMoneyFormatter(): array
     {
-        $formatter = (new class implements MoneyFormatter {
-            public function format(Money $money): string {
-                return $money->getAmount()->toScale(2) . " " . $money->getCurrency()->__toString();
+        $formatter = (new class() implements MoneyFormatter {
+            public function format(Money $money): string
+            {
+                return $money->getAmount()->toScale(2) . ' ' . $money->getCurrency()->__toString();
             }
         });
+
         return [
             [['1.23', 'USD'], $formatter, '1.23 USD'],
             [['1.7', 'EUR'], $formatter, '1.70 EUR'],
