@@ -680,10 +680,14 @@ final class Money extends AbstractMoney
      * Note that NumberFormatter internally represents values using floating point arithmetic,
      * so discrepancies can appear when formatting very large monetary values.
      *
-     * @param NumberFormatter $formatter The formatter to format with.
+     * @param NumberFormatter|MoneyFormatter $formatter The formatter to format with.
      */
-    public function formatWith(NumberFormatter $formatter): string
+    public function formatWith(NumberFormatter|MoneyFormatter $formatter): string
     {
+        if($formatter instanceof MoneyFormatter) {
+            return $formatter->format($this);
+        }
+
         return $formatter->formatCurrency(
             $this->amount->toFloat(),
             $this->currency->getCurrencyCode(),

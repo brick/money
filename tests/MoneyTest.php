@@ -19,6 +19,7 @@ use Brick\Money\Context\DefaultContext;
 use Brick\Money\Currency;
 use Brick\Money\Exception\MoneyMismatchException;
 use Brick\Money\Money;
+use Brick\Money\MoneyFormatter;
 use Generator;
 use InvalidArgumentException;
 use NumberFormatter;
@@ -831,6 +832,32 @@ class MoneyTest extends AbstractTestCase
         return [
             [['1.23', 'USD'], 'en_US', ';', '$1;23'],
             [['1.7', 'EUR', new AutoContext()], 'fr_FR', '~', '1~70 €'],
+        ];
+    }
+
+    /**
+     * @param array          $money The money to test.
+     * @param MoneyFormatter $formatter The money formatter to test.
+     * @param string         $expected The expected output.
+     */
+    #[RequiresPhpExtension('intl')]
+    #[DataProvider('providerFormatWithMoneyFormatter')]
+    public function testFormatWithMoneyFormatter(array $money, MoneyFormatter $formatter, string $expected): void
+    {
+        $actual = Money::of(...$money)->formatWith($formatter);
+        self::assertSame($expected, $actual);
+    }
+
+    public static function providerFormatWithMoneyFormatter(): array
+    {
+        $formatter = (new class implements MoneyFormatter {
+            public function format(Money $money): string {
+                return $money->getAmount()->toScale(2) . " " . $money->getCurrency()->__toString();
+            }
+        });
+        return [
+            [['1.23', 'USD'], $formatter, '1.23 USD'],
+            [['1.7', 'EUR'], $formatter, '1.70 EUR'],
         ];
     }
 
