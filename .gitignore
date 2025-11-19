@@ -1,6 +1,7 @@
 /vendor
 /composer.lock
 /.phpunit.cache
+/.idea/
 
 /tools/*
 !/tools/ecs/composer.json

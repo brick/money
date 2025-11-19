@@ -48,9 +48,9 @@
     'CN' => ['CNY'],
     'CO' => ['COP'],
     'CR' => ['CRC'],
-    'CU' => ['CUP', 'CUC'],
+    'CU' => ['CUP'],
     'CV' => ['CVE'],
-    'CW' => ['ANG'],
+    'CW' => ['XCG'],
     'CX' => ['AUD'],
     'CY' => ['EUR'],
     'CZ' => ['CZK'],
@@ -206,7 +206,7 @@
     'SS' => ['SSP'],
     'ST' => ['STN'],
     'SV' => ['SVC', 'USD'],
-    'SX' => ['ANG'],
+    'SX' => ['XCG'],
     'SY' => ['SYP'],
     'SZ' => ['SZL'],
     'TC' => ['USD'],
@@ -244,5 +244,5 @@
     'YT' => ['EUR'],
     'ZA' => ['ZAR'],
     'ZM' => ['ZMW'],
-    'ZW' => ['ZWG']
+    'ZW' => ['ZWG'],
 ];

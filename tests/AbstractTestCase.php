@@ -9,6 +9,7 @@ use Brick\Math\BigNumber;
 use Brick\Math\BigRational;
 use Brick\Money\Context;
 use Brick\Money\Currency;
+use Brick\Money\CurrencyType;
 use Brick\Money\Money;
 use Brick\Money\MoneyBag;
 use Brick\Money\RationalMoney;
@@ -96,12 +97,13 @@ abstract class AbstractTestCase extends TestCase
         self::assertSame($expected, (string) $actual);
     }
 
-    final protected function assertCurrencyEquals(string $currencyCode, int $numericCode, string $name, int $defaultFractionDigits, Currency $currency): void
+    final protected function assertCurrencyEquals(string $currencyCode, int $numericCode, string $name, int $defaultFractionDigits, CurrencyType $currencyType, Currency $currency): void
     {
         self::assertSame($currencyCode, $currency->getCurrencyCode());
         self::assertSame($numericCode, $currency->getNumericCode());
         self::assertSame($name, $currency->getName());
         self::assertSame($defaultFractionDigits, $currency->getDefaultFractionDigits());
+        self::assertSame($currencyType, $currency->getCurrencyType());
     }
 
     final protected function isExceptionClass(mixed $value): bool
