@@ -38,6 +38,7 @@ final class MoneyLocaleFormatter implements MoneyFormatter
         if ($this->lastScale !== $scale) {
             $this->numberFormatter->setAttribute(NumberFormatter::MIN_FRACTION_DIGITS, $scale);
             $this->numberFormatter->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, $scale);
+            $this->lastScale = $scale;
         }
 
         return $this->numberFormatter->formatCurrency(
