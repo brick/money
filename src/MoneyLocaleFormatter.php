@@ -14,7 +14,7 @@ final class MoneyLocaleFormatter implements MoneyFormatter
 
     protected readonly NumberFormatter $numberFormatter;
 
-    protected ?int $lastScale;
+    protected ?int $lastScale = null;
 
     public function __construct(string $locale, bool $allowWholeNumber)
     {
