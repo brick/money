@@ -18,7 +18,6 @@ final class MoneyLocaleFormatter implements MoneyFormatter
 
     public function __construct(string $locale, bool $allowWholeNumber)
     {
-        $this->lastScale = null;
         $this->locale = $locale;
         $this->allowWholeNumber = $allowWholeNumber;
         $this->numberFormatter = new NumberFormatter($locale, NumberFormatter::CURRENCY);
