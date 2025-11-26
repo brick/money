@@ -736,6 +736,7 @@ final class Money extends AbstractMoney
             $lastFormatterScale = $scale;
         }
 
+        /** @psalm-suppress DeprecatedMethod */
         return $this->formatWith($formatter);
     }
 
