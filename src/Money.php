@@ -686,7 +686,10 @@ final class Money extends AbstractMoney
      */
     public function formatWith(NumberFormatter $formatter): string
     {
-        return (new MoneyNumberFormatter($formatter))->format($this);
+        return $formatter->formatCurrency(
+            $this->amount->toFloat(),
+            $this->currency->getCurrencyCode(),
+        );
     }
 
     /**
@@ -695,12 +698,57 @@ final class Money extends AbstractMoney
      * Note that this method uses NumberFormatter, which internally represents values using floating point arithmetic,
      * so discrepancies can appear when formatting very large monetary values.
      *
-     * @deprecated Use MoneyLocaleFormatter::format($money).
+     * @deprecated Use Money::format($locale, $allowWholeNumber).
      *
      * @param string $locale           The locale to format to.
      * @param bool   $allowWholeNumber Whether to allow formatting as a whole number if the amount has no fraction.
      */
     public function formatTo(string $locale, bool $allowWholeNumber = false): string
+    {
+        /** @var NumberFormatter|null $lastFormatter */
+        static $lastFormatter = null;
+        static $lastFormatterLocale;
+        static $lastFormatterScale;
+
+        if ($allowWholeNumber && ! $this->amount->hasNonZeroFractionalPart()) {
+            $scale = 0;
+        } else {
+            $scale = $this->amount->getScale();
+        }
+
+        if ($lastFormatter !== null && $lastFormatterLocale === $locale) {
+            $formatter = $lastFormatter;
+
+            if ($lastFormatterScale !== $scale) {
+                $formatter->setAttribute(NumberFormatter::MIN_FRACTION_DIGITS, $scale);
+                $formatter->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, $scale);
+
+                $lastFormatterScale = $scale;
+            }
+        } else {
+            $formatter = new NumberFormatter($locale, NumberFormatter::CURRENCY);
+
+            $formatter->setAttribute(NumberFormatter::MIN_FRACTION_DIGITS, $scale);
+            $formatter->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, $scale);
+
+            $lastFormatter = $formatter;
+            $lastFormatterLocale = $locale;
+            $lastFormatterScale = $scale;
+        }
+
+        return $this->formatWith($formatter);
+    }
+
+    /**
+     * Formats this Money to the given locale.
+     *
+     * Note that this method uses MoneyLocaleFormatter, which in turns internally uses NumberFormatter, which represents values using floating
+     * point arithmetic, so discrepancies can appear when formatting very large monetary values.
+     *
+     * @param string $locale           The locale to format to.
+     * @param bool   $allowWholeNumber Whether to allow formatting as a whole number if the amount has no fraction.
+     */
+    public function format(string $locale, bool $allowWholeNumber = false): string
     {
         return (new MoneyLocaleFormatter($locale, $allowWholeNumber))->format($this);
     }
