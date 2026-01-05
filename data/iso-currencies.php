@@ -228,7 +228,7 @@
         975,
         'Bulgarian Lev',
         2,
-        Brick\Money\CurrencyType::IsoCurrent,
+        Brick\Money\CurrencyType::IsoHistorical,
     ],
     'BHD' => [
         'BHD',

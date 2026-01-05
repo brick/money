@@ -11,7 +11,7 @@
     'AZ' => ['AYM', 'AZM', 'RUR'],
     'BA' => ['BAD'],
     'BE' => ['BEC', 'BEF', 'BEL'],
-    'BG' => ['BGJ', 'BGK', 'BGL'],
+    'BG' => ['BGJ', 'BGK', 'BGL', 'BGN'],
     'BL' => ['FRF'],
     'BQ' => ['BOP'],
     'BR' => ['BRB', 'BRC', 'BRE', 'BRN', 'BRR'],

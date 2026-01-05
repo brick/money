@@ -19,7 +19,7 @@
     'BD' => ['BDT'],
     'BE' => ['EUR'],
     'BF' => ['XOF'],
-    'BG' => ['BGN'],
+    'BG' => ['EUR'],
     'BH' => ['BHD'],
     'BI' => ['BIF'],
     'BJ' => ['XOF'],

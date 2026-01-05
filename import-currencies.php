@@ -332,6 +332,7 @@ $historicalMinorUnits = [
     'BEL' => 2,
     'BGJ' => 2,
     'BGK' => 2,
+    'BGN' => 2,
     'BGL' => 2,
     'BOP' => 2,
     'BRB' => 2,
