@@ -529,7 +529,7 @@ $processCurrentDatafile = function ($file) use ($countryCodes, $historicalCountr
     }
 };
 
-$processHistoricDatafile = function ($file) use ($countryCodes, $historicalCountryCodes, $historicalMinorUnits, &$currencies, &$numericToCurrency, &$countryNamesFound, &$countryToCurrencyHistorical): void {
+$processHistoricDatafile = function ($file) use ($countryCodes, $historicalCountryCodes, $historicalMinorUnits, &$currencies, &$numericToCurrency, &$countryNamesFound, &$countryToCurrencyHistorical, &$countryToCurrencyCurrent): void {
     $document = new DOMDocument();
     $success = $document->loadXML($file);
 
@@ -575,6 +575,12 @@ $processHistoricDatafile = function ($file) use ($countryCodes, $historicalCount
 
         if ($countryCode !== null) {
             if (! $isFund) {
+                // Renaming a currency will cause it to be marked as withdrawn, while retaining its ISO code. Skip these records if the currency code is still in use in that country.
+                // Note: If there is a change of country, keep the record.
+                if (isset($countryToCurrencyCurrent[$countryCode]) && in_array($currencyCode, $countryToCurrencyCurrent[$countryCode], true)) {
+                    continue;
+                }
+
                 if (! in_array($currencyCode, $countryToCurrencyHistorical[$countryCode] ?? [], true)) {
                     $countryToCurrencyHistorical[$countryCode][] = $currencyCode;
                 }
@@ -616,8 +622,8 @@ exportToFile(__DIR__ . '/data/numeric-to-currency.php', $numericToCurrency);
 exportToFile(__DIR__ . '/data/country-to-currency.php', $countryToCurrencyCurrent);
 exportToFile(__DIR__ . '/data/country-to-currency-historical.php', $countryToCurrencyHistorical);
 
-$currentCurrenciesCount = count(array_filter($currencies, fn ($currency) => ! $currency[4]));
-$historicalCurrenciesCount = count(array_filter($currencies, fn ($currency) => $currency[4]));
+$currentCurrenciesCount = count(array_filter($currencies, fn ($currency) => $currency[4] === CurrencyType::IsoCurrent));
+$historicalCurrenciesCount = count(array_filter($currencies, fn ($currency) => $currency[4] === CurrencyType::IsoHistorical));
 
 printf(
     'Exported %d current currencies and %d historical currencies in %d existing countries and %d historic countries.' . PHP_EOL,

@@ -101,7 +101,7 @@ final class ISOCurrencyProvider
     public function getCurrency(string|int $currencyCode): Currency
     {
         if (is_int($currencyCode)) {
-            trigger_deprecation('brick/money', '0.11.0', 'Calling "%s()" with integer argument is deprecated, call getCurrentCurrencyByNumericCode() instead.', __METHOD__);
+            trigger_deprecation('brick/money', '0.11.0', 'Calling "%s()" with integer argument is deprecated, call getCurrencyByNumericCode() instead.', __METHOD__);
 
             return $this->getCurrencyByNumericCode($currencyCode);
         }
