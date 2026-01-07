@@ -9,6 +9,9 @@ use InvalidArgumentException;
 use JsonSerializable;
 use Stringable;
 
+use function is_int;
+use function trigger_deprecation;
+
 /**
  * A currency. This class is immutable.
  */
@@ -92,6 +95,12 @@ final class Currency implements Stringable, JsonSerializable
      */
     public static function of(string|int $currencyCode): Currency
     {
+        if (is_int($currencyCode)) {
+            trigger_deprecation('brick/money', '0.11.0', 'Calling "%s()" with integer argument is deprecated, call ofNumericCode() instead.', __METHOD__);
+
+            return self::ofNumericCode($currencyCode);
+        }
+
         return ISOCurrencyProvider::getInstance()->getCurrency($currencyCode);
     }
 
