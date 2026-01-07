@@ -16,12 +16,12 @@ use Brick\Money\Exception\CurrencyConversionException;
  * This order is important because some exchange rate providers may only have one-way rates,
  * or may use a different rate in each direction.
  */
-final class MoneyComparator
+final readonly class MoneyComparator
 {
     /**
      * The exchange rate provider.
      */
-    private readonly ExchangeRateProvider $exchangeRateProvider;
+    private ExchangeRateProvider $exchangeRateProvider;
 
     /**
      * Class constructor.

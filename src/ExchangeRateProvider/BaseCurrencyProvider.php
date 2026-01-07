@@ -18,17 +18,17 @@ use Override;
  * using this provider on top of it would allow you to get an exchange rate from EUR to USD, GBP to USD,
  * or even EUR to GBP and GBP to EUR.
  */
-final class BaseCurrencyProvider implements ExchangeRateProvider
+final readonly class BaseCurrencyProvider implements ExchangeRateProvider
 {
     /**
      * The provider for rates relative to the base currency.
      */
-    private readonly ExchangeRateProvider $provider;
+    private ExchangeRateProvider $provider;
 
     /**
      * The code of the currency all the exchanges rates are based on.
      */
-    private readonly string $baseCurrencyCode;
+    private string $baseCurrencyCode;
 
     /**
      * @param ExchangeRateProvider $provider         The provider for rates relative to the base currency.

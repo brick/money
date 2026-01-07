@@ -13,12 +13,12 @@ use Brick\Money\Exception\CurrencyConversionException;
 /**
  * Converts monies into different currencies, using an exchange rate provider.
  */
-final class CurrencyConverter
+final readonly class CurrencyConverter
 {
     /**
      * The exchange rate provider.
      */
-    private readonly ExchangeRateProvider $exchangeRateProvider;
+    private ExchangeRateProvider $exchangeRateProvider;
 
     /**
      * @param ExchangeRateProvider $exchangeRateProvider The exchange rate provider.

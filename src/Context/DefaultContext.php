@@ -14,7 +14,7 @@ use Override;
 /**
  * Adjusts a number to the default scale for the currency.
  */
-final class DefaultContext implements Context
+final readonly class DefaultContext implements Context
 {
     #[Override]
     public function applyTo(BigNumber $amount, Currency $currency, RoundingMode $roundingMode): BigDecimal

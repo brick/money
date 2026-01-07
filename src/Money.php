@@ -38,22 +38,22 @@ use function intdiv;
  * - CustomContext handles monies with a custom scale, and optionally step.
  * - AutoContext automatically adjusts the scale of the money to the minimum required.
  */
-final class Money extends AbstractMoney
+final readonly class Money extends AbstractMoney
 {
     /**
      * The amount.
      */
-    private readonly BigDecimal $amount;
+    private BigDecimal $amount;
 
     /**
      * The currency.
      */
-    private readonly Currency $currency;
+    private Currency $currency;
 
     /**
      * The context that defines the capability of this Money.
      */
-    private readonly Context $context;
+    private Context $context;
 
     private function __construct(BigDecimal $amount, Currency $currency, Context $context)
     {

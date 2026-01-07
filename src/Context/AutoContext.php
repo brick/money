@@ -15,7 +15,7 @@ use Override;
 /**
  * Automatically adjusts the scale of a number to the strict minimum.
  */
-final class AutoContext implements Context
+final readonly class AutoContext implements Context
 {
     #[Override]
     public function applyTo(BigNumber $amount, Currency $currency, RoundingMode $roundingMode): BigDecimal

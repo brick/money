@@ -16,7 +16,7 @@ use function trigger_deprecation;
 /**
  * A currency. This class is immutable.
  */
-final class Currency implements Stringable, JsonSerializable
+final readonly class Currency implements Stringable, JsonSerializable
 {
     /**
      * The currency code.
@@ -25,7 +25,7 @@ final class Currency implements Stringable, JsonSerializable
      * For non ISO currencies no constraints are defined, but the code must be unique across an application, and must
      * not conflict with ISO currency codes.
      */
-    private readonly string $currencyCode;
+    private string $currencyCode;
 
     /**
      * The numeric currency code.
@@ -38,7 +38,7 @@ final class Currency implements Stringable, JsonSerializable
      *
      * The numeric code can be useful when storing monies in a database.
      */
-    private readonly int $numericCode;
+    private int $numericCode;
 
     /**
      * The name of the currency.
@@ -46,7 +46,7 @@ final class Currency implements Stringable, JsonSerializable
      * For ISO currencies this will be the official English name of the currency.
      * For non ISO currencies no constraints are defined.
      */
-    private readonly string $name;
+    private string $name;
 
     /**
      * The default number of fraction digits (typical scale) used with this currency.
@@ -54,7 +54,7 @@ final class Currency implements Stringable, JsonSerializable
      * For example, the default number of fraction digits for the Euro is 2, while for the Japanese Yen it is 0.
      * This cannot be a negative number.
      */
-    private readonly int $defaultFractionDigits;
+    private int $defaultFractionDigits;
 
     /**
      * The type of the currency.
@@ -63,7 +63,7 @@ final class Currency implements Stringable, JsonSerializable
      * or has been withdrawn (IsoHistorical). For non ISO currencies defined by the application,
      * the type is Custom.
      */
-    private readonly CurrencyType $currencyType;
+    private CurrencyType $currencyType;
 
     /**
      * Class constructor.

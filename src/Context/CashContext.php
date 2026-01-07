@@ -14,14 +14,14 @@ use Override;
 /**
  * Adjusts a number to the default scale for the currency, respecting a cash rounding.
  */
-final class CashContext implements Context
+final readonly class CashContext implements Context
 {
     /**
      * The cash rounding step, in minor units.
      *
      * For example, step 5 on CHF would allow CHF 0.00, CHF 0.05, CHF 0.10, etc.
      */
-    private readonly int $step;
+    private int $step;
 
     /**
      * @param int $step The cash rounding step, in minor units. Must be a multiple of 2 and/or 5.
