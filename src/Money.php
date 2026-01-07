@@ -673,6 +673,8 @@ final readonly class Money extends AbstractMoney
      * Note that NumberFormatter internally represents values using floating point arithmetic,
      * so discrepancies can appear when formatting very large monetary values.
      *
+     * @deprecated Use MoneyNumberFormatter::format($money).
+     *
      * @param NumberFormatter $formatter The formatter to format with.
      */
     public function formatWith(NumberFormatter $formatter): string
@@ -688,6 +690,8 @@ final readonly class Money extends AbstractMoney
      *
      * Note that this method uses NumberFormatter, which internally represents values using floating point arithmetic,
      * so discrepancies can appear when formatting very large monetary values.
+     *
+     * @deprecated Use Money::format($locale, $allowWholeNumber).
      *
      * @param string $locale           The locale to format to.
      * @param bool   $allowWholeNumber Whether to allow formatting as a whole number if the amount has no fraction.
@@ -725,7 +729,22 @@ final readonly class Money extends AbstractMoney
             $lastFormatterScale = $scale;
         }
 
+        /** @psalm-suppress DeprecatedMethod */
         return $this->formatWith($formatter);
+    }
+
+    /**
+     * Formats this Money to the given locale.
+     *
+     * Note that this method uses MoneyLocaleFormatter, which in turns internally uses NumberFormatter, which represents values using floating
+     * point arithmetic, so discrepancies can appear when formatting very large monetary values.
+     *
+     * @param string $locale           The locale to format to.
+     * @param bool   $allowWholeNumber Whether to allow formatting as a whole number if the amount has no fraction.
+     */
+    public function format(string $locale, bool $allowWholeNumber = false): string
+    {
+        return (new MoneyLocaleFormatter($locale, $allowWholeNumber))->format($this);
     }
 
     public function toRational(): RationalMoney
