@@ -103,7 +103,7 @@ class MoneyTest extends AbstractTestCase
     public function testZero(string $currency, ?Context $context, string $expected): void
     {
         $actual = Money::zero($currency, $context);
-        $this->assertMoneyIs($expected, $actual, $context === null ? new DefaultContext() : $context);
+        $this->assertMoneyIs($expected, $actual, $context ?? new DefaultContext());
     }
 
     public static function providerZero(): array
