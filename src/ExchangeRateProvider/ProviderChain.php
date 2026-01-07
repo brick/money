@@ -63,7 +63,7 @@ final class ProviderChain implements ExchangeRateProvider
         foreach ($this->providers as $provider) {
             try {
                 return $provider->getExchangeRate($sourceCurrencyCode, $targetCurrencyCode);
-            } catch (CurrencyConversionException $e) {
+            } catch (CurrencyConversionException) {
                 continue;
             }
         }
