@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Brick\Money\Tests;
 
 use Brick\Money\Currency;
+use Brick\Money\CurrencyType;
 use Brick\Money\Exception\UnknownCurrencyException;
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -16,30 +17,25 @@ use function json_encode;
  */
 class CurrencyTest extends AbstractTestCase
 {
-    /**
-     * @param string $currencyCode   The currency code.
-     * @param int    $numericCode    The currency's numeric code.
-     * @param int    $fractionDigits The currency's default fraction digits.
-     * @param string $name           The currency's name.
-     */
     #[DataProvider('providerOf')]
-    public function testOf(string $currencyCode, int $numericCode, int $fractionDigits, string $name): void
+    public function testOf(string $currencyCode, int $numericCode, int $fractionDigits, string $name, CurrencyType $currencyType): void
     {
         $currency = Currency::of($currencyCode);
-        $this->assertCurrencyEquals($currencyCode, $numericCode, $name, $fractionDigits, $currency);
+        $this->assertCurrencyEquals($currencyCode, $numericCode, $name, $fractionDigits, $currencyType, $currency);
 
         $currency = Currency::of($numericCode);
-        $this->assertCurrencyEquals($currencyCode, $numericCode, $name, $fractionDigits, $currency);
+        $this->assertCurrencyEquals($currencyCode, $numericCode, $name, $fractionDigits, $currencyType, $currency);
     }
 
     public static function providerOf(): array
     {
         return [
-            ['USD', 840, 2, 'US Dollar'],
-            ['EUR', 978, 2, 'Euro'],
-            ['GBP', 826, 2, 'Pound Sterling'],
-            ['JPY', 392, 0, 'Yen'],
-            ['DZD', 12, 2, 'Algerian Dinar'],
+            ['USD', 840, 2, 'US Dollar', CurrencyType::IsoCurrent],
+            ['EUR', 978, 2, 'Euro', CurrencyType::IsoCurrent],
+            ['GBP', 826, 2, 'Pound Sterling', CurrencyType::IsoCurrent],
+            ['JPY', 392, 0, 'Yen', CurrencyType::IsoCurrent],
+            ['DZD', 12, 2, 'Algerian Dinar', CurrencyType::IsoCurrent],
+            ['SKK', 703, 2, 'Slovak Koruna', CurrencyType::IsoHistorical],
         ];
     }
 
@@ -61,7 +57,7 @@ class CurrencyTest extends AbstractTestCase
     public function testConstructor(): void
     {
         $bitCoin = new Currency('BTC', -1, 'BitCoin', 8);
-        $this->assertCurrencyEquals('BTC', -1, 'BitCoin', 8, $bitCoin);
+        $this->assertCurrencyEquals('BTC', -1, 'BitCoin', 8, CurrencyType::Custom, $bitCoin);
     }
 
     public function testOfReturnsSameInstance(): void
@@ -96,8 +92,32 @@ class CurrencyTest extends AbstractTestCase
             ['IT', 'EUR'],
             ['US', 'USD'],
             ['AQ', UnknownCurrencyException::class], // no currency
-            ['CU', UnknownCurrencyException::class], // 2 currencies
+            ['BT', UnknownCurrencyException::class], // 2 currencies
             ['XX', UnknownCurrencyException::class], // unknown
+        ];
+    }
+
+    #[DataProvider('providerOfNumericCode')]
+    public function testOfNumericCode(int $currencyCode, string $expected): void
+    {
+        if ($this->isExceptionClass($expected)) {
+            $this->expectException($expected);
+        }
+
+        $actual = Currency::ofNumericCode($currencyCode);
+
+        if (! $this->isExceptionClass($expected)) {
+            self::assertInstanceOf(Currency::class, $actual);
+            self::assertSame($expected, $actual->getCurrencyCode());
+        }
+    }
+
+    public static function providerOfNumericCode(): array
+    {
+        return [
+            [203, 'CZK'],
+            [840, 'USD'],
+            [1, UnknownCurrencyException::class], // unknown currency
         ];
     }
 

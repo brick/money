@@ -9,9 +9,8 @@
 
 declare(strict_types=1);
 
+use Brick\Money\CurrencyType;
 use Brick\VarExporter\VarExporter;
-
-use const PHP_EOL;
 
 require __DIR__ . '/vendor/autoload.php';
 
@@ -32,6 +31,7 @@ $countryCodes = [
     'ANGUILLA' => 'AI',
     'ANTARCTICA' => 'AQ',
     'ANTIGUA AND BARBUDA' => 'AG',
+    'ARAB MONETARY FUND' => null,
     'ARGENTINA' => 'AR',
     'ARMENIA' => 'AM',
     'ARUBA' => 'AW',
@@ -274,91 +274,368 @@ $countryCodes = [
     'ZIMBABWE' => 'ZW',
 ];
 
-$data = file_get_contents('https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml');
+/**
+ * List of additional historical names of countries.
+ * Countries have ceased to exist or changed their official names.
+ */
+$historicalCountryCodes = [
+    'BOLIVIA' => 'BQ',
+    'BURMA' => 'BU',
+    'CZECHOSLOVAKIA' => 'CS',
+    'FRENCH SOUTHERN TERRITORIES' => 'FQ',
+    'GERMAN DEMOCRATIC REPUBLIC' => 'DD',
+    'HOLY SEE (VATICAN CITY STATE)' => 'VA',
+    'LAO' => 'LA',
+    'MOLDOVA, REPUBLIC OF' => 'MD',
+    'NETHERLANDS' => 'NL',
+    'NETHERLANDS ANTILLES' => 'AN',
+    'RUSSIAN FEDERATION' => 'RU',
+    'SAINT MARTIN' => 'MF',
+    'SAINT-BARTHÉLEMY' => 'BL',
+    'SERBIA AND MONTENEGRO' => 'CS',
+    'SOUTHERN RHODESIA' => 'RH',
+    'SUDAN' => 'SD',
+    'SWAZILAND' => 'SZ',
+    'TURKEY' => 'TR',
+    'UNION OF SOVIET SOCIALIST REPUBLICS' => 'SU',
+    'UNITED STATES' => 'US',
+    'VENEZUELA' => 'VE',
+    'VIETNAM' => 'VN',
+    'YEMEN, DEMOCRATIC' => 'YD',
+    'YUGOSLAVIA' => 'YU',
+    'ZAIRE' => 'ZR',
+];
 
-$document = new DOMDocument();
-$success = $document->loadXML($data);
+/**
+ * Minor units of historical currencies are not listed within list-three file. They have to be reconstructed manually from additional sources.
+ * This list has to be up to date, otherwise import will fail. Use null for undefined minor units.
+ *
+ * @var array<string, int|null> $historicalMinorUnits
+ */
+$historicalMinorUnits = [
+    'ADP' => 0,
+    'AFA' => 2,
+    'ALK' => 2,
+    'ANG' => 2,
+    'AOK' => 2,
+    'AON' => 0,
+    'AOR' => 0,
+    'ARA' => 2,
+    'ARP' => 2,
+    'ARY' => 2,
+    'ATS' => 2,
+    'AYM' => 2,
+    'AZM' => 2,
+    'BAD' => 2,
+    'BEC' => 2,
+    'BEF' => 2,
+    'BEL' => 2,
+    'BGJ' => 2,
+    'BGK' => 2,
+    'BGN' => 2,
+    'BGL' => 2,
+    'BOP' => 2,
+    'BRB' => 2,
+    'BRC' => 2,
+    'BRE' => 2,
+    'BRN' => 2,
+    'BRR' => 2,
+    'BUK' => 2,
+    'BYB' => 2,
+    'BYR' => 2,
+    'CHC' => 2,
+    'CSD' => 2,
+    'CSJ' => 2,
+    'CSK' => 2,
+    'CUC' => 2,
+    'CYP' => 3,
+    'DDM' => 2,
+    'DEM' => 2,
+    'ECS' => 2,
+    'ECV' => 2,
+    'EEK' => 2,
+    'ESA' => 2,
+    'ESB' => 2,
+    'ESP' => 2,
+    'EUR' => 2,
+    'FIM' => 2,
+    'FRF' => 2,
+    'GEK' => 0,
+    'GHC' => 2,
+    'GHP' => 2,
+    'GNE' => 2,
+    'GNS' => 2,
+    'GQE' => 2,
+    'GRD' => 2,
+    'GWE' => 2,
+    'GWP' => 2,
+    'HRD' => 2,
+    'HRK' => 2,
+    'IDR' => 2,
+    'IEP' => 2,
+    'ILP' => 3,
+    'ILR' => 2,
+    'ISJ' => 2,
+    'ITL' => 2,
+    'LAJ' => 2,
+    'LSM' => 2,
+    'LTL' => 2,
+    'LTT' => 2,
+    'LUC' => 2,
+    'LUF' => 2,
+    'LUL' => 2,
+    'LVL' => 2,
+    'LVR' => 2,
+    'MGF' => 2,
+    'MLF' => 2,
+    'MRO' => 2,
+    'MTL' => 3,
+    'MTP' => 2,
+    'MVQ' => 2,
+    'MWK' => 2,
+    'MXP' => 2,
+    'MZE' => 2,
+    'MZM' => 2,
+    'NIC' => 2,
+    'NLG' => 2,
+    'PEH' => 2,
+    'PEI' => 2,
+    'PEN' => 2,
+    'PES' => 2,
+    'PLZ' => 2,
+    'PTE' => 2,
+    'RHD' => 2,
+    'ROK' => 2,
+    'ROL' => 2,
+    'RON' => 2,
+    'RUR' => 2,
+    'SDD' => 2,
+    'SDG' => 2,
+    'SDP' => 2,
+    'SIT' => 2,
+    'SKK' => 2,
+    'SLL' => 2,
+    'SRG' => 2,
+    'STD' => 2,
+    'SUR' => 2,
+    'SZL' => 2,
+    'TJR' => 2,
+    'TMM' => 2,
+    'TPE' => 2,
+    'TRL' => 2,
+    'TRY' => 2,
+    'UAK' => 2,
+    'UGS' => 2,
+    'UGW' => 2,
+    'USS' => 2,
+    'UYN' => 2,
+    'UYP' => 2,
+    'VEB' => 2,
+    'VEF' => 2,
+    'VNC' => 2,
+    'XEU' => null,
+    'XFO' => null,
+    'XFU' => null,
+    'XRE' => null,
+    'YDD' => 2,
+    'YUD' => 2,
+    'YUM' => 2,
+    'YUN' => 2,
+    'ZAL' => 2,
+    'ZMK' => 2,
+    'ZRN' => 2,
+    'ZRZ' => 2,
+    'ZWC' => 2,
+    'ZWD' => 2,
+    'ZWL' => 2,
+    'ZWN' => 2,
+    'ZWR' => 2,
+];
 
-if (! $success) {
-    echo "Failed to load XML file.\n";
-    exit(1);
-}
+$currentCurrencyDatafile = file_get_contents('https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml');
+$historicalCurrencyDatafile = file_get_contents('https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-three.xml');
 
-$countries = $document->getElementsByTagName('CcyNtry');
 $currencies = [];
-
 $numericToCurrency = [];
-$countryToCurrency = [];
+$countryToCurrencyCurrent = [];
+$countryToCurrencyHistorical = [];
 $countryNamesFound = [];
 
-foreach ($countries as $country) {
-    /** @var DOMElement $country */
-    $countryName = getDomElementString($country, 'CtryNm');
-    $currencyName = getDomElementString($country, 'CcyNm');
-    $currencyCode = getDomElementString($country, 'Ccy');
-    $numericCode = getDomElementString($country, 'CcyNbr');
-    $minorUnits = getDomElementString($country, 'CcyMnrUnts');
+$processCurrentDatafile = function ($file) use ($countryCodes, $historicalCountryCodes, &$currencies, &$numericToCurrency, &$countryNamesFound, &$countryToCurrencyCurrent): void {
+    $countryToCurrencyCurrent = [];
 
-    $countryNamesFound[$countryName] = true;
+    $document = new DOMDocument();
+    $success = $document->loadXML($file);
 
-    $isFund = $country->getElementsByTagName('CcyNm')->item(0)->getAttribute('IsFund') === 'true';
-
-    if ($currencyName === null || $currencyCode === null && $numericCode === null && $minorUnits == null) {
-        continue;
+    if (! $success) {
+        echo "Failed to load XML file.\n";
+        exit(1);
     }
 
-    if ($minorUnits === 'N.A.') {
-        continue;
-    }
+    $countries = $document->getElementsByTagName('CcyNtry');
+    foreach ($countries as $country) {
+        /** @var DOMElement $country */
+        $countryName = getDomElementString($country, 'CtryNm');
+        $currencyName = getDomElementString($country, 'CcyNm');
+        $currencyCode = getDomElementString($country, 'Ccy');
+        $numericCode = getDomElementString($country, 'CcyNbr');
+        $minorUnits = getDomElementString($country, 'CcyMnrUnts');
 
-    if (! array_key_exists($countryName, $countryCodes)) {
-        throw new RuntimeException('No country code found for ' . $countryName);
-    }
+        $countryNamesFound[$countryName] = true;
 
-    $countryCode = $countryCodes[$countryName];
+        $isFund = $country->getElementsByTagName('CcyNm')->item(0)->getAttribute('IsFund') === 'true';
 
-    if ($countryCode !== null) {
-        if (! $isFund) {
-            $countryToCurrency[$countryCode][] = $currencyCode;
+        if ($currencyName === null || $currencyCode === null && $numericCode === null && $minorUnits == null) {
+            continue;
+        }
+
+        if ($minorUnits === 'N.A.') {
+            continue;
+        }
+
+        if (! array_key_exists($countryName, $countryCodes)) {
+            throw new RuntimeException('No country code found for ' . $countryName);
+        }
+
+        $countryCode = $countryCodes[$countryName];
+
+        if ($countryCode !== null) {
+            if (! $isFund) {
+                $countryToCurrencyCurrent[$countryCode][] = $currencyCode;
+            }
+        }
+
+        $currencyName = checkCurrencyName($currencyName);
+        $currencyCode = checkCurrencyCode($currencyCode);
+        $numericCode = checkNumericCode($numericCode);
+        $minorUnits = checkMinorUnits($minorUnits);
+
+        $value = [$currencyCode, $numericCode, $currencyName, $minorUnits, CurrencyType::IsoCurrent];
+
+        if (isset($currencies[$currencyCode])) {
+            if ($currencies[$currencyCode] !== $value) {
+                throw new RuntimeException('Inconsistent values found for currency code ' . $currencyCode);
+            }
+        } else {
+            $currencies[$currencyCode] = $value;
+            $numericToCurrency[$numericCode] = $currencyCode;
         }
     }
 
-    $currencyName = checkCurrencyName($currencyName);
-    $currencyCode = checkCurrencyCode($currencyCode);
-    $numericCode = checkNumericCode($numericCode);
-    $minorUnits = checkMinorUnits($minorUnits);
-
-    $value = [$currencyCode, $numericCode, $currencyName, $minorUnits];
-
-    if (isset($currencies[$currencyCode])) {
-        if ($currencies[$currencyCode] !== $value) {
-            throw new RuntimeException('Inconsistent values found for currency code ' . $currencyCode);
+    foreach ($countryCodes as $countryName => $countryCode) {
+        if (! isset($countryNamesFound[$countryName])) {
+            echo 'Warning: ' . $countryName . ' not found in current ISO file.', PHP_EOL;
         }
-    } else {
-        $currencies[$currencyCode] = $value;
-        $numericToCurrency[$numericCode] = $currencyCode;
     }
-}
+};
 
-foreach ($countryCodes as $countryName => $countryCode) {
-    if (! isset($countryNamesFound[$countryName])) {
-        echo 'Warning: ' . $countryName . ' not found in ISO file.', PHP_EOL;
+$processHistoricDatafile = function ($file) use ($countryCodes, $historicalCountryCodes, $historicalMinorUnits, &$currencies, &$numericToCurrency, &$countryNamesFound, &$countryToCurrencyHistorical, &$countryToCurrencyCurrent): void {
+    $document = new DOMDocument();
+    $success = $document->loadXML($file);
+
+    if (! $success) {
+        echo "Failed to load XML file.\n";
+        exit(1);
     }
-}
+
+    $countries = $document->getElementsByTagName('HstrcCcyNtry');
+
+    foreach ($countries as $country) {
+        /** @var DOMElement $country */
+        $countryName = getDomElementString($country, 'CtryNm');
+        $currencyName = getDomElementString($country, 'CcyNm');
+        $currencyCode = getDomElementString($country, 'Ccy');
+        $numericCode = getDomElementString($country, 'CcyNbr');
+
+        if (! array_key_exists($currencyCode, $historicalMinorUnits)) {
+            throw new RuntimeException('Missing minor unit definition for currency ' . $currencyCode);
+        }
+        $minorUnits = $historicalMinorUnits[$currencyCode];
+
+        $countryNamesFound[$countryName] = true;
+
+        $isFund = $country->getElementsByTagName('CcyNm')->item(0)->getAttribute('IsFund') === 'true';
+
+        if ($currencyName === null || $currencyCode === null && $numericCode === null && $minorUnits == null) {
+            continue;
+        }
+
+        if ($minorUnits === 'N.A.' || $minorUnits === null) {
+            continue;
+        }
+
+        // Historical data are messy
+        $countryName = str_replace([' ', '  '], ['', ' '], $countryName);
+
+        if (! array_key_exists($countryName, $countryCodes) && ! array_key_exists($countryName, $historicalCountryCodes)) {
+            throw new RuntimeException('No country code found for ' . $countryName);
+        }
+
+        $countryCode = $countryCodes[$countryName] ?? $historicalCountryCodes[$countryName];
+
+        if ($countryCode !== null) {
+            if (! $isFund) {
+                // Renaming a currency will cause it to be marked as withdrawn, while retaining its ISO code. Skip these records if the currency code is still in use in that country.
+                // Note: If there is a change of country, keep the record.
+                if (isset($countryToCurrencyCurrent[$countryCode]) && in_array($currencyCode, $countryToCurrencyCurrent[$countryCode], true)) {
+                    continue;
+                }
+
+                if (! in_array($currencyCode, $countryToCurrencyHistorical[$countryCode] ?? [], true)) {
+                    $countryToCurrencyHistorical[$countryCode][] = $currencyCode;
+                }
+            }
+        }
+
+        $currencyName = checkCurrencyName($currencyName);
+        $currencyCode = checkCurrencyCode($currencyCode);
+        $numericCode = checkNumericCode($numericCode);
+        $minorUnits = checkMinorUnits($minorUnits);
+
+        $value = [$currencyCode, $numericCode, $currencyName, $minorUnits, CurrencyType::IsoHistorical];
+
+        if (! isset($currencies[$currencyCode])) {
+            $currencies[$currencyCode] = $value;
+        }
+        if (! isset($numericToCurrency[$numericCode])) {
+            $numericToCurrency[$numericCode] = $currencyCode;
+        }
+    }
+
+    foreach ($countryCodes as $countryName => $countryCode) {
+        if (! isset($countryNamesFound[$countryName])) {
+            echo 'Warning: ' . $countryName . ' not found in current ISO file.', PHP_EOL;
+        }
+    }
+};
+
+$processCurrentDatafile($currentCurrencyDatafile);
+$processHistoricDatafile($historicalCurrencyDatafile);
 
 ksort($currencies);
 ksort($numericToCurrency);
-ksort($countryToCurrency);
+ksort($countryToCurrencyCurrent);
+ksort($countryToCurrencyHistorical);
 
 exportToFile(__DIR__ . '/data/iso-currencies.php', $currencies);
 exportToFile(__DIR__ . '/data/numeric-to-currency.php', $numericToCurrency);
-exportToFile(__DIR__ . '/data/country-to-currency.php', $countryToCurrency);
+exportToFile(__DIR__ . '/data/country-to-currency.php', $countryToCurrencyCurrent);
+exportToFile(__DIR__ . '/data/country-to-currency-historical.php', $countryToCurrencyHistorical);
 
-printf('Exported %d currencies in %d countries.' . PHP_EOL, count($currencies), count($countryToCurrency));
+$currentCurrenciesCount = count(array_filter($currencies, fn ($currency) => $currency[4] === CurrencyType::IsoCurrent));
+$historicalCurrenciesCount = count(array_filter($currencies, fn ($currency) => $currency[4] === CurrencyType::IsoHistorical));
+
+printf(
+    'Exported %d current currencies and %d historical currencies in %d existing countries and %d historic countries.' . PHP_EOL,
+    $currentCurrenciesCount,
+    $historicalCurrenciesCount,
+    count($countryToCurrencyCurrent),
+    count($countryToCurrencyHistorical),
+);
 
 function exportToFile(string $file, array $data): void
 {
-    $data = '<?php ' . VarExporter::export($data, VarExporter::ADD_RETURN | VarExporter::INLINE_SCALAR_LIST);
+    $data = '<?php ' . VarExporter::export($data, VarExporter::ADD_RETURN | VarExporter::INLINE_SCALAR_LIST | VarExporter::TRAILING_COMMA_IN_ARRAY);
 
     if (file_get_contents($file) === $data) {
         printf("%s: no change\n", $file);
@@ -417,8 +694,12 @@ function checkNumericCode(string $numericCode): int
 /**
  * @throws RuntimeException
  */
-function checkMinorUnits(string $minorUnits): int
+function checkMinorUnits(string|int $minorUnits): int
 {
+    if (is_int($minorUnits)) {
+        return $minorUnits;
+    }
+
     if (preg_match('/^[0-9]{1}$/', $minorUnits) !== 1) {
         throw new RuntimeException('Invalid minor unit: ' . $minorUnits);
     }

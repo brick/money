@@ -9,6 +9,9 @@ use InvalidArgumentException;
 use JsonSerializable;
 use Stringable;
 
+use function is_int;
+use function trigger_deprecation;
+
 /**
  * A currency. This class is immutable.
  */
@@ -53,14 +56,24 @@ final class Currency implements Stringable, JsonSerializable
     private readonly int $defaultFractionDigits;
 
     /**
+     * The type of the currency.
+     *
+     * For ISO currencies, this indicates whether the currency is currently in use (IsoCurrent)
+     * or has been withdrawn (IsoHistorical). For non ISO currencies defined by the application,
+     * the type is Custom.
+     */
+    private readonly CurrencyType $currencyType;
+
+    /**
      * Class constructor.
      *
-     * @param string $currencyCode          The currency code.
-     * @param int    $numericCode           The numeric currency code.
-     * @param string $name                  The currency name.
-     * @param int    $defaultFractionDigits The default number of fraction digits.
+     * @param string       $currencyCode          The currency code.
+     * @param int          $numericCode           The numeric currency code.
+     * @param string       $name                  The currency name.
+     * @param int          $defaultFractionDigits The default number of fraction digits.
+     * @param CurrencyType $currencyType          The type of the currency.
      */
-    public function __construct(string $currencyCode, int $numericCode, string $name, int $defaultFractionDigits)
+    public function __construct(string $currencyCode, int $numericCode, string $name, int $defaultFractionDigits, CurrencyType $currencyType = CurrencyType::Custom)
     {
         if ($defaultFractionDigits < 0) {
             throw new InvalidArgumentException('The default fraction digits cannot be less than zero.');
@@ -70,6 +83,7 @@ final class Currency implements Stringable, JsonSerializable
         $this->numericCode = $numericCode;
         $this->name = $name;
         $this->defaultFractionDigits = $defaultFractionDigits;
+        $this->currencyType = $currencyType;
     }
 
     /**
@@ -81,11 +95,19 @@ final class Currency implements Stringable, JsonSerializable
      */
     public static function of(string|int $currencyCode): Currency
     {
+        if (is_int($currencyCode)) {
+            trigger_deprecation('brick/money', '0.11.0', 'Calling "%s()" with integer argument is deprecated, call ofNumericCode() instead.', __METHOD__);
+
+            return self::ofNumericCode($currencyCode);
+        }
+
         return ISOCurrencyProvider::getInstance()->getCurrency($currencyCode);
     }
 
     /**
-     * Returns a Currency instance for the given ISO country code.
+     * Returns the current currency for the given ISO country code.
+     *
+     * Note: This value may change in minor releases, as countries may change their official currency.
      *
      * @param string $countryCode The 2-letter ISO 3166-1 country code.
      *
@@ -94,6 +116,23 @@ final class Currency implements Stringable, JsonSerializable
     public static function ofCountry(string $countryCode): Currency
     {
         return ISOCurrencyProvider::getInstance()->getCurrencyForCountry($countryCode);
+    }
+
+    /**
+     * Returns a Currency instance matching the given ISO currency code.
+     *
+     * Note: Numeric codes often mirror the ISO 3166-1 numeric code of the issuing
+     * country/territory, so they may outlive a particular currency and be kept/reused
+     * across currency changes. The resolved Currency therefore depends on the ISO 4217
+     * dataset version and may change after an update in a minor version.
+     *
+     * @param int $currencyCode The numeric ISO 4217 currency code.
+     *
+     * @throws UnknownCurrencyException If an unknown currency code is given.
+     */
+    public static function ofNumericCode(int $currencyCode): Currency
+    {
+        return ISOCurrencyProvider::getInstance()->getCurrencyByNumericCode($currencyCode);
     }
 
     /**
@@ -154,6 +193,17 @@ final class Currency implements Stringable, JsonSerializable
 
         return $this->currencyCode === (string) $currency
             || ($this->numericCode !== 0 && $this->numericCode === (int) $currency);
+    }
+
+    /**
+     * Returns the type of this currency.
+     *
+     * For ISO currencies, this will be either IsoCurrent (in use) or IsoHistorical (withdrawn).
+     * For application-defined currencies, the type is Custom.
+     */
+    public function getCurrencyType(): CurrencyType
+    {
+        return $this->currencyType;
     }
 
     final public function jsonSerialize(): string
