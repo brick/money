@@ -5,8 +5,8 @@ on:
   pull_request:
 
 env:
-  PSALM_PHP_VERSION: "8.4"
-  COVERAGE_PHP_VERSION: "8.4"
+  PSALM_PHP_VERSION: "8.5"
+  COVERAGE_PHP_VERSION: "8.5"
 
 jobs:
   psalm:
@@ -42,14 +42,14 @@ jobs:
       fail-fast: false
       matrix:
         php-version:
-          - "8.1"
           - "8.2"
           - "8.3"
           - "8.4"
+          - "8.5"
         deps:
           - "highest"
         include:
-          - php-version: "8.1"
+          - php-version: "8.2"
             deps: "lowest"
 
     steps:
