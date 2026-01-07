@@ -44,6 +44,19 @@ It is therefore safe to lock your project to a given release cycle, such as `0.1
 
 If you need to upgrade to a newer release cycle, check the [release history](https://github.com/brick/money/releases) for a list of changes introduced by each further `0.x.0` version.
 
+#### Currency updates
+
+This library is based on the latest ISO 4217 standard. This is a living standard, so updates to currencies are expected to happen regularly.
+
+Updates to the following features **will be considered breaking changes** and **are covered by the backwards compatibility promise**:
+
+- Currencies obtained by alpha currency code such as `EUR` or `USD`, through `Currency::of()`, `Money::of()`, `ISOCurrencyProvider::getCurrency()`, etc. 
+
+The following features are evolving constantly, they will **not** be considered breaking changes and **may be updated in *minor* releases** even after version `1.0.0` has been released:
+
+- Currencies obtained by numeric currency code such as `978` or `840`, through `Currency::ofNumericCode()`, `ISOCurrencyProvider::getCurrencyByNumericCode()`, etc.
+- Currencies obtained by country code such as `FR` or `US`, through `Currency::ofCountry()`, `ISOCurrencyProvider::getCurrencyByCountry()`, etc.
+
 ## Creating a Money
 
 ### From a regular currency value
