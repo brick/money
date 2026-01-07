@@ -96,7 +96,9 @@ final class Currency implements Stringable, JsonSerializable
     }
 
     /**
-     * Returns a Currency instance for the given ISO country code.
+     * Returns the current currency for the given ISO country code.
+     *
+     * Note: This value may change in minor releases, as countries may change their official currency.
      *
      * @param string $countryCode The 2-letter ISO 3166-1 country code.
      *

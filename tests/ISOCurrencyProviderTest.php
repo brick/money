@@ -133,7 +133,7 @@ class ISOCurrencyProviderTest extends AbstractTestCase
     {
         $provider = ISOCurrencyProvider::getInstance();
 
-        $currencies = $provider->getCurrentCurrenciesForCountry('PA');
+        $currencies = $provider->getCurrenciesForCountry('PA');
         self::assertCount(2, $currencies);
 
         $retrievedCurrencies = [];

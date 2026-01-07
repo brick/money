@@ -171,13 +171,15 @@ final class ISOCurrencyProvider
     /**
      * Returns the current currency for the given ISO country code.
      *
+     * Note: This value may change in minor releases, as countries may change their official currency.
+     *
      * @param string $countryCode The 2-letter ISO 3166-1 country code.
      *
      * @throws UnknownCurrencyException If the country code is not known, or the country has no single currency.
      */
     public function getCurrencyForCountry(string $countryCode): Currency
     {
-        $currencies = $this->getCurrentCurrenciesForCountry($countryCode);
+        $currencies = $this->getCurrenciesForCountry($countryCode);
 
         $count = count($currencies);
 
@@ -199,33 +201,17 @@ final class ISOCurrencyProvider
     }
 
     /**
-     * Returns the currencies for the given ISO country code.
+     * Returns the current currencies for the given ISO country code.
      *
      * If the country code is not known, or if the country has no official currency, an empty array is returned.
      *
-     * @deprecated Use getCurrentCurrenciesForCountry() instead.
+     * Note: This value may change in minor releases, as countries may change their official currencies.
      *
      * @param string $countryCode The 2-letter ISO 3166-1 country code.
      *
      * @return Currency[]
      */
     public function getCurrenciesForCountry(string $countryCode): array
-    {
-        trigger_deprecation('brick/money', '0.11.0', 'Calling "%s()" is deprecated, call getCurrentCurrenciesForCountry() instead.', __METHOD__);
-
-        return $this->getCurrentCurrenciesForCountry($countryCode);
-    }
-
-    /**
-     * Returns the current currencies for the given ISO country code.
-     *
-     * If the country code is not known, or if the country has no official currency, an empty array is returned.
-     *
-     * @param string $countryCode The 2-letter ISO 3166-1 country code.
-     *
-     * @return Currency[]
-     */
-    public function getCurrentCurrenciesForCountry(string $countryCode): array
     {
         if ($this->countryToCurrencyCurrent === null) {
             $this->countryToCurrencyCurrent = require __DIR__ . '/../data/country-to-currency.php';
