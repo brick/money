@@ -28,38 +28,28 @@ use function intdiv;
 /**
  * A monetary value in a given currency. This class is immutable.
  *
- * A Money has an amount, a currency, and a context. The context defines the scale of the amount, and an optional cash
+ * Money has an amount, a currency, and a context. The context defines the scale of the amount, and an optional cash
  * rounding step, for monies that do not have coins or notes for their smallest units.
  *
  * All operations on a Money return another Money with the same context. The available contexts are:
  *
  * - DefaultContext handles monies with the default scale for the currency.
  * - CashContext is similar to DefaultContext, but supports a cash rounding step.
- * - CustomContext handles monies with a custom scale, and optionally step.
+ * - CustomContext handles monies with a custom scale and optionally step.
  * - AutoContext automatically adjusts the scale of the money to the minimum required.
  */
 final readonly class Money extends AbstractMoney
 {
     /**
-     * The amount.
+     * @param BigDecimal $amount   The amount.
+     * @param Currency   $currency The currency.
+     * @param Context    $context  The context that defines the capability of this Money.
      */
-    private BigDecimal $amount;
-
-    /**
-     * The currency.
-     */
-    private Currency $currency;
-
-    /**
-     * The context that defines the capability of this Money.
-     */
-    private Context $context;
-
-    private function __construct(BigDecimal $amount, Currency $currency, Context $context)
-    {
-        $this->amount = $amount;
-        $this->currency = $currency;
-        $this->context = $context;
+    private function __construct(
+        private BigDecimal $amount,
+        private Currency $currency,
+        private Context $context,
+    ) {
     }
 
     /**

@@ -19,72 +19,37 @@ use function trigger_deprecation;
 final readonly class Currency implements Stringable, JsonSerializable
 {
     /**
-     * The currency code.
-     *
-     * For ISO currencies this will be the 3-letter uppercase ISO 4217 currency code.
-     * For non ISO currencies no constraints are defined, but the code must be unique across an application, and must
-     * not conflict with ISO currency codes.
+     * @param string       $currencyCode          The currency code. For ISO currencies this will be the 3-letter
+     *                                            uppercase ISO 4217 currency code. For non-ISO currencies no
+     *                                            constraints are defined, but the code must be unique across an
+     *                                            application and must not conflict with ISO currency codes.
+     * @param int          $numericCode           The numeric currency code. For ISO currencies this will be the
+     *                                            ISO 4217 numeric currency code, without leading zeros. For non-ISO
+     *                                            currencies no constraints are defined, but the code must be unique
+     *                                            across an application and must not conflict with ISO currency codes.
+     *                                            Set to zero if the currency does not have a numeric code.
+     * @param string       $name                  The currency name. For ISO currencies this will be the official
+     *                                            English name of the currency. For non-ISO currencies no constraints
+     *                                            are defined.
+     * @param int          $defaultFractionDigits The default number of fraction digits (typical scale) used with this
+     *                                            currency. For example, the default number of fraction digits for the
+     *                                            Euro is 2, while for the Japanese Yen it is 0. This cannot be a
+     *                                            negative number.
+     * @param CurrencyType $currencyType          The type of the currency. For ISO currencies, this indicates whether
+     *                                            the currency is currently in use (IsoCurrent) or has been withdrawn
+     *                                            (IsoHistorical). For non-ISO currencies defined by the application,
+     *                                            the type is Custom.
      */
-    private string $currencyCode;
-
-    /**
-     * The numeric currency code.
-     *
-     * For ISO currencies this will be the ISO 4217 numeric currency code, without leading zeros.
-     * For non ISO currencies no constraints are defined, but the code must be unique across an application, and must
-     * not conflict with ISO currency codes.
-     *
-     * If set to zero, the currency is considered to not have a numeric code.
-     *
-     * The numeric code can be useful when storing monies in a database.
-     */
-    private int $numericCode;
-
-    /**
-     * The name of the currency.
-     *
-     * For ISO currencies this will be the official English name of the currency.
-     * For non ISO currencies no constraints are defined.
-     */
-    private string $name;
-
-    /**
-     * The default number of fraction digits (typical scale) used with this currency.
-     *
-     * For example, the default number of fraction digits for the Euro is 2, while for the Japanese Yen it is 0.
-     * This cannot be a negative number.
-     */
-    private int $defaultFractionDigits;
-
-    /**
-     * The type of the currency.
-     *
-     * For ISO currencies, this indicates whether the currency is currently in use (IsoCurrent)
-     * or has been withdrawn (IsoHistorical). For non ISO currencies defined by the application,
-     * the type is Custom.
-     */
-    private CurrencyType $currencyType;
-
-    /**
-     * Class constructor.
-     *
-     * @param string       $currencyCode          The currency code.
-     * @param int          $numericCode           The numeric currency code.
-     * @param string       $name                  The currency name.
-     * @param int          $defaultFractionDigits The default number of fraction digits.
-     * @param CurrencyType $currencyType          The type of the currency.
-     */
-    public function __construct(string $currencyCode, int $numericCode, string $name, int $defaultFractionDigits, CurrencyType $currencyType = CurrencyType::Custom)
-    {
+    public function __construct(
+        private string $currencyCode,
+        private int $numericCode,
+        private string $name,
+        private int $defaultFractionDigits,
+        private CurrencyType $currencyType = CurrencyType::Custom,
+    ) {
         if ($defaultFractionDigits < 0) {
             throw new InvalidArgumentException('The default fraction digits cannot be less than zero.');
         }
-
-        $this->currencyCode = $currencyCode;
-        $this->numericCode = $numericCode;
-        $this->name = $name;
-        $this->defaultFractionDigits = $defaultFractionDigits;
-        $this->currencyType = $currencyType;
     }
 
     /**

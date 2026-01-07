@@ -14,11 +14,6 @@ use Override;
 final class CachedProvider implements ExchangeRateProvider
 {
     /**
-     * The underlying exchange rate provider.
-     */
-    private readonly ExchangeRateProvider $provider;
-
-    /**
      * The cached exchange rates.
      *
      * @var array<string, array<string, BigNumber|int|float|string>>
@@ -26,11 +21,11 @@ final class CachedProvider implements ExchangeRateProvider
     private array $exchangeRates = [];
 
     /**
-     * Class constructor.
+     * @param ExchangeRateProvider $provider The underlying exchange rate provider.
      */
-    public function __construct(ExchangeRateProvider $provider)
-    {
-        $this->provider = $provider;
+    public function __construct(
+        private readonly ExchangeRateProvider $provider,
+    ) {
     }
 
     #[Override]

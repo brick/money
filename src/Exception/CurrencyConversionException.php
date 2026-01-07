@@ -13,16 +13,13 @@ use function sprintf;
  */
 final class CurrencyConversionException extends MoneyException
 {
-    private readonly string $sourceCurrencyCode;
-
-    private readonly string $targetCurrencyCode;
-
-    public function __construct(string $message, string $sourceCurrencyCode, string $targetCurrencyCode, ?Throwable $previous = null)
-    {
+    public function __construct(
+        string $message,
+        private readonly string $sourceCurrencyCode,
+        private readonly string $targetCurrencyCode,
+        ?Throwable $previous = null,
+    ) {
         parent::__construct($message, 0, $previous);
-
-        $this->sourceCurrencyCode = $sourceCurrencyCode;
-        $this->targetCurrencyCode = $targetCurrencyCode;
     }
 
     public static function exchangeRateNotAvailable(string $sourceCurrencyCode, string $targetCurrencyCode, ?string $info = null, ?Throwable $previous = null): self

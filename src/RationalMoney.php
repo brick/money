@@ -18,20 +18,14 @@ use Override;
  */
 final readonly class RationalMoney extends AbstractMoney
 {
-    private BigRational $amount;
-
-    private Currency $currency;
-
     /**
-     * Class constructor.
-     *
      * @param BigRational $amount   The amount.
      * @param Currency    $currency The currency.
      */
-    public function __construct(BigRational $amount, Currency $currency)
-    {
-        $this->amount = $amount;
-        $this->currency = $currency;
+    public function __construct(
+        private BigRational $amount,
+        private Currency $currency,
+    ) {
     }
 
     /**

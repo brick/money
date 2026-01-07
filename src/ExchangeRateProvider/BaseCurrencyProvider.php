@@ -21,23 +21,13 @@ use Override;
 final readonly class BaseCurrencyProvider implements ExchangeRateProvider
 {
     /**
-     * The provider for rates relative to the base currency.
-     */
-    private ExchangeRateProvider $provider;
-
-    /**
-     * The code of the currency all the exchanges rates are based on.
-     */
-    private string $baseCurrencyCode;
-
-    /**
      * @param ExchangeRateProvider $provider         The provider for rates relative to the base currency.
      * @param string               $baseCurrencyCode The code of the currency all the exchanges rates are based on.
      */
-    public function __construct(ExchangeRateProvider $provider, string $baseCurrencyCode)
-    {
-        $this->provider = $provider;
-        $this->baseCurrencyCode = $baseCurrencyCode;
+    public function __construct(
+        private ExchangeRateProvider $provider,
+        private string $baseCurrencyCode,
+    ) {
     }
 
     #[Override]

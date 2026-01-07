@@ -19,18 +19,11 @@ use Brick\Money\Exception\CurrencyConversionException;
 final readonly class MoneyComparator
 {
     /**
-     * The exchange rate provider.
+     * @param ExchangeRateProvider $exchangeRateProvider The exchange rate provider.
      */
-    private ExchangeRateProvider $exchangeRateProvider;
-
-    /**
-     * Class constructor.
-     *
-     * @param ExchangeRateProvider $provider The exchange rate provider.
-     */
-    public function __construct(ExchangeRateProvider $provider)
-    {
-        $this->exchangeRateProvider = $provider;
+    public function __construct(
+        private ExchangeRateProvider $exchangeRateProvider,
+    ) {
     }
 
     /**
