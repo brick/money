@@ -7,6 +7,7 @@ namespace Brick\Money\ExchangeRateProvider;
 use Brick\Money\Exception\CurrencyConversionException;
 use Brick\Money\ExchangeRateProvider;
 use InvalidArgumentException;
+use Override;
 use PDO;
 use PDOStatement;
 
@@ -91,6 +92,7 @@ final class PDOProvider implements ExchangeRateProvider
         $this->parameters = $parameters;
     }
 
+    #[Override]
     public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode): int|float|string
     {
         $parameters = $this->parameters;

@@ -17,6 +17,7 @@ use Brick\Money\Exception\MoneyMismatchException;
 use Brick\Money\Exception\UnknownCurrencyException;
 use InvalidArgumentException;
 use NumberFormatter;
+use Override;
 
 use function array_fill;
 use function array_map;
@@ -247,6 +248,7 @@ final class Money extends AbstractMoney
     /**
      * Returns the amount of this Money, as a BigDecimal.
      */
+    #[Override]
     public function getAmount(): BigDecimal
     {
         return $this->amount;
@@ -278,6 +280,7 @@ final class Money extends AbstractMoney
     /**
      * Returns the Currency of this Money.
      */
+    #[Override]
     public function getCurrency(): Currency
     {
         return $this->currency;

@@ -7,6 +7,7 @@ namespace Brick\Money\ExchangeRateProvider;
 use Brick\Math\BigNumber;
 use Brick\Money\Exception\CurrencyConversionException;
 use Brick\Money\ExchangeRateProvider;
+use Override;
 
 use function spl_object_id;
 
@@ -56,6 +57,7 @@ final class ProviderChain implements ExchangeRateProvider
         return $this;
     }
 
+    #[Override]
     public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode): BigNumber|int|float|string
     {
         foreach ($this->providers as $provider) {

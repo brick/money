@@ -7,6 +7,7 @@ namespace Brick\Money;
 use Brick\Money\Exception\UnknownCurrencyException;
 use InvalidArgumentException;
 use JsonSerializable;
+use Override;
 use Stringable;
 
 use function is_int;
@@ -206,6 +207,7 @@ final class Currency implements Stringable, JsonSerializable
         return $this->currencyType;
     }
 
+    #[Override]
     final public function jsonSerialize(): string
     {
         return $this->currencyCode;
@@ -214,6 +216,7 @@ final class Currency implements Stringable, JsonSerializable
     /**
      * Returns the currency code.
      */
+    #[Override]
     public function __toString(): string
     {
         return $this->currencyCode;

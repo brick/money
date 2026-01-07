@@ -7,6 +7,7 @@ namespace Brick\Money\ExchangeRateProvider;
 use Brick\Math\BigNumber;
 use Brick\Money\Exception\CurrencyConversionException;
 use Brick\Money\ExchangeRateProvider;
+use Override;
 
 /**
  * A configurable exchange rate provider.
@@ -28,6 +29,7 @@ final class ConfigurableProvider implements ExchangeRateProvider
         return $this;
     }
 
+    #[Override]
     public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode): BigNumber|int|float|string
     {
         if (isset($this->exchangeRates[$sourceCurrencyCode][$targetCurrencyCode])) {

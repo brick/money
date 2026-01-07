@@ -8,6 +8,7 @@ use Brick\Math\BigNumber;
 use Brick\Math\BigRational;
 use Brick\Math\Exception\MathException;
 use Brick\Money\Exception\MoneyMismatchException;
+use Override;
 
 /**
  * An exact monetary amount, represented as a rational number. This class is immutable.
@@ -50,11 +51,13 @@ final class RationalMoney extends AbstractMoney
         return new RationalMoney($amount, $currency);
     }
 
+    #[Override]
     public function getAmount(): BigRational
     {
         return $this->amount;
     }
 
+    #[Override]
     public function getCurrency(): Currency
     {
         return $this->currency;

@@ -6,6 +6,7 @@ namespace Brick\Money\ExchangeRateProvider;
 
 use Brick\Math\BigNumber;
 use Brick\Money\ExchangeRateProvider;
+use Override;
 
 /**
  * Caches the results of another exchange rate provider.
@@ -32,6 +33,7 @@ final class CachedProvider implements ExchangeRateProvider
         $this->provider = $provider;
     }
 
+    #[Override]
     public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode): BigNumber|int|float|string
     {
         if (isset($this->exchangeRates[$sourceCurrencyCode][$targetCurrencyCode])) {

@@ -9,6 +9,7 @@ use Brick\Math\BigNumber;
 use Brick\Math\RoundingMode;
 use Brick\Money\Context;
 use Brick\Money\Currency;
+use Override;
 
 /**
  * Adjusts a number to a custom scale, and optionally step.
@@ -37,6 +38,7 @@ final class CustomContext implements Context
         $this->step = $step;
     }
 
+    #[Override]
     public function applyTo(BigNumber $amount, Currency $currency, RoundingMode $roundingMode): BigDecimal
     {
         if ($this->step === 1) {
@@ -50,11 +52,13 @@ final class CustomContext implements Context
             ->multipliedBy($this->step);
     }
 
+    #[Override]
     public function getStep(): int
     {
         return $this->step;
     }
 
+    #[Override]
     public function isFixedScale(): bool
     {
         return true;

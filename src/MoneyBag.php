@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Brick\Money;
 
 use Brick\Math\BigRational;
+use Override;
 
 use function is_int;
 
@@ -43,6 +44,7 @@ final class MoneyBag implements MoneyContainer
     /**
      * Returns the amounts contained in this bag, as rational numbers, indexed by currency code.
      */
+    #[Override]
     public function getAmounts(): array
     {
         return $this->amounts;

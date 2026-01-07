@@ -7,6 +7,7 @@ namespace Brick\Money\ExchangeRateProvider;
 use Brick\Math\BigNumber;
 use Brick\Math\BigRational;
 use Brick\Money\ExchangeRateProvider;
+use Override;
 
 /**
  * Calculates exchange rates relative to a base currency.
@@ -39,6 +40,7 @@ final class BaseCurrencyProvider implements ExchangeRateProvider
         $this->baseCurrencyCode = $baseCurrencyCode;
     }
 
+    #[Override]
     public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode): BigNumber
     {
         if ($sourceCurrencyCode === $this->baseCurrencyCode) {

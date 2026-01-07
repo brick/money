@@ -6,6 +6,7 @@ namespace Brick\Money\Tests\ExchangeRateProvider;
 
 use Brick\Money\Exception\CurrencyConversionException;
 use Brick\Money\ExchangeRateProvider;
+use Override;
 
 /**
  * A mock implementation of ExchangeRateProvider for tests.
@@ -32,6 +33,7 @@ class ProviderMock implements ExchangeRateProvider
         return $this->calls;
     }
 
+    #[Override]
     public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode): float
     {
         $this->calls++;

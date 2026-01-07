@@ -10,6 +10,7 @@ use Brick\Math\Exception\RoundingNecessaryException;
 use Brick\Math\RoundingMode;
 use Brick\Money\Exception\MoneyMismatchException;
 use JsonSerializable;
+use Override;
 use Stringable;
 
 /**
@@ -40,6 +41,7 @@ abstract class AbstractMoney implements MoneyContainer, Stringable, JsonSerializ
     /**
      * Required by interface MoneyContainer.
      */
+    #[Override]
     final public function getAmounts(): array
     {
         return [
@@ -177,6 +179,7 @@ abstract class AbstractMoney implements MoneyContainer, Stringable, JsonSerializ
             && $this->getCurrency()->is($that->getCurrency());
     }
 
+    #[Override]
     final public function jsonSerialize(): array
     {
         return [
