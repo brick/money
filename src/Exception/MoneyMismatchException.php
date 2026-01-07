@@ -11,7 +11,7 @@ use function sprintf;
 /**
  * Exception thrown when a money is not in the expected currency or context.
  */
-class MoneyMismatchException extends MoneyException
+final class MoneyMismatchException extends MoneyException
 {
     public static function currencyMismatch(Currency $expected, Currency $actual): self
     {

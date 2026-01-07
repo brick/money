@@ -11,7 +11,7 @@ use function sprintf;
 /**
  * Exception thrown when an exchange rate is not available.
  */
-class CurrencyConversionException extends MoneyException
+final class CurrencyConversionException extends MoneyException
 {
     private readonly string $sourceCurrencyCode;
 

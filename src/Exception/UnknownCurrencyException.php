@@ -9,7 +9,7 @@ use function implode;
 /**
  * Exception thrown when attempting to create a Currency from an unknown currency code.
  */
-class UnknownCurrencyException extends MoneyException
+final class UnknownCurrencyException extends MoneyException
 {
     public static function unknownCurrency(string|int $currencyCode): self
     {
