@@ -17,7 +17,7 @@ use function spl_object_id;
 final class ProviderChain implements ExchangeRateProvider
 {
     /**
-     * The exchange rate providers, indexed by object hash.
+     * The exchange rate providers, indexed by object id.
      *
      * @var array<int, ExchangeRateProvider>
      */
