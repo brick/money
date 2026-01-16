@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Brick\Money\Tests\ExchangeRateProvider;
 
-use Brick\Money\Exception\CurrencyConversionException;
+use Brick\Math\BigNumber;
+use Brick\Money\Currency;
 use Brick\Money\ExchangeRateProvider;
 use Override;
 
@@ -34,14 +35,17 @@ class ProviderMock implements ExchangeRateProvider
     }
 
     #[Override]
-    public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode): string
+    public function getExchangeRate(Currency $sourceCurrency, Currency $targetCurrency): ?BigNumber
     {
         $this->calls++;
 
+        $sourceCurrencyCode = $sourceCurrency->getCurrencyCode();
+        $targetCurrencyCode = $targetCurrency->getCurrencyCode();
+
         if (isset($this->exchangeRates[$sourceCurrencyCode][$targetCurrencyCode])) {
-            return $this->exchangeRates[$sourceCurrencyCode][$targetCurrencyCode];
+            return BigNumber::of($this->exchangeRates[$sourceCurrencyCode][$targetCurrencyCode]);
         }
 
-        throw CurrencyConversionException::exchangeRateNotAvailable($sourceCurrencyCode, $targetCurrencyCode);
+        return null;
     }
 }
