@@ -1,5 +1,38 @@
 # Changelog
 
+## UNRELEASED (0.11.0)
+
+💥 **Breaking changes**
+
+- Minimum PHP version is now 8.2
+- The following classes are now `final`:
+  - `CurrencyConversionException`
+  - `MoneyMismatchException`
+  - `UnknownCurrencyException`
+- `CustomContext` now validates the step and will throw an exception if an invalid step is given
+
+⚠️ **Deprecations**
+
+- Calling `Currency::of()` with a numeric code is deprecated, use `Currency::ofNumericCode()` instead
+- Calling `ISOCurrencyProvider::getCurrency()` with a numeric code is deprecated, use `getCurrencyByNumericCode()` instead
+
+✨ **New features**
+
+- **Support for historical currencies** in `Money::of()`, `Currency::of()`, etc. (#104 by @survik1)
+- New enum: `CurrencyType`
+- New method: `Currency::getCurrencyType()` returns the type of the currency
+- New method: `Currency::ofNumericCode()` returns a currency by its numeric ISO 4217 code
+- New method: `ISOCurrencyProvider::getCurrencyByNumericCode()` returns a currency by its numeric code
+- New method: `ISOCurrencyProvider::getHistoricalCurrenciesForCountry()` returns historical currencies for a country
+
+👌 **Improvements**
+
+- `MoneyException` now extends `RuntimeException` instead of `Exception`
+
+📝 **Documentation**
+
+- Backward compatibility promise notes for currency updates
+
 ## [0.10.3](https://github.com/brick/money/releases/tag/0.10.3) - 2025-09-03
 
 👌 **Improvements**
