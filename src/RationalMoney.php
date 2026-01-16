@@ -130,4 +130,10 @@ final readonly class RationalMoney extends AbstractMoney
     {
         return $this->currency . ' ' . $this->amount;
     }
+
+    #[Override]
+    protected function toRational(): RationalMoney
+    {
+        return $this;
+    }
 }

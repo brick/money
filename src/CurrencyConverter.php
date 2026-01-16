@@ -26,34 +26,34 @@ final readonly class CurrencyConverter
     /**
      * Converts the given money to the given currency.
      *
-     * @param MoneyContainer      $moneyContainer The Money, RationalMoney or MoneyBag to convert.
-     * @param Currency|string|int $currency       The Currency instance, ISO currency code or ISO numeric currency code.
-     * @param Context|null        $context        A context to create the money in, or null to use the default.
-     * @param RoundingMode        $roundingMode   The rounding mode, if necessary.
+     * @param Monetary            $money        The Money, RationalMoney or MoneyBag to convert.
+     * @param Currency|string|int $currency     The Currency instance, ISO currency code or ISO numeric currency code.
+     * @param Context|null        $context      A context to create the money in, or null to use the default.
+     * @param RoundingMode        $roundingMode The rounding mode, if necessary.
      *
      * @throws CurrencyConversionException If the exchange rate is not available.
      * @throws RoundingNecessaryException  If rounding is necessary and RoundingMode::UNNECESSARY is used.
      */
     public function convert(
-        MoneyContainer $moneyContainer,
+        Monetary $money,
         Currency|string|int $currency,
         ?Context $context = null,
         RoundingMode $roundingMode = RoundingMode::UNNECESSARY,
     ): Money {
         return $this
-            ->convertToRational($moneyContainer, $currency)
+            ->convertToRational($money, $currency)
             ->to($context ?? new DefaultContext(), $roundingMode);
     }
 
     /**
      * Converts the given money to the given currency, and returns the result as a RationalMoney with no rounding.
      *
-     * @param MoneyContainer      $moneyContainer The Money, RationalMoney or MoneyBag to convert.
-     * @param Currency|string|int $currency       The Currency instance, ISO currency code or ISO numeric currency code.
+     * @param Monetary            $money    The Money, RationalMoney or MoneyBag to convert.
+     * @param Currency|string|int $currency The Currency instance, ISO currency code or ISO numeric currency code.
      *
      * @throws CurrencyConversionException If the exchange rate is not available.
      */
-    public function convertToRational(MoneyContainer $moneyContainer, Currency|string|int $currency): RationalMoney
+    public function convertToRational(Monetary $money, Currency|string|int $currency): RationalMoney
     {
         if (! $currency instanceof Currency) {
             $currency = Currency::of($currency);
@@ -63,7 +63,12 @@ final readonly class CurrencyConverter
 
         $total = BigRational::zero();
 
-        foreach ($moneyContainer->getAmounts() as $sourceCurrencyCode => $amount) {
+        foreach ($money->getMonies() as $containedMoney) {
+            $sourceCurrency = $containedMoney->getCurrency();
+            $sourceCurrencyCode = $sourceCurrency->getCurrencyCode();
+
+            $amount = $containedMoney->getAmount();
+
             if ($sourceCurrencyCode !== $currencyCode) {
                 $exchangeRate = $this->exchangeRateProvider->getExchangeRate($sourceCurrencyCode, $currencyCode);
                 $amount = $amount->toBigRational()->multipliedBy($exchangeRate);

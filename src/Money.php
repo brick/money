@@ -728,6 +728,7 @@ final readonly class Money extends AbstractMoney
         return $this->formatWith($formatter);
     }
 
+    #[Override]
     public function toRational(): RationalMoney
     {
         return new RationalMoney($this->amount->toBigRational(), $this->currency);

@@ -19,7 +19,7 @@ use Stringable;
  * Please consider this class sealed: extending this class yourself is not supported, and breaking changes (such as
  * adding new abstract methods) can happen at any time, even in a minor version.
  */
-abstract readonly class AbstractMoney implements MoneyContainer, Stringable, JsonSerializable
+abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSerializable
 {
     abstract public function getAmount(): BigNumber;
 
@@ -39,13 +39,13 @@ abstract readonly class AbstractMoney implements MoneyContainer, Stringable, Jso
     }
 
     /**
-     * Required by interface MoneyContainer.
+     * Required by interface Monetary. Not intended for direct use.
      */
     #[Override]
-    final public function getAmounts(): array
+    final public function getMonies(): array
     {
         return [
-            $this->getCurrency()->getCurrencyCode() => $this->getAmount(),
+            $this->toRational(),
         ];
     }
 
@@ -187,6 +187,11 @@ abstract readonly class AbstractMoney implements MoneyContainer, Stringable, Jso
             'currency' => $this->getCurrency()->jsonSerialize(),
         ];
     }
+
+    /**
+     * Converts this money object to a RationalMoney.
+     */
+    abstract protected function toRational(): RationalMoney;
 
     /**
      * Returns the amount of the given parameter.

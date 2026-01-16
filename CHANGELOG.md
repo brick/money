@@ -10,11 +10,17 @@
   - `MoneyMismatchException`
   - `UnknownCurrencyException`
 - `CustomContext` now validates the step and will throw an exception if an invalid step is given
+- Interface `MoneyContainer` has been removed (replaced by `Monetary`)
+- Method `AbstractMoney::getAmounts()` has been removed (replaced by `getMonies()`)
+- Method `MoneyBag::getAmounts()` has been removed (replaced by `getMonies()`)
+- `CurrencyConverter::convert()` and `convertToRational()` now accept a `Monetary` instance (which still includes `Money`, `RationalMoney` and `MoneyBag`)
+- `MoneyBag::add()` and `subtract()` now accept a `Monetary` instance (which still includes `Money`, `RationalMoney` and `MoneyBag`)
 
 ⚠️ **Deprecations**
 
 - Calling `Currency::of()` with a numeric code is deprecated, use `Currency::ofNumericCode()` instead
 - Calling `ISOCurrencyProvider::getCurrency()` with a numeric code is deprecated, use `getCurrencyByNumericCode()` instead
+- `MoneyBag::getAmount()` is deprecated, use `getMoney()` instead
 
 ✨ **New features**
 
@@ -24,6 +30,9 @@
 - New method: `Currency::ofNumericCode()` returns a currency by its numeric ISO 4217 code
 - New method: `ISOCurrencyProvider::getCurrencyByNumericCode()` returns a currency by its numeric code
 - New method: `ISOCurrencyProvider::getHistoricalCurrenciesForCountry()` returns historical currencies for a country
+- New method: `MoneyBag::getMoney()` returns the contained amount in a given currency (replaces `getAmount()`)
+- New method: `MoneyBag::getMonies()` returns the contained monies (replaces `getAmounts()`)
+- New interface: `Monetary` (replaces `MoneyContainer`)
 
 👌 **Improvements**
 

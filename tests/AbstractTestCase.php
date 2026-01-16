@@ -83,12 +83,14 @@ abstract class AbstractTestCase extends TestCase
             $this->assertBigNumberEquals($expectedAmount, $actualAmount);
         }
 
-        // Test getAmounts()
-        $actualAmounts = $moneyBag->getAmounts();
+        // Test getMonies()
+        $actualMonies = $moneyBag->getMonies();
+        self::assertTrue(array_is_list($actualMonies));
 
-        foreach ($actualAmounts as $currencyCode => $actualAmount) {
-            self::assertInstanceOf(BigRational::class, $actualAmount);
-            $this->assertBigNumberEquals($expectedAmounts[$currencyCode], $actualAmount);
+        foreach ($actualMonies as $actualMoney) {
+            self::assertInstanceOf(RationalMoney::class, $actualMoney);
+            $currencyCode = $actualMoney->getCurrency()->getCurrencyCode();
+            $this->assertBigNumberEquals($expectedAmounts[$currencyCode], $actualMoney->getAmount());
         }
     }
 
