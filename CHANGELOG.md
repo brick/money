@@ -26,12 +26,13 @@
 
 - **Support for historical currencies** in `Money::of()`, `Currency::of()`, etc. (#104 by @survik1)
 - New enum: `CurrencyType`
-- New method: `Currency::getCurrencyType()` returns the type of the currency
-- New method: `Currency::ofNumericCode()` returns a currency by its numeric ISO 4217 code
-- New method: `ISOCurrencyProvider::getCurrencyByNumericCode()` returns a currency by its numeric code
-- New method: `ISOCurrencyProvider::getHistoricalCurrenciesForCountry()` returns historical currencies for a country
-- New method: `MoneyBag::getMoney()` returns the contained amount in a given currency (replaces `getAmount()`)
-- New method: `MoneyBag::getMonies()` returns the contained monies (replaces `getAmounts()`)
+- New methods:
+  - `Currency::getCurrencyType()` returns the type of the currency
+  - `Currency::ofNumericCode()` returns a currency by its numeric ISO 4217 code
+  - `ISOCurrencyProvider::getCurrencyByNumericCode()` returns a currency by its numeric code
+  - `ISOCurrencyProvider::getHistoricalCurrenciesForCountry()` returns historical currencies for a country
+  - `MoneyBag::getMoney()` returns the contained amount in a given currency (replaces `getAmount()`)
+  - `MoneyBag::getMonies()` returns the contained monies (replaces `getAmounts()`)
 - New interface: `Monetary` (replaces `MoneyContainer`)
 
 👌 **Improvements**
@@ -290,7 +291,7 @@ New method: `CustomContext::getScale()`
 
 Backports from 0.2.x:
 
-- New method: `CustomContext::getScale()`
+- `CustomContext::getScale()`
 - `Money::formatTo()` now always respects the scale of the Money
 - Bug fix: `Money::allocate()` incorrectly allocated negative monies
 
