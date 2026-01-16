@@ -15,6 +15,7 @@ use Brick\Money\MoneyBag;
 use Brick\Money\RationalMoney;
 use PHPUnit\Framework\TestCase;
 
+use function array_is_list;
 use function array_map;
 use function is_string;
 use function str_ends_with;
