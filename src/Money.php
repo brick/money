@@ -736,6 +736,7 @@ final readonly class Money extends AbstractMoney
     /**
      * Returns a non-localized string representation of this Money, e.g. "EUR 23.00".
      */
+    #[Override]
     public function __toString(): string
     {
         return $this->currency . ' ' . $this->amount;

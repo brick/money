@@ -125,6 +125,7 @@ final readonly class RationalMoney extends AbstractMoney
         return new self($this->amount->simplified(), $this->currency);
     }
 
+    #[Override]
     public function __toString(): string
     {
         return $this->currency . ' ' . $this->amount;
