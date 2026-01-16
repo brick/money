@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Brick\Money\Tests\ExchangeRateProvider;
 
-use Brick\Money\Exception\CurrencyConversionException;
+use Brick\Money\Currency;
 use Brick\Money\ExchangeRateProvider\PdoProvider;
 use Brick\Money\ExchangeRateProvider\PdoProviderConfiguration;
 use Brick\Money\Tests\AbstractTestCase;
@@ -76,12 +76,12 @@ class PdoProviderTest extends AbstractTestCase
     }
 
     /**
-     * @param string $sourceCurrencyCode The code of the source currency.
-     * @param string $targetCurrencyCode The code of the target currency.
-     * @param string $expectedResult     The expected exchange rate, or an exception class if expected.
+     * @param string      $sourceCurrencyCode The code of the source currency.
+     * @param string      $targetCurrencyCode The code of the target currency.
+     * @param string|null $expectedResult     The expected exchange rate, or null if not found.
      */
     #[DataProvider('providerGetExchangeRate')]
-    public function testGetExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode, string $expectedResult): void
+    public function testGetExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode, ?string $expectedResult): void
     {
         $pdo = new PDO('sqlite::memory:');
 
@@ -108,14 +108,15 @@ class PdoProviderTest extends AbstractTestCase
 
         $provider = new PdoProvider($pdo, $configuration);
 
-        if (self::isExceptionClass($expectedResult)) {
-            $this->expectException($expectedResult);
-        }
+        $sourceCurrency = Currency::of($sourceCurrencyCode);
+        $targetCurrency = Currency::of($targetCurrencyCode);
 
-        $actualRate = $provider->getExchangeRate($sourceCurrencyCode, $targetCurrencyCode);
+        $actualRate = $provider->getExchangeRate($sourceCurrency, $targetCurrency);
 
-        if (! self::isExceptionClass($expectedResult)) {
-            self::assertSame($expectedResult, $actualRate);
+        if ($expectedResult === null) {
+            self::assertNull($actualRate);
+        } else {
+            self::assertBigNumberEquals($expectedResult, $actualRate);
         }
     }
 
@@ -125,18 +126,18 @@ class PdoProviderTest extends AbstractTestCase
             ['USD', 'EUR', '0.9'],
             ['EUR', 'USD', '1.1'],
             ['USD', 'CAD', '1.2'],
-            ['CAD', 'USD', CurrencyConversionException::class],
-            ['EUR', 'CAD', CurrencyConversionException::class],
+            ['CAD', 'USD', null],
+            ['EUR', 'CAD', null],
         ];
     }
 
     /**
-     * @param string $sourceCurrencyCode The code of the source currency.
-     * @param string $targetCurrencyCode The code of the target currency.
-     * @param string $expectedResult     The expected exchange rate, or an exception class if expected.
+     * @param string      $sourceCurrencyCode The code of the source currency.
+     * @param string      $targetCurrencyCode The code of the target currency.
+     * @param string|null $expectedResult     The expected exchange rate, or null if not found.
      */
     #[DataProvider('providerWithFixedSourceCurrency')]
-    public function testWithFixedSourceCurrency(string $sourceCurrencyCode, string $targetCurrencyCode, string $expectedResult): void
+    public function testWithFixedSourceCurrency(string $sourceCurrencyCode, string $targetCurrencyCode, ?string $expectedResult): void
     {
         $pdo = new PDO('sqlite::memory:');
 
@@ -161,14 +162,15 @@ class PdoProviderTest extends AbstractTestCase
 
         $provider = new PdoProvider($pdo, $configuration);
 
-        if (self::isExceptionClass($expectedResult)) {
-            $this->expectException($expectedResult);
-        }
+        $sourceCurrency = Currency::of($sourceCurrencyCode);
+        $targetCurrency = Currency::of($targetCurrencyCode);
 
-        $actualRate = $provider->getExchangeRate($sourceCurrencyCode, $targetCurrencyCode);
+        $actualRate = $provider->getExchangeRate($sourceCurrency, $targetCurrency);
 
-        if (! self::isExceptionClass($expectedResult)) {
-            self::assertSame($expectedResult, $actualRate);
+        if ($expectedResult === null) {
+            self::assertNull($actualRate);
+        } else {
+            self::assertBigNumberEquals($expectedResult, $actualRate);
         }
     }
 
@@ -177,19 +179,19 @@ class PdoProviderTest extends AbstractTestCase
         return [
             ['EUR', 'USD', '1.1'],
             ['EUR', 'CAD', '1.2'],
-            ['EUR', 'GBP', CurrencyConversionException::class],
-            ['USD', 'EUR', CurrencyConversionException::class],
-            ['CAD', 'EUR', CurrencyConversionException::class],
+            ['EUR', 'GBP', null],
+            ['USD', 'EUR', null],
+            ['CAD', 'EUR', null],
         ];
     }
 
     /**
-     * @param string $sourceCurrencyCode The code of the source currency.
-     * @param string $targetCurrencyCode The code of the target currency.
-     * @param string $expectedResult     The expected exchange rate, or an exception class if expected.
+     * @param string      $sourceCurrencyCode The code of the source currency.
+     * @param string      $targetCurrencyCode The code of the target currency.
+     * @param string|null $expectedResult     The expected exchange rate, or null if not found.
      */
     #[DataProvider('providerWithFixedTargetCurrency')]
-    public function testWithFixedTargetCurrency(string $sourceCurrencyCode, string $targetCurrencyCode, string $expectedResult): void
+    public function testWithFixedTargetCurrency(string $sourceCurrencyCode, string $targetCurrencyCode, ?string $expectedResult): void
     {
         $pdo = new PDO('sqlite::memory:');
 
@@ -214,14 +216,15 @@ class PdoProviderTest extends AbstractTestCase
 
         $provider = new PdoProvider($pdo, $configuration);
 
-        if (self::isExceptionClass($expectedResult)) {
-            $this->expectException($expectedResult);
-        }
+        $sourceCurrency = Currency::of($sourceCurrencyCode);
+        $targetCurrency = Currency::of($targetCurrencyCode);
 
-        $actualRate = $provider->getExchangeRate($sourceCurrencyCode, $targetCurrencyCode);
+        $actualRate = $provider->getExchangeRate($sourceCurrency, $targetCurrency);
 
-        if (! self::isExceptionClass($expectedResult)) {
-            self::assertSame($expectedResult, $actualRate);
+        if ($expectedResult === null) {
+            self::assertNull($actualRate);
+        } else {
+            self::assertBigNumberEquals($expectedResult, $actualRate);
         }
     }
 
@@ -230,20 +233,20 @@ class PdoProviderTest extends AbstractTestCase
         return [
             ['USD', 'EUR', '0.9'],
             ['CAD', 'EUR', '0.8'],
-            ['GBP', 'EUR', CurrencyConversionException::class],
-            ['EUR', 'USD', CurrencyConversionException::class],
-            ['EUR', 'CAD', CurrencyConversionException::class],
+            ['GBP', 'EUR', null],
+            ['EUR', 'USD', null],
+            ['EUR', 'CAD', null],
         ];
     }
 
     /**
-     * @param string $sourceCurrencyCode The code of the source currency.
-     * @param string $targetCurrencyCode The code of the target currency.
-     * @param array  $parameters         The parameters to resolve the extra query placeholders.
-     * @param string $expectedResult     The expected exchange rate, or an exception class if expected.
+     * @param string      $sourceCurrencyCode The code of the source currency.
+     * @param string      $targetCurrencyCode The code of the target currency.
+     * @param array       $parameters         The parameters to resolve the extra query placeholders.
+     * @param string|null $expectedResult     The expected exchange rate, or null if not found.
      */
     #[DataProvider('providerWithParameters')]
-    public function testWithParameters(string $sourceCurrencyCode, string $targetCurrencyCode, array $parameters, string $expectedResult): void
+    public function testWithParameters(string $sourceCurrencyCode, string $targetCurrencyCode, array $parameters, ?string $expectedResult): void
     {
         $pdo = new PDO('sqlite::memory:');
 
@@ -275,14 +278,15 @@ class PdoProviderTest extends AbstractTestCase
         $provider = new PdoProvider($pdo, $configuration);
         $provider->setParameters(...$parameters);
 
-        if (self::isExceptionClass($expectedResult)) {
-            $this->expectException($expectedResult);
-        }
+        $sourceCurrency = Currency::of($sourceCurrencyCode);
+        $targetCurrency = Currency::of($targetCurrencyCode);
 
-        $actualRate = $provider->getExchangeRate($sourceCurrencyCode, $targetCurrencyCode);
+        $actualRate = $provider->getExchangeRate($sourceCurrency, $targetCurrency);
 
-        if (! self::isExceptionClass($expectedResult)) {
-            self::assertSame($expectedResult, $actualRate);
+        if ($expectedResult === null) {
+            self::assertNull($actualRate);
+        } else {
+            self::assertBigNumberEquals($expectedResult, $actualRate);
         }
     }
 
@@ -291,12 +295,12 @@ class PdoProviderTest extends AbstractTestCase
         return [
             ['EUR', 'USD', [2017, 8], '1.1'],
             ['EUR', 'CAD', [2017, 8], '1.2'],
-            ['EUR', 'GBP', [2017, 8], CurrencyConversionException::class],
+            ['EUR', 'GBP', [2017, 8], null],
             ['EUR', 'USD', [2017, 9], '1.15'],
             ['EUR', 'CAD', [2017, 9], '1.25'],
-            ['EUR', 'GBP', [2017, 9], CurrencyConversionException::class],
-            ['EUR', 'USD', [2017, 10], CurrencyConversionException::class],
-            ['EUR', 'CAD', [2017, 10], CurrencyConversionException::class],
+            ['EUR', 'GBP', [2017, 9], null],
+            ['EUR', 'USD', [2017, 10], null],
+            ['EUR', 'CAD', [2017, 10], null],
         ];
     }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Brick\Money\Tests\ExchangeRateProvider;
 
-use Brick\Money\Exception\CurrencyConversionException;
+use Brick\Money\Currency;
 use Brick\Money\ExchangeRateProvider\CachedProvider;
 use Brick\Money\Tests\AbstractTestCase;
 
@@ -18,21 +18,25 @@ class CachedProviderTest extends AbstractTestCase
         $mock = new ProviderMock();
         $provider = new CachedProvider($mock);
 
-        self::assertSame('1.1', $provider->getExchangeRate('EUR', 'USD'));
+        $eur = Currency::of('EUR');
+        $usd = Currency::of('USD');
+        $gbp = Currency::of('GBP');
+
+        self::assertBigNumberEquals('1.1', $provider->getExchangeRate($eur, $usd));
         self::assertSame(1, $mock->getCalls());
 
-        self::assertSame('1.1', $provider->getExchangeRate('EUR', 'USD'));
+        self::assertBigNumberEquals('1.1', $provider->getExchangeRate($eur, $usd));
         self::assertSame(1, $mock->getCalls());
 
-        self::assertSame('0.9', $provider->getExchangeRate('EUR', 'GBP'));
+        self::assertBigNumberEquals('0.9', $provider->getExchangeRate($eur, $gbp));
         self::assertSame(2, $mock->getCalls());
 
-        self::assertSame('0.9', $provider->getExchangeRate('EUR', 'GBP'));
+        self::assertBigNumberEquals('0.9', $provider->getExchangeRate($eur, $gbp));
         self::assertSame(2, $mock->getCalls());
 
         $provider->invalidate();
 
-        self::assertSame('0.9', $provider->getExchangeRate('EUR', 'GBP'));
+        self::assertBigNumberEquals('0.9', $provider->getExchangeRate($eur, $gbp));
         self::assertSame(3, $mock->getCalls());
     }
 
@@ -41,7 +45,6 @@ class CachedProviderTest extends AbstractTestCase
         $mock = new ProviderMock();
         $provider = new CachedProvider($mock);
 
-        $this->expectException(CurrencyConversionException::class);
-        $provider->getExchangeRate('USD', 'EUR');
+        self::assertNull($provider->getExchangeRate(Currency::of('USD'), Currency::of('EUR')));
     }
 }

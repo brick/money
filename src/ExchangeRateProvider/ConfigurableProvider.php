@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace Brick\Money\ExchangeRateProvider;
 
 use Brick\Math\BigNumber;
-use Brick\Money\Exception\CurrencyConversionException;
+use Brick\Math\Exception\MathException;
+use Brick\Money\Currency;
 use Brick\Money\ExchangeRateProvider;
 use Override;
 
@@ -15,27 +16,40 @@ use Override;
 final class ConfigurableProvider implements ExchangeRateProvider
 {
     /**
-     * @var array<string, array<string, BigNumber|int|string>>
+     * The configured exchange rates, indexed by source currency code and target currency code.
+     *
+     * @var array<string, array<string, BigNumber>>
      */
     private array $exchangeRates = [];
 
     /**
+     * Sets an exchange rate for a currency pair.
+     *
+     * This method allows non-ISO currency codes.
+     *
      * @return ConfigurableProvider This instance, for chaining.
+     *
+     * @throws MathException If the exchange rate is not a valid number.
      */
-    public function setExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode, BigNumber|int|string $exchangeRate): self
-    {
-        $this->exchangeRates[$sourceCurrencyCode][$targetCurrencyCode] = $exchangeRate;
+    public function setExchangeRate(
+        Currency|string $sourceCurrency,
+        Currency|string $targetCurrency,
+        BigNumber|int|string $exchangeRate,
+    ): self {
+        $sourceCurrencyCode = $sourceCurrency instanceof Currency ? $sourceCurrency->getCurrencyCode() : $sourceCurrency;
+        $targetCurrencyCode = $targetCurrency instanceof Currency ? $targetCurrency->getCurrencyCode() : $targetCurrency;
+
+        $this->exchangeRates[$sourceCurrencyCode][$targetCurrencyCode] = BigNumber::of($exchangeRate);
 
         return $this;
     }
 
     #[Override]
-    public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode): BigNumber|int|string
+    public function getExchangeRate(Currency $sourceCurrency, Currency $targetCurrency): ?BigNumber
     {
-        if (isset($this->exchangeRates[$sourceCurrencyCode][$targetCurrencyCode])) {
-            return $this->exchangeRates[$sourceCurrencyCode][$targetCurrencyCode];
-        }
+        $sourceCurrencyCode = $sourceCurrency->getCurrencyCode();
+        $targetCurrencyCode = $targetCurrency->getCurrencyCode();
 
-        throw CurrencyConversionException::exchangeRateNotAvailable($sourceCurrencyCode, $targetCurrencyCode);
+        return $this->exchangeRates[$sourceCurrencyCode][$targetCurrencyCode] ?? null;
     }
 }

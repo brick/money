@@ -6,7 +6,7 @@ namespace Brick\Money\Tests\ExchangeRateProvider;
 
 use Brick\Math\BigRational;
 use Brick\Math\RoundingMode;
-use Brick\Money\Exception\CurrencyConversionException;
+use Brick\Money\Currency;
 use Brick\Money\ExchangeRateProvider;
 use Brick\Money\ExchangeRateProvider\ConfigurableProvider;
 use Brick\Money\Tests\AbstractTestCase;
@@ -25,7 +25,10 @@ class ConfigurableProviderTest extends AbstractTestCase
     #[DataProvider('providerGetExchangeRate')]
     public function testGetExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode, string $exchangeRate): void
     {
-        $rate = $this->getExchangeRateProvider()->getExchangeRate($sourceCurrencyCode, $targetCurrencyCode);
+        $sourceCurrency = Currency::of($sourceCurrencyCode);
+        $targetCurrency = Currency::of($targetCurrencyCode);
+
+        $rate = $this->getExchangeRateProvider()->getExchangeRate($sourceCurrency, $targetCurrency);
         self::assertSame($exchangeRate, (string) BigRational::of($rate)->toScale(3, RoundingMode::Down));
     }
 
@@ -40,16 +43,9 @@ class ConfigurableProviderTest extends AbstractTestCase
 
     public function testUnknownCurrencyPair(): void
     {
-        try {
-            $this->getExchangeRateProvider()->getExchangeRate('EUR', 'USD');
-        } catch (CurrencyConversionException $e) {
-            self::assertSame('EUR', $e->getSourceCurrencyCode());
-            self::assertSame('USD', $e->getTargetCurrencyCode());
-
-            return;
-        }
-
-        self::fail('Expected CurrencyConversionException');
+        self::assertNull(
+            $this->getExchangeRateProvider()->getExchangeRate(Currency::of('EUR'), Currency::of('USD')),
+        );
     }
 
     private function getExchangeRateProvider(): ExchangeRateProvider

@@ -9,7 +9,8 @@ use Brick\Math\Exception\RoundingNecessaryException;
 use Brick\Math\RoundingMode;
 use Brick\Money\Context\DefaultContext;
 use Brick\Money\Exception\ContextException;
-use Brick\Money\Exception\CurrencyConversionException;
+use Brick\Money\Exception\ExchangeRateNotFoundException;
+use Brick\Money\Exception\ExchangeRateProviderException;
 use Brick\Money\Exception\UnknownCurrencyException;
 
 /**
@@ -33,10 +34,11 @@ final readonly class CurrencyConverter
      * @param Context         $context      A context to create the money in, defaults to DefaultContext.
      * @param RoundingMode    $roundingMode The rounding mode, if necessary.
      *
-     * @throws UnknownCurrencyException    If an unknown currency code is given.
-     * @throws CurrencyConversionException If the exchange rate is not available.
-     * @throws RoundingNecessaryException  If rounding is necessary and RoundingMode::Unnecessary is used.
-     * @throws ContextException            If the context does not apply.
+     * @throws UnknownCurrencyException      If an unknown currency code is given.
+     * @throws ExchangeRateNotFoundException If the exchange rate is not available.
+     * @throws ExchangeRateProviderException If an error occurs while retrieving exchange rates.
+     * @throws RoundingNecessaryException    If rounding is necessary and RoundingMode::Unnecessary is used.
+     * @throws ContextException              If the context does not apply.
      */
     public function convert(
         Monetary $money,
@@ -55,8 +57,9 @@ final readonly class CurrencyConverter
      * @param Monetary        $money    The Money, RationalMoney or MoneyBag to convert.
      * @param Currency|string $currency The Currency instance or ISO currency code.
      *
-     * @throws UnknownCurrencyException    If an unknown currency code is given.
-     * @throws CurrencyConversionException If the exchange rate is not available.
+     * @throws UnknownCurrencyException      If an unknown currency code is given.
+     * @throws ExchangeRateNotFoundException If the exchange rate is not available.
+     * @throws ExchangeRateProviderException If an error occurs while retrieving exchange rates.
      */
     public function convertToRational(Monetary $money, Currency|string $currency): RationalMoney
     {
@@ -75,7 +78,12 @@ final readonly class CurrencyConverter
             $amount = $containedMoney->getAmount();
 
             if ($sourceCurrencyCode !== $currencyCode) {
-                $exchangeRate = $this->exchangeRateProvider->getExchangeRate($sourceCurrencyCode, $currencyCode);
+                $exchangeRate = $this->exchangeRateProvider->getExchangeRate($sourceCurrency, $currency);
+
+                if ($exchangeRate === null) {
+                    throw ExchangeRateNotFoundException::exchangeRateNotFound($sourceCurrencyCode, $currencyCode);
+                }
+
                 $amount = $amount->toBigRational()->multipliedBy($exchangeRate);
             }
 
