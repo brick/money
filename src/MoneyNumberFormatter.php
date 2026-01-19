@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Brick\Money;
 
 use NumberFormatter;
+use Override;
 
 /**
  * Basic convenience wrapper of \NumberFormatter.
@@ -18,7 +19,7 @@ final class MoneyNumberFormatter implements MoneyFormatter
         $this->numberFormatter = $numberFormatter;
     }
 
-    #[\Override]
+    #[Override]
     public function format(Money $money): string
     {
         return $this->numberFormatter->formatCurrency(

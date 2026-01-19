@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Brick\Money;
 
 use NumberFormatter;
+use Override;
 
 final class MoneyLocaleFormatter implements MoneyFormatter
 {
@@ -21,7 +22,7 @@ final class MoneyLocaleFormatter implements MoneyFormatter
         $this->numberFormatter = new NumberFormatter($locale, NumberFormatter::CURRENCY);
     }
 
-    #[\Override]
+    #[Override]
     public function format(Money $money): string
     {
         if ($this->allowWholeNumber && ! $money->getAmount()->hasNonZeroFractionalPart()) {
