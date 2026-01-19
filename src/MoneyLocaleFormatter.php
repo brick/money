@@ -14,8 +14,6 @@ final class MoneyLocaleFormatter implements MoneyFormatter
 
     protected readonly NumberFormatter $numberFormatter;
 
-    protected ?int $lastScale = null;
-
     public function __construct(string $locale, bool $allowWholeNumber)
     {
         $this->locale = $locale;
@@ -34,11 +32,8 @@ final class MoneyLocaleFormatter implements MoneyFormatter
         /**
          * Adjust scale used by the number formatter in $this->moneyFormatter.
          */
-        if ($this->lastScale !== $scale) {
-            $this->numberFormatter->setAttribute(NumberFormatter::MIN_FRACTION_DIGITS, $scale);
-            $this->numberFormatter->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, $scale);
-            $this->lastScale = $scale;
-        }
+        $this->numberFormatter->setAttribute(NumberFormatter::MIN_FRACTION_DIGITS, $scale);
+        $this->numberFormatter->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, $scale);
 
         return $this->numberFormatter->formatCurrency(
             $money->getAmount()->toFloat(),
