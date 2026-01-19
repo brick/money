@@ -872,28 +872,10 @@ class MoneyTest extends AbstractTestCase
      * @param string $expected         The expected output.
      */
     #[RequiresPhpExtension('intl')]
-    #[DataProvider('providerFormat')]
-    public function testFormat(array $money, string $locale, bool $allowWholeNumber, string $expected): void
+    #[DataProvider('providerFormatTo')]
+    public function testFormatToLocale(array $money, string $locale, bool $allowWholeNumber, string $expected): void
     {
         self::assertSame($expected, Money::of(...$money)->formatToLocale($locale, $allowWholeNumber));
-    }
-
-    public static function providerFormat(): array
-    {
-        return [
-            [['1.23', 'USD'], 'en_US', false, '$1.23'],
-            [['1.23', 'USD'], 'fr_FR', false, '1,23 $US'],
-            [['1.23', 'EUR'], 'fr_FR', false, '1,23 €'],
-            [['1.234', 'EUR', new CustomContext(3)], 'fr_FR', false, '1,234 €'],
-            [['234.0', 'EUR', new CustomContext(1)], 'fr_FR', false, '234,0 €'],
-            [['234.0', 'EUR', new CustomContext(1)], 'fr_FR', true, '234 €'],
-            [['234.00', 'GBP'], 'en_GB', false, '£234.00'],
-            [['234.00', 'GBP'], 'en_GB', true, '£234'],
-            [['234.000', 'EUR', new CustomContext(3)], 'fr_FR', false, '234,000 €'],
-            [['234.000', 'EUR', new CustomContext(3)], 'fr_FR', true, '234 €'],
-            [['234.001', 'GBP', new CustomContext(3)], 'en_GB', false, '£234.001'],
-            [['234.001', 'GBP', new CustomContext(3)], 'en_GB', true, '£234.001'],
-        ];
     }
 
     public function testToRational(): void
