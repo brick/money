@@ -686,10 +686,7 @@ final class Money extends AbstractMoney
      */
     public function formatWith(NumberFormatter $formatter): string
     {
-        return $formatter->formatCurrency(
-            $this->amount->toFloat(),
-            $this->currency->getCurrencyCode(),
-        );
+        return (new MoneyNumberFormatter($formatter))->format($this);
     }
 
     /**
@@ -705,39 +702,8 @@ final class Money extends AbstractMoney
      */
     public function formatTo(string $locale, bool $allowWholeNumber = false): string
     {
-        /** @var NumberFormatter|null $lastFormatter */
-        static $lastFormatter = null;
-        static $lastFormatterLocale;
-        static $lastFormatterScale;
-
-        if ($allowWholeNumber && ! $this->amount->hasNonZeroFractionalPart()) {
-            $scale = 0;
-        } else {
-            $scale = $this->amount->getScale();
-        }
-
-        if ($lastFormatter !== null && $lastFormatterLocale === $locale) {
-            $formatter = $lastFormatter;
-
-            if ($lastFormatterScale !== $scale) {
-                $formatter->setAttribute(NumberFormatter::MIN_FRACTION_DIGITS, $scale);
-                $formatter->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, $scale);
-
-                $lastFormatterScale = $scale;
-            }
-        } else {
-            $formatter = new NumberFormatter($locale, NumberFormatter::CURRENCY);
-
-            $formatter->setAttribute(NumberFormatter::MIN_FRACTION_DIGITS, $scale);
-            $formatter->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, $scale);
-
-            $lastFormatter = $formatter;
-            $lastFormatterLocale = $locale;
-            $lastFormatterScale = $scale;
-        }
-
         /** @psalm-suppress DeprecatedMethod */
-        return $this->formatWith($formatter);
+        return $this->formatToLocale($locale, $allowWholeNumber);
     }
 
     /**
@@ -749,7 +715,7 @@ final class Money extends AbstractMoney
      * @param string $locale           The locale to format to.
      * @param bool   $allowWholeNumber Whether to allow formatting as a whole number if the amount has no fraction.
      */
-    public function format(string $locale, bool $allowWholeNumber = false): string
+    public function formatToLocale(string $locale, bool $allowWholeNumber = false): string
     {
         return (new MoneyLocaleFormatter($locale, $allowWholeNumber))->format($this);
     }

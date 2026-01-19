@@ -875,7 +875,7 @@ class MoneyTest extends AbstractTestCase
     #[DataProvider('providerFormat')]
     public function testFormat(array $money, string $locale, bool $allowWholeNumber, string $expected): void
     {
-        self::assertSame($expected, Money::of(...$money)->format($locale, $allowWholeNumber));
+        self::assertSame($expected, Money::of(...$money)->formatToLocale($locale, $allowWholeNumber));
     }
 
     public static function providerFormat(): array
