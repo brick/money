@@ -21,6 +21,7 @@ final class MoneyLocaleFormatter implements MoneyFormatter
         $this->numberFormatter = new NumberFormatter($locale, NumberFormatter::CURRENCY);
     }
 
+    #[\Override]
     public function format(Money $money): string
     {
         if ($this->allowWholeNumber && ! $money->getAmount()->hasNonZeroFractionalPart()) {

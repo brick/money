@@ -18,6 +18,7 @@ final class MoneyNumberFormatter implements MoneyFormatter
         $this->numberFormatter = $numberFormatter;
     }
 
+    #[\Override]
     public function format(Money $money): string
     {
         return $this->numberFormatter->formatCurrency(

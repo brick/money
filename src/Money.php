@@ -702,7 +702,6 @@ final class Money extends AbstractMoney
      */
     public function formatTo(string $locale, bool $allowWholeNumber = false): string
     {
-        /** @psalm-suppress DeprecatedMethod */
         return $this->formatToLocale($locale, $allowWholeNumber);
     }
 
