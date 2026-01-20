@@ -21,6 +21,8 @@
 - Calling `Currency::of()` with a numeric code is deprecated, use `Currency::ofNumericCode()` instead
 - Calling `ISOCurrencyProvider::getCurrency()` with a numeric code is deprecated, use `getCurrencyByNumericCode()` instead
 - `MoneyBag::getAmount()` is deprecated, use `getMoney()` instead
+- `Money::formatTo()` is deprecated, use `Money::formatToLocale()` instead
+- `Money::formatWith()` is deprecated, use `MoneyNumberFormatter::format()` instead
 
 ✨ **New features**
 
@@ -33,7 +35,13 @@
   - `ISOCurrencyProvider::getHistoricalCurrenciesForCountry()` returns historical currencies for a country
   - `MoneyBag::getMoney()` returns the contained amount in a given currency (replaces `getAmount()`)
   - `MoneyBag::getMonies()` returns the contained monies (replaces `getAmounts()`)
-- New interface: `Monetary` (replaces `MoneyContainer`)
+  - `Money::formatToLocale()` formats the amount to a locale (replaces `formatTo()`) (#105 by @mklepaczewski)
+- New interfaces:
+  - `Monetary` (replaces `MoneyContainer`)
+  - `MoneyFormatter` formats a given `Money` object (#105 by @mklepaczewski)
+- New classes:
+  - `MoneyLocaleFormatter` formats a given `Money` object to a locale (#105 by @mklepaczewski)
+  - `MoneyNumberFormatter` formats a given `Money` object using a `NumberFormatter` instance (#105 by @mklepaczewski)
 
 👌 **Improvements**
 
