@@ -25,6 +25,20 @@ use function json_encode;
  */
 class RationalMoneyTest extends AbstractTestCase
 {
+    #[DataProvider('providerZero')]
+    public function testZero(string $currencyCode, string $expected): void
+    {
+        $this->assertRationalMoneyEquals($expected, RationalMoney::zero($currencyCode));
+    }
+
+    public static function providerZero(): array
+    {
+        return [
+            ['USD', 'USD 0'],
+            ['EUR', 'EUR 0'],
+        ];
+    }
+
     public function testGetters(): void
     {
         $amount = BigRational::of('123/456');

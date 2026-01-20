@@ -45,6 +45,20 @@ final readonly class RationalMoney extends AbstractMoney
         return new RationalMoney($amount, $currency);
     }
 
+    /**
+     * Returns a RationalMoney with zero value, in the given currency.
+     *
+     * @param Currency|string $currency The Currency instance or ISO currency code.
+     */
+    public static function zero(Currency|string $currency): RationalMoney
+    {
+        if (! $currency instanceof Currency) {
+            $currency = Currency::of($currency);
+        }
+
+        return new RationalMoney(BigRational::zero(), $currency);
+    }
+
     #[Override]
     public function getAmount(): BigRational
     {

@@ -42,6 +42,7 @@
   - `MoneyBag::getMoney()` returns the contained amount in a given currency (replaces `getAmount()`)
   - `MoneyBag::getMonies()` returns the contained monies (replaces `getAmounts()`)
   - `Money::formatToLocale()` formats the amount to a locale (replaces `formatTo()`) (#105 by @mklepaczewski)
+  - `RationalMoney::zero()` returns a zero `RationalMoney` in a given currency
 - New interfaces:
   - `Monetary` (replaces `MoneyContainer`)
   - `MoneyFormatter` formats a given `Money` object (#105 by @mklepaczewski)
