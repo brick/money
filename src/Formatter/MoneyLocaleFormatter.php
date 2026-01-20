@@ -11,15 +11,12 @@ use Override;
 
 final class MoneyLocaleFormatter implements MoneyFormatter
 {
-    protected readonly string $locale;
-
     protected readonly bool $allowWholeNumber;
 
     protected readonly NumberFormatter $numberFormatter;
 
     public function __construct(string $locale, bool $allowWholeNumber)
     {
-        $this->locale = $locale;
         $this->allowWholeNumber = $allowWholeNumber;
         $this->numberFormatter = new NumberFormatter($locale, NumberFormatter::CURRENCY);
     }
