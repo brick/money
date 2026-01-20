@@ -10,7 +10,10 @@ use NumberFormatter;
 use Override;
 
 /**
- * Basic convenience wrapper of \NumberFormatter.
+ * Basic convenience wrapper of NumberFormatter.
+ *
+ * Note that NumberFormatter internally represents values using floating point arithmetic, so discrepancies can appear
+ * when formatting very large monetary values.
  */
 final class MoneyNumberFormatter implements MoneyFormatter
 {

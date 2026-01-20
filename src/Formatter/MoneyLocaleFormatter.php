@@ -9,12 +9,20 @@ use Brick\Money\MoneyFormatter;
 use NumberFormatter;
 use Override;
 
+/**
+ * Note that this formatter uses NumberFormatter, which internally represents values using floating point arithmetic,
+ * so discrepancies can appear when formatting very large monetary values.
+ */
 final class MoneyLocaleFormatter implements MoneyFormatter
 {
     protected readonly bool $allowWholeNumber;
 
     protected readonly NumberFormatter $numberFormatter;
 
+    /**
+     * @param string $locale           The locale to format to, for example 'fr_FR' or 'en_US'.
+     * @param bool   $allowWholeNumber Whether to allow formatting as a whole number if the amount has no fraction.
+     */
     public function __construct(string $locale, bool $allowWholeNumber)
     {
         $this->allowWholeNumber = $allowWholeNumber;
