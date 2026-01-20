@@ -172,6 +172,8 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
      *
      * Unlike isEqualTo(), this method only accepts a money, and returns false if the given money is in another
      * currency, instead of throwing a MoneyMismatchException.
+     *
+     * @psalm-suppress DeprecatedMethod
      */
     final public function isAmountAndCurrencyEqualTo(AbstractMoney $that): bool
     {
@@ -201,6 +203,8 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
      * @param AbstractMoney|BigNumber|int|float|string $that A money or amount.
      *
      * @throws MoneyMismatchException If currencies don't match.
+     *
+     * @psalm-suppress DeprecatedMethod
      */
     final protected function getAmountOf(AbstractMoney|BigNumber|int|float|string $that): BigNumber|int|float|string
     {
