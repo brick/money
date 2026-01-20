@@ -59,8 +59,8 @@ class ISOCurrencyProviderTest extends AbstractTestCase
             ['TND', 788, 'Tunisian Dinar', 3, CurrencyType::IsoCurrent],
             ['DZD', 12, 'Algerian Dinar', 2, CurrencyType::IsoCurrent],
             ['ALL', 8, 'Lek', 2, CurrencyType::IsoCurrent],
-            ['ITL', 380, 'Italian Lira', 2, CurrencyType::IsoHistorical],
-            ['VNC', 704, 'Old Dong', 2, CurrencyType::IsoHistorical],
+            ['ITL', 380, 'Italian Lira', 0, CurrencyType::IsoHistorical],
+            ['BGN', 975, 'Bulgarian Lev', 2, CurrencyType::IsoHistorical],
         ];
     }
 
@@ -123,7 +123,6 @@ class ISOCurrencyProviderTest extends AbstractTestCase
     public static function providerHistoricalCurrencies(): array
     {
         return [
-            ['ES', ['ESA', 'ESB', 'ESP']],
             ['AD', ['ADP', 'ESP', 'FRF']],
             ['IT', ['ITL']],
         ];
