@@ -865,6 +865,19 @@ class MoneyTest extends AbstractTestCase
         ];
     }
 
+    /**
+     * @param array  $money            The money to test.
+     * @param string $locale           The target locale.
+     * @param bool   $allowWholeNumber Whether to allow formatting as a whole number if the amount has no fraction.
+     * @param string $expected         The expected output.
+     */
+    #[RequiresPhpExtension('intl')]
+    #[DataProvider('providerFormatTo')]
+    public function testFormatToLocale(array $money, string $locale, bool $allowWholeNumber, string $expected): void
+    {
+        self::assertSame($expected, Money::of(...$money)->formatToLocale($locale, $allowWholeNumber));
+    }
+
     public function testToRational(): void
     {
         $money = Money::of('12.3456', 'EUR', new AutoContext());
