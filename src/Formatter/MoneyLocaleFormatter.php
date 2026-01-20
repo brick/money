@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Brick\Money;
+namespace Brick\Money\Formatter;
 
+use Brick\Money\Money;
+use Brick\Money\MoneyFormatter;
 use NumberFormatter;
 use Override;
 

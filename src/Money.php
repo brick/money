@@ -15,6 +15,8 @@ use Brick\Math\RoundingMode;
 use Brick\Money\Context\DefaultContext;
 use Brick\Money\Exception\MoneyMismatchException;
 use Brick\Money\Exception\UnknownCurrencyException;
+use Brick\Money\Formatter\MoneyLocaleFormatter;
+use Brick\Money\Formatter\MoneyNumberFormatter;
 use InvalidArgumentException;
 use NumberFormatter;
 use Override;

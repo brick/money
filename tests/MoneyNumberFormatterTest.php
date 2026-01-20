@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Brick\Money\Tests;
 
 use Brick\Money\Context\AutoContext;
+use Brick\Money\Formatter\MoneyNumberFormatter;
 use Brick\Money\Money;
-use Brick\Money\MoneyNumberFormatter;
 use NumberFormatter;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
