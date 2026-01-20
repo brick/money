@@ -101,13 +101,13 @@ class PDOProviderTest extends AbstractTestCase
 
         $provider = new PDOProvider($pdo, $configuration);
 
-        if ($this->isExceptionClass($expectedResult)) {
+        if (self::isExceptionClass($expectedResult)) {
             $this->expectException($expectedResult);
         }
 
         $actualRate = $provider->getExchangeRate($sourceCurrencyCode, $targetCurrencyCode);
 
-        if (! $this->isExceptionClass($expectedResult)) {
+        if (! self::isExceptionClass($expectedResult)) {
             self::assertSame($expectedResult, $actualRate);
         }
     }
@@ -154,13 +154,13 @@ class PDOProviderTest extends AbstractTestCase
 
         $provider = new PDOProvider($pdo, $configuration);
 
-        if ($this->isExceptionClass($expectedResult)) {
+        if (self::isExceptionClass($expectedResult)) {
             $this->expectException($expectedResult);
         }
 
         $actualRate = $provider->getExchangeRate($sourceCurrencyCode, $targetCurrencyCode);
 
-        if (! $this->isExceptionClass($expectedResult)) {
+        if (! self::isExceptionClass($expectedResult)) {
             self::assertSame($expectedResult, $actualRate);
         }
     }
@@ -207,13 +207,13 @@ class PDOProviderTest extends AbstractTestCase
 
         $provider = new PDOProvider($pdo, $configuration);
 
-        if ($this->isExceptionClass($expectedResult)) {
+        if (self::isExceptionClass($expectedResult)) {
             $this->expectException($expectedResult);
         }
 
         $actualRate = $provider->getExchangeRate($sourceCurrencyCode, $targetCurrencyCode);
 
-        if (! $this->isExceptionClass($expectedResult)) {
+        if (! self::isExceptionClass($expectedResult)) {
             self::assertSame($expectedResult, $actualRate);
         }
     }
@@ -268,13 +268,13 @@ class PDOProviderTest extends AbstractTestCase
         $provider = new PDOProvider($pdo, $configuration);
         $provider->setParameters(...$parameters);
 
-        if ($this->isExceptionClass($expectedResult)) {
+        if (self::isExceptionClass($expectedResult)) {
             $this->expectException($expectedResult);
         }
 
         $actualRate = $provider->getExchangeRate($sourceCurrencyCode, $targetCurrencyCode);
 
-        if (! $this->isExceptionClass($expectedResult)) {
+        if (! self::isExceptionClass($expectedResult)) {
             self::assertSame($expectedResult, $actualRate);
         }
     }

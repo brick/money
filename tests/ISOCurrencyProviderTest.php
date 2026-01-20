@@ -37,12 +37,12 @@ class ISOCurrencyProviderTest extends AbstractTestCase
         $provider = ISOCurrencyProvider::getInstance();
 
         $currency = $provider->getCurrency($currencyCode);
-        $this->assertCurrencyEquals($currencyCode, $numericCode, $name, $defaultFractionDigits, $currencyType, $currency);
+        self::assertCurrencyEquals($currencyCode, $numericCode, $name, $defaultFractionDigits, $currencyType, $currency);
 
         // Library does not support numeric currency codes of historical currencies
         if ($currencyType === CurrencyType::IsoCurrent) {
             $currency = $provider->getCurrencyByNumericCode($numericCode);
-            $this->assertCurrencyEquals($currencyCode, $numericCode, $name, $defaultFractionDigits, $currencyType, $currency);
+            self::assertCurrencyEquals($currencyCode, $numericCode, $name, $defaultFractionDigits, $currencyType, $currency);
         }
     }
 

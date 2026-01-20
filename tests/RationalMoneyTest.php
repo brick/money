@@ -28,7 +28,7 @@ class RationalMoneyTest extends AbstractTestCase
     #[DataProvider('providerZero')]
     public function testZero(string $currencyCode, string $expected): void
     {
-        $this->assertRationalMoneyEquals($expected, RationalMoney::zero($currencyCode));
+        self::assertRationalMoneyEquals($expected, RationalMoney::zero($currencyCode));
     }
 
     public static function providerZero(): array
@@ -55,14 +55,14 @@ class RationalMoneyTest extends AbstractTestCase
     {
         $rationalMoney = RationalMoney::of(...$rationalMoney);
 
-        if ($this->isExceptionClass($expected)) {
+        if (self::isExceptionClass($expected)) {
             $this->expectException($expected);
         }
 
         $actual = $rationalMoney->plus($amount);
 
-        if (! $this->isExceptionClass($expected)) {
-            $this->assertRationalMoneyEquals($expected, $actual);
+        if (! self::isExceptionClass($expected)) {
+            self::assertRationalMoneyEquals($expected, $actual);
         }
     }
 
@@ -84,14 +84,14 @@ class RationalMoneyTest extends AbstractTestCase
     {
         $rationalMoney = RationalMoney::of(...$rationalMoney);
 
-        if ($this->isExceptionClass($expected)) {
+        if (self::isExceptionClass($expected)) {
             $this->expectException($expected);
         }
 
         $actual = $rationalMoney->minus($amount);
 
-        if (! $this->isExceptionClass($expected)) {
-            $this->assertRationalMoneyEquals($expected, $actual);
+        if (! self::isExceptionClass($expected)) {
+            self::assertRationalMoneyEquals($expected, $actual);
         }
     }
 
@@ -113,14 +113,14 @@ class RationalMoneyTest extends AbstractTestCase
     {
         $rationalMoney = RationalMoney::of(...$rationalMoney);
 
-        if ($this->isExceptionClass($expected)) {
+        if (self::isExceptionClass($expected)) {
             $this->expectException($expected);
         }
 
         $actual = $rationalMoney->multipliedBy($operand);
 
-        if (! $this->isExceptionClass($expected)) {
-            $this->assertRationalMoneyEquals($expected, $actual);
+        if (! self::isExceptionClass($expected)) {
+            self::assertRationalMoneyEquals($expected, $actual);
         }
     }
 
@@ -138,14 +138,14 @@ class RationalMoneyTest extends AbstractTestCase
     {
         $rationalMoney = RationalMoney::of(...$rationalMoney);
 
-        if ($this->isExceptionClass($expected)) {
+        if (self::isExceptionClass($expected)) {
             $this->expectException($expected);
         }
 
         $actual = $rationalMoney->dividedBy($operand);
 
-        if (! $this->isExceptionClass($expected)) {
-            $this->assertRationalMoneyEquals($expected, $actual);
+        if (! self::isExceptionClass($expected)) {
+            self::assertRationalMoneyEquals($expected, $actual);
         }
     }
 
@@ -165,7 +165,7 @@ class RationalMoneyTest extends AbstractTestCase
         $rationalMoney = RationalMoney::of(...$rationalMoney);
 
         $actual = $rationalMoney->simplified();
-        $this->assertRationalMoneyEquals($expected, $actual);
+        self::assertRationalMoneyEquals($expected, $actual);
     }
 
     public static function providerSimplified(): array
@@ -183,14 +183,14 @@ class RationalMoneyTest extends AbstractTestCase
     {
         $rationalMoney = RationalMoney::of(...$rationalMoney);
 
-        if ($this->isExceptionClass($expected)) {
+        if (self::isExceptionClass($expected)) {
             $this->expectException($expected);
         }
 
         $actual = $rationalMoney->to($context, $roundingMode);
 
-        if (! $this->isExceptionClass($expected)) {
-            $this->assertMoneyIs($expected, $actual);
+        if (! self::isExceptionClass($expected)) {
+            self::assertMoneyIs($expected, $actual);
         }
     }
 

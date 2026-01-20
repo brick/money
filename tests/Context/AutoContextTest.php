@@ -27,14 +27,14 @@ class AutoContextTest extends AbstractTestCase
 
         $context = new AutoContext();
 
-        if ($this->isExceptionClass($expected)) {
+        if (self::isExceptionClass($expected)) {
             $this->expectException($expected);
         }
 
         $actual = $context->applyTo($amount, $currency, $roundingMode);
 
-        if (! $this->isExceptionClass($expected)) {
-            $this->assertBigDecimalIs($expected, $actual);
+        if (! self::isExceptionClass($expected)) {
+            self::assertBigDecimalIs($expected, $actual);
         }
     }
 

@@ -35,14 +35,14 @@ class CurrencyConverterTest extends AbstractTestCase
         $money = Money::of(...$money);
         $currencyConverter = $this->createCurrencyConverter();
 
-        if ($this->isExceptionClass($expectedResult)) {
+        if (self::isExceptionClass($expectedResult)) {
             $this->expectException($expectedResult);
         }
 
         $actualResult = $currencyConverter->convert($money, $toCurrency, null, $roundingMode);
 
-        if (! $this->isExceptionClass($expectedResult)) {
-            $this->assertMoneyIs($expectedResult, $actualResult);
+        if (! self::isExceptionClass($expectedResult)) {
+            self::assertMoneyIs($expectedResult, $actualResult);
         }
     }
 
@@ -86,7 +86,7 @@ class CurrencyConverterTest extends AbstractTestCase
         }
 
         $currencyConverter = new CurrencyConverter($exchangeRateProvider);
-        $this->assertMoneyIs($total, $currencyConverter->convert($moneyBag, $currency, $context, $roundingMode));
+        self::assertMoneyIs($total, $currencyConverter->convert($moneyBag, $currency, $context, $roundingMode));
     }
 
     public static function providerConvertMoneyBag(): array
@@ -122,7 +122,7 @@ class CurrencyConverterTest extends AbstractTestCase
         $currencyConverter = new CurrencyConverter($exchangeRateProvider);
         $actualTotal = $currencyConverter->convertToRational($moneyBag, $currency)->simplified();
 
-        $this->assertRationalMoneyEquals($expectedTotal, $actualTotal);
+        self::assertRationalMoneyEquals($expectedTotal, $actualTotal);
     }
 
     public static function providerConvertMoneyBagToRational(): array
@@ -146,14 +146,14 @@ class CurrencyConverterTest extends AbstractTestCase
 
         $rationalMoney = RationalMoney::of(...$money);
 
-        if ($this->isExceptionClass($expectedResult)) {
+        if (self::isExceptionClass($expectedResult)) {
             $this->expectException($expectedResult);
         }
 
         $actualResult = $currencyConverter->convert($rationalMoney, $toCurrency, null, $roundingMode);
 
-        if (! $this->isExceptionClass($expectedResult)) {
-            $this->assertMoneyIs($expectedResult, $actualResult);
+        if (! self::isExceptionClass($expectedResult)) {
+            self::assertMoneyIs($expectedResult, $actualResult);
         }
     }
 

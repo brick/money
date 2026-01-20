@@ -21,10 +21,10 @@ class CurrencyTest extends AbstractTestCase
     public function testOf(string $currencyCode, int $numericCode, int $fractionDigits, string $name, CurrencyType $currencyType): void
     {
         $currency = Currency::of($currencyCode);
-        $this->assertCurrencyEquals($currencyCode, $numericCode, $name, $fractionDigits, $currencyType, $currency);
+        self::assertCurrencyEquals($currencyCode, $numericCode, $name, $fractionDigits, $currencyType, $currency);
 
         $currency = Currency::of($numericCode);
-        $this->assertCurrencyEquals($currencyCode, $numericCode, $name, $fractionDigits, $currencyType, $currency);
+        self::assertCurrencyEquals($currencyCode, $numericCode, $name, $fractionDigits, $currencyType, $currency);
     }
 
     public static function providerOf(): array
@@ -57,7 +57,7 @@ class CurrencyTest extends AbstractTestCase
     public function testConstructor(): void
     {
         $bitCoin = new Currency('BTC', -1, 'BitCoin', 8);
-        $this->assertCurrencyEquals('BTC', -1, 'BitCoin', 8, CurrencyType::Custom, $bitCoin);
+        self::assertCurrencyEquals('BTC', -1, 'BitCoin', 8, CurrencyType::Custom, $bitCoin);
     }
 
     public function testOfReturnsSameInstance(): void
@@ -68,13 +68,13 @@ class CurrencyTest extends AbstractTestCase
     #[DataProvider('providerOfCountry')]
     public function testOfCountry(string $countryCode, string $expected): void
     {
-        if ($this->isExceptionClass($expected)) {
+        if (self::isExceptionClass($expected)) {
             $this->expectException($expected);
         }
 
         $actual = Currency::ofCountry($countryCode);
 
-        if (! $this->isExceptionClass($expected)) {
+        if (! self::isExceptionClass($expected)) {
             self::assertInstanceOf(Currency::class, $actual);
             self::assertSame($expected, $actual->getCurrencyCode());
         }
@@ -100,13 +100,13 @@ class CurrencyTest extends AbstractTestCase
     #[DataProvider('providerOfNumericCode')]
     public function testOfNumericCode(int $currencyCode, string $expected): void
     {
-        if ($this->isExceptionClass($expected)) {
+        if (self::isExceptionClass($expected)) {
             $this->expectException($expected);
         }
 
         $actual = Currency::ofNumericCode($currencyCode);
 
-        if (! $this->isExceptionClass($expected)) {
+        if (! self::isExceptionClass($expected)) {
             self::assertInstanceOf(Currency::class, $actual);
             self::assertSame($expected, $actual->getCurrencyCode());
         }
