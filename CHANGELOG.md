@@ -28,8 +28,10 @@
 - `Money::formatWith()` is deprecated, use `MoneyNumberFormatter::format()` instead
 - `Currency::is()` is deprecated, use `Currency::isEqualTo()` instead
 
-> [!NOTE]
-> Passing a currency by numeric code has been deprecated in many places. This separates retrieval by alphabetic code, which has strong backwards compatibility guarantees, from retrieval by numeric code, which may change in minor versions because ISO reassigns numeric currency codes over time, and forces users to explicitly call methods that are documented as not being covered by the same BC guarantees.
+> [!IMPORTANT]
+> The convenience of passing a currency by ISO numeric code in addition to alphabetic code has been deprecated, leaving only alphabetic-code lookup in generic APIs. For example, `Money::of()` will accept `Currency|string` in the future, instead of `Currency|string|int` today.
+> This makes explicit the separation between retrieval by alphabetic code, which has strong backwards compatibility guarantees, and retrieval by numeric code, which may change in minor versions due to ISO reassignments.
+> This will require users to explicitly obtain a currency through `Currency::ofNumericCode()`, which is documented as not being covered by the same BC guarantees.
 
 ✨ **New features**
 
