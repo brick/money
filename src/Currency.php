@@ -149,6 +149,8 @@ final readonly class Currency implements Stringable, JsonSerializable
      *
      * The currencies are considered equal if their currency codes are equal.
      *
+     * @deprecated Use isEqualTo() instead. Note that isEqualTo() does not support—and ignores—numeric codes.
+     *
      * @param Currency|string|int $currency The Currency instance, currency code or numeric currency code.
      */
     public function is(Currency|string|int $currency): bool
@@ -159,6 +161,22 @@ final readonly class Currency implements Stringable, JsonSerializable
 
         return $this->currencyCode === (string) $currency
             || ($this->numericCode !== 0 && $this->numericCode === (int) $currency);
+    }
+
+    /**
+     * Returns whether this currency is equal to the given currency.
+     *
+     * The currencies are considered equal if and only if their alphabetic currency codes are equal.
+     * Two currencies with the same numeric code but different alphabetic codes are NOT considered equal,
+     * because numeric codes may outlive a particular currency and be reused across currency changes.
+     *
+     * @param Currency|string $currency The Currency instance or ISO currency code.
+     */
+    public function isEqualTo(Currency|string $currency): bool
+    {
+        $currencyCode = $currency instanceof Currency ? $currency->getCurrencyCode() : $currency;
+
+        return $currencyCode === $this->currencyCode;
     }
 
     /**

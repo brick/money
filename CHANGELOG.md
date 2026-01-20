@@ -26,6 +26,7 @@
 - `MoneyBag::getAmount()` is deprecated, use `getMoney()` instead
 - `Money::formatTo()` is deprecated, use `Money::formatToLocale()` instead
 - `Money::formatWith()` is deprecated, use `MoneyNumberFormatter::format()` instead
+- `Currency::is()` is deprecated, use `Currency::isEqualTo()` instead
 
 > [!NOTE]
 > Passing a currency by numeric code has been deprecated in many places. This separates retrieval by alphabetic code, which has strong backwards compatibility guarantees, from retrieval by numeric code, which may change in minor versions because ISO reassigns numeric currency codes over time, and forces users to explicitly call methods that are documented as not being covered by the same BC guarantees.
@@ -37,6 +38,7 @@
 - New methods:
   - `Currency::getCurrencyType()` returns the type of the currency
   - `Currency::ofNumericCode()` returns a currency by its numeric ISO 4217 code
+  - `Currency::isEqualTo()` compares two currencies for equality (replaces `is()`)
   - `ISOCurrencyProvider::getCurrencyByNumericCode()` returns a currency by its numeric code
   - `ISOCurrencyProvider::getHistoricalCurrenciesForCountry()` returns historical currencies for a country
   - `MoneyBag::getMoney()` returns the contained amount in a given currency (replaces `getAmount()`)

@@ -143,6 +143,31 @@ class CurrencyTest extends AbstractTestCase
         self::assertTrue($clone->is($currency));
     }
 
+    public function testIsEqualTo(): void
+    {
+        $currency = Currency::of('EUR');
+
+        // Test with string currency code
+        self::assertTrue($currency->isEqualTo('EUR'));
+        self::assertFalse($currency->isEqualTo('USD'));
+
+        // Test with Currency instance
+        self::assertTrue($currency->isEqualTo(Currency::of('EUR')));
+        self::assertFalse($currency->isEqualTo(Currency::of('USD')));
+
+        // Test with cloned Currency
+        $clone = clone $currency;
+        self::assertNotSame($currency, $clone);
+        self::assertTrue($currency->isEqualTo($clone));
+        self::assertTrue($clone->isEqualTo($currency));
+
+        // Test with custom currency
+        $customCurrency = new Currency('XBT', 0, 'Bitcoin', 8);
+        self::assertTrue($customCurrency->isEqualTo('XBT'));
+        self::assertFalse($customCurrency->isEqualTo('BTC'));
+        self::assertTrue($customCurrency->isEqualTo(new Currency('XBT', 999, 'Different Name', 2)));
+    }
+
     #[DataProvider('providerJsonSerialize')]
     public function testJsonSerialize(Currency $currency, string $expected): void
     {
