@@ -10,9 +10,9 @@
   - `MoneyMismatchException`
   - `UnknownCurrencyException`
 - `CustomContext` now validates the step and will throw an exception if an invalid step is given
-- Interface `MoneyContainer` has been removed (replaced by `Monetary`)
-- Method `AbstractMoney::getAmounts()` has been removed (replaced by `getMonies()`)
-- Method `MoneyBag::getAmounts()` has been removed (replaced by `getMonies()`)
+- Interface `MoneyContainer` has been removed (replaced with `Monetary`)
+- Method `AbstractMoney::getAmounts()` has been removed (replaced with `getMonies()`)
+- Method `MoneyBag::getAmounts()` has been removed (replaced with `getMonies()`)
 - `CurrencyConverter::convert()` and `convertToRational()` now accept a `Monetary` instance (which still includes `Money`, `RationalMoney` and `MoneyBag`)
 - `MoneyBag::add()` and `subtract()` now accept a `Monetary` instance (which still includes `Money`, `RationalMoney` and `MoneyBag`)
 
