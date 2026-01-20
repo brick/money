@@ -20,9 +20,15 @@
 
 - Calling `Currency::of()` with a numeric code is deprecated, use `Currency::ofNumericCode()` instead
 - Calling `ISOCurrencyProvider::getCurrency()` with a numeric code is deprecated, use `getCurrencyByNumericCode()` instead
+- Calling `CurrencyConverter::convert()` or `convertToRational()` with a numeric currency code is deprecated, use a `Currency` instance instead
+- Calling `Money::of()`, `ofMinor()`, `zero()` or `convertedTo()` with a numeric currency code is deprecated, use a `Currency` instance instead
+- Calling `RationalMoney::of()` with a numeric currency code is deprecated, use a `Currency` instance instead
 - `MoneyBag::getAmount()` is deprecated, use `getMoney()` instead
 - `Money::formatTo()` is deprecated, use `Money::formatToLocale()` instead
 - `Money::formatWith()` is deprecated, use `MoneyNumberFormatter::format()` instead
+
+> [!NOTE]
+> Passing a currency by numeric code has been deprecated in many places. This separates retrieval by alphabetic code, which has strong backwards compatibility guarantees, from retrieval by numeric code, which may change in minor versions because ISO reassigns numeric currency codes over time, and forces users to explicitly call methods that are documented as not being covered by the same BC guarantees.
 
 ✨ **New features**
 
