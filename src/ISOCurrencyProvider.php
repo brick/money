@@ -233,6 +233,8 @@ final class ISOCurrencyProvider
      *
      * If the country code is not known, or if the country has no official currency, an empty array is returned.
      *
+     * Note: This value may change in minor releases, as additional currencies can be withdrawn from countries.
+     *
      * @param string $countryCode The 2-letter ISO 3166-1 country code.
      *
      * @return Currency[]
