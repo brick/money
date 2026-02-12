@@ -9,6 +9,7 @@ use Override;
 
 use function array_values;
 use function is_int;
+use function trigger_deprecation;
 
 /**
  * Container for monies in different currencies.
@@ -36,6 +37,8 @@ final class MoneyBag implements Monetary
      */
     public function getAmount(Currency|string|int $currency): BigRational
     {
+        trigger_deprecation('brick/money', '0.11.0', 'Calling "%s()" is deprecated, use getMoney()->getAmount() instead.', __METHOD__);
+
         if ($currency instanceof Currency) {
             $currencyCode = $currency->getCurrencyCode();
         } elseif (is_int($currency)) {

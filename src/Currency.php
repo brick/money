@@ -155,6 +155,8 @@ final readonly class Currency implements Stringable, JsonSerializable
      */
     public function is(Currency|string|int $currency): bool
     {
+        trigger_deprecation('brick/money', '0.11.0', 'Calling "%s()" is deprecated, use isEqualTo() instead.', __METHOD__);
+
         if ($currency instanceof Currency) {
             return $this->currencyCode === $currency->currencyCode;
         }

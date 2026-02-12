@@ -26,6 +26,7 @@ use function array_map;
 use function array_sum;
 use function array_values;
 use function intdiv;
+use function trigger_deprecation;
 
 /**
  * A monetary value in a given currency. This class is immutable.
@@ -681,6 +682,8 @@ final readonly class Money extends AbstractMoney
      */
     public function formatWith(NumberFormatter $formatter): string
     {
+        trigger_deprecation('brick/money', '0.11.0', 'Calling "%s()" is deprecated, use MoneyNumberFormatter::format() instead.', __METHOD__);
+
         return (new MoneyNumberFormatter($formatter))->format($this);
     }
 
@@ -697,6 +700,8 @@ final readonly class Money extends AbstractMoney
      */
     public function formatTo(string $locale, bool $allowWholeNumber = false): string
     {
+        trigger_deprecation('brick/money', '0.11.0', 'Calling "%s()" is deprecated, use formatToLocale() instead.', __METHOD__);
+
         return $this->formatToLocale($locale, $allowWholeNumber);
     }
 
