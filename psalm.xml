@@ -21,5 +21,17 @@
                 <directory name="src" />
             </errorLevel>
         </ImplicitToStringCast>
+        <DeprecatedConstant>
+            <!-- Still using UPPER_SNAKE_CASE RoundingMode constants for now -->
+            <errorLevel type="suppress">
+                <directory name="src" />
+            </errorLevel>
+        </DeprecatedConstant>
+        <DeprecatedMethod>
+            <!-- Still using stripTrailingZeros() and gcdMultiple() for now -->
+            <errorLevel type="suppress">
+                <directory name="src" />
+            </errorLevel>
+        </DeprecatedMethod>
     </issueHandlers>
 </psalm>
