@@ -7,9 +7,7 @@ namespace Brick\Money;
 use Brick\Money\Exception\UnknownCurrencyException;
 
 use function count;
-use function is_int;
 use function ksort;
-use function trigger_deprecation;
 
 /**
  * Provides ISO 4217 currencies.
@@ -92,20 +90,14 @@ final class ISOCurrencyProvider
     /**
      * Returns the currency matching the given currency code.
      *
-     * @param string|int $currencyCode The 3-letter or numeric ISO 4217 currency code.
+     * @param string $currencyCode The 3-letter uppercase ISO 4217 currency code.
      *
      * @return Currency The currency.
      *
      * @throws UnknownCurrencyException If the currency code is not known.
      */
-    public function getCurrency(string|int $currencyCode): Currency
+    public function getCurrency(string $currencyCode): Currency
     {
-        if (is_int($currencyCode)) {
-            trigger_deprecation('brick/money', '0.11.0', 'Calling "%s()" with integer argument is deprecated, call getCurrencyByNumericCode() instead.', __METHOD__);
-
-            return $this->getCurrencyByNumericCode($currencyCode);
-        }
-
         if (isset($this->currencies[$currencyCode])) {
             return $this->currencies[$currencyCode];
         }

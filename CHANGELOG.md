@@ -10,6 +10,15 @@
   - `AbstractMoney::compareTo()`, `isEqualTo()`, `isLessThan()`, `isLessThanOrEqualTo()`, `isGreaterThan()`, `isGreaterThanOrEqualTo()`
   - `ConfigurableProvider::setExchangeRate()`
 - **Calling `Currency::of()` with a numeric code is no longer supported**, use `Currency::ofNumericCode()` instead (#104)
+- **Calling the following methods with a numeric currency code is no longer supported**, use a `Currency` instance from `Currency::ofNumericCode()` instead (#104):
+  - `Money::of()`
+  - `Money::ofMinor()`
+  - `Money::zero()`
+  - `Money::convertedTo()`
+  - `RationalMoney::of()`
+  - `CurrencyConverter::convert()`
+  - `CurrencyConverter::convertToRational()`
+  - `ISOCurrencyProvider::getCurrency()`
 - `Currency::is()` has been removed, use `Currency::isEqualTo()` instead
 
 ## [0.11.1](https://github.com/brick/money/releases/tag/0.11.1) - 2026-02-12
