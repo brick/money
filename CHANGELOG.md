@@ -28,6 +28,7 @@
 ⚠️ **Deprecations**
 
 - Method `RationalMoney::simplified()` is deprecated, as it is now a no-op
+- Method `Money::getUnscaledAmount()` is deprecated, use `getAmount()->getUnscaledValue()` instead
 
 📌 **Compatibility**
 
