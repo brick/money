@@ -9,6 +9,7 @@
   - `RationalMoney::of()`, `plus()`, `minus()`, `multipliedBy()`, `dividedBy()`
   - `AbstractMoney::compareTo()`, `isEqualTo()`, `isLessThan()`, `isLessThanOrEqualTo()`, `isGreaterThan()`, `isGreaterThanOrEqualTo()`
   - `ConfigurableProvider::setExchangeRate()`
+- **Calling `Currency::of()` with a numeric code is no longer supported**, use `Currency::ofNumericCode()` instead (#104)
 
 ## [0.11.2](https://github.com/brick/money/releases/tag/0.11.2) - 2026-03-02
 

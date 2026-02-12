@@ -10,7 +10,6 @@ use JsonSerializable;
 use Override;
 use Stringable;
 
-use function is_int;
 use function trigger_deprecation;
 
 /**
@@ -55,18 +54,12 @@ final readonly class Currency implements Stringable, JsonSerializable
     /**
      * Returns a Currency instance matching the given ISO currency code.
      *
-     * @param string|int $currencyCode The 3-letter or numeric ISO 4217 currency code.
+     * @param string $currencyCode The 3-letter ISO 4217 currency code.
      *
      * @throws UnknownCurrencyException If an unknown currency code is given.
      */
-    public static function of(string|int $currencyCode): Currency
+    public static function of(string $currencyCode): Currency
     {
-        if (is_int($currencyCode)) {
-            trigger_deprecation('brick/money', '0.11.0', 'Calling "%s()" with integer argument is deprecated, call ofNumericCode() instead.', __METHOD__);
-
-            return self::ofNumericCode($currencyCode);
-        }
-
         return ISOCurrencyProvider::getInstance()->getCurrency($currencyCode);
     }
 
