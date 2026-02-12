@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.11.1](https://github.com/brick/money/releases/tag/0.11.1) - 2026-02-12
+
+⚠️ **Deprecations**
+
+- Added explicit `trigger_deprecation()` calls to methods that were already marked as `@deprecated`, so deprecation notices are now emitted at runtime.
+
 ## [0.11.0](https://github.com/brick/money/releases/tag/0.11.0) - 2026-01-22
 
 💥 **Breaking changes**
@@ -317,4 +323,3 @@ Backports from 0.2.x:
 ## [0.1.0](https://github.com/brick/money/releases/tag/0.1.0) - 2017-10-02
 
 First beta release!
-
