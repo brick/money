@@ -102,7 +102,7 @@ final readonly class Money extends AbstractMoney
     }
 
     /**
-     * Returns the total of the given monies.
+     * Returns the sum of the given monies.
      *
      * The monies must share the same currency and context.
      *
@@ -111,8 +111,36 @@ final readonly class Money extends AbstractMoney
      *
      * @throws MoneyMismatchException If all the monies are not in the same currency and context.
      */
+    public static function sum(Money $money, Money ...$monies): Money
+    {
+        $sum = $money;
+
+        foreach ($monies as $money) {
+            $sum = $sum->plus($money);
+        }
+
+        return $sum;
+    }
+
+    /**
+     * Returns the total of the given monies.
+     *
+     * The monies must share the same currency and context.
+     *
+     * @deprecated Use Money::sum() instead.
+     *
+     * @param Money $money     The first money.
+     * @param Money ...$monies The subsequent monies.
+     *
+     * @throws MoneyMismatchException If all the monies are not in the same currency and context.
+     */
     public static function total(Money $money, Money ...$monies): Money
     {
+        trigger_error(
+            'Money::total() is deprecated, and will be removed in a future version. Use Money::sum() instead.',
+            E_USER_DEPRECATED,
+        );
+
         $total = $money;
 
         foreach ($monies as $money) {
