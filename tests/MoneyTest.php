@@ -911,6 +911,17 @@ class MoneyTest extends AbstractTestCase
         ];
     }
 
+    public function testSum(): void
+    {
+        $total = Money::sum(
+            Money::of('5.50', 'USD'),
+            Money::of('3.50', 'USD'),
+            Money::of('4.90', 'USD'),
+        );
+
+        self::assertMoneyEquals('13.90', 'USD', $total);
+    }
+
     public function testTotal(): void
     {
         $total = Money::total(
@@ -920,6 +931,16 @@ class MoneyTest extends AbstractTestCase
         );
 
         self::assertMoneyEquals('13.90', 'USD', $total);
+    }
+
+    public function testSumOfDifferentCurrenciesThrowsException(): void
+    {
+        $this->expectException(MoneyMismatchException::class);
+
+        Money::sum(
+            Money::of('1.00', 'EUR'),
+            Money::of('1.00', 'USD'),
+        );
     }
 
     public function testTotalOfDifferentCurrenciesThrowsException(): void
