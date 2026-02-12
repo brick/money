@@ -40,7 +40,7 @@ final class IsoCurrencyProvider
      *
      * @var array<string, list<string>>|null
      */
-    private ?array $countryToCurrencyCurrent = null;
+    private ?array $countryToCurrency = null;
 
     /**
      * An associative array of country code to currency codes.
@@ -206,14 +206,14 @@ final class IsoCurrencyProvider
      */
     public function getCurrenciesForCountry(string $countryCode): array
     {
-        if ($this->countryToCurrencyCurrent === null) {
-            $this->countryToCurrencyCurrent = require __DIR__ . '/../data/country-to-currency.php';
+        if ($this->countryToCurrency === null) {
+            $this->countryToCurrency = require __DIR__ . '/../data/country-to-currency.php';
         }
 
-        if (isset($this->countryToCurrencyCurrent[$countryCode])) {
+        if (isset($this->countryToCurrency[$countryCode])) {
             return array_map(
                 $this->getCurrency(...),
-                $this->countryToCurrencyCurrent[$countryCode],
+                $this->countryToCurrency[$countryCode],
             );
         }
 
