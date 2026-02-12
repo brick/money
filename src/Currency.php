@@ -10,8 +10,6 @@ use JsonSerializable;
 use Override;
 use Stringable;
 
-use function trigger_deprecation;
-
 /**
  * A currency. This class is immutable.
  */
@@ -135,27 +133,6 @@ final readonly class Currency implements Stringable, JsonSerializable
     public function getDefaultFractionDigits(): int
     {
         return $this->defaultFractionDigits;
-    }
-
-    /**
-     * Returns whether this currency is equal to the given currency.
-     *
-     * The currencies are considered equal if their currency codes are equal.
-     *
-     * @deprecated Use isEqualTo() instead. Note that isEqualTo() does not support—and ignores—numeric codes.
-     *
-     * @param Currency|string|int $currency The Currency instance, currency code or numeric currency code.
-     */
-    public function is(Currency|string|int $currency): bool
-    {
-        trigger_deprecation('brick/money', '0.11.0', 'Calling "%s()" is deprecated, use isEqualTo() instead.', __METHOD__);
-
-        if ($currency instanceof Currency) {
-            return $this->currencyCode === $currency->currencyCode;
-        }
-
-        return $this->currencyCode === (string) $currency
-            || ($this->numericCode !== 0 && $this->numericCode === (int) $currency);
     }
 
     /**

@@ -115,22 +115,6 @@ class CurrencyTest extends AbstractTestCase
         new Currency('BTC', 0, 'BitCoin', -1);
     }
 
-    public function testIs(): void
-    {
-        $currency = Currency::of('EUR');
-
-        self::assertTrue($currency->is('EUR'));
-        self::assertTrue($currency->is(978));
-
-        self::assertFalse($currency->is('USD'));
-        self::assertFalse($currency->is(840));
-
-        $clone = clone $currency;
-
-        self::assertNotSame($currency, $clone);
-        self::assertTrue($clone->is($currency));
-    }
-
     public function testIsEqualTo(): void
     {
         $currency = Currency::of('EUR');
