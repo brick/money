@@ -107,7 +107,7 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
      * @throws MathException          If the argument is an invalid number.
      * @throws MoneyMismatchException If the argument is a money in a different currency.
      */
-    final public function compareTo(AbstractMoney|BigNumber|int|float|string $that): int
+    final public function compareTo(AbstractMoney|BigNumber|int|string $that): int
     {
         return $this->getAmount()->compareTo($this->getAmountOf($that));
     }
@@ -118,7 +118,7 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
      * @throws MathException          If the argument is an invalid number.
      * @throws MoneyMismatchException If the argument is a money in a different currency.
      */
-    final public function isEqualTo(AbstractMoney|BigNumber|int|float|string $that): bool
+    final public function isEqualTo(AbstractMoney|BigNumber|int|string $that): bool
     {
         return $this->getAmount()->isEqualTo($this->getAmountOf($that));
     }
@@ -129,7 +129,7 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
      * @throws MathException          If the argument is an invalid number.
      * @throws MoneyMismatchException If the argument is a money in a different currency.
      */
-    final public function isLessThan(AbstractMoney|BigNumber|int|float|string $that): bool
+    final public function isLessThan(AbstractMoney|BigNumber|int|string $that): bool
     {
         return $this->getAmount()->isLessThan($this->getAmountOf($that));
     }
@@ -140,7 +140,7 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
      * @throws MathException          If the argument is an invalid number.
      * @throws MoneyMismatchException If the argument is a money in a different currency.
      */
-    final public function isLessThanOrEqualTo(AbstractMoney|BigNumber|int|float|string $that): bool
+    final public function isLessThanOrEqualTo(AbstractMoney|BigNumber|int|string $that): bool
     {
         return $this->getAmount()->isLessThanOrEqualTo($this->getAmountOf($that));
     }
@@ -151,7 +151,7 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
      * @throws MathException          If the argument is an invalid number.
      * @throws MoneyMismatchException If the argument is a money in a different currency.
      */
-    final public function isGreaterThan(AbstractMoney|BigNumber|int|float|string $that): bool
+    final public function isGreaterThan(AbstractMoney|BigNumber|int|string $that): bool
     {
         return $this->getAmount()->isGreaterThan($this->getAmountOf($that));
     }
@@ -162,7 +162,7 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
      * @throws MathException          If the argument is an invalid number.
      * @throws MoneyMismatchException If the argument is a money in a different currency.
      */
-    final public function isGreaterThanOrEqualTo(AbstractMoney|BigNumber|int|float|string $that): bool
+    final public function isGreaterThanOrEqualTo(AbstractMoney|BigNumber|int|string $that): bool
     {
         return $this->getAmount()->isGreaterThanOrEqualTo($this->getAmountOf($that));
     }
@@ -198,11 +198,11 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
      *
      * If the parameter is a money, its currency is checked against this money's currency.
      *
-     * @param AbstractMoney|BigNumber|int|float|string $that A money or amount.
+     * @param AbstractMoney|BigNumber|int|string $that A money or amount.
      *
      * @throws MoneyMismatchException If currencies don't match.
      */
-    final protected function getAmountOf(AbstractMoney|BigNumber|int|float|string $that): BigNumber|int|float|string
+    final protected function getAmountOf(AbstractMoney|BigNumber|int|string $that): BigNumber|int|string
     {
         if ($that instanceof AbstractMoney) {
             if (! $that->getCurrency()->isEqualTo($this->getCurrency())) {

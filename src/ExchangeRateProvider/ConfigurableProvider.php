@@ -15,14 +15,14 @@ use Override;
 final class ConfigurableProvider implements ExchangeRateProvider
 {
     /**
-     * @var array<string, array<string, BigNumber|int|float|string>>
+     * @var array<string, array<string, BigNumber|int|string>>
      */
     private array $exchangeRates = [];
 
     /**
      * @return ConfigurableProvider This instance, for chaining.
      */
-    public function setExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode, BigNumber|int|float|string $exchangeRate): self
+    public function setExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode, BigNumber|int|string $exchangeRate): self
     {
         $this->exchangeRates[$sourceCurrencyCode][$targetCurrencyCode] = $exchangeRate;
 
@@ -30,7 +30,7 @@ final class ConfigurableProvider implements ExchangeRateProvider
     }
 
     #[Override]
-    public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode): BigNumber|int|float|string
+    public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode): BigNumber|int|string
     {
         if (isset($this->exchangeRates[$sourceCurrencyCode][$targetCurrencyCode])) {
             return $this->exchangeRates[$sourceCurrencyCode][$targetCurrencyCode];

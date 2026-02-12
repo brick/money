@@ -16,7 +16,7 @@ final class CachedProvider implements ExchangeRateProvider
     /**
      * The cached exchange rates.
      *
-     * @var array<string, array<string, BigNumber|int|float|string>>
+     * @var array<string, array<string, BigNumber|int|string>>
      */
     private array $exchangeRates = [];
 
@@ -29,7 +29,7 @@ final class CachedProvider implements ExchangeRateProvider
     }
 
     #[Override]
-    public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode): BigNumber|int|float|string
+    public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode): BigNumber|int|string
     {
         if (isset($this->exchangeRates[$sourceCurrencyCode][$targetCurrencyCode])) {
             return $this->exchangeRates[$sourceCurrencyCode][$targetCurrencyCode];

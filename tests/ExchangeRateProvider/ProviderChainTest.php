@@ -23,14 +23,14 @@ class ProviderChainTest extends AbstractTestCase
     public static function setUpBeforeClass(): void
     {
         $provider = new ConfigurableProvider();
-        $provider->setExchangeRate('USD', 'GBP', 0.7);
-        $provider->setExchangeRate('USD', 'EUR', 0.9);
+        $provider->setExchangeRate('USD', 'GBP', '0.7');
+        $provider->setExchangeRate('USD', 'EUR', '0.9');
 
         self::$provider1 = $provider;
 
         $provider = new ConfigurableProvider();
-        $provider->setExchangeRate('USD', 'EUR', 0.8);
-        $provider->setExchangeRate('EUR', 'USD', 1.2);
+        $provider->setExchangeRate('USD', 'EUR', '0.8');
+        $provider->setExchangeRate('EUR', 'USD', '1.2');
 
         self::$provider2 = $provider;
     }
@@ -48,8 +48,8 @@ class ProviderChainTest extends AbstractTestCase
         $provider = new ProviderChain();
         $provider->addExchangeRateProvider(self::$provider1);
 
-        self::assertSame(0.7, $provider->getExchangeRate('USD', 'GBP'));
-        self::assertSame(0.9, $provider->getExchangeRate('USD', 'EUR'));
+        self::assertSame('0.7', $provider->getExchangeRate('USD', 'GBP'));
+        self::assertSame('0.9', $provider->getExchangeRate('USD', 'EUR'));
 
         return $provider;
     }
@@ -59,9 +59,9 @@ class ProviderChainTest extends AbstractTestCase
     {
         $provider->addExchangeRateProvider(self::$provider2);
 
-        self::assertSame(0.7, $provider->getExchangeRate('USD', 'GBP'));
-        self::assertSame(0.9, $provider->getExchangeRate('USD', 'EUR'));
-        self::assertSame(1.2, $provider->getExchangeRate('EUR', 'USD'));
+        self::assertSame('0.7', $provider->getExchangeRate('USD', 'GBP'));
+        self::assertSame('0.9', $provider->getExchangeRate('USD', 'EUR'));
+        self::assertSame('1.2', $provider->getExchangeRate('EUR', 'USD'));
 
         return $provider;
     }
@@ -71,7 +71,7 @@ class ProviderChainTest extends AbstractTestCase
     {
         $provider->removeExchangeRateProvider(self::$provider1);
 
-        self::assertSame(0.8, $provider->getExchangeRate('USD', 'EUR'));
-        self::assertSame(1.2, $provider->getExchangeRate('EUR', 'USD'));
+        self::assertSame('0.8', $provider->getExchangeRate('USD', 'EUR'));
+        self::assertSame('1.2', $provider->getExchangeRate('EUR', 'USD'));
     }
 }

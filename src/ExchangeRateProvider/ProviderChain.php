@@ -58,7 +58,7 @@ final class ProviderChain implements ExchangeRateProvider
     }
 
     #[Override]
-    public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode): BigNumber|int|float|string
+    public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode): BigNumber|int|string
     {
         foreach ($this->providers as $provider) {
             try {

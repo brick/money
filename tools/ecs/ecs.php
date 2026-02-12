@@ -29,7 +29,7 @@ return static function (ECSConfig $ecsConfig): void {
         // AbstractTestCase uses assertEquals() intentionally when comparing contexts
         PhpUnitStrictFixer::class => $libRootPath . '/tests/AbstractTestCase.php',
 
-        // We want to keep BigNumber|int|float|string order
+        // We want to keep BigNumber|int|string order
         OrderedTypesFixer::class => null,
         PhpdocTypesOrderFixer::class => null,
     ]);

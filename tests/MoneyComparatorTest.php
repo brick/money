@@ -151,14 +151,14 @@ class MoneyComparatorTest extends AbstractTestCase
     {
         $provider = new ConfigurableProvider();
 
-        $provider->setExchangeRate('EUR', 'USD', 1.1);
-        $provider->setExchangeRate('USD', 'EUR', 0.9);
+        $provider->setExchangeRate('EUR', 'USD', '1.1');
+        $provider->setExchangeRate('USD', 'EUR', '0.9');
 
         $provider->setExchangeRate('USD', 'BSD', 1);
         $provider->setExchangeRate('BSD', 'USD', 1);
 
-        $provider->setExchangeRate('EUR', 'GBP', 0.8);
-        $provider->setExchangeRate('GBP', 'EUR', 1.2);
+        $provider->setExchangeRate('EUR', 'GBP', '0.8');
+        $provider->setExchangeRate('GBP', 'EUR', '1.2');
 
         return $provider;
     }

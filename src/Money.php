@@ -149,10 +149,10 @@ final readonly class Money extends AbstractMoney
      * To override this behaviour, a Context instance can be provided.
      * Operations on this Money return a Money with the same context.
      *
-     * @param BigNumber|int|float|string $amount       The monetary amount.
-     * @param Currency|string|int        $currency     The Currency instance, ISO currency code or ISO numeric currency code.
-     * @param Context|null               $context      An optional Context.
-     * @param RoundingMode               $roundingMode An optional RoundingMode, if the amount does not fit the context.
+     * @param BigNumber|int|string $amount       The monetary amount.
+     * @param Currency|string|int  $currency     The Currency instance, ISO currency code or ISO numeric currency code.
+     * @param Context|null         $context      An optional Context.
+     * @param RoundingMode         $roundingMode An optional RoundingMode, if the amount does not fit the context.
      *
      * @throws NumberFormatException      If the amount is a string in a non-supported format.
      * @throws UnknownCurrencyException   If the currency is an unknown currency code.
@@ -160,7 +160,7 @@ final readonly class Money extends AbstractMoney
      *                                    to represent the amount at the requested scale.
      */
     public static function of(
-        BigNumber|int|float|string $amount,
+        BigNumber|int|string $amount,
         Currency|string|int $currency,
         ?Context $context = null,
         RoundingMode $roundingMode = RoundingMode::Unnecessary,
@@ -185,10 +185,10 @@ final readonly class Money extends AbstractMoney
      * currency's default fraction digits. For example, `Money::ofMinor(1234, 'USD')` will yield `USD 12.34`.
      * If the amount cannot be safely converted to this scale, an exception is thrown.
      *
-     * @param BigNumber|int|float|string $minorAmount  The amount, in minor currency units.
-     * @param Currency|string|int        $currency     The Currency instance, ISO currency code or ISO numeric currency code.
-     * @param Context|null               $context      An optional Context.
-     * @param RoundingMode               $roundingMode An optional RoundingMode, if the amount does not fit the context.
+     * @param BigNumber|int|string $minorAmount  The amount, in minor currency units.
+     * @param Currency|string|int  $currency     The Currency instance, ISO currency code or ISO numeric currency code.
+     * @param Context|null         $context      An optional Context.
+     * @param RoundingMode         $roundingMode An optional RoundingMode, if the amount does not fit the context.
      *
      * @throws NumberFormatException      If the amount is a string in a non-supported format.
      * @throws UnknownCurrencyException   If the currency is an unknown currency code.
@@ -196,7 +196,7 @@ final readonly class Money extends AbstractMoney
      *                                    to represent the amount at the requested scale.
      */
     public static function ofMinor(
-        BigNumber|int|float|string $minorAmount,
+        BigNumber|int|string $minorAmount,
         Currency|string|int $currency,
         ?Context $context = null,
         RoundingMode $roundingMode = RoundingMode::Unnecessary,
@@ -298,13 +298,13 @@ final readonly class Money extends AbstractMoney
      * rounding mode can be provided. If a rounding mode is not provided and rounding is necessary, an exception is
      * thrown.
      *
-     * @param AbstractMoney|BigNumber|int|float|string $that         The money or amount to add.
-     * @param RoundingMode                             $roundingMode An optional RoundingMode constant.
+     * @param AbstractMoney|BigNumber|int|string $that         The money or amount to add.
+     * @param RoundingMode                       $roundingMode An optional RoundingMode constant.
      *
      * @throws MathException          If the argument is an invalid number or rounding is necessary.
      * @throws MoneyMismatchException If the argument is a money in a different currency or in a different context.
      */
-    public function plus(AbstractMoney|BigNumber|int|float|string $that, RoundingMode $roundingMode = RoundingMode::Unnecessary): Money
+    public function plus(AbstractMoney|BigNumber|int|string $that, RoundingMode $roundingMode = RoundingMode::Unnecessary): Money
     {
         $amount = $this->getAmountOf($that);
 
@@ -332,13 +332,13 @@ final readonly class Money extends AbstractMoney
      * rounding mode can be provided. If a rounding mode is not provided and rounding is necessary, an exception is
      * thrown.
      *
-     * @param AbstractMoney|BigNumber|int|float|string $that         The money or amount to subtract.
-     * @param RoundingMode                             $roundingMode An optional RoundingMode constant.
+     * @param AbstractMoney|BigNumber|int|string $that         The money or amount to subtract.
+     * @param RoundingMode                       $roundingMode An optional RoundingMode constant.
      *
      * @throws MathException          If the argument is an invalid number or rounding is necessary.
      * @throws MoneyMismatchException If the argument is a money in a different currency or in a different context.
      */
-    public function minus(AbstractMoney|BigNumber|int|float|string $that, RoundingMode $roundingMode = RoundingMode::Unnecessary): Money
+    public function minus(AbstractMoney|BigNumber|int|string $that, RoundingMode $roundingMode = RoundingMode::Unnecessary): Money
     {
         $amount = $this->getAmountOf($that);
 
@@ -362,12 +362,12 @@ final readonly class Money extends AbstractMoney
      * rounding mode can be provided. If a rounding mode is not provided and rounding is necessary, an exception is
      * thrown.
      *
-     * @param BigNumber|int|float|string $that         The multiplier.
-     * @param RoundingMode               $roundingMode An optional RoundingMode constant.
+     * @param BigNumber|int|string $that         The multiplier.
+     * @param RoundingMode         $roundingMode An optional RoundingMode constant.
      *
      * @throws MathException If the argument is an invalid number or rounding is necessary.
      */
-    public function multipliedBy(BigNumber|int|float|string $that, RoundingMode $roundingMode = RoundingMode::Unnecessary): Money
+    public function multipliedBy(BigNumber|int|string $that, RoundingMode $roundingMode = RoundingMode::Unnecessary): Money
     {
         $amount = $this->amount->toBigRational()->multipliedBy($that);
 
@@ -381,12 +381,12 @@ final readonly class Money extends AbstractMoney
      * rounding mode can be provided. If a rounding mode is not provided and rounding is necessary, an exception is
      * thrown.
      *
-     * @param BigNumber|int|float|string $that         The divisor.
-     * @param RoundingMode               $roundingMode An optional RoundingMode constant.
+     * @param BigNumber|int|string $that         The divisor.
+     * @param RoundingMode         $roundingMode An optional RoundingMode constant.
      *
      * @throws MathException If the argument is an invalid number or is zero, or rounding is necessary.
      */
-    public function dividedBy(BigNumber|int|float|string $that, RoundingMode $roundingMode = RoundingMode::Unnecessary): Money
+    public function dividedBy(BigNumber|int|string $that, RoundingMode $roundingMode = RoundingMode::Unnecessary): Money
     {
         $amount = $this->amount->toBigRational()->dividedBy($that);
 
@@ -399,11 +399,11 @@ final readonly class Money extends AbstractMoney
      * The given number must be a integer value. The resulting Money has the same context as this Money.
      * This method can serve as a basis for a money allocation algorithm.
      *
-     * @param BigNumber|int|float|string $that The divisor. Must be convertible to a BigInteger.
+     * @param BigNumber|int|string $that The divisor. Must be convertible to a BigInteger.
      *
      * @throws MathException If the divisor cannot be converted to a BigInteger.
      */
-    public function quotient(BigNumber|int|float|string $that): Money
+    public function quotient(BigNumber|int|string $that): Money
     {
         $that = BigInteger::of($that);
         $step = $this->context->getStep();
@@ -423,13 +423,13 @@ final readonly class Money extends AbstractMoney
      * The given number must be an integer value. The resulting monies have the same context as this Money.
      * This method can serve as a basis for a money allocation algorithm.
      *
-     * @param BigNumber|int|float|string $that The divisor. Must be convertible to a BigInteger.
+     * @param BigNumber|int|string $that The divisor. Must be convertible to a BigInteger.
      *
      * @return array{Money, Money} The quotient and the remainder.
      *
      * @throws MathException If the divisor cannot be converted to a BigInteger.
      */
-    public function quotientAndRemainder(BigNumber|int|float|string $that): array
+    public function quotientAndRemainder(BigNumber|int|string $that): array
     {
         $that = BigInteger::of($that);
         $step = $this->context->getStep();
@@ -643,17 +643,17 @@ final readonly class Money extends AbstractMoney
      * For example, converting a default money of `USD 1.23` to `EUR` with an exchange rate of `0.91` and
      * RoundingMode::Up will yield `EUR 1.12`.
      *
-     * @param Currency|string|int        $currency     The Currency instance, ISO currency code or ISO numeric currency code.
-     * @param BigNumber|int|float|string $exchangeRate The exchange rate to multiply by.
-     * @param Context|null               $context      An optional context.
-     * @param RoundingMode               $roundingMode An optional rounding mode.
+     * @param Currency|string|int  $currency     The Currency instance, ISO currency code or ISO numeric currency code.
+     * @param BigNumber|int|string $exchangeRate The exchange rate to multiply by.
+     * @param Context|null         $context      An optional context.
+     * @param RoundingMode         $roundingMode An optional rounding mode.
      *
      * @throws UnknownCurrencyException If an unknown currency code is given.
      * @throws MathException            If the exchange rate or rounding mode is invalid, or rounding is necessary.
      */
     public function convertedTo(
         Currency|string|int $currency,
-        BigNumber|int|float|string $exchangeRate,
+        BigNumber|int|string $exchangeRate,
         ?Context $context = null,
         RoundingMode $roundingMode = RoundingMode::Unnecessary,
     ): Money {

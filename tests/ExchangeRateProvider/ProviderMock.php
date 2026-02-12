@@ -14,12 +14,12 @@ use Override;
 class ProviderMock implements ExchangeRateProvider
 {
     /**
-     * @var array<string, array<string, float>>
+     * @var array<string, array<string, string>>
      */
     private array $exchangeRates = [
         'EUR' => [
-            'USD' => 1.1,
-            'GBP' => 0.9,
+            'USD' => '1.1',
+            'GBP' => '0.9',
         ],
     ];
 
@@ -34,7 +34,7 @@ class ProviderMock implements ExchangeRateProvider
     }
 
     #[Override]
-    public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode): float
+    public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode): string
     {
         $this->calls++;
 
