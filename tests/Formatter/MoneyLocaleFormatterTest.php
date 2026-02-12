@@ -21,7 +21,7 @@ class MoneyLocaleFormatterTest extends AbstractTestCase
      */
     #[RequiresPhpExtension('intl')]
     #[DataProvider('providerFormat')]
-    public function testFormatTo(array $money, string $locale, bool $allowWholeNumber, string $expected): void
+    public function testFormat(array $money, string $locale, bool $allowWholeNumber, string $expected): void
     {
         $formatter = new MoneyLocaleFormatter($locale, $allowWholeNumber);
         self::assertSame($expected, $formatter->format(Money::of(...$money)));
