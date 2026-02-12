@@ -23,7 +23,7 @@ class MoneyBagTest extends AbstractTestCase
         self::assertMoneyBagContains([], $moneyBag);
 
         foreach (['USD', 'EUR', 'GBP', 'JPY'] as $currencyCode) {
-            self::assertTrue($moneyBag->getAmount($currencyCode)->isZero());
+            self::assertTrue($moneyBag->getMoney($currencyCode)->isZero());
         }
     }
 
@@ -32,22 +32,22 @@ class MoneyBagTest extends AbstractTestCase
         $moneyBag = new MoneyBag();
 
         $moneyBag->add(Money::of('123', 'EUR'));
-        self::assertMoneyBagContains(['EUR' => '123.00'], $moneyBag);
+        self::assertMoneyBagContains([Money::of('123.00', 'EUR')], $moneyBag);
 
         $moneyBag->add(Money::of('234.99', 'EUR'));
-        self::assertMoneyBagContains(['EUR' => '357.99'], $moneyBag);
+        self::assertMoneyBagContains([Money::of('357.99', 'EUR')], $moneyBag);
 
         $moneyBag->add(Money::of(3, 'JPY'));
-        self::assertMoneyBagContains(['EUR' => '357.99', 'JPY' => '3'], $moneyBag);
+        self::assertMoneyBagContains([Money::of('357.99', 'EUR'), Money::of('3', 'JPY')], $moneyBag);
 
         $moneyBag->add(Money::of('1.1234', 'JPY', new AutoContext()));
-        self::assertMoneyBagContains(['EUR' => '357.99', 'JPY' => '4.1234'], $moneyBag);
+        self::assertMoneyBagContains([Money::of('357.99', 'EUR'), Money::of('4.1234', 'JPY', new AutoContext())], $moneyBag);
 
         $moneyBag->subtract(Money::of('3.589950', 'EUR', new AutoContext()));
-        self::assertMoneyBagContains(['EUR' => '354.400050', 'JPY' => '4.1234'], $moneyBag);
+        self::assertMoneyBagContains([Money::of('354.400050', 'EUR', new AutoContext()), Money::of('4.1234', 'JPY', new AutoContext())], $moneyBag);
 
         $moneyBag->add(RationalMoney::of('1/3', 'EUR'));
-        self::assertMoneyBagContains(['EUR' => '21284003/60000', 'JPY' => '4.1234'], $moneyBag);
+        self::assertMoneyBagContains([RationalMoney::of('21284003/60000', 'EUR'), Money::of('4.1234', 'JPY', new AutoContext())], $moneyBag);
 
         return $moneyBag;
     }
@@ -56,6 +56,13 @@ class MoneyBagTest extends AbstractTestCase
     public function testAddCustomCurrency(MoneyBag $moneyBag): void
     {
         $moneyBag->add(Money::of('0.1234', new Currency('BTC', 0, 'Bitcoin', 8)));
-        self::assertMoneyBagContains(['EUR' => '21284003/60000', 'JPY' => '4.1234', 'BTC' => '0.1234'], $moneyBag);
+        self::assertMoneyBagContains(
+            [
+                RationalMoney::of('21284003/60000', 'EUR'),
+                Money::of('4.1234', 'JPY', new AutoContext()),
+                Money::of('0.1234', new Currency('BTC', 0, 'Bitcoin', 8)),
+            ],
+            $moneyBag,
+        );
     }
 }

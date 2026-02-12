@@ -7,6 +7,7 @@ namespace Brick\Money\Tests;
 use Brick\Math\BigDecimal;
 use Brick\Math\BigNumber;
 use Brick\Math\BigRational;
+use Brick\Money\AbstractMoney;
 use Brick\Money\Context;
 use Brick\Money\Currency;
 use Brick\Money\CurrencyType;
@@ -69,16 +70,27 @@ abstract class AbstractTestCase extends TestCase
         self::assertSame($expected, $actual);
     }
 
-    final protected static function assertBigNumberEquals(string $expected, BigNumber $actual): void
+    final protected static function assertBigNumberEquals(BigNumber|string $expected, BigNumber $actual): void
     {
         self::assertTrue($actual->isEqualTo($expected), $actual . ' != ' . $expected);
     }
 
-    final protected static function assertMoneyBagContains(array $expectedAmounts, MoneyBag $moneyBag): void
+    /**
+     * @param list<AbstractMoney> $expectedMonies
+     */
+    final protected static function assertMoneyBagContains(array $expectedMonies, MoneyBag $moneyBag): void
     {
-        // Test get() on each currency
+        $expectedAmounts = [];
+        $expectedCurrencies = [];
+        foreach ($expectedMonies as $expectedMoney) {
+            $currencyCode = $expectedMoney->getCurrency()->getCurrencyCode();
+            $expectedAmounts[$currencyCode] = $expectedMoney->getAmount();
+            $expectedCurrencies[$currencyCode] = $expectedMoney->getCurrency();
+        }
+
+        // Test getMoney() on each currency
         foreach ($expectedAmounts as $currencyCode => $expectedAmount) {
-            $actualAmount = $moneyBag->getAmount($currencyCode);
+            $actualAmount = $moneyBag->getMoney($expectedCurrencies[$currencyCode])->getAmount();
 
             self::assertInstanceOf(BigRational::class, $actualAmount);
             self::assertBigNumberEquals($expectedAmount, $actualAmount);
@@ -88,11 +100,15 @@ abstract class AbstractTestCase extends TestCase
         $actualMonies = $moneyBag->getMonies();
         self::assertTrue(array_is_list($actualMonies));
 
-        foreach ($actualMonies as $actualMoney) {
-            self::assertInstanceOf(RationalMoney::class, $actualMoney);
-            $currencyCode = $actualMoney->getCurrency()->getCurrencyCode();
-            self::assertBigNumberEquals($expectedAmounts[$currencyCode], $actualMoney->getAmount());
+        $actualAmounts = [];
+        foreach ($actualMonies as $money) {
+            $actualAmounts[$money->getCurrency()->getCurrencyCode()] = $money->getAmount();
         }
+
+        $expectedAmounts = array_map(fn (BigNumber $amount) => $amount->toBigRational()->toString(), $expectedAmounts);
+        $actualAmounts = array_map(fn (BigRational $amount) => $amount->toString(), $actualAmounts);
+
+        self::assertSame($expectedAmounts, $actualAmounts);
     }
 
     final protected static function assertRationalMoneyEquals(string $expected, RationalMoney $actual): void
