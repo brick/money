@@ -393,8 +393,8 @@ Money objects can be formatted according to a given locale:
 
 ```php
 $money = Money::of(5000, 'USD');
-echo $money->formatTo('en_US'); // $5,000.00
-echo $money->formatTo('fr_FR'); // 5 000,00 $US
+echo $money->formatToLocale('en_US'); // $5,000.00
+echo $money->formatToLocale('fr_FR'); // 5 000,00 $US
 ```
 
 Alternatively, you can format Money objects with your own instance of [NumberFormatter](http://php.net/manual/en/class.numberformatter.php), which gives you room for customization:
