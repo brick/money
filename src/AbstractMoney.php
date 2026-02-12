@@ -176,7 +176,7 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
     final public function isAmountAndCurrencyEqualTo(AbstractMoney $that): bool
     {
         return $this->getAmount()->isEqualTo($that->getAmount())
-            && $this->getCurrency()->is($that->getCurrency());
+            && $this->getCurrency()->isEqualTo($that->getCurrency());
     }
 
     #[Override]
@@ -205,7 +205,7 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
     final protected function getAmountOf(AbstractMoney|BigNumber|int|float|string $that): BigNumber|int|float|string
     {
         if ($that instanceof AbstractMoney) {
-            if (! $that->getCurrency()->is($this->getCurrency())) {
+            if (! $that->getCurrency()->isEqualTo($this->getCurrency())) {
                 throw MoneyMismatchException::currencyMismatch($this->getCurrency(), $that->getCurrency());
             }
 
