@@ -20,6 +20,7 @@
   - `CurrencyConverter::convertToRational()`
   - `ISOCurrencyProvider::getCurrency()`
 - **`RationalMoney` is now always simplified to lowest terms:** `USD 25/100` is automatically simplified to `USD 1/4`
+- `ISOCurrencyProvider` has been renamed to `IsoCurrencyProvider`
 
 Deprecated methods removed:
 

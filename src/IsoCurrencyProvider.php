@@ -12,9 +12,9 @@ use function ksort;
 /**
  * Provides ISO 4217 currencies.
  */
-final class ISOCurrencyProvider
+final class IsoCurrencyProvider
 {
-    private static ?ISOCurrencyProvider $instance = null;
+    private static ?IsoCurrencyProvider $instance = null;
 
     /**
      * The raw currency data, indexed by currency code.
@@ -76,12 +76,12 @@ final class ISOCurrencyProvider
     }
 
     /**
-     * Returns the singleton instance of ISOCurrencyProvider.
+     * Returns the singleton instance of IsoCurrencyProvider.
      */
-    public static function getInstance(): ISOCurrencyProvider
+    public static function getInstance(): IsoCurrencyProvider
     {
         if (self::$instance === null) {
-            self::$instance = new ISOCurrencyProvider();
+            self::$instance = new IsoCurrencyProvider();
         }
 
         return self::$instance;
