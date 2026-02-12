@@ -34,6 +34,7 @@ Deprecated methods removed:
 - Method `RationalMoney::simplified()` is deprecated, as it is now a no-op
 - Method `Money::getUnscaledAmount()` is deprecated, use `getAmount()->getUnscaledValue()` instead
 - Method `Money::total()` is deprecated, use `sum()` instead
+- Method `AbstractMoney::to()` is deprecated, use `toContext()` instead
 - Passing `null` to the `$context` parameter of the following methods is deprecated, use named arguments if you need to skip `$context`:
   - `CurrencyConverter::convert()`
   - `Money::of()`

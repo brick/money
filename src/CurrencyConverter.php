@@ -55,7 +55,7 @@ final readonly class CurrencyConverter
 
         return $this
             ->convertToRational($money, $currency)
-            ->to($context, $roundingMode);
+            ->toContext($context, $roundingMode);
     }
 
     /**
