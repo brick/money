@@ -10,6 +10,10 @@ use Brick\Math\RoundingMode;
 use Brick\Money\Context\DefaultContext;
 use Brick\Money\Exception\CurrencyConversionException;
 
+use function trigger_error;
+
+use const E_USER_DEPRECATED;
+
 /**
  * Converts monies into different currencies, using an exchange rate provider.
  */
@@ -28,7 +32,7 @@ final readonly class CurrencyConverter
      *
      * @param Monetary        $money        The Money, RationalMoney or MoneyBag to convert.
      * @param Currency|string $currency     The Currency instance or ISO currency code.
-     * @param Context|null    $context      A context to create the money in, or null to use the default.
+     * @param Context|null    $context      A context to create the money in, defaults to DefaultContext.
      * @param RoundingMode    $roundingMode The rounding mode, if necessary.
      *
      * @throws CurrencyConversionException If the exchange rate is not available.
@@ -37,12 +41,21 @@ final readonly class CurrencyConverter
     public function convert(
         Monetary $money,
         Currency|string $currency,
-        ?Context $context = null,
+        ?Context $context = new DefaultContext(),
         RoundingMode $roundingMode = RoundingMode::Unnecessary,
     ): Money {
+        if ($context === null) {
+            trigger_error(
+                'Passing null for the $context parameter to CurrencyConverter::convert() is deprecated, use named arguments to skip to rounding mode.',
+                E_USER_DEPRECATED,
+            );
+
+            $context = new DefaultContext();
+        }
+
         return $this
             ->convertToRational($money, $currency)
-            ->to($context ?? new DefaultContext(), $roundingMode);
+            ->to($context, $roundingMode);
     }
 
     /**
