@@ -32,9 +32,9 @@ final readonly class RationalMoney extends AbstractMoney
      * Convenience factory method.
      *
      * @param BigNumber|int|string $amount   The monetary amount.
-     * @param Currency|string|int  $currency The Currency instance, ISO currency code or ISO numeric currency code.
+     * @param Currency|string      $currency The Currency instance or ISO currency code.
      */
-    public static function of(BigNumber|int|string $amount, Currency|string|int $currency): RationalMoney
+    public static function of(BigNumber|int|string $amount, Currency|string $currency): RationalMoney
     {
         $amount = BigRational::of($amount);
 

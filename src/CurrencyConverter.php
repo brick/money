@@ -26,17 +26,17 @@ final readonly class CurrencyConverter
     /**
      * Converts the given money to the given currency.
      *
-     * @param Monetary            $money        The Money, RationalMoney or MoneyBag to convert.
-     * @param Currency|string|int $currency     The Currency instance, ISO currency code or ISO numeric currency code.
-     * @param Context|null        $context      A context to create the money in, or null to use the default.
-     * @param RoundingMode        $roundingMode The rounding mode, if necessary.
+     * @param Monetary        $money        The Money, RationalMoney or MoneyBag to convert.
+     * @param Currency|string $currency     The Currency instance or ISO currency code.
+     * @param Context|null    $context      A context to create the money in, or null to use the default.
+     * @param RoundingMode    $roundingMode The rounding mode, if necessary.
      *
      * @throws CurrencyConversionException If the exchange rate is not available.
      * @throws RoundingNecessaryException  If rounding is necessary and RoundingMode::Unnecessary is used.
      */
     public function convert(
         Monetary $money,
-        Currency|string|int $currency,
+        Currency|string $currency,
         ?Context $context = null,
         RoundingMode $roundingMode = RoundingMode::Unnecessary,
     ): Money {
@@ -48,12 +48,12 @@ final readonly class CurrencyConverter
     /**
      * Converts the given money to the given currency, and returns the result as a RationalMoney with no rounding.
      *
-     * @param Monetary            $money    The Money, RationalMoney or MoneyBag to convert.
-     * @param Currency|string|int $currency The Currency instance, ISO currency code or ISO numeric currency code.
+     * @param Monetary        $money    The Money, RationalMoney or MoneyBag to convert.
+     * @param Currency|string $currency The Currency instance or ISO currency code.
      *
      * @throws CurrencyConversionException If the exchange rate is not available.
      */
-    public function convertToRational(Monetary $money, Currency|string|int $currency): RationalMoney
+    public function convertToRational(Monetary $money, Currency|string $currency): RationalMoney
     {
         if (! $currency instanceof Currency) {
             $currency = Currency::of($currency);

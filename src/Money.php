@@ -152,7 +152,7 @@ final readonly class Money extends AbstractMoney
      * Operations on this Money return a Money with the same context.
      *
      * @param BigNumber|int|string $amount       The monetary amount.
-     * @param Currency|string|int  $currency     The Currency instance, ISO currency code or ISO numeric currency code.
+     * @param Currency|string      $currency     The Currency instance or ISO currency code.
      * @param Context|null         $context      An optional Context.
      * @param RoundingMode         $roundingMode An optional RoundingMode, if the amount does not fit the context.
      *
@@ -163,7 +163,7 @@ final readonly class Money extends AbstractMoney
      */
     public static function of(
         BigNumber|int|string $amount,
-        Currency|string|int $currency,
+        Currency|string $currency,
         ?Context $context = null,
         RoundingMode $roundingMode = RoundingMode::Unnecessary,
     ): Money {
@@ -188,7 +188,7 @@ final readonly class Money extends AbstractMoney
      * If the amount cannot be safely converted to this scale, an exception is thrown.
      *
      * @param BigNumber|int|string $minorAmount  The amount, in minor currency units.
-     * @param Currency|string|int  $currency     The Currency instance, ISO currency code or ISO numeric currency code.
+     * @param Currency|string      $currency     The Currency instance or ISO currency code.
      * @param Context|null         $context      An optional Context.
      * @param RoundingMode         $roundingMode An optional RoundingMode, if the amount does not fit the context.
      *
@@ -199,7 +199,7 @@ final readonly class Money extends AbstractMoney
      */
     public static function ofMinor(
         BigNumber|int|string $minorAmount,
-        Currency|string|int $currency,
+        Currency|string $currency,
         ?Context $context = null,
         RoundingMode $roundingMode = RoundingMode::Unnecessary,
     ): Money {
@@ -222,10 +222,10 @@ final readonly class Money extends AbstractMoney
      * By default, the money is created with a DefaultContext: it has the default scale for the currency.
      * A Context instance can be provided to override the default.
      *
-     * @param Currency|string|int $currency The Currency instance, ISO currency code or ISO numeric currency code.
-     * @param Context|null        $context  An optional context.
+     * @param Currency|string $currency The Currency instance or ISO currency code.
+     * @param Context|null    $context  An optional context.
      */
-    public static function zero(Currency|string|int $currency, ?Context $context = null): Money
+    public static function zero(Currency|string $currency, ?Context $context = null): Money
     {
         if (! $currency instanceof Currency) {
             $currency = Currency::of($currency);
@@ -645,7 +645,7 @@ final readonly class Money extends AbstractMoney
      * For example, converting a default money of `USD 1.23` to `EUR` with an exchange rate of `0.91` and
      * RoundingMode::Up will yield `EUR 1.12`.
      *
-     * @param Currency|string|int  $currency     The Currency instance, ISO currency code or ISO numeric currency code.
+     * @param Currency|string      $currency     The Currency instance or ISO currency code.
      * @param BigNumber|int|string $exchangeRate The exchange rate to multiply by.
      * @param Context|null         $context      An optional context.
      * @param RoundingMode         $roundingMode An optional rounding mode.
@@ -654,7 +654,7 @@ final readonly class Money extends AbstractMoney
      * @throws MathException            If the exchange rate or rounding mode is invalid, or rounding is necessary.
      */
     public function convertedTo(
-        Currency|string|int $currency,
+        Currency|string $currency,
         BigNumber|int|string $exchangeRate,
         ?Context $context = null,
         RoundingMode $roundingMode = RoundingMode::Unnecessary,
