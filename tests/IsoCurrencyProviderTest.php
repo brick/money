@@ -11,6 +11,7 @@ use Brick\Money\IsoCurrencyProvider;
 use PHPUnit\Framework\Attributes\DataProvider;
 use ReflectionClass;
 
+use function array_map;
 use function count;
 
 /**
@@ -102,21 +103,14 @@ class IsoCurrencyProviderTest extends AbstractTestCase
     }
 
     #[DataProvider('providerHistoricalCurrencies')]
-    public function testGetHistoricalCurrencies(string $countryCode, array $currencyCodes): void
+    public function testGetHistoricalCurrencies(string $countryCode, array $expectedCurrencyCodes): void
     {
-        $provider = IsoCurrencyProvider::getInstance();
+        $actualCurrencyCodes = array_map(
+            fn (Currency $currency) => $currency->getCurrencyCode(),
+            IsoCurrencyProvider::getInstance()->getHistoricalCurrenciesForCountry($countryCode),
+        );
 
-        $currencies = $provider->getHistoricalCurrenciesForCountry($countryCode);
-
-        self::assertSameSize($currencyCodes, $currencies);
-
-        $retrievedCurrencyCodes = [];
-        foreach ($currencies as $currency) {
-            self::assertInstanceOf(Currency::class, $currency);
-            $retrievedCurrencyCodes[] = $currency->getCurrencyCode();
-        }
-
-        self::assertEquals($currencyCodes, $retrievedCurrencyCodes);
+        self::assertSame($expectedCurrencyCodes, $actualCurrencyCodes);
     }
 
     public static function providerHistoricalCurrencies(): array
