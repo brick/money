@@ -22,9 +22,6 @@ class CurrencyTest extends AbstractTestCase
     {
         $currency = Currency::of($currencyCode);
         self::assertCurrencyEquals($currencyCode, $numericCode, $name, $fractionDigits, $currencyType, $currency);
-
-        $currency = Currency::of($numericCode);
-        self::assertCurrencyEquals($currencyCode, $numericCode, $name, $fractionDigits, $currencyType, $currency);
     }
 
     public static function providerOf(): array
@@ -39,19 +36,10 @@ class CurrencyTest extends AbstractTestCase
         ];
     }
 
-    #[DataProvider('providerOfUnknownCurrencyCode')]
-    public function testOfUnknownCurrencyCode(string|int $currencyCode): void
+    public function testOfUnknownCurrencyCode(): void
     {
         $this->expectException(UnknownCurrencyException::class);
-        Currency::of($currencyCode);
-    }
-
-    public static function providerOfUnknownCurrencyCode(): array
-    {
-        return [
-            ['XXX'],
-            [-1],
-        ];
+        Currency::of('XXX');
     }
 
     public function testConstructor(): void
