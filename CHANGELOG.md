@@ -23,6 +23,7 @@
 - `Currency::is()` has been removed, use `Currency::isEqualTo()` instead
 - `MoneyBag::getAmount()` has been removed, use `MoneyBag::getMoney()->getAmount()` instead
 - `Money::formatTo()` has been removed, use `Money::formatToLocale()` instead
+- `Money::formatWith()` has been removed, use `MoneyNumberFormatter::format()` instead
 
 ⚠️ **Deprecations**
 

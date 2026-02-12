@@ -16,9 +16,7 @@ use Brick\Money\Context\DefaultContext;
 use Brick\Money\Exception\MoneyMismatchException;
 use Brick\Money\Exception\UnknownCurrencyException;
 use Brick\Money\Formatter\MoneyLocaleFormatter;
-use Brick\Money\Formatter\MoneyNumberFormatter;
 use InvalidArgumentException;
-use NumberFormatter;
 use Override;
 
 use function array_fill;
@@ -26,7 +24,6 @@ use function array_map;
 use function array_sum;
 use function array_values;
 use function intdiv;
-use function trigger_deprecation;
 
 /**
  * A monetary value in a given currency. This class is immutable.
@@ -668,23 +665,6 @@ final readonly class Money extends AbstractMoney
         $amount = $this->amount->toBigRational()->multipliedBy($exchangeRate);
 
         return self::create($amount, $currency, $context, $roundingMode);
-    }
-
-    /**
-     * Formats this Money with the given NumberFormatter.
-     *
-     * Note that NumberFormatter internally represents values using floating point arithmetic,
-     * so discrepancies can appear when formatting very large monetary values.
-     *
-     * @deprecated Use MoneyNumberFormatter::format($money).
-     *
-     * @param NumberFormatter $formatter The formatter to format with.
-     */
-    public function formatWith(NumberFormatter $formatter): string
-    {
-        trigger_deprecation('brick/money', '0.11.0', 'Calling "%s()" is deprecated, use MoneyNumberFormatter::format() instead.', __METHOD__);
-
-        return (new MoneyNumberFormatter($formatter))->format($this);
     }
 
     /**

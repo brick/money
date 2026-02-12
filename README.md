@@ -400,13 +400,16 @@ echo $money->formatToLocale('fr_FR'); // 5 000,00 $US
 Alternatively, you can format Money objects with your own instance of [NumberFormatter](http://php.net/manual/en/class.numberformatter.php), which gives you room for customization:
 
 ```php
+use Brick\Money\Money;
+use Brick\Money\Formatter\MoneyNumberFormatter;
+
 $formatter = new \NumberFormatter('en_US', \NumberFormatter::CURRENCY);
 $formatter->setSymbol(\NumberFormatter::CURRENCY_SYMBOL, 'US$');
 $formatter->setSymbol(\NumberFormatter::MONETARY_GROUPING_SEPARATOR_SYMBOL, '·');
 $formatter->setAttribute(\NumberFormatter::MIN_FRACTION_DIGITS, 2);
 
 $money = Money::of(5000, 'USD');
-echo $money->formatWith($formatter); // US$5·000.00
+echo (new MoneyNumberFormatter($formatter))->format($money); // US$5·000.00
 ```
 
 *Important note: because formatting is performed using `NumberFormatter`, the amount is converted to floating point in the process; so discrepancies can appear when formatting very large monetary values.*

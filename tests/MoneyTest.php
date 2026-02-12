@@ -21,7 +21,6 @@ use Brick\Money\Exception\MoneyMismatchException;
 use Brick\Money\Money;
 use Generator;
 use InvalidArgumentException;
-use NumberFormatter;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 
@@ -806,31 +805,6 @@ class MoneyTest extends AbstractTestCase
             [['1.23', 'USD'], ['JPY', '125', new CustomContext(2)], 'JPY 153.75'],
             [['1.23', 'USD'], ['JPY', '125', null, RoundingMode::Down], 'JPY 153'],
             [['1.23', 'USD'], ['JPY', '125', new DefaultContext(), RoundingMode::Up], 'JPY 154'],
-        ];
-    }
-
-    /**
-     * @param array  $money    The money to test.
-     * @param string $locale   The target locale.
-     * @param string $symbol   A decimal symbol to apply to the NumberFormatter.
-     * @param string $expected The expected output.
-     */
-    #[RequiresPhpExtension('intl')]
-    #[DataProvider('providerFormatWith')]
-    public function testFormatWith(array $money, string $locale, string $symbol, string $expected): void
-    {
-        $formatter = new NumberFormatter($locale, NumberFormatter::CURRENCY);
-        $formatter->setSymbol(NumberFormatter::MONETARY_SEPARATOR_SYMBOL, $symbol);
-
-        $actual = Money::of(...$money)->formatWith($formatter);
-        self::assertSame($expected, $actual);
-    }
-
-    public static function providerFormatWith(): array
-    {
-        return [
-            [['1.23', 'USD'], 'en_US', ';', '$1;23'],
-            [['1.7', 'EUR', new AutoContext()], 'fr_FR', '~', '1~70 €'],
         ];
     }
 
