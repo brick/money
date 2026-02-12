@@ -50,7 +50,7 @@ class BaseCurrencyProviderTest extends AbstractTestCase
     }
 
     #[DataProvider('providerReturnBigNumber')]
-    public function testReturnBigNumber(BigNumber|float|int|string $rate): void
+    public function testReturnBigNumber(BigNumber|int|string $rate): void
     {
         $configurableProvider = new ConfigurableProvider();
         $configurableProvider->setExchangeRate('USD', 'EUR', $rate);
@@ -63,16 +63,16 @@ class BaseCurrencyProviderTest extends AbstractTestCase
 
     public static function providerReturnBigNumber(): array
     {
-        return [[1], [1.1], ['1.0'], [BigNumber::of('1')]];
+        return [[1], ['1.1'], ['1.0'], [BigNumber::of('1')]];
     }
 
     private function getExchangeRateProvider(): ExchangeRateProvider
     {
         $provider = new ConfigurableProvider();
 
-        $provider->setExchangeRate('USD', 'EUR', 0.9);
-        $provider->setExchangeRate('USD', 'GBP', 0.8);
-        $provider->setExchangeRate('USD', 'CAD', 1.1);
+        $provider->setExchangeRate('USD', 'EUR', '0.9');
+        $provider->setExchangeRate('USD', 'GBP', '0.8');
+        $provider->setExchangeRate('USD', 'CAD', '1.1');
 
         return new BaseCurrencyProvider($provider, 'USD');
     }

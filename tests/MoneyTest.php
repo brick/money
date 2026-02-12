@@ -57,7 +57,7 @@ class MoneyTest extends AbstractTestCase
         return [
             ['USD 1.00', 1, 'USD'],
             ['USD 5.60', '5.6', 840],
-            ['JPY 1', 1.0, 'JPY'],
+            ['JPY 1', '1.0', 'JPY'],
             ['JPY 1.200', '1.2', 'JPY', new CustomContext(3)],
             ['EUR 9.00', 9, 978],
             ['EUR 0.42', BigRational::of('3/7'), 'EUR', null, RoundingMode::Down],
@@ -250,13 +250,13 @@ class MoneyTest extends AbstractTestCase
     }
 
     /**
-     * @param array                  $money        The base money.
-     * @param Money|int|float|string $multiplier   The multiplier.
-     * @param RoundingMode           $roundingMode The rounding mode to use.
-     * @param string                 $expected     The expected money value, or an exception class name.
+     * @param array            $money        The base money.
+     * @param Money|int|string $multiplier   The multiplier.
+     * @param RoundingMode     $roundingMode The rounding mode to use.
+     * @param string           $expected     The expected money value, or an exception class name.
      */
     #[DataProvider('providerMultipliedBy')]
-    public function testMultipliedBy(array $money, Money|int|float|string $multiplier, RoundingMode $roundingMode, string $expected): void
+    public function testMultipliedBy(array $money, Money|int|string $multiplier, RoundingMode $roundingMode, string $expected): void
     {
         $money = Money::of(...$money);
 
@@ -288,13 +288,13 @@ class MoneyTest extends AbstractTestCase
     }
 
     /**
-     * @param array            $money        The base money.
-     * @param int|float|string $divisor      The divisor.
-     * @param RoundingMode     $roundingMode The rounding mode to use.
-     * @param string           $expected     The expected money value, or an exception class name.
+     * @param array        $money        The base money.
+     * @param int|string   $divisor      The divisor.
+     * @param RoundingMode $roundingMode The rounding mode to use.
+     * @param string       $expected     The expected money value, or an exception class name.
      */
     #[DataProvider('providerDividedBy')]
-    public function testDividedBy(array $money, int|float|string $divisor, RoundingMode $roundingMode, string $expected): void
+    public function testDividedBy(array $money, int|string $divisor, RoundingMode $roundingMode, string $expected): void
     {
         $money = Money::of(...$money);
 

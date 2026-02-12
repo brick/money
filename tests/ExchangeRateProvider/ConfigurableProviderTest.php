@@ -56,9 +56,9 @@ class ConfigurableProviderTest extends AbstractTestCase
     {
         $provider = new ConfigurableProvider();
 
-        $provider->setExchangeRate('USD', 'EUR', 0.8);
-        $provider->setExchangeRate('USD', 'GBP', 0.6);
-        $provider->setExchangeRate('USD', 'CAD', 1.2);
+        $provider->setExchangeRate('USD', 'EUR', '0.8');
+        $provider->setExchangeRate('USD', 'GBP', '0.6');
+        $provider->setExchangeRate('USD', 'CAD', '1.2');
 
         return $provider;
     }

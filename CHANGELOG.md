@@ -1,5 +1,15 @@
 # Changelog
 
+## UNRELEASED (0.12.0)
+
+💥 **Breaking changes**
+
+- **Calling the following methods with floating-point values is no longer supported**, explicitly cast floats to string `(string) $float` to get the same behaviour as before (brick/math#105):
+  - `Money::of()`, `ofMinor()`, `plus()`, `minus()`, `multipliedBy()`, `dividedBy()`, `quotient()`, `quotientAndRemainder()`, `convertedTo()`
+  - `RationalMoney::of()`, `plus()`, `minus()`, `multipliedBy()`, `dividedBy()`
+  - `AbstractMoney::compareTo()`, `isEqualTo()`, `isLessThan()`, `isLessThanOrEqualTo()`, `isGreaterThan()`, `isGreaterThanOrEqualTo()`
+  - `ConfigurableProvider::setExchangeRate()`
+
 ## [0.11.2](https://github.com/brick/money/releases/tag/0.11.2) - 2026-03-02
 
 ⚠️ **Deprecations**

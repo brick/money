@@ -18,21 +18,21 @@ class CachedProviderTest extends AbstractTestCase
         $mock = new ProviderMock();
         $provider = new CachedProvider($mock);
 
-        self::assertSame(1.1, $provider->getExchangeRate('EUR', 'USD'));
+        self::assertSame('1.1', $provider->getExchangeRate('EUR', 'USD'));
         self::assertSame(1, $mock->getCalls());
 
-        self::assertSame(1.1, $provider->getExchangeRate('EUR', 'USD'));
+        self::assertSame('1.1', $provider->getExchangeRate('EUR', 'USD'));
         self::assertSame(1, $mock->getCalls());
 
-        self::assertSame(0.9, $provider->getExchangeRate('EUR', 'GBP'));
+        self::assertSame('0.9', $provider->getExchangeRate('EUR', 'GBP'));
         self::assertSame(2, $mock->getCalls());
 
-        self::assertSame(0.9, $provider->getExchangeRate('EUR', 'GBP'));
+        self::assertSame('0.9', $provider->getExchangeRate('EUR', 'GBP'));
         self::assertSame(2, $mock->getCalls());
 
         $provider->invalidate();
 
-        self::assertSame(0.9, $provider->getExchangeRate('EUR', 'GBP'));
+        self::assertSame('0.9', $provider->getExchangeRate('EUR', 'GBP'));
         self::assertSame(3, $mock->getCalls());
     }
 

@@ -69,12 +69,12 @@ class PDOProviderTest extends AbstractTestCase
     }
 
     /**
-     * @param string       $sourceCurrencyCode The code of the source currency.
-     * @param string       $targetCurrencyCode The code of the target currency.
-     * @param float|string $expectedResult     The expected exchange rate, or an exception class if expected.
+     * @param string $sourceCurrencyCode The code of the source currency.
+     * @param string $targetCurrencyCode The code of the target currency.
+     * @param string $expectedResult     The expected exchange rate, or an exception class if expected.
      */
     #[DataProvider('providerGetExchangeRate')]
-    public function testGetExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode, float|string $expectedResult): void
+    public function testGetExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode, string $expectedResult): void
     {
         $pdo = new PDO('sqlite::memory:');
 
@@ -88,9 +88,9 @@ class PDOProviderTest extends AbstractTestCase
 
         $statement = $pdo->prepare('INSERT INTO exchange_rate VALUES (?, ?, ?)');
 
-        $statement->execute(['EUR', 'USD', 1.1]);
-        $statement->execute(['USD', 'EUR', 0.9]);
-        $statement->execute(['USD', 'CAD', 1.2]);
+        $statement->execute(['EUR', 'USD', '1.1']);
+        $statement->execute(['USD', 'EUR', '0.9']);
+        $statement->execute(['USD', 'CAD', '1.2']);
 
         $configuration = new PDOProviderConfiguration(
             tableName: 'exchange_rate',
@@ -115,21 +115,21 @@ class PDOProviderTest extends AbstractTestCase
     public static function providerGetExchangeRate(): array
     {
         return [
-            ['USD', 'EUR', 0.9],
-            ['EUR', 'USD', 1.1],
-            ['USD', 'CAD', 1.2],
+            ['USD', 'EUR', '0.9'],
+            ['EUR', 'USD', '1.1'],
+            ['USD', 'CAD', '1.2'],
             ['CAD', 'USD', CurrencyConversionException::class],
             ['EUR', 'CAD', CurrencyConversionException::class],
         ];
     }
 
     /**
-     * @param string       $sourceCurrencyCode The code of the source currency.
-     * @param string       $targetCurrencyCode The code of the target currency.
-     * @param float|string $expectedResult     The expected exchange rate, or an exception class if expected.
+     * @param string $sourceCurrencyCode The code of the source currency.
+     * @param string $targetCurrencyCode The code of the target currency.
+     * @param string $expectedResult     The expected exchange rate, or an exception class if expected.
      */
     #[DataProvider('providerWithFixedSourceCurrency')]
-    public function testWithFixedSourceCurrency(string $sourceCurrencyCode, string $targetCurrencyCode, float|string $expectedResult): void
+    public function testWithFixedSourceCurrency(string $sourceCurrencyCode, string $targetCurrencyCode, string $expectedResult): void
     {
         $pdo = new PDO('sqlite::memory:');
 
@@ -142,8 +142,8 @@ class PDOProviderTest extends AbstractTestCase
 
         $statement = $pdo->prepare('INSERT INTO exchange_rate VALUES (?, ?)');
 
-        $statement->execute(['USD', 1.1]);
-        $statement->execute(['CAD', 1.2]);
+        $statement->execute(['USD', '1.1']);
+        $statement->execute(['CAD', '1.2']);
 
         $configuration = new PDOProviderConfiguration(
             tableName: 'exchange_rate',
@@ -168,8 +168,8 @@ class PDOProviderTest extends AbstractTestCase
     public static function providerWithFixedSourceCurrency(): array
     {
         return [
-            ['EUR', 'USD', 1.1],
-            ['EUR', 'CAD', 1.2],
+            ['EUR', 'USD', '1.1'],
+            ['EUR', 'CAD', '1.2'],
             ['EUR', 'GBP', CurrencyConversionException::class],
             ['USD', 'EUR', CurrencyConversionException::class],
             ['CAD', 'EUR', CurrencyConversionException::class],
@@ -177,12 +177,12 @@ class PDOProviderTest extends AbstractTestCase
     }
 
     /**
-     * @param string       $sourceCurrencyCode The code of the source currency.
-     * @param string       $targetCurrencyCode The code of the target currency.
-     * @param float|string $expectedResult     The expected exchange rate, or an exception class if expected.
+     * @param string $sourceCurrencyCode The code of the source currency.
+     * @param string $targetCurrencyCode The code of the target currency.
+     * @param string $expectedResult     The expected exchange rate, or an exception class if expected.
      */
     #[DataProvider('providerWithFixedTargetCurrency')]
-    public function testWithFixedTargetCurrency(string $sourceCurrencyCode, string $targetCurrencyCode, float|string $expectedResult): void
+    public function testWithFixedTargetCurrency(string $sourceCurrencyCode, string $targetCurrencyCode, string $expectedResult): void
     {
         $pdo = new PDO('sqlite::memory:');
 
@@ -195,8 +195,8 @@ class PDOProviderTest extends AbstractTestCase
 
         $statement = $pdo->prepare('INSERT INTO exchange_rate VALUES (?, ?)');
 
-        $statement->execute(['USD', 0.9]);
-        $statement->execute(['CAD', 0.8]);
+        $statement->execute(['USD', '0.9']);
+        $statement->execute(['CAD', '0.8']);
 
         $configuration = new PDOProviderConfiguration(
             tableName: 'exchange_rate',
@@ -221,8 +221,8 @@ class PDOProviderTest extends AbstractTestCase
     public static function providerWithFixedTargetCurrency(): array
     {
         return [
-            ['USD', 'EUR', 0.9],
-            ['CAD', 'EUR', 0.8],
+            ['USD', 'EUR', '0.9'],
+            ['CAD', 'EUR', '0.8'],
             ['GBP', 'EUR', CurrencyConversionException::class],
             ['EUR', 'USD', CurrencyConversionException::class],
             ['EUR', 'CAD', CurrencyConversionException::class],
@@ -230,13 +230,13 @@ class PDOProviderTest extends AbstractTestCase
     }
 
     /**
-     * @param string       $sourceCurrencyCode The code of the source currency.
-     * @param string       $targetCurrencyCode The code of the target currency.
-     * @param array        $parameters         The parameters to resolve the extra query placeholders.
-     * @param float|string $expectedResult     The expected exchange rate, or an exception class if expected.
+     * @param string $sourceCurrencyCode The code of the source currency.
+     * @param string $targetCurrencyCode The code of the target currency.
+     * @param array  $parameters         The parameters to resolve the extra query placeholders.
+     * @param string $expectedResult     The expected exchange rate, or an exception class if expected.
      */
     #[DataProvider('providerWithParameters')]
-    public function testWithParameters(string $sourceCurrencyCode, string $targetCurrencyCode, array $parameters, float|string $expectedResult): void
+    public function testWithParameters(string $sourceCurrencyCode, string $targetCurrencyCode, array $parameters, string $expectedResult): void
     {
         $pdo = new PDO('sqlite::memory:');
 
@@ -252,10 +252,10 @@ class PDOProviderTest extends AbstractTestCase
 
         $statement = $pdo->prepare('INSERT INTO exchange_rate VALUES (?, ?, ?, ?, ?)');
 
-        $statement->execute([2017, 8, 'EUR', 'USD', 1.1]);
-        $statement->execute([2017, 8, 'EUR', 'CAD', 1.2]);
-        $statement->execute([2017, 9, 'EUR', 'USD', 1.15]);
-        $statement->execute([2017, 9, 'EUR', 'CAD', 1.25]);
+        $statement->execute([2017, 8, 'EUR', 'USD', '1.1']);
+        $statement->execute([2017, 8, 'EUR', 'CAD', '1.2']);
+        $statement->execute([2017, 9, 'EUR', 'USD', '1.15']);
+        $statement->execute([2017, 9, 'EUR', 'CAD', '1.25']);
 
         $configuration = new PDOProviderConfiguration(
             tableName: 'exchange_rate',
@@ -282,11 +282,11 @@ class PDOProviderTest extends AbstractTestCase
     public static function providerWithParameters(): array
     {
         return [
-            ['EUR', 'USD', [2017, 8], 1.1],
-            ['EUR', 'CAD', [2017, 8], 1.2],
+            ['EUR', 'USD', [2017, 8], '1.1'],
+            ['EUR', 'CAD', [2017, 8], '1.2'],
             ['EUR', 'GBP', [2017, 8], CurrencyConversionException::class],
-            ['EUR', 'USD', [2017, 9], 1.15],
-            ['EUR', 'CAD', [2017, 9], 1.25],
+            ['EUR', 'USD', [2017, 9], '1.15'],
+            ['EUR', 'CAD', [2017, 9], '1.25'],
             ['EUR', 'GBP', [2017, 9], CurrencyConversionException::class],
             ['EUR', 'USD', [2017, 10], CurrencyConversionException::class],
             ['EUR', 'CAD', [2017, 10], CurrencyConversionException::class],

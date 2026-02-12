@@ -12,6 +12,7 @@ use PDO;
 use PDOStatement;
 
 use function implode;
+use function is_float;
 use function sprintf;
 use function var_export;
 
@@ -93,7 +94,7 @@ final class PDOProvider implements ExchangeRateProvider
     }
 
     #[Override]
-    public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode): int|float|string
+    public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode): int|string
     {
         $parameters = $this->parameters;
 
@@ -131,6 +132,10 @@ final class PDOProvider implements ExchangeRateProvider
             }
 
             throw CurrencyConversionException::exchangeRateNotAvailable($sourceCurrencyCode, $targetCurrencyCode, $info);
+        }
+
+        if (is_float($exchangeRate)) {
+            return (string) $exchangeRate;
         }
 
         return $exchangeRate;
