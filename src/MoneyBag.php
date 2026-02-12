@@ -8,8 +8,6 @@ use Brick\Math\BigRational;
 use Override;
 
 use function array_values;
-use function is_int;
-use function trigger_deprecation;
 
 /**
  * Container for monies in different currencies.
@@ -24,35 +22,6 @@ final class MoneyBag implements Monetary
      * @var array<string, RationalMoney>
      */
     private array $monies = [];
-
-    /**
-     * Returns the amount in the given currency contained in the bag, as a rational number.
-     *
-     * Non-ISO (non-numeric) currency codes are accepted.
-     *
-     * @deprecated Use getMoney()->getAmount() instead. Note that getMoney() does not support non-ISO currency codes,
-     *             and does not support numeric currency codes.
-     *
-     * @param Currency|string|int $currency The Currency instance, currency code or ISO numeric currency code.
-     */
-    public function getAmount(Currency|string|int $currency): BigRational
-    {
-        trigger_deprecation('brick/money', '0.11.0', 'Calling "%s()" is deprecated, use getMoney()->getAmount() instead.', __METHOD__);
-
-        if ($currency instanceof Currency) {
-            $currencyCode = $currency->getCurrencyCode();
-        } elseif (is_int($currency)) {
-            $currencyCode = Currency::ofNumericCode($currency)->getCurrencyCode();
-        } else {
-            $currencyCode = $currency;
-        }
-
-        if (isset($this->monies[$currencyCode])) {
-            return $this->monies[$currencyCode]->getAmount();
-        }
-
-        return BigRational::zero();
-    }
 
     /**
      * Returns the contained amount in the given currency as a RationalMoney.
