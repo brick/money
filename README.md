@@ -209,14 +209,14 @@ $money = Money::of('9.5', 'EUR') // EUR 9.50
   ->dividedBy(3) // EUR 950/300
   ->plus('17.795') // EUR 6288500/300000
   ->multipliedBy('1.196') // EUR 7521046000/300000000
-  ->to($money->getContext(), RoundingMode::Down) // EUR 25.07
+  ->toContext($money->getContext(), RoundingMode::Down) // EUR 25.07
 ```
 
-As you can see, the intermediate results are represented as fractions, and no rounding is ever performed. The final `to()` method converts it to a `Money`, applying a context and a rounding mode if necessary. Most of the time you want the result in the same context as the original Money, which is what the example above does. But you can really apply any context:
+As you can see, the intermediate results are represented as fractions, and no rounding is ever performed. The final `toContext()` method converts it to a `Money`, applying a context and a rounding mode if necessary. Most of the time you want the result in the same context as the original Money, which is what the example above does. But you can really apply any context:
 
 ```php
 ...
-  ->to(new CustomContext(scale: 8), RoundingMode::Up); // EUR 25.07015334
+  ->toContext(new CustomContext(scale: 8), RoundingMode::Up); // EUR 25.07015334
 ```
 
 Note: as you can see in the example above, the numbers in the fractions can quickly get very large.
