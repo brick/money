@@ -22,6 +22,7 @@
 - **`RationalMoney` is now always simplified to lowest terms:** `USD 25/100` is automatically simplified to `USD 1/4`
 - `Currency::is()` has been removed, use `Currency::isEqualTo()` instead
 - `MoneyBag::getAmount()` has been removed, use `MoneyBag::getMoney()->getAmount()` instead
+- `Money::formatTo()` has been removed, use `Money::formatToLocale()` instead
 
 ⚠️ **Deprecations**
 

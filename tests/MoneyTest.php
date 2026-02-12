@@ -841,13 +841,13 @@ class MoneyTest extends AbstractTestCase
      * @param string $expected         The expected output.
      */
     #[RequiresPhpExtension('intl')]
-    #[DataProvider('providerFormatTo')]
-    public function testFormatTo(array $money, string $locale, bool $allowWholeNumber, string $expected): void
+    #[DataProvider('providerFormatToLocale')]
+    public function testFormatToLocale(array $money, string $locale, bool $allowWholeNumber, string $expected): void
     {
-        self::assertSame($expected, Money::of(...$money)->formatTo($locale, $allowWholeNumber));
+        self::assertSame($expected, Money::of(...$money)->formatToLocale($locale, $allowWholeNumber));
     }
 
-    public static function providerFormatTo(): array
+    public static function providerFormatToLocale(): array
     {
         return [
             [['1.23', 'USD'], 'en_US', false, '$1.23'],
@@ -863,19 +863,6 @@ class MoneyTest extends AbstractTestCase
             [['234.001', 'GBP', new CustomContext(3)], 'en_GB', false, '£234.001'],
             [['234.001', 'GBP', new CustomContext(3)], 'en_GB', true, '£234.001'],
         ];
-    }
-
-    /**
-     * @param array  $money            The money to test.
-     * @param string $locale           The target locale.
-     * @param bool   $allowWholeNumber Whether to allow formatting as a whole number if the amount has no fraction.
-     * @param string $expected         The expected output.
-     */
-    #[RequiresPhpExtension('intl')]
-    #[DataProvider('providerFormatTo')]
-    public function testFormatToLocale(array $money, string $locale, bool $allowWholeNumber, string $expected): void
-    {
-        self::assertSame($expected, Money::of(...$money)->formatToLocale($locale, $allowWholeNumber));
     }
 
     public function testToRational(): void
