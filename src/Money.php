@@ -179,7 +179,7 @@ final readonly class Money extends AbstractMoney
      *
      * @param BigNumber|int|string $amount       The monetary amount.
      * @param Currency|string      $currency     The Currency instance or ISO currency code.
-     * @param Context|null         $context      An optional Context.
+     * @param Context|null         $context      An optional Context, defaults to DefaultContext.
      * @param RoundingMode         $roundingMode An optional RoundingMode, if the amount does not fit the context.
      *
      * @throws NumberFormatException      If the amount is a string in a non-supported format.
@@ -190,7 +190,7 @@ final readonly class Money extends AbstractMoney
     public static function of(
         BigNumber|int|string $amount,
         Currency|string $currency,
-        ?Context $context = null,
+        ?Context $context = new DefaultContext(),
         RoundingMode $roundingMode = RoundingMode::Unnecessary,
     ): Money {
         if (! $currency instanceof Currency) {
@@ -198,6 +198,11 @@ final readonly class Money extends AbstractMoney
         }
 
         if ($context === null) {
+            trigger_error(
+                'Passing null for the $context parameter to Money::of() is deprecated, use named arguments to skip to rounding mode.',
+                E_USER_DEPRECATED,
+            );
+
             $context = new DefaultContext();
         }
 
@@ -215,7 +220,7 @@ final readonly class Money extends AbstractMoney
      *
      * @param BigNumber|int|string $minorAmount  The amount, in minor currency units.
      * @param Currency|string      $currency     The Currency instance or ISO currency code.
-     * @param Context|null         $context      An optional Context.
+     * @param Context|null         $context      An optional Context, defaults to DefaultContext.
      * @param RoundingMode         $roundingMode An optional RoundingMode, if the amount does not fit the context.
      *
      * @throws NumberFormatException      If the amount is a string in a non-supported format.
@@ -226,7 +231,7 @@ final readonly class Money extends AbstractMoney
     public static function ofMinor(
         BigNumber|int|string $minorAmount,
         Currency|string $currency,
-        ?Context $context = null,
+        ?Context $context = new DefaultContext(),
         RoundingMode $roundingMode = RoundingMode::Unnecessary,
     ): Money {
         if (! $currency instanceof Currency) {
@@ -234,6 +239,11 @@ final readonly class Money extends AbstractMoney
         }
 
         if ($context === null) {
+            trigger_error(
+                'Passing null for the $context parameter to Money::ofMinor() is deprecated, use named arguments to skip to rounding mode.',
+                E_USER_DEPRECATED,
+            );
+
             $context = new DefaultContext();
         }
 
@@ -249,15 +259,20 @@ final readonly class Money extends AbstractMoney
      * A Context instance can be provided to override the default.
      *
      * @param Currency|string $currency The Currency instance or ISO currency code.
-     * @param Context|null    $context  An optional context.
+     * @param Context|null    $context  An optional context, defaults to DefaultContext.
      */
-    public static function zero(Currency|string $currency, ?Context $context = null): Money
+    public static function zero(Currency|string $currency, ?Context $context = new DefaultContext()): Money
     {
         if (! $currency instanceof Currency) {
             $currency = Currency::of($currency);
         }
 
         if ($context === null) {
+            trigger_error(
+                'Passing null for the $context parameter to Money::zero() is deprecated, use named arguments to skip to rounding mode.',
+                E_USER_DEPRECATED,
+            );
+
             $context = new DefaultContext();
         }
 
@@ -681,7 +696,7 @@ final readonly class Money extends AbstractMoney
      *
      * @param Currency|string      $currency     The Currency instance or ISO currency code.
      * @param BigNumber|int|string $exchangeRate The exchange rate to multiply by.
-     * @param Context|null         $context      An optional context.
+     * @param Context|null         $context      An optional context, defaults to DefaultContext.
      * @param RoundingMode         $roundingMode An optional rounding mode.
      *
      * @throws UnknownCurrencyException If an unknown currency code is given.
@@ -698,6 +713,12 @@ final readonly class Money extends AbstractMoney
         }
 
         if ($context === null) {
+            trigger_error(
+                'Passing null for the $context parameter to Money::convertedTo() is deprecated, use an explicit Context instance. ' .
+                'This parameter will default to DefaultContext in a future version.',
+                E_USER_DEPRECATED,
+            );
+
             $context = $this->context;
         }
 
