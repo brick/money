@@ -34,6 +34,8 @@ interface Context
      *
      * If no cash rounding is involved, this must return 1.
      * This value is used by money allocation methods that do not go through the applyTo() method.
+     *
+     * @return int<1, max>
      */
     public function getStep(): int;
 

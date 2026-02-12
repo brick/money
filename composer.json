@@ -10,7 +10,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
-        "brick/math": "~0.14.4",
+        "brick/math": "~0.15.0",
         "symfony/deprecation-contracts": "^2.2|^3.0"
     },
     "require-dev": {

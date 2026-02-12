@@ -881,7 +881,7 @@ class MoneyTest extends AbstractTestCase
     public function testToRational(): void
     {
         $money = Money::of('12.3456', 'EUR', new AutoContext());
-        self::assertRationalMoneyEquals('EUR 123456/10000', $money->toRational());
+        self::assertRationalMoneyEquals('EUR 7716/625', $money->toRational());
     }
 
     /**

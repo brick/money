@@ -17,8 +17,8 @@ use Override;
 final readonly class CashContext implements Context
 {
     /**
-     * @param int $step The cash rounding step, in minor units. Must be a multiple of 2 and/or 5.
-     *                  For example, step 5 on CHF would allow CHF 0.00, CHF 0.05, CHF 0.10, etc.
+     * @param int<1, max> $step The cash rounding step, in minor units. Must be a multiple of 2 and/or 5.
+     *                          For example, step 5 on CHF would allow CHF 0.00, CHF 0.05, CHF 0.10, etc.
      */
     public function __construct(
         private int $step,
