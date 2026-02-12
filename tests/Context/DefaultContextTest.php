@@ -39,15 +39,15 @@ class DefaultContextTest extends AbstractTestCase
     public static function providerApplyTo(): array
     {
         return [
-            ['1', 'USD', RoundingMode::UNNECESSARY, '1.00'],
-            ['1.001', 'USD', RoundingMode::UNNECESSARY, RoundingNecessaryException::class],
-            ['1.001', 'USD', RoundingMode::DOWN, '1.00'],
-            ['1.001', 'USD', RoundingMode::UP, '1.01'],
-            ['1', 'JPY', RoundingMode::UNNECESSARY, '1'],
-            ['1.00', 'JPY', RoundingMode::UNNECESSARY, '1'],
-            ['1.01', 'JPY', RoundingMode::UNNECESSARY, RoundingNecessaryException::class],
-            ['1.01', 'JPY', RoundingMode::DOWN, '1'],
-            ['1.01', 'JPY', RoundingMode::UP, '2'],
+            ['1', 'USD', RoundingMode::Unnecessary, '1.00'],
+            ['1.001', 'USD', RoundingMode::Unnecessary, RoundingNecessaryException::class],
+            ['1.001', 'USD', RoundingMode::Down, '1.00'],
+            ['1.001', 'USD', RoundingMode::Up, '1.01'],
+            ['1', 'JPY', RoundingMode::Unnecessary, '1'],
+            ['1.00', 'JPY', RoundingMode::Unnecessary, '1'],
+            ['1.01', 'JPY', RoundingMode::Unnecessary, RoundingNecessaryException::class],
+            ['1.01', 'JPY', RoundingMode::Down, '1'],
+            ['1.01', 'JPY', RoundingMode::Up, '2'],
         ];
     }
 

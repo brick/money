@@ -31,9 +31,9 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
      * @param Context      $context      The context.
      * @param RoundingMode $roundingMode The rounding mode, if necessary.
      *
-     * @throws RoundingNecessaryException If RoundingMode::UNNECESSARY is used but rounding is necessary.
+     * @throws RoundingNecessaryException If RoundingMode::Unnecessary is used but rounding is necessary.
      */
-    final public function to(Context $context, RoundingMode $roundingMode = RoundingMode::UNNECESSARY): Money
+    final public function to(Context $context, RoundingMode $roundingMode = RoundingMode::Unnecessary): Money
     {
         return Money::create($this->getAmount(), $this->getCurrency(), $context, $roundingMode);
     }

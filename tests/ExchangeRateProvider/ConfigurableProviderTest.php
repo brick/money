@@ -26,7 +26,7 @@ class ConfigurableProviderTest extends AbstractTestCase
     public function testGetExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode, string $exchangeRate): void
     {
         $rate = $this->getExchangeRateProvider()->getExchangeRate($sourceCurrencyCode, $targetCurrencyCode);
-        self::assertSame($exchangeRate, (string) BigRational::of($rate)->toScale(3, RoundingMode::DOWN));
+        self::assertSame($exchangeRate, (string) BigRational::of($rate)->toScale(3, RoundingMode::Down));
     }
 
     public static function providerGetExchangeRate(): array

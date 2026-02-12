@@ -32,13 +32,13 @@ final readonly class CurrencyConverter
      * @param RoundingMode        $roundingMode The rounding mode, if necessary.
      *
      * @throws CurrencyConversionException If the exchange rate is not available.
-     * @throws RoundingNecessaryException  If rounding is necessary and RoundingMode::UNNECESSARY is used.
+     * @throws RoundingNecessaryException  If rounding is necessary and RoundingMode::Unnecessary is used.
      */
     public function convert(
         Monetary $money,
         Currency|string|int $currency,
         ?Context $context = null,
-        RoundingMode $roundingMode = RoundingMode::UNNECESSARY,
+        RoundingMode $roundingMode = RoundingMode::Unnecessary,
     ): Money {
         return $this
             ->convertToRational($money, $currency)

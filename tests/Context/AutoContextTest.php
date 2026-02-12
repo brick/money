@@ -41,11 +41,11 @@ class AutoContextTest extends AbstractTestCase
     public static function providerApplyTo(): array
     {
         return [
-            ['1', 'USD', RoundingMode::UNNECESSARY, '1'],
-            ['1.23', 'JPY', RoundingMode::UNNECESSARY, '1.23'],
-            ['123/5000', 'EUR', RoundingMode::UNNECESSARY, '0.0246'],
-            ['5/7', 'EUR', RoundingMode::UNNECESSARY, RoundingNecessaryException::class],
-            ['5/7', 'EUR', RoundingMode::DOWN, InvalidArgumentException::class],
+            ['1', 'USD', RoundingMode::Unnecessary, '1'],
+            ['1.23', 'JPY', RoundingMode::Unnecessary, '1.23'],
+            ['123/5000', 'EUR', RoundingMode::Unnecessary, '0.0246'],
+            ['5/7', 'EUR', RoundingMode::Unnecessary, RoundingNecessaryException::class],
+            ['5/7', 'EUR', RoundingMode::Down, InvalidArgumentException::class],
         ];
     }
 

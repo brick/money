@@ -197,12 +197,12 @@ class RationalMoneyTest extends AbstractTestCase
     public static function providerTo(): array
     {
         return [
-            [['987.65', 'USD'], new DefaultContext(), RoundingMode::UNNECESSARY, 'USD 987.65'],
-            [['246/200', 'USD'], new DefaultContext(), RoundingMode::UNNECESSARY, 'USD 1.23'],
-            [['987.65', 'CZK'], new CashContext(100), RoundingMode::UP, 'CZK 988.00'],
-            [['123/456', 'GBP'], new CustomContext(4), RoundingMode::UP, 'GBP 0.2698'],
-            [['123/456', 'GBP'], new AutoContext(), RoundingMode::UNNECESSARY, RoundingNecessaryException::class],
-            [['123456789/256', 'CHF'], new AutoContext(), RoundingMode::UNNECESSARY, 'CHF 482253.08203125'],
+            [['987.65', 'USD'], new DefaultContext(), RoundingMode::Unnecessary, 'USD 987.65'],
+            [['246/200', 'USD'], new DefaultContext(), RoundingMode::Unnecessary, 'USD 1.23'],
+            [['987.65', 'CZK'], new CashContext(100), RoundingMode::Up, 'CZK 988.00'],
+            [['123/456', 'GBP'], new CustomContext(4), RoundingMode::Up, 'GBP 0.2698'],
+            [['123/456', 'GBP'], new AutoContext(), RoundingMode::Unnecessary, RoundingNecessaryException::class],
+            [['123456789/256', 'CHF'], new AutoContext(), RoundingMode::Unnecessary, 'CHF 482253.08203125'],
         ];
     }
 

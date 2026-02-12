@@ -19,7 +19,7 @@ interface Context
      *
      * The given rounding mode MUST be respected; no default rounding mode must be applied.
      * In case the rounding mode is irrelevant, for example in AutoContext, this method MUST throw an exception if a
-     * rounding mode other than RoundingMode::UNNECESSARY is used.
+     * rounding mode other than RoundingMode::Unnecessary is used.
      *
      * @param BigNumber    $amount       The amount.
      * @param Currency     $currency     The target currency.

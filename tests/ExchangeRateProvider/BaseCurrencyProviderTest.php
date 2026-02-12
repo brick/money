@@ -26,7 +26,7 @@ class BaseCurrencyProviderTest extends AbstractTestCase
     public function testGetExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode, string $exchangeRate): void
     {
         $rate = $this->getExchangeRateProvider()->getExchangeRate($sourceCurrencyCode, $targetCurrencyCode);
-        self::assertSame($exchangeRate, (string) $rate->toScale(6, RoundingMode::DOWN));
+        self::assertSame($exchangeRate, (string) $rate->toScale(6, RoundingMode::Down));
     }
 
     public static function providerGetExchangeRate(): array

@@ -20,8 +20,8 @@ final readonly class AutoContext implements Context
     #[Override]
     public function applyTo(BigNumber $amount, Currency $currency, RoundingMode $roundingMode): BigDecimal
     {
-        if ($roundingMode !== RoundingMode::UNNECESSARY) {
-            throw new InvalidArgumentException('AutoContext only supports RoundingMode::UNNECESSARY');
+        if ($roundingMode !== RoundingMode::Unnecessary) {
+            throw new InvalidArgumentException('AutoContext only supports RoundingMode::Unnecessary');
         }
 
         return $amount->toBigDecimal()->stripTrailingZeros();

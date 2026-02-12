@@ -49,18 +49,18 @@ class CurrencyConverterTest extends AbstractTestCase
     public static function providerConvertMoney(): array
     {
         return [
-            [['1.23', 'EUR'], 'USD', RoundingMode::DOWN, 'USD 1.35'],
-            [['1.23', 'EUR'], 'USD', RoundingMode::UP, 'USD 1.36'],
-            [['1.10', 'EUR'], 'USD', RoundingMode::DOWN, 'USD 1.21'],
-            [['1.10', 'EUR'], 'USD', RoundingMode::UP, 'USD 1.21'],
-            [['123.57', 'USD'], 'EUR', RoundingMode::DOWN, 'EUR 112.33'],
-            [['123.57', 'USD'], 'EUR', RoundingMode::UP, 'EUR 112.34'],
-            [['123.57', 'USD'], 'EUR', RoundingMode::UNNECESSARY, RoundingNecessaryException::class],
-            [['1724657496.87', 'USD', new AutoContext()], 'EUR', RoundingMode::UNNECESSARY, 'EUR 1567870451.70'],
-            [['127.367429', 'BSD', new AutoContext()], 'USD', RoundingMode::UP, 'USD 127.37'],
-            [['1.23', 'USD'], 'BSD', RoundingMode::DOWN, CurrencyConversionException::class],
-            [['1.23', 'EUR'], 'EUR', RoundingMode::UNNECESSARY, 'EUR 1.23'],
-            [['123456.789', 'JPY', new AutoContext()], 'JPY', RoundingMode::HALF_EVEN, 'JPY 123457'],
+            [['1.23', 'EUR'], 'USD', RoundingMode::Down, 'USD 1.35'],
+            [['1.23', 'EUR'], 'USD', RoundingMode::Up, 'USD 1.36'],
+            [['1.10', 'EUR'], 'USD', RoundingMode::Down, 'USD 1.21'],
+            [['1.10', 'EUR'], 'USD', RoundingMode::Up, 'USD 1.21'],
+            [['123.57', 'USD'], 'EUR', RoundingMode::Down, 'EUR 112.33'],
+            [['123.57', 'USD'], 'EUR', RoundingMode::Up, 'EUR 112.34'],
+            [['123.57', 'USD'], 'EUR', RoundingMode::Unnecessary, RoundingNecessaryException::class],
+            [['1724657496.87', 'USD', new AutoContext()], 'EUR', RoundingMode::Unnecessary, 'EUR 1567870451.70'],
+            [['127.367429', 'BSD', new AutoContext()], 'USD', RoundingMode::Up, 'USD 127.37'],
+            [['1.23', 'USD'], 'BSD', RoundingMode::Down, CurrencyConversionException::class],
+            [['1.23', 'EUR'], 'EUR', RoundingMode::Unnecessary, 'EUR 1.23'],
+            [['123456.789', 'JPY', new AutoContext()], 'JPY', RoundingMode::HalfEven, 'JPY 123457'],
         ];
     }
 
@@ -92,11 +92,11 @@ class CurrencyConverterTest extends AbstractTestCase
     public static function providerConvertMoneyBag(): array
     {
         return [
-            [[['354.40005', 'EUR'], ['3.1234', 'JPY']], 'USD', new DefaultContext(), RoundingMode::DOWN, 'USD 437.56'],
-            [[['354.40005', 'EUR'], ['3.1234', 'JPY']], 'USD', new DefaultContext(), RoundingMode::UP, 'USD 437.57'],
+            [[['354.40005', 'EUR'], ['3.1234', 'JPY']], 'USD', new DefaultContext(), RoundingMode::Down, 'USD 437.56'],
+            [[['354.40005', 'EUR'], ['3.1234', 'JPY']], 'USD', new DefaultContext(), RoundingMode::Up, 'USD 437.57'],
 
-            [[['1234.56', 'EUR'], ['31562', 'JPY']], 'USD', new CustomContext(6), RoundingMode::DOWN, 'USD 1835.871591'],
-            [[['1234.56', 'EUR'], ['31562', 'JPY']], 'USD', new CustomContext(6), RoundingMode::UP, 'USD 1835.871592'],
+            [[['1234.56', 'EUR'], ['31562', 'JPY']], 'USD', new CustomContext(6), RoundingMode::Down, 'USD 1835.871591'],
+            [[['1234.56', 'EUR'], ['31562', 'JPY']], 'USD', new CustomContext(6), RoundingMode::Up, 'USD 1835.871592'],
         ];
     }
 
@@ -160,10 +160,10 @@ class CurrencyConverterTest extends AbstractTestCase
     public static function providerConvertRationalMoney(): array
     {
         return [
-            [['7/9', 'USD'], 'EUR', RoundingMode::DOWN, 'EUR 0.70'],
-            [['7/9', 'USD'], 'EUR', RoundingMode::UP, 'EUR 0.71'],
-            [['4/3', 'EUR'], 'USD', RoundingMode::DOWN, 'USD 1.46'],
-            [['4/3', 'EUR'], 'USD', RoundingMode::UP, 'USD 1.47'],
+            [['7/9', 'USD'], 'EUR', RoundingMode::Down, 'EUR 0.70'],
+            [['7/9', 'USD'], 'EUR', RoundingMode::Up, 'EUR 0.71'],
+            [['4/3', 'EUR'], 'USD', RoundingMode::Down, 'USD 1.46'],
+            [['4/3', 'EUR'], 'USD', RoundingMode::Up, 'USD 1.47'],
         ];
     }
 
