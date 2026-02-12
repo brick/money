@@ -33,10 +33,15 @@ Deprecated methods removed:
 
 - Method `RationalMoney::simplified()` is deprecated, as it is now a no-op
 - Method `Money::getUnscaledAmount()` is deprecated, use `getAmount()->getUnscaledValue()` instead
+- Method `Money::total()` is deprecated, use `sum()` instead
 
 📌 **Compatibility**
 
 - brick/money now requires `brick/math:~0.15`
+
+✨ **New features**
+
+- New method: `Money::sum()` (replaces `total()`)
 
 ## [0.11.1](https://github.com/brick/money/releases/tag/0.11.1) - 2026-02-12
 
