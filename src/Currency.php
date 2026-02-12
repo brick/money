@@ -58,7 +58,7 @@ final readonly class Currency implements Stringable, JsonSerializable
      */
     public static function of(string $currencyCode): Currency
     {
-        return ISOCurrencyProvider::getInstance()->getCurrency($currencyCode);
+        return IsoCurrencyProvider::getInstance()->getCurrency($currencyCode);
     }
 
     /**
@@ -72,7 +72,7 @@ final readonly class Currency implements Stringable, JsonSerializable
      */
     public static function ofCountry(string $countryCode): Currency
     {
-        return ISOCurrencyProvider::getInstance()->getCurrencyForCountry($countryCode);
+        return IsoCurrencyProvider::getInstance()->getCurrencyForCountry($countryCode);
     }
 
     /**
@@ -89,7 +89,7 @@ final readonly class Currency implements Stringable, JsonSerializable
      */
     public static function ofNumericCode(int $currencyCode): Currency
     {
-        return ISOCurrencyProvider::getInstance()->getCurrencyByNumericCode($currencyCode);
+        return IsoCurrencyProvider::getInstance()->getCurrencyByNumericCode($currencyCode);
     }
 
     /**
