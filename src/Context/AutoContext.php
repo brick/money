@@ -24,7 +24,7 @@ final readonly class AutoContext implements Context
             throw new InvalidArgumentException('AutoContext only supports RoundingMode::Unnecessary');
         }
 
-        return $amount->toBigDecimal()->stripTrailingZeros();
+        return $amount->toBigDecimal()->strippedOfTrailingZeros();
     }
 
     #[Override]

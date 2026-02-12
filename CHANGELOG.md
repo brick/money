@@ -8,7 +8,7 @@
 
 📌 **Compatibility**
 
-- Restricted compatibility to `brick/math:~0.14.2`
+- Restricted compatibility to `brick/math:~0.14.4`
 
 👌 **Improvements**
 
