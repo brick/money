@@ -69,12 +69,12 @@ class RationalMoneyTest extends AbstractTestCase
     public static function providerPlus(): array
     {
         return [
-            [['1.1234', 'USD'], '987.65', 'USD 988773400/1000000'],
-            [['123/456', 'GBP'], '14.99', 'GBP 695844/45600'],
-            [['123/456', 'GBP'], '567/890', 'GBP 368022/405840'],
-            [['1.123', 'CHF'], RationalMoney::of('0.1', 'CHF'), 'CHF 12230/10000'],
+            [['1.1234', 'USD'], '987.65', 'USD 4943867/5000'],
+            [['123/456', 'GBP'], '14.99', 'GBP 57987/3800'],
+            [['123/456', 'GBP'], '567/890', 'GBP 61337/67640'],
+            [['1.123', 'CHF'], RationalMoney::of('0.1', 'CHF'), 'CHF 1223/1000'],
             [['1.123', 'CHF'], RationalMoney::of('0.1', 'CAD'), MoneyMismatchException::class],
-            [['9.876', 'CAD'], Money::of(3, 'CAD'), 'CAD 1287600/100000'],
+            [['9.876', 'CAD'], Money::of(3, 'CAD'), 'CAD 3219/250'],
             [['9.876', 'CAD'], Money::of(3, 'USD'), MoneyMismatchException::class],
         ];
     }
@@ -98,12 +98,12 @@ class RationalMoneyTest extends AbstractTestCase
     public static function providerMinus(): array
     {
         return [
-            [['987.65', 'USD'], '1.1234', 'USD 986526600/1000000'],
-            [['123/456', 'GBP'], '14.99', 'GBP -671244/45600'],
-            [['123/456', 'GBP'], '567/890', 'GBP -149082/405840'],
-            [['1.123', 'CHF'], RationalMoney::of('0.1', 'CHF'), 'CHF 10230/10000'],
+            [['987.65', 'USD'], '1.1234', 'USD 4932633/5000'],
+            [['123/456', 'GBP'], '14.99', 'GBP -55937/3800'],
+            [['123/456', 'GBP'], '567/890', 'GBP -24847/67640'],
+            [['1.123', 'CHF'], RationalMoney::of('0.1', 'CHF'), 'CHF 1023/1000'],
             [['1.123', 'CHF'], RationalMoney::of('0.1', 'CAD'), MoneyMismatchException::class],
-            [['9.876', 'CAD'], Money::of(3, 'CAD'), 'CAD 687600/100000'],
+            [['9.876', 'CAD'], Money::of(3, 'CAD'), 'CAD 1719/250'],
             [['9.876', 'CAD'], Money::of(3, 'USD'), MoneyMismatchException::class],
         ];
     }
@@ -127,9 +127,9 @@ class RationalMoneyTest extends AbstractTestCase
     public static function providerMultipliedBy(): array
     {
         return [
-            [['987.65', 'USD'], '1.123456', 'USD 110958131840/100000000'],
-            [['123/456', 'GBP'], '14.99', 'GBP 184377/45600'],
-            [['123/456', 'GBP'], '567/890', 'GBP 69741/405840'],
+            [['987.65', 'USD'], '1.123456', 'USD 173372081/156250'],
+            [['123/456', 'GBP'], '14.99', 'GBP 61459/15200'],
+            [['123/456', 'GBP'], '567/890', 'GBP 23247/135280'],
         ];
     }
 
@@ -152,29 +152,10 @@ class RationalMoneyTest extends AbstractTestCase
     public static function providerDividedBy(): array
     {
         return [
-            [['987.65', 'USD'], '1.123456', 'USD 98765000000/112345600'],
-            [['987.65', 'USD'], '5', 'USD 98765/500'],
-            [['123/456', 'GBP'], '14.99', 'GBP 12300/683544'],
-            [['123/456', 'GBP'], '567/890', 'GBP 109470/258552'],
-        ];
-    }
-
-    #[DataProvider('providerSimplified')]
-    public function testSimplified(array $rationalMoney, string $expected): void
-    {
-        $rationalMoney = RationalMoney::of(...$rationalMoney);
-
-        $actual = $rationalMoney->simplified();
-        self::assertRationalMoneyEquals($expected, $actual);
-    }
-
-    public static function providerSimplified(): array
-    {
-        return [
-            [['123456/10000', 'USD'], 'USD 7716/625'],
-            [['695844/45600', 'CAD'], 'CAD 57987/3800'],
-            [['368022/405840', 'EUR'], 'EUR 61337/67640'],
-            [['-671244/45600', 'GBP'], 'GBP -55937/3800'],
+            [['987.65', 'USD'], '1.123456', 'USD 61728125/70216'],
+            [['987.65', 'USD'], '5', 'USD 19753/100'],
+            [['123/456', 'GBP'], '14.99', 'GBP 1025/56962'],
+            [['123/456', 'GBP'], '567/890', 'GBP 18245/43092'],
         ];
     }
 
@@ -216,7 +197,7 @@ class RationalMoneyTest extends AbstractTestCase
     public static function providerJsonSerialize(): array
     {
         return [
-            [RationalMoney::of('3.5', 'EUR'), ['amount' => '35/10', 'currency' => 'EUR']],
+            [RationalMoney::of('3.5', 'EUR'), ['amount' => '7/2', 'currency' => 'EUR']],
             [RationalMoney::of('3.888923', 'GBP'), ['amount' => '3888923/1000000', 'currency' => 'GBP']],
         ];
     }

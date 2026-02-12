@@ -19,7 +19,7 @@ final class ISOCurrencyProvider
     /**
      * The raw currency data, indexed by currency code.
      *
-     * @var array<string, array{string, int, string, int, CurrencyType}>
+     * @var array<string, array{string, int, string, non-negative-int, CurrencyType}>
      */
     private readonly array $currencyData;
 

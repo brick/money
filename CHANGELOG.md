@@ -19,7 +19,16 @@
   - `CurrencyConverter::convert()`
   - `CurrencyConverter::convertToRational()`
   - `ISOCurrencyProvider::getCurrency()`
+- **`RationalMoney` is now always simplified to lowest terms:** `USD 25/100` is automatically simplified to `USD 1/4`
 - `Currency::is()` has been removed, use `Currency::isEqualTo()` instead
+
+⚠️ **Deprecations**
+
+- Method `RationalMoney::simplified()` is deprecated, as it is now a no-op
+
+📌 **Compatibility**
+
+- brick/money now requires `brick/math:~0.15`
 
 ## [0.11.2](https://github.com/brick/money/releases/tag/0.11.2) - 2026-03-02
 
