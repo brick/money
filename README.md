@@ -274,9 +274,11 @@ use Brick\Money\MoneyBag;
 $eur = Money::of('12.34', 'EUR');
 $jpy = Money::of(123, 'JPY');
 
-$moneyBag = new MoneyBag();
-$moneyBag->add($eur);
-$moneyBag->add($jpy);
+$moneyBag = MoneyBag::fromMonies($eur, $jpy);
+
+// or:
+
+$moneyBag = MoneyBag::zero()->plus($eur)->plus($jpy);
 ```
 
 You can add any kind of money to a MoneyBag: a `Money`, a `RationalMoney`, or even another `MoneyBag`.

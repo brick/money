@@ -40,6 +40,9 @@ Deprecated methods removed:
   - `Money::ofMinor()`
   - `Money::zero()`
 - Passing `null` to the `$context` parameter of `Money::convertedTo()` is deprecated, use an explicit `Context` instance; the default will change to `DefaultContext` in a future version
+- Instantiating a `MoneyBag` with `new` is deprecated, use `MoneyBag::zero()` or `MoneyBag::fromMonies()` instead
+- Method `MoneyBag::add()` is deprecated, use `plus()` instead, which returns a new instance
+- Method `MoneyBag::subtract()` is deprecated, use `minus()` instead, which returns a new instance
 
 📌 **Compatibility**
 
