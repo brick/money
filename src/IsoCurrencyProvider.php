@@ -6,6 +6,7 @@ namespace Brick\Money;
 
 use Brick\Money\Exception\UnknownCurrencyException;
 
+use function array_map;
 use function count;
 use function ksort;
 
@@ -209,15 +210,14 @@ final class IsoCurrencyProvider
             $this->countryToCurrencyCurrent = require __DIR__ . '/../data/country-to-currency.php';
         }
 
-        $result = [];
-
         if (isset($this->countryToCurrencyCurrent[$countryCode])) {
-            foreach ($this->countryToCurrencyCurrent[$countryCode] as $currencyCode) {
-                $result[] = $this->getCurrency($currencyCode);
-            }
+            return array_map(
+                $this->getCurrency(...),
+                $this->countryToCurrencyCurrent[$countryCode],
+            );
         }
 
-        return $result;
+        return [];
     }
 
     /**
@@ -237,14 +237,13 @@ final class IsoCurrencyProvider
             $this->countryToCurrencyHistorical = require __DIR__ . '/../data/country-to-currency-historical.php';
         }
 
-        $result = [];
-
         if (isset($this->countryToCurrencyHistorical[$countryCode])) {
-            foreach ($this->countryToCurrencyHistorical[$countryCode] as $currencyCode) {
-                $result[] = $this->getCurrency($currencyCode);
-            }
+            return array_map(
+                $this->getCurrency(...),
+                $this->countryToCurrencyHistorical[$countryCode],
+            );
         }
 
-        return $result;
+        return [];
     }
 }
