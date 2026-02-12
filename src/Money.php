@@ -24,6 +24,9 @@ use function array_map;
 use function array_sum;
 use function array_values;
 use function intdiv;
+use function trigger_error;
+
+use const E_USER_DEPRECATED;
 
 /**
  * A monetary value in a given currency. This class is immutable.
@@ -261,9 +264,17 @@ final readonly class Money extends AbstractMoney
      * Returns a BigInteger containing the unscaled value (all digits) of this money.
      *
      * For example, `123.4567 USD` will return a BigInteger of `1234567`.
+     *
+     * @deprecated Use getAmount()->getUnscaledValue() instead.
      */
     public function getUnscaledAmount(): BigInteger
     {
+        trigger_error(
+            'Money::getUnscaledAmount() is deprecated, and will be removed in a future version. ' .
+            'Use getAmount()->getUnscaledValue() instead.',
+            E_USER_DEPRECATED,
+        );
+
         return $this->amount->getUnscaledValue();
     }
 
