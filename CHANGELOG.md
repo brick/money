@@ -4,7 +4,15 @@
 
 ⚠️ **Deprecations**
 
-- Added explicit `trigger_deprecation()` calls to methods that were already marked as `@deprecated`, so deprecation notices are now emitted at runtime.
+- Added explicit `trigger_deprecation()` calls to methods that were already marked as `@deprecated`, so deprecation notices are now emitted at runtime
+
+📌 **Compatibility**
+
+- Restricted compatibility to `brick/math:~0.14.2`
+
+👌 **Improvements**
+
+- Fixed calls to deprecated brick/math and brick/money APIs
 
 ## [0.11.0](https://github.com/brick/money/releases/tag/0.11.0) - 2026-01-22
 
