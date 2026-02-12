@@ -690,24 +690,6 @@ final readonly class Money extends AbstractMoney
     /**
      * Formats this Money to the given locale.
      *
-     * Note that this method uses NumberFormatter, which internally represents values using floating point arithmetic,
-     * so discrepancies can appear when formatting very large monetary values.
-     *
-     * @deprecated Use Money::formatToLocale($locale, $allowWholeNumber).
-     *
-     * @param string $locale           The locale to format to, for example 'fr_FR' or 'en_US'.
-     * @param bool   $allowWholeNumber Whether to allow formatting as a whole number if the amount has no fraction.
-     */
-    public function formatTo(string $locale, bool $allowWholeNumber = false): string
-    {
-        trigger_deprecation('brick/money', '0.11.0', 'Calling "%s()" is deprecated, use formatToLocale() instead.', __METHOD__);
-
-        return $this->formatToLocale($locale, $allowWholeNumber);
-    }
-
-    /**
-     * Formats this Money to the given locale.
-     *
      * Note that this method uses MoneyLocaleFormatter, which in turn internally uses NumberFormatter, which represents values using floating
      * point arithmetic, so discrepancies can appear when formatting very large monetary values.
      *
