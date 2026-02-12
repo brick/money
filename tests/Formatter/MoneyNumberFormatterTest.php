@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Brick\Money\Tests;
+namespace Brick\Money\Tests\Formatter;
 
 use Brick\Money\Context\AutoContext;
 use Brick\Money\Formatter\MoneyNumberFormatter;
 use Brick\Money\Money;
+use Brick\Money\Tests\AbstractTestCase;
 use NumberFormatter;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
