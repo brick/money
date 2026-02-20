@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Brick\Money\Context;
 
 use Brick\Math\BigDecimal;
+use Brick\Math\BigInteger;
 use Brick\Math\BigNumber;
 use Brick\Math\RoundingMode;
 use Brick\Money\Context;
@@ -29,7 +30,12 @@ final readonly class CustomContext implements Context
         private int $scale,
         private int $step = 1,
     ) {
-        if (! $this->isValidStep($scale, $step)) {
+        /** @psalm-suppress DocblockTypeContradiction, NoValue */
+        if ($scale < 0) {
+            throw new MoneyException(sprintf('Invalid scale: %d.', $scale));
+        }
+
+        if ($step < 1 || ! $this->isValidStepForScale($scale, $step)) {
             throw new MoneyException(sprintf('Invalid step: %d.', $step));
         }
     }
@@ -68,14 +74,15 @@ final readonly class CustomContext implements Context
         return $this->scale;
     }
 
-    private function isValidStep(int $scale, int $step): bool
+    /**
+     * @param non-negative-int $scale
+     * @param int<1, max>      $step
+     */
+    private function isValidStepForScale(int $scale, int $step): bool
     {
-        if ($step < 1) {
-            return false;
-        }
+        $step = BigInteger::of($step);
+        $power = BigInteger::ten()->power($scale);
 
-        $power = 10 ** $scale;
-
-        return $power % $step === 0 || $step % $power === 0;
+        return $power->mod($step)->isZero() || $step->mod($power)->isZero();
     }
 }
