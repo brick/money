@@ -247,7 +247,8 @@ final readonly class Money extends AbstractMoney
             $context = new DefaultContext();
         }
 
-        $amount = BigRational::of($minorAmount)->dividedBy(10 ** $currency->getDefaultFractionDigits());
+        $divisor = BigInteger::ten()->power($currency->getDefaultFractionDigits());
+        $amount = BigRational::of($minorAmount)->dividedBy($divisor);
 
         return self::create($amount, $currency, $context, $roundingMode);
     }
