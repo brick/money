@@ -10,10 +10,8 @@ use Brick\Math\BigNumber;
 use Brick\Math\RoundingMode;
 use Brick\Money\Context;
 use Brick\Money\Currency;
-use Brick\Money\Exception\MoneyException;
+use Brick\Money\Exception\InvalidArgumentException;
 use Override;
-
-use function sprintf;
 
 /**
  * Adjusts a number to a custom scale and optionally step.
@@ -32,11 +30,11 @@ final readonly class CustomContext implements Context
     ) {
         /** @psalm-suppress DocblockTypeContradiction, NoValue */
         if ($scale < 0) {
-            throw new MoneyException(sprintf('Invalid scale: %d.', $scale));
+            throw InvalidArgumentException::invalidScale($scale);
         }
 
         if ($step < 1 || ! $this->isValidStepForScale($scale, $step)) {
-            throw new MoneyException(sprintf('Invalid step: %d.', $step));
+            throw InvalidArgumentException::invalidStep($step);
         }
     }
 
