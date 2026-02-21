@@ -76,7 +76,7 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
     /**
      * Returns the sign of this money.
      *
-     * @return int -1 if the number is negative, 0 if zero, 1 if positive.
+     * @return -1|0|1 -1 if the number is negative, 0 if zero, 1 if positive.
      */
     final public function getSign(): int
     {
@@ -126,7 +126,7 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
     /**
      * Compares this money to the given amount.
      *
-     * @return int [-1, 0, 1] if `$this` is less than, equal to, or greater than `$that`.
+     * @return -1|0|1 If `$this` is less than, equal to, or greater than `$that`.
      *
      * @throws MathException          If the argument is an invalid number.
      * @throws MoneyMismatchException If the argument is a money in a different currency.

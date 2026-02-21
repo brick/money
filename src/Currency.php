@@ -20,7 +20,7 @@ final readonly class Currency implements Stringable, JsonSerializable
      *                                                uppercase ISO 4217 currency code. For non-ISO currencies no
      *                                                constraints are defined, but the code must be unique across an
      *                                                application and must not conflict with ISO currency codes.
-     * @param int              $numericCode           The numeric currency code. For ISO currencies this will be the
+     * @param non-negative-int $numericCode           The numeric currency code. For ISO currencies this will be the
      *                                                ISO 4217 numeric currency code, without leading zeros. For non-ISO
      *                                                currencies no constraints are defined, but the code must be unique
      *                                                across an application and must not conflict with ISO currency codes.
@@ -109,6 +109,8 @@ final readonly class Currency implements Stringable, JsonSerializable
      *
      * For ISO currencies this will be the ISO 4217 numeric currency code, without leading zeros.
      * For non ISO currencies no constraints are defined.
+     *
+     * @return non-negative-int
      */
     public function getNumericCode(): int
     {

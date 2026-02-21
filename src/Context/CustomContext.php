@@ -22,7 +22,7 @@ final readonly class CustomContext implements Context
 {
     /**
      * @param non-negative-int $scale The scale of the monies using this context.
-     * @param int<1, max>      $step  An optional cash rounding step. Must either divide 10^scale or be a multiple of 10^scale.
+     * @param positive-int     $step  An optional cash rounding step. Must either divide 10^scale or be a multiple of 10^scale.
      *                                For example, scale=2 and step=5 allows 0.00, 0.05, 0.10, etc.
      *                                And scale=2 and step=1000 allows 0.00, 10.00, 20.00, etc.
      */
@@ -68,6 +68,8 @@ final readonly class CustomContext implements Context
 
     /**
      * Returns the scale used by this context.
+     *
+     * @return non-negative-int
      */
     public function getScale(): int
     {
@@ -76,7 +78,7 @@ final readonly class CustomContext implements Context
 
     /**
      * @param non-negative-int $scale
-     * @param int<1, max>      $step
+     * @param positive-int     $step
      */
     private function isValidStepForScale(int $scale, int $step): bool
     {
