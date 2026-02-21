@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Brick\Money\Exception;
 
 use Brick\Money\Currency;
+use RuntimeException;
 
 use function sprintf;
 
 /**
  * Exception thrown when a money is not in the expected currency or context.
  */
-final class MoneyMismatchException extends \DomainException implements MoneyException
+final class MoneyMismatchException extends RuntimeException implements MoneyException
 {
     public static function currencyMismatch(Currency $expected, Currency $actual): self
     {

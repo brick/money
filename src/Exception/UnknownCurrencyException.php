@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Brick\Money\Exception;
 
+use RuntimeException;
+
 use function implode;
 
 /**
  * Exception thrown when attempting to create a Currency from an unknown currency code.
  */
-final class UnknownCurrencyException extends \DomainException implements MoneyException
+final class UnknownCurrencyException extends RuntimeException implements MoneyException
 {
     public static function unknownCurrency(string|int $currencyCode): self
     {

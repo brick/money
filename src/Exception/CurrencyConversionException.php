@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Brick\Money\Exception;
 
+use RuntimeException;
 use Throwable;
 
 use function sprintf;
@@ -11,7 +12,7 @@ use function sprintf;
 /**
  * Exception thrown when an exchange rate is not available.
  */
-final class CurrencyConversionException extends \RuntimeException implements MoneyException
+final class CurrencyConversionException extends RuntimeException implements MoneyException
 {
     public function __construct(
         string $message,
