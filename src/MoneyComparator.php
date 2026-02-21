@@ -36,7 +36,7 @@ final readonly class MoneyComparator
      * This order is important if the exchange rate provider uses different exchange rates
      * when converting back and forth two currencies.
      *
-     * @return int -1, 0 or 1.
+     * @return -1|0|1
      *
      * @throws CurrencyConversionException If the exchange rate is not available.
      */
