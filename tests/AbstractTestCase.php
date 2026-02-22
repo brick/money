@@ -116,7 +116,7 @@ abstract class AbstractTestCase extends TestCase
         self::assertSame($expected, (string) $actual);
     }
 
-    final protected static function assertCurrencyEquals(string $currencyCode, int $numericCode, string $name, int $defaultFractionDigits, CurrencyType $currencyType, Currency $currency): void
+    final protected static function assertCurrencyEquals(string $currencyCode, ?int $numericCode, string $name, int $defaultFractionDigits, CurrencyType $currencyType, Currency $currency): void
     {
         self::assertSame($currencyCode, $currency->getCurrencyCode());
         self::assertSame($numericCode, $currency->getNumericCode());

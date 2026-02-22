@@ -44,8 +44,8 @@ class CurrencyTest extends AbstractTestCase
 
     public function testConstructor(): void
     {
-        $bitCoin = new Currency('BTC', -1, 'BitCoin', 8);
-        self::assertCurrencyEquals('BTC', -1, 'BitCoin', 8, CurrencyType::Custom, $bitCoin);
+        $bitCoin = new Currency('BTC', null, 'BitCoin', 8);
+        self::assertCurrencyEquals('BTC', null, 'BitCoin', 8, CurrencyType::Custom, $bitCoin);
     }
 
     public function testOfReturnsSameInstance(): void
