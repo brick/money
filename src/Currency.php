@@ -97,7 +97,7 @@ final readonly class Currency implements Stringable, JsonSerializable
      * Returns the currency code.
      *
      * For ISO currencies this will be the 3-letter uppercase ISO 4217 currency code.
-     * For non ISO currencies no constraints are defined.
+     * For non-ISO currencies no constraints are defined.
      */
     public function getCurrencyCode(): string
     {
@@ -108,7 +108,7 @@ final readonly class Currency implements Stringable, JsonSerializable
      * Returns the numeric currency code.
      *
      * For ISO currencies this will be the ISO 4217 numeric currency code, without leading zeros.
-     * For non ISO currencies no constraints are defined.
+     * For non-ISO currencies no constraints are defined.
      *
      * @return non-negative-int|null
      */
@@ -121,7 +121,7 @@ final readonly class Currency implements Stringable, JsonSerializable
      * Returns the name of the currency.
      *
      * For ISO currencies this will be the official English name of the currency.
-     * For non ISO currencies no constraints are defined.
+     * For non-ISO currencies no constraints are defined.
      */
     public function getName(): string
     {
