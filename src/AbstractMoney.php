@@ -207,8 +207,8 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
     final public function jsonSerialize(): array
     {
         return [
-            'amount' => (string) $this->getAmount(),
-            'currency' => $this->getCurrency()->jsonSerialize(),
+            'amount' => $this->getAmount()->toString(),
+            'currency' => $this->getCurrency()->getCurrencyCode(),
         ];
     }
 
