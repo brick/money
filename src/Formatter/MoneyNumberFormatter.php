@@ -9,6 +9,8 @@ use Brick\Money\MoneyFormatter;
 use NumberFormatter;
 use Override;
 
+use function assert;
+
 /**
  * Basic convenience wrapper of NumberFormatter.
  *
@@ -27,9 +29,13 @@ final class MoneyNumberFormatter implements MoneyFormatter
     #[Override]
     public function format(Money $money): string
     {
-        return $this->numberFormatter->formatCurrency(
+        $formatted = $this->numberFormatter->formatCurrency(
             $money->getAmount()->toFloat(),
             $money->getCurrency()->getCurrencyCode(),
         );
+
+        assert($formatted !== false);
+
+        return $formatted;
     }
 }

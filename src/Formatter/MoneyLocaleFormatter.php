@@ -9,6 +9,8 @@ use Brick\Money\MoneyFormatter;
 use NumberFormatter;
 use Override;
 
+use function assert;
+
 /**
  * Note that this formatter uses NumberFormatter, which internally represents values using floating point arithmetic,
  * so discrepancies can appear when formatting very large monetary values.
@@ -44,9 +46,13 @@ final class MoneyLocaleFormatter implements MoneyFormatter
         $this->numberFormatter->setAttribute(NumberFormatter::MIN_FRACTION_DIGITS, $scale);
         $this->numberFormatter->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, $scale);
 
-        return $this->numberFormatter->formatCurrency(
+        $formatted = $this->numberFormatter->formatCurrency(
             $money->getAmount()->toFloat(),
             $money->getCurrency()->getCurrencyCode(),
         );
+
+        assert($formatted !== false);
+
+        return $formatted;
     }
 }
