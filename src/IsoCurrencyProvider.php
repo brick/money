@@ -73,7 +73,10 @@ final class IsoCurrencyProvider
      */
     private function __construct()
     {
-        $this->currencyData = require __DIR__ . '/../data/iso-currencies.php';
+        /** @var array<string, array{string, non-negative-int, string, non-negative-int, CurrencyType}> $currencyData */
+        $currencyData = require __DIR__ . '/../data/iso-currencies.php';
+
+        $this->currencyData = $currencyData;
     }
 
     /**
@@ -129,7 +132,10 @@ final class IsoCurrencyProvider
     public function getCurrencyByNumericCode(int $currencyCode): Currency
     {
         if ($this->numericToCurrency === null) {
-            $this->numericToCurrency = require __DIR__ . '/../data/numeric-to-currency.php';
+            /** @var array<int, string> $numericToCurrency */
+            $numericToCurrency = require __DIR__ . '/../data/numeric-to-currency.php';
+
+            $this->numericToCurrency = $numericToCurrency;
         }
 
         if (isset($this->numericToCurrency[$currencyCode])) {
@@ -207,7 +213,10 @@ final class IsoCurrencyProvider
     public function getCurrenciesForCountry(string $countryCode): array
     {
         if ($this->countryToCurrency === null) {
-            $this->countryToCurrency = require __DIR__ . '/../data/country-to-currency.php';
+            /** @var array<string, list<string>> $countryToCurrency */
+            $countryToCurrency = require __DIR__ . '/../data/country-to-currency.php';
+
+            $this->countryToCurrency = $countryToCurrency;
         }
 
         if (isset($this->countryToCurrency[$countryCode])) {
@@ -234,7 +243,10 @@ final class IsoCurrencyProvider
     public function getHistoricalCurrenciesForCountry(string $countryCode): array
     {
         if ($this->countryToCurrencyHistorical === null) {
-            $this->countryToCurrencyHistorical = require __DIR__ . '/../data/country-to-currency-historical.php';
+            /** @var array<string, list<string>> $countryToCurrencyHistorical */
+            $countryToCurrencyHistorical = require __DIR__ . '/../data/country-to-currency-historical.php';
+
+            $this->countryToCurrencyHistorical = $countryToCurrencyHistorical;
         }
 
         if (isset($this->countryToCurrencyHistorical[$countryCode])) {

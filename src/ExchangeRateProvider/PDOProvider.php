@@ -38,6 +38,8 @@ final class PDOProvider implements ExchangeRateProvider
 
     /**
      * Extra parameters set dynamically to resolve the query placeholders.
+     *
+     * @phpstan-ignore missingType.iterableValue
      */
     private array $parameters = [];
 
@@ -122,7 +124,6 @@ final class PDOProvider implements ExchangeRateProvider
         if ($exchangeRate === false) {
             if ($this->parameters !== []) {
                 $info = [];
-                /** @psalm-suppress MixedAssignment */
                 foreach ($this->parameters as $parameter) {
                     $info[] = var_export($parameter, true);
                 }

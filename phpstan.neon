@@ -1,0 +1,9 @@
+parameters:
+    level: 10
+    paths:
+        - src
+    scanFiles:
+        - data/country-to-currency.php
+        - data/country-to-currency-historical.php
+        - data/iso-currencies.php
+        - data/numeric-to-currency.php

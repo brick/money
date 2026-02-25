@@ -44,7 +44,7 @@ final readonly class Currency implements Stringable, JsonSerializable
         private int $defaultFractionDigits,
         private CurrencyType $currencyType = CurrencyType::Custom,
     ) {
-        /** @psalm-suppress DocblockTypeContradiction */
+        /** @phpstan-ignore smaller.alwaysFalse */
         if ($defaultFractionDigits < 0) {
             throw new InvalidArgumentException('The default fraction digits cannot be less than zero.');
         }

@@ -28,11 +28,12 @@ final readonly class CustomContext implements Context
         private int $scale,
         private int $step = 1,
     ) {
-        /** @psalm-suppress DocblockTypeContradiction, NoValue */
+        /** @phpstan-ignore smaller.alwaysFalse */
         if ($scale < 0) {
             throw InvalidArgumentException::invalidScale($scale);
         }
 
+        /** @phpstan-ignore smaller.alwaysFalse */
         if ($step < 1 || ! $this->isValidStepForScale($scale, $step)) {
             throw InvalidArgumentException::invalidStep($step);
         }

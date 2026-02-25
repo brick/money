@@ -16,8 +16,8 @@
         "ext-dom": "*",
         "ext-pdo": "*",
         "brick/varexporter": "0.7.0",
-        "phpunit/phpunit": "^11.0",
-        "vimeo/psalm": "6.14.3"
+        "phpstan/phpstan": "2.1.40",
+        "phpunit/phpunit": "^11.0"
     },
     "suggest": {
         "ext-intl": "Required to format Money objects"

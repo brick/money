@@ -203,6 +203,9 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
             && $this->getCurrency()->isEqualTo($that->getCurrency());
     }
 
+    /**
+     * @return array{amount: string, currency: string}
+     */
     #[Override]
     final public function jsonSerialize(): array
     {

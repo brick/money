@@ -513,7 +513,7 @@ final readonly class Money extends AbstractMoney
      *
      * The resulting monies have the same context as this Money.
      *
-     * @param non-negative-int[] $ratios The ratios.
+     * @param non-negative-int ...$ratios The ratios.
      *
      * @return Money[]
      *
@@ -526,7 +526,7 @@ final readonly class Money extends AbstractMoney
         }
 
         foreach ($ratios as $ratio) {
-            /** @psalm-suppress DocblockTypeContradiction */
+            /** @phpstan-ignore smaller.alwaysFalse */
             if ($ratio < 0) {
                 throw new InvalidArgumentException('Cannot allocate() negative ratios.');
             }
@@ -579,7 +579,7 @@ final readonly class Money extends AbstractMoney
      *
      * The resulting monies have the same context as this Money.
      *
-     * @param non-negative-int[] $ratios The ratios.
+     * @param non-negative-int ...$ratios The ratios.
      *
      * @return Money[]
      *
@@ -592,7 +592,7 @@ final readonly class Money extends AbstractMoney
         }
 
         foreach ($ratios as $ratio) {
-            /** @psalm-suppress DocblockTypeContradiction */
+            /** @phpstan-ignore smaller.alwaysFalse */
             if ($ratio < 0) {
                 throw new InvalidArgumentException('Cannot allocateWithRemainder() negative ratios.');
             }
@@ -640,7 +640,7 @@ final readonly class Money extends AbstractMoney
      */
     public function split(int $parts): array
     {
-        /** @psalm-suppress DocblockTypeContradiction */
+        /** @phpstan-ignore smaller.alwaysFalse */
         if ($parts < 1) {
             throw new InvalidArgumentException('Cannot split() into less than 1 part.');
         }
@@ -664,7 +664,7 @@ final readonly class Money extends AbstractMoney
      */
     public function splitWithRemainder(int $parts): array
     {
-        /** @psalm-suppress DocblockTypeContradiction */
+        /** @phpstan-ignore smaller.alwaysFalse */
         if ($parts < 1) {
             throw new InvalidArgumentException('Cannot splitWithRemainder() into less than 1 part.');
         }
