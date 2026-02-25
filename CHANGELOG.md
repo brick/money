@@ -53,6 +53,7 @@ Deprecated methods removed:
 ✨ **New features**
 
 - New method: `Money::sum()` (replaces `total()`)
+- New method: `RationalMoney::convertedTo()`
 - New `MoneyBag` immutable API:
   - `MoneyBag::zero()`
   - `MoneyBag::fromMonies()`

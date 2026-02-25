@@ -136,6 +136,23 @@ final readonly class RationalMoney extends AbstractMoney
     }
 
     /**
+     * Converts this RationalMoney to another currency, using an exchange rate.
+     *
+     * @param Currency|string      $currency     The Currency instance or ISO currency code.
+     * @param BigNumber|int|string $exchangeRate The exchange rate to multiply by.
+     *
+     * @throws MathException If the exchange rate is not a valid number.
+     */
+    public function convertedTo(Currency|string $currency, BigNumber|int|string $exchangeRate): RationalMoney
+    {
+        if (! $currency instanceof Currency) {
+            $currency = Currency::of($currency);
+        }
+
+        return new self($this->amount->multipliedBy($exchangeRate), $currency);
+    }
+
+    /**
      * Returns the simplified value of this RationalMoney.
      *
      * @deprecated This is now a no-op. RationalMoney is always in its simplest form.

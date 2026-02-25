@@ -14,6 +14,7 @@ use Brick\Money\Context\CustomContext;
 use Brick\Money\Context\DefaultContext;
 use Brick\Money\Currency;
 use Brick\Money\Exception\MoneyMismatchException;
+use Brick\Money\Exception\UnknownCurrencyException;
 use Brick\Money\Money;
 use Brick\Money\RationalMoney;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -156,6 +157,33 @@ class RationalMoneyTest extends AbstractTestCase
             [['987.65', 'USD'], '5', 'USD 19753/100'],
             [['123/456', 'GBP'], '14.99', 'GBP 1025/56962'],
             [['123/456', 'GBP'], '567/890', 'GBP 18245/43092'],
+        ];
+    }
+
+    #[DataProvider('providerConvertedTo')]
+    public function testConvertedTo(array $rationalMoney, mixed $currency, mixed $exchangeRate, string $expected): void
+    {
+        $rationalMoney = RationalMoney::of(...$rationalMoney);
+
+        if (self::isExceptionClass($expected)) {
+            $this->expectException($expected);
+        }
+
+        $actual = $rationalMoney->convertedTo($currency, $exchangeRate);
+
+        if (! self::isExceptionClass($expected)) {
+            self::assertRationalMoneyEquals($expected, $actual);
+        }
+    }
+
+    public static function providerConvertedTo(): array
+    {
+        return [
+            [['1.23', 'USD'], 'EUR', '0.91', 'EUR 11193/10000'],
+            [['123/456', 'GBP'], 'USD', '567/890', 'USD 23247/135280'],
+            [['3/7', 'USD'], 'EUR', '7/3', 'EUR 1'],
+            [['100', 'USD'], 'JPY', 150, 'JPY 15000'],
+            [['1.23', 'USD'], 'INVALID', '1', UnknownCurrencyException::class],
         ];
     }
 
