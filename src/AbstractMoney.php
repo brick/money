@@ -20,8 +20,11 @@ use const E_USER_DEPRECATED;
 /**
  * Base class for Money and RationalMoney.
  *
- * Please consider this class sealed: extending this class yourself is not supported, and breaking changes (such as
- * adding new abstract methods) can happen at any time, even in a minor version.
+ * This class is sealed: extending this class yourself is not supported, and breaking changes affecting subclasses, such
+ * as adding new abstract methods or updating / removing protected methods, can happen at any time, even in minor or
+ * patch releases.
+ *
+ * @phpstan-sealed Money|RationalMoney
  */
 abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSerializable
 {
