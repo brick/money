@@ -48,14 +48,15 @@ If you need to upgrade to a newer release cycle, check the [release history](htt
 
 This library is based on the latest ISO 4217 standard. This is a living standard, so updates to currencies are expected to happen regularly.
 
-Updates to the following features **will be considered breaking changes** and **are covered by the backwards compatibility promise**:
+Updates to the following features **will be considered breaking changes**, and **will only be released in a new major version** after 1.0:
 
-- Currencies obtained by alpha currency code such as `EUR` or `USD`, through `Currency::of()`, `Money::of()`, `ISOCurrencyProvider::getCurrency()`, etc. 
+- Currencies obtained by alpha currency code such as `EUR` or `USD`, through `Currency::of()`, `Money::of()`, `Money::ofMinor()`, `IsoCurrencyProvider::getCurrency()`, etc.
 
-The following features are evolving constantly, they will **not** be considered breaking changes and **may be updated in *minor* releases** even after version `1.0.0` has been released:
+The following features are evolving constantly, they will **not** be considered breaking changes and **may be updated in *minor* releases** after 1.0:
 
-- Currencies obtained by numeric currency code such as `978` or `840`, through `Currency::ofNumericCode()`, `ISOCurrencyProvider::getCurrencyByNumericCode()`, etc.
-- Currencies obtained by country code such as `FR` or `US`, through `Currency::ofCountry()`, `ISOCurrencyProvider::getCurrencyByCountry()`, etc.
+- Currencies obtained by numeric currency code such as `978` or `840`, through `Currency::ofNumericCode()`, `IsoCurrencyProvider::getCurrencyByNumericCode()`, etc.
+- Current currencies obtained by country code such as `FR` or `US`, through `Currency::ofCountry()`, `IsoCurrencyProvider::getCurrencyForCountry()`, `IsoCurrencyProvider::getCurrenciesForCountry()`, etc.
+- Historical currencies obtained by country code through `IsoCurrencyProvider::getHistoricalCurrenciesForCountry()`.
 
 ## Creating a Money
 
