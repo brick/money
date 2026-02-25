@@ -21,10 +21,10 @@ final readonly class Currency implements Stringable, JsonSerializable
      *                                                     constraints are defined, but the code must be unique across an
      *                                                     application and must not conflict with ISO currency codes.
      * @param non-negative-int|null $numericCode           The numeric currency code. For ISO currencies this will be the
-     *                                                     ISO 4217 numeric currency code, without leading zeros. For non-ISO
-     *                                                     currencies no constraints are defined, but the code must be unique
-     *                                                     across an application and must not conflict with ISO currency codes.
-     *                                                     Set to null if the currency does not have a numeric code.
+     *                                                     ISO 4217 numeric currency code. For non-ISO currencies no constraints
+     *                                                     are defined, but the code must be unique across an application and
+     *                                                     must not conflict with ISO currency codes. Set to null if the currency
+     *                                                     does not have a numeric code.
      * @param string                $name                  The currency name. For ISO currencies this will be the official
      *                                                     English name of the currency. For non-ISO currencies no constraints
      *                                                     are defined.
@@ -107,7 +107,7 @@ final readonly class Currency implements Stringable, JsonSerializable
     /**
      * Returns the numeric currency code.
      *
-     * For ISO currencies this will be the ISO 4217 numeric currency code, without leading zeros.
+     * For ISO currencies this will be the ISO 4217 numeric currency code.
      * For non-ISO currencies no constraints are defined.
      *
      * @return non-negative-int|null
