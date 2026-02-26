@@ -120,7 +120,7 @@ class CurrencyConverterTest extends AbstractTestCase
         }
 
         $currencyConverter = new CurrencyConverter($exchangeRateProvider);
-        $actualTotal = $currencyConverter->convertToRational($moneyBag, $currency)->simplified();
+        $actualTotal = $currencyConverter->convertToRational($moneyBag, $currency);
 
         self::assertRationalMoneyEquals($expectedTotal, $actualTotal);
     }

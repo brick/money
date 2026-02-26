@@ -10,6 +10,7 @@ Deprecated methods removed:
 - `AbstractMoney::isAmountAndCurrencyEqualTo()` has been removed, use `isSameValueAs()` instead
 - `Money::total()` has been removed, use `sum()` instead
 - `Money::getUnscaledAmount()` has been removed, use `getAmount()->getUnscaledValue()` instead
+- `RationalMoney::simplified()` has been removed, `RationalMoney` is always in its simplest form now
 
 ## [0.12.3](https://github.com/brick/money/releases/tag/0.12.3) - 2026-03-23
 
