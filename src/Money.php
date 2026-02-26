@@ -130,36 +130,6 @@ final readonly class Money extends AbstractMoney
     }
 
     /**
-     * Returns the total of the given monies.
-     *
-     * The monies must share the same currency and context.
-     *
-     * @deprecated Use Money::sum() instead.
-     *
-     * @param Money $money     The first money.
-     * @param Money ...$monies The subsequent monies.
-     *
-     * @throws MoneyMismatchException If all the monies are not in the same currency and context.
-     *
-     * @pure
-     */
-    public static function total(Money $money, Money ...$monies): Money
-    {
-        trigger_error(
-            'Money::total() is deprecated, and will be removed in a future version. Use Money::sum() instead.',
-            E_USER_DEPRECATED,
-        );
-
-        $total = $money;
-
-        foreach ($monies as $money) {
-            $total = $total->plus($money);
-        }
-
-        return $total;
-    }
-
-    /**
      * Returns a Money of the given amount and currency.
      *
      * By default, the money is created with a DefaultContext. This means that the amount is scaled to match the
