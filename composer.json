@@ -17,7 +17,6 @@
         "ext-dom": "*",
         "ext-pdo": "*",
         "brick/varexporter": "0.7.0",
-        "php-coveralls/php-coveralls": "^2.2",
         "phpunit/phpunit": "^11.0",
         "vimeo/psalm": "6.14.3"
     },
