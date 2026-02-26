@@ -272,25 +272,8 @@ final readonly class Money extends AbstractMoney
     }
 
     /**
-     * Returns a BigInteger containing the unscaled value (all digits) of this money.
-     *
-     * For example, `123.4567 USD` will return a BigInteger of `1234567`.
-     *
-     * @deprecated Use getAmount()->getUnscaledValue() instead.
-     *
-     * @pure
+     * Returns the Currency of this Money.
      */
-    public function getUnscaledAmount(): BigInteger
-    {
-        trigger_error(
-            'Money::getUnscaledAmount() is deprecated, and will be removed in a future version. ' .
-            'Use getAmount()->getUnscaledValue() instead.',
-            E_USER_DEPRECATED,
-        );
-
-        return $this->amount->getUnscaledValue();
-    }
-
     #[Override]
     public function getCurrency(): Currency
     {

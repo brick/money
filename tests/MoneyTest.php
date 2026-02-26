@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Brick\Money\Tests;
 
 use Brick\Math\BigDecimal;
-use Brick\Math\BigInteger;
 use Brick\Math\BigRational;
 use Brick\Math\Exception\DivisionByZeroException;
 use Brick\Math\Exception\NumberFormatException;
@@ -783,14 +782,6 @@ class MoneyTest extends AbstractTestCase
             [[50, 'JPY'], '50'],
             [['1.123', 'JPY', new AutoContext()], '1.123'],
         ];
-    }
-
-    public function testGetUnscaledAmount(): void
-    {
-        $actual = Money::of('123.45', 'USD')->getUnscaledAmount();
-
-        self::assertInstanceOf(BigInteger::class, $actual);
-        self::assertSame('12345', (string) $actual);
     }
 
     #[DataProvider('providerConvertedTo')]
