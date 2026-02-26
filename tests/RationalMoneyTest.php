@@ -222,22 +222,6 @@ class RationalMoneyTest extends AbstractTestCase
     }
 
     #[DataProvider('providerToContext')]
-    public function testTo(array $rationalMoney, Context $context, RoundingMode $roundingMode, string $expected): void
-    {
-        $rationalMoney = RationalMoney::of(...$rationalMoney);
-
-        if (self::isExceptionClass($expected)) {
-            $this->expectException($expected);
-        }
-
-        $actual = $rationalMoney->to($context, $roundingMode);
-
-        if (! self::isExceptionClass($expected)) {
-            self::assertMoneyIs($expected, $actual);
-        }
-    }
-
-    #[DataProvider('providerToContext')]
     public function testToContext(array $rationalMoney, Context $context, RoundingMode $roundingMode, string $expected): void
     {
         $rationalMoney = RationalMoney::of(...$rationalMoney);

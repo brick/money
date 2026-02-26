@@ -54,28 +54,6 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
     }
 
     /**
-     * Converts this money to a Money in the given Context.
-     *
-     * @deprecated Use toContext() instead.
-     *
-     * @param Context      $context      The context.
-     * @param RoundingMode $roundingMode The rounding mode, if necessary.
-     *
-     * @throws RoundingNecessaryException If RoundingMode::Unnecessary is used but rounding is necessary.
-     *
-     * @pure
-     */
-    final public function to(Context $context, RoundingMode $roundingMode = RoundingMode::Unnecessary): Money
-    {
-        trigger_error(
-            'AbstractMoney::to() is deprecated, and will be removed in a future version. Use toContext() instead.',
-            E_USER_DEPRECATED,
-        );
-
-        return $this->toContext($context, $roundingMode);
-    }
-
-    /**
      * Required by interface Monetary. Not intended for direct use.
      */
     #[Override]
