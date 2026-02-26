@@ -78,11 +78,11 @@ class CurrencyConverterTest extends AbstractTestCase
         $exchangeRateProvider->setExchangeRate('EUR', 'USD', '1.23456789');
         $exchangeRateProvider->setExchangeRate('JPY', 'USD', '0.00987654321');
 
-        $moneyBag = new MoneyBag();
+        $moneyBag = MoneyBag::zero();
 
         foreach ($monies as [$amount, $currencyCode]) {
             $money = Money::of($amount, $currencyCode, new AutoContext());
-            $moneyBag->add($money);
+            $moneyBag = $moneyBag->plus($money);
         }
 
         $currencyConverter = new CurrencyConverter($exchangeRateProvider);
@@ -112,11 +112,11 @@ class CurrencyConverterTest extends AbstractTestCase
         $exchangeRateProvider->setExchangeRate('EUR', 'USD', '1.123456789');
         $exchangeRateProvider->setExchangeRate('JPY', 'USD', '0.0098765432123456789');
 
-        $moneyBag = new MoneyBag();
+        $moneyBag = MoneyBag::zero();
 
         foreach ($monies as [$amount, $currencyCode]) {
             $money = Money::of($amount, $currencyCode, new AutoContext());
-            $moneyBag->add($money);
+            $moneyBag = $moneyBag->plus($money);
         }
 
         $currencyConverter = new CurrencyConverter($exchangeRateProvider);
