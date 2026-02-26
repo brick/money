@@ -1,5 +1,13 @@
 # Changelog
 
+## UNRELEASED (0.13.0)
+
+💥 **Breaking changes**
+
+Deprecated methods removed:
+
+- `AbstractMoney::to()` has been removed, use `toContext()` instead
+
 ## [0.12.3](https://github.com/brick/money/releases/tag/0.12.3) - 2026-03-23
 
 ⚠️ **Deprecations**
