@@ -20,7 +20,7 @@ class MoneyBagTest extends AbstractTestCase
 {
     public function testEmptyMoneyBag(): void
     {
-        $moneyBag = new MoneyBag();
+        $moneyBag = MoneyBag::zero();
 
         self::assertMoneyBagContains([], $moneyBag);
 
@@ -31,24 +31,24 @@ class MoneyBagTest extends AbstractTestCase
 
     public function testAddSubtractMoney(): MoneyBag
     {
-        $moneyBag = new MoneyBag();
+        $moneyBag = MoneyBag::zero();
 
-        $moneyBag->add(Money::of('123', 'EUR'));
+        $moneyBag = $moneyBag->plus(Money::of('123', 'EUR'));
         self::assertMoneyBagContains([Money::of('123.00', 'EUR')], $moneyBag);
 
-        $moneyBag->add(Money::of('234.99', 'EUR'));
+        $moneyBag = $moneyBag->plus(Money::of('234.99', 'EUR'));
         self::assertMoneyBagContains([Money::of('357.99', 'EUR')], $moneyBag);
 
-        $moneyBag->add(Money::of(3, 'JPY'));
+        $moneyBag = $moneyBag->plus(Money::of(3, 'JPY'));
         self::assertMoneyBagContains([Money::of('357.99', 'EUR'), Money::of('3', 'JPY')], $moneyBag);
 
-        $moneyBag->add(Money::of('1.1234', 'JPY', new AutoContext()));
+        $moneyBag = $moneyBag->plus(Money::of('1.1234', 'JPY', new AutoContext()));
         self::assertMoneyBagContains([Money::of('357.99', 'EUR'), Money::of('4.1234', 'JPY', new AutoContext())], $moneyBag);
 
-        $moneyBag->subtract(Money::of('3.589950', 'EUR', new AutoContext()));
+        $moneyBag = $moneyBag->minus(Money::of('3.589950', 'EUR', new AutoContext()));
         self::assertMoneyBagContains([Money::of('354.400050', 'EUR', new AutoContext()), Money::of('4.1234', 'JPY', new AutoContext())], $moneyBag);
 
-        $moneyBag->add(RationalMoney::of('1/3', 'EUR'));
+        $moneyBag = $moneyBag->plus(RationalMoney::of('1/3', 'EUR'));
         self::assertMoneyBagContains([RationalMoney::of('21284003/60000', 'EUR'), Money::of('4.1234', 'JPY', new AutoContext())], $moneyBag);
 
         return $moneyBag;
@@ -57,7 +57,7 @@ class MoneyBagTest extends AbstractTestCase
     #[Depends('testAddSubtractMoney')]
     public function testAddCustomCurrency(MoneyBag $moneyBag): void
     {
-        $moneyBag->add(Money::of('0.1234', new Currency('BTC', 0, 'Bitcoin', 8)));
+        $moneyBag = $moneyBag->plus(Money::of('0.1234', new Currency('BTC', 0, 'Bitcoin', 8)));
         self::assertMoneyBagContains(
             [
                 RationalMoney::of('21284003/60000', 'EUR'),

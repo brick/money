@@ -6,61 +6,54 @@ namespace Brick\Money;
 
 use Brick\Math\BigRational;
 use Brick\Money\Exception\UnknownCurrencyException;
+use Closure;
 use JsonSerializable;
 use Override;
-use ReflectionClass;
 
 use function array_map;
 use function array_values;
-use function trigger_error;
-
-use const E_USER_DEPRECATED;
 
 /**
  * Container for monies in different currencies.
  *
- * This class is mutable.
+ * This class is immutable.
  */
-final class MoneyBag implements Monetary, JsonSerializable
+final readonly class MoneyBag implements Monetary, JsonSerializable
 {
     /**
-     * The monies in this bag, indexed by currency code.
+     * @param array<string, RationalMoney> $monies The monies in this bag, indexed by currency code.
      *
-     * @var array<string, RationalMoney>
+     * @pure
      */
-    private array $monies = [];
-
-    public function __construct()
-    {
-        trigger_error(
-            'Instantiating a MoneyBag with new is deprecated, and will be disallowed in a future version. ' .
-            'Use MoneyBag::zero(), or create from a list of monies using MoneyBag::fromMonies().',
-            E_USER_DEPRECATED,
-        );
+    private function __construct(
+        private array $monies = [],
+    ) {
     }
 
     /**
      * Returns an empty MoneyBag of zero value.
+     *
+     * @pure
      */
     public static function zero(): MoneyBag
     {
-        // Temporary fix to bypass the deprecation warning in the constructor.
-        // This will be removed in a future version.
-        return (new ReflectionClass(MoneyBag::class))->newInstanceWithoutConstructor();
+        return new MoneyBag();
     }
 
     /**
      * Creates a MoneyBag from a list of monies.
+     *
+     * @pure
      */
     public static function fromMonies(Monetary ...$monies): MoneyBag
     {
-        $moneyBag = MoneyBag::zero();
+        $result = [];
 
         foreach ($monies as $money) {
-            $moneyBag = $moneyBag->plus($money);
+            $result = self::accumulate($result, $money, fn ($a, $b) => $a->plus($b));
         }
 
-        return $moneyBag;
+        return new MoneyBag($result);
     }
 
     /**
@@ -71,17 +64,14 @@ final class MoneyBag implements Monetary, JsonSerializable
      * @param Currency|string $currency The Currency instance, or ISO currency code.
      *
      * @throws UnknownCurrencyException If an unknown currency code is given.
+     *
+     * @pure
      */
     public function getMoney(Currency|string $currency): RationalMoney
     {
-        $currencyCode = $currency instanceof Currency ? $currency->getCurrencyCode() : $currency;
         $currency = $currency instanceof Currency ? $currency : Currency::of($currency);
 
-        if (isset($this->monies[$currencyCode])) {
-            return $this->monies[$currencyCode];
-        }
-
-        return new RationalMoney(BigRational::zero(), $currency);
+        return self::get($this->monies, $currency);
     }
 
     #[Override]
@@ -110,19 +100,12 @@ final class MoneyBag implements Monetary, JsonSerializable
      * @param Monetary $money A Money, RationalMoney, or MoneyBag instance.
      *
      * @return MoneyBag The new MoneyBag instance.
+     *
+     * @pure
      */
     public function plus(Monetary $money): MoneyBag
     {
-        $new = clone $this;
-
-        foreach ($money->getMonies() as $containedMoney) {
-            $currency = $containedMoney->getCurrency();
-            $currencyCode = $currency->getCurrencyCode();
-
-            $new->monies[$currencyCode] = $new->getMoney($currency)->plus($containedMoney);
-        }
-
-        return $new;
+        return new MoneyBag(self::accumulate($this->monies, $money, fn ($a, $b) => $a->plus($b)));
     }
 
     /**
@@ -131,72 +114,47 @@ final class MoneyBag implements Monetary, JsonSerializable
      * @param Monetary $money A Money, RationalMoney, or MoneyBag instance.
      *
      * @return MoneyBag The new MoneyBag instance.
+     *
+     * @pure
      */
     public function minus(Monetary $money): MoneyBag
     {
-        $new = clone $this;
-
-        foreach ($money->getMonies() as $containedMoney) {
-            $currency = $containedMoney->getCurrency();
-            $currencyCode = $currency->getCurrencyCode();
-
-            $new->monies[$currencyCode] = $new->getMoney($currency)->minus($containedMoney);
-        }
-
-        return $new;
+        return new MoneyBag(self::accumulate($this->monies, $money, fn ($a, $b) => $a->minus($b)));
     }
 
     /**
-     * Adds money to this bag.
+     * @param array<string, RationalMoney>                              $monies
+     * @param pure-Closure(RationalMoney, RationalMoney): RationalMoney $fn
      *
-     * @deprecated MoneyBag will be made immutable in a future version. Use MoneyBag::plus() instead, which returns a new instance.
+     * @return array<string, RationalMoney>
      *
-     * @param Monetary $money A Money, RationalMoney, or MoneyBag instance.
-     *
-     * @return MoneyBag This instance.
+     * @pure
      */
-    public function add(Monetary $money): MoneyBag
+    private static function accumulate(array $monies, Monetary $money, Closure $fn): array
     {
-        trigger_error(
-            'MoneyBag::add() is deprecated, and will be removed in a future version. ' .
-            'MoneyBag will be immutable in the future. Use MoneyBag::plus(), which returns a new instance instead.',
-            E_USER_DEPRECATED,
-        );
-
         foreach ($money->getMonies() as $containedMoney) {
             $currency = $containedMoney->getCurrency();
             $currencyCode = $currency->getCurrencyCode();
 
-            $this->monies[$currencyCode] = $this->getMoney($currency)->plus($containedMoney);
+            $monies[$currencyCode] = $fn(self::get($monies, $currency), $containedMoney);
         }
 
-        return $this;
+        return $monies;
     }
 
     /**
-     * Subtracts money from this bag.
+     * @param array<string, RationalMoney> $monies
      *
-     * @deprecated MoneyBag will be made immutable in a future version. Use MoneyBag::minus() instead, which returns a new instance.
-     *
-     * @param Monetary $money A Money, RationalMoney, or MoneyBag instance.
-     *
-     * @return MoneyBag This instance.
+     * @pure
      */
-    public function subtract(Monetary $money): MoneyBag
+    private static function get(array $monies, Currency $currency): RationalMoney
     {
-        trigger_error(
-            'MoneyBag::subtract() is deprecated, and will be removed in a future version. ' .
-            'MoneyBag will be immutable in the future. Use MoneyBag::minus(), which returns a new instance instead.',
-            E_USER_DEPRECATED,
-        );
+        $currencyCode = $currency->getCurrencyCode();
 
-        foreach ($money->getMonies() as $containedMoney) {
-            $currency = $containedMoney->getCurrency();
-            $currencyCode = $currency->getCurrencyCode();
-
-            $this->monies[$currencyCode] = $this->getMoney($currency)->minus($containedMoney);
+        if (isset($monies[$currencyCode])) {
+            return $monies[$currencyCode];
         }
 
-        return $this;
+        return new RationalMoney(BigRational::zero(), $currency);
     }
 }

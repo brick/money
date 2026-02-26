@@ -4,6 +4,8 @@
 
 💥 **Breaking changes**
 
+- `MoneyBag` can no longer be instantiated with `new`: its constructor is now private; use `MoneyBag::zero()` to create an empty instance
+
 Deprecated methods removed:
 
 - `AbstractMoney::to()` has been removed, use `toContext()` instead
@@ -11,6 +13,8 @@ Deprecated methods removed:
 - `Money::total()` has been removed, use `sum()` instead
 - `Money::getUnscaledAmount()` has been removed, use `getAmount()->getUnscaledValue()` instead
 - `RationalMoney::simplified()` has been removed, `RationalMoney` is always in its simplest form now
+- `MoneyBag::add()` has been removed, use `plus()` instead, which returns a new instance
+- `MoneyBag::subtract()` has been removed, use `minus()` instead, which returns a new instance
 
 ## [0.12.3](https://github.com/brick/money/releases/tag/0.12.3) - 2026-03-23
 
