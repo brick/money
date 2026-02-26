@@ -11,10 +11,6 @@ use Brick\Money\Exception\MoneyMismatchException;
 use Brick\Money\Exception\UnknownCurrencyException;
 use Override;
 
-use function trigger_error;
-
-use const E_USER_DEPRECATED;
-
 /**
  * An exact monetary amount, represented as a rational number. This class is immutable.
  *
@@ -193,21 +189,6 @@ final readonly class RationalMoney extends AbstractMoney
         }
 
         return new self($this->amount->multipliedBy($exchangeRate), $currency);
-    }
-
-    /**
-     * Returns the simplified value of this RationalMoney.
-     *
-     * @deprecated This is now a no-op. RationalMoney is always in its simplest form.
-     */
-    public function simplified(): RationalMoney
-    {
-        trigger_error(
-            'RationalMoney::simplified() is now a no-op, and will be removed in a future version. RationalMoney instances are now always simplified to lowest terms.',
-            E_USER_DEPRECATED,
-        );
-
-        return $this;
     }
 
     #[Override]
