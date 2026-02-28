@@ -795,9 +795,16 @@ class MoneyTest extends AbstractTestCase
     {
         return [
             [['1.23', 'USD'], ['JPY', '125', new CustomContext(2)], 'JPY 153.75'],
-            [['1.23', 'USD'], ['JPY', '125', null, RoundingMode::Down], 'JPY 153'],
+            [['1.23', 'USD'], ['JPY', '125', new DefaultContext(), RoundingMode::Down], 'JPY 153'],
             [['1.23', 'USD'], ['JPY', '125', new DefaultContext(), RoundingMode::Up], 'JPY 154'],
         ];
+    }
+
+    public function testConvertedToDefaultContext(): void
+    {
+        $actual = Money::of('1.23', 'USD', new AutoContext())->convertedTo('JPY', '125', roundingMode: RoundingMode::Up);
+
+        self::assertMoneyIs('JPY 154', $actual, new DefaultContext());
     }
 
     /**
