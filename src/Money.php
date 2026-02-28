@@ -139,7 +139,7 @@ final readonly class Money extends AbstractMoney
      *
      * @param BigNumber|int|string $amount       The monetary amount.
      * @param Currency|string      $currency     The Currency instance or ISO currency code.
-     * @param Context|null         $context      An optional Context, defaults to DefaultContext.
+     * @param Context              $context      An optional Context, defaults to DefaultContext.
      * @param RoundingMode         $roundingMode An optional RoundingMode, if the amount does not fit the context.
      *
      * @throws MathException              If the amount is not a valid number.
@@ -152,20 +152,11 @@ final readonly class Money extends AbstractMoney
     public static function of(
         BigNumber|int|string $amount,
         Currency|string $currency,
-        ?Context $context = new DefaultContext(),
+        Context $context = new DefaultContext(),
         RoundingMode $roundingMode = RoundingMode::Unnecessary,
     ): Money {
         if (! $currency instanceof Currency) {
             $currency = Currency::of($currency);
-        }
-
-        if ($context === null) {
-            trigger_error(
-                'Passing null for the $context parameter to Money::of() is deprecated, use named arguments to skip to rounding mode.',
-                E_USER_DEPRECATED,
-            );
-
-            $context = new DefaultContext();
         }
 
         $amount = BigNumber::of($amount);
@@ -182,7 +173,7 @@ final readonly class Money extends AbstractMoney
      *
      * @param BigNumber|int|string $minorAmount  The amount, in minor currency units.
      * @param Currency|string      $currency     The Currency instance or ISO currency code.
-     * @param Context|null         $context      An optional Context, defaults to DefaultContext.
+     * @param Context              $context      An optional Context, defaults to DefaultContext.
      * @param RoundingMode         $roundingMode An optional RoundingMode, if the amount does not fit the context.
      *
      * @throws MathException              If the amount is not a valid number.
@@ -195,20 +186,11 @@ final readonly class Money extends AbstractMoney
     public static function ofMinor(
         BigNumber|int|string $minorAmount,
         Currency|string $currency,
-        ?Context $context = new DefaultContext(),
+        Context $context = new DefaultContext(),
         RoundingMode $roundingMode = RoundingMode::Unnecessary,
     ): Money {
         if (! $currency instanceof Currency) {
             $currency = Currency::of($currency);
-        }
-
-        if ($context === null) {
-            trigger_error(
-                'Passing null for the $context parameter to Money::ofMinor() is deprecated, use named arguments to skip to rounding mode.',
-                E_USER_DEPRECATED,
-            );
-
-            $context = new DefaultContext();
         }
 
         $divisor = BigInteger::ten()->power($currency->getDefaultFractionDigits());
@@ -224,23 +206,14 @@ final readonly class Money extends AbstractMoney
      * A Context instance can be provided to override the default.
      *
      * @param Currency|string $currency The Currency instance or ISO currency code.
-     * @param Context|null    $context  An optional context, defaults to DefaultContext.
+     * @param Context         $context  An optional context, defaults to DefaultContext.
      *
      * @pure
      */
-    public static function zero(Currency|string $currency, ?Context $context = new DefaultContext()): Money
+    public static function zero(Currency|string $currency, Context $context = new DefaultContext()): Money
     {
         if (! $currency instanceof Currency) {
             $currency = Currency::of($currency);
-        }
-
-        if ($context === null) {
-            trigger_error(
-                'Passing null for the $context parameter to Money::zero() is deprecated, use named arguments to skip to rounding mode.',
-                E_USER_DEPRECATED,
-            );
-
-            $context = new DefaultContext();
         }
 
         $amount = BigDecimal::zero();

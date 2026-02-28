@@ -60,9 +60,9 @@ class MoneyTest extends AbstractTestCase
             ['JPY 1', '1.0', 'JPY'],
             ['JPY 1.200', '1.2', 'JPY', new CustomContext(3)],
             ['EUR 9.00', 9, Currency::ofNumericCode(978)],
-            ['EUR 0.42', BigRational::of('3/7'), 'EUR', null, RoundingMode::Down],
-            ['EUR 0.43', BigRational::of('3/7'), 'EUR', null, RoundingMode::Up],
-            ['CUSTOM 0.428', BigRational::of('3/7'), new Currency('CUSTOM', 0, '', 3), null, RoundingMode::Down],
+            ['EUR 0.42', BigRational::of('3/7'), 'EUR', new DefaultContext(), RoundingMode::Down],
+            ['EUR 0.43', BigRational::of('3/7'), 'EUR', new DefaultContext(), RoundingMode::Up],
+            ['CUSTOM 0.428', BigRational::of('3/7'), new Currency('CUSTOM', 0, '', 3), new DefaultContext(), RoundingMode::Down],
             ['CUSTOM 0.4286', BigRational::of('3/7'), new Currency('CUSTOM', 0, '', 3), new CustomContext(4, 1), RoundingMode::Up],
             [RoundingNecessaryException::class, '1.2', 'JPY'],
             [NumberFormatException::class, '1..', 'JPY'],
@@ -100,18 +100,18 @@ class MoneyTest extends AbstractTestCase
     }
 
     #[DataProvider('providerZero')]
-    public function testZero(string $currency, ?Context $context, string $expected): void
+    public function testZero(string $currency, Context $context, string $expected): void
     {
         $actual = Money::zero($currency, $context);
-        self::assertMoneyIs($expected, $actual, $context ?? new DefaultContext());
+        self::assertMoneyIs($expected, $actual, $context);
     }
 
     public static function providerZero(): array
     {
         return [
-            ['USD', null, 'USD 0.00'],
-            ['TND', null, 'TND 0.000'],
-            ['JPY', null, 'JPY 0'],
+            ['USD', new DefaultContext(), 'USD 0.00'],
+            ['TND', new DefaultContext(), 'TND 0.000'],
+            ['JPY', new DefaultContext(), 'JPY 0'],
             ['USD', new CustomContext(4), 'USD 0.0000'],
             ['USD', new AutoContext(), 'USD 0'],
         ];
