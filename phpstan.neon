@@ -6,8 +6,6 @@ parameters:
         # Methods that return void are considered impure.
         # https://phpstan.org/blog/remembering-and-forgetting-returned-values
         - '#^Impure call to method .*::checkContext\(\) in pure method .*\.$#'
-        # Ignore trigger_error() calls.
-        - '#^Possibly impure call to function trigger_error\(\) in pure method .*\.$#'
         # PHPStan does not consider array_map() as pure.
         # https://github.com/phpstan/phpstan/issues/11100
         - '#^Possibly impure call to function array_map\(\) in pure method .*\.$#'

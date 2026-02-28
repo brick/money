@@ -21,9 +21,6 @@ use Override;
 use function array_fill;
 use function array_map;
 use function array_values;
-use function trigger_error;
-
-use const E_USER_DEPRECATED;
 
 /**
  * A monetary value in a given currency. This class is immutable.
@@ -623,7 +620,7 @@ final readonly class Money extends AbstractMoney
     /**
      * Converts this Money to another currency, using an exchange rate.
      *
-     * By default, the resulting Money has the same context as this Money.
+     * By default, the resulting Money is created with a DefaultContext.
      * This can be overridden by providing a Context.
      *
      * For example, converting a default money of `USD 1.23` to `EUR` with an exchange rate of `0.91` and
@@ -631,7 +628,7 @@ final readonly class Money extends AbstractMoney
      *
      * @param Currency|string      $currency     The Currency instance or ISO currency code.
      * @param BigNumber|int|string $exchangeRate The exchange rate to multiply by.
-     * @param Context|null         $context      An optional context, defaults to DefaultContext.
+     * @param Context              $context      An optional context, defaults to DefaultContext.
      * @param RoundingMode         $roundingMode An optional rounding mode.
      *
      * @throws UnknownCurrencyException If an unknown currency code is given.
@@ -642,21 +639,11 @@ final readonly class Money extends AbstractMoney
     public function convertedTo(
         Currency|string $currency,
         BigNumber|int|string $exchangeRate,
-        ?Context $context = null,
+        Context $context = new DefaultContext(),
         RoundingMode $roundingMode = RoundingMode::Unnecessary,
     ): Money {
         if (! $currency instanceof Currency) {
             $currency = Currency::of($currency);
-        }
-
-        if ($context === null) {
-            trigger_error(
-                'Passing null for the $context parameter to Money::convertedTo() is deprecated, use an explicit Context instance. ' .
-                'This parameter will default to DefaultContext in a future version.',
-                E_USER_DEPRECATED,
-            );
-
-            $context = $this->context;
         }
 
         $amount = $this->amount->toBigRational()->multipliedBy($exchangeRate);

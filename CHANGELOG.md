@@ -5,11 +5,13 @@
 💥 **Breaking changes**
 
 - `MoneyBag` can no longer be instantiated with `new`: its constructor is now private; use `MoneyBag::zero()` to create an empty instance
+- `Money::convertedTo()` now defaults to `DefaultContext` instead of `$this`'s context
 - The following methods no longer accept `null` for the `$context` parameter:
   - `CurrencyConverter::convert()`
   - `Money::of()`
   - `Money::ofMinor()`
   - `Money::zero()`
+  - `Money::convertedTo()`
 
 Deprecated methods removed:
 
