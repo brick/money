@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Brick\Money\ExchangeRateProvider;
 
 use Brick\Money\Exception\CurrencyConversionException;
+use Brick\Money\Exception\InvalidArgumentException;
 use Brick\Money\ExchangeRateProvider;
-use InvalidArgumentException;
 use Override;
 use PDO;
 use PDOStatement;

@@ -9,7 +9,7 @@ use Brick\Math\BigNumber;
 use Brick\Math\RoundingMode;
 use Brick\Money\Context;
 use Brick\Money\Currency;
-use InvalidArgumentException;
+use Brick\Money\Exception\InvalidArgumentException;
 use Override;
 
 /**

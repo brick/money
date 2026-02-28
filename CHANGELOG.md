@@ -50,6 +50,10 @@ Deprecated methods removed:
 
 - brick/money now requires `brick/math:~0.15`
 
+👌 **Improvements**
+
+- All `InvalidArgumentException` thrown now implement `MoneyException`
+
 ✨ **New features**
 
 - New method: `Money::sum()` (replaces `total()`)

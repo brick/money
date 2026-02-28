@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Brick\Money;
 
+use Brick\Money\Exception\InvalidArgumentException;
 use Brick\Money\Exception\UnknownCurrencyException;
-use InvalidArgumentException;
 use JsonSerializable;
 use Override;
 use Stringable;

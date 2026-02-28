@@ -13,10 +13,10 @@ use Brick\Math\Exception\NumberFormatException;
 use Brick\Math\Exception\RoundingNecessaryException;
 use Brick\Math\RoundingMode;
 use Brick\Money\Context\DefaultContext;
+use Brick\Money\Exception\InvalidArgumentException;
 use Brick\Money\Exception\MoneyMismatchException;
 use Brick\Money\Exception\UnknownCurrencyException;
 use Brick\Money\Formatter\MoneyLocaleFormatter;
-use InvalidArgumentException;
 use Override;
 
 use function array_fill;

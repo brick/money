@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Brick\Money\ExchangeRateProvider;
 
-use InvalidArgumentException;
+use Brick\Money\Exception\InvalidArgumentException;
 
 /**
  * Configuration for the PDOExchangeRateProvider.
