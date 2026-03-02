@@ -29,13 +29,18 @@ final class MoneyMismatchException extends RuntimeException implements MoneyExce
     /**
      * @pure
      */
-    public static function contextMismatch(string $method): self
+    public static function contextMismatch(?string $method): self
     {
-        return new self(sprintf(
-            'The monies do not share the same context. ' .
-            'If this is intended, use %s($money->toRational()) instead of %s($money).',
-            $method,
-            $method,
-        ));
+        $message = 'The monies do not share the same context.';
+
+        if ($method !== null) {
+            $message .= sprintf(
+                ' If this is intended, use %s($money->toRational()) instead of %s($money).',
+                $method,
+                $method,
+            );
+        }
+
+        return new self($message);
     }
 }

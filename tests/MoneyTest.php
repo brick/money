@@ -877,9 +877,9 @@ class MoneyTest extends AbstractTestCase
     public static function providerMin(): array
     {
         return [
-            [[['1.0', 'USD', new AutoContext()], ['3.50', 'USD'], ['4.00', 'USD']], 'USD 1'],
+            [[['1.0', 'USD', new AutoContext()], ['3.50', 'USD'], ['4.00', 'USD']], MoneyMismatchException::class],
             [[['5.00', 'USD'], ['3.50', 'USD'], ['4.00', 'USD']], 'USD 3.50'],
-            [[['5.00', 'USD'], ['3.50', 'USD'], ['3.499', 'USD', new AutoContext()]], 'USD 3.499'],
+            [[['5.00', 'USD'], ['3.50', 'USD'], ['3.499', 'USD', new AutoContext()]], MoneyMismatchException::class],
             [[['1.00', 'USD'], ['1.00', 'EUR']], MoneyMismatchException::class],
         ];
     }
@@ -911,8 +911,8 @@ class MoneyTest extends AbstractTestCase
     {
         return [
             [[['5.50', 'USD'], ['3.50', 'USD'], ['4.90', 'USD']], 'USD 5.50'],
-            [[['1.3', 'USD', new AutoContext()], ['3.50', 'USD'], ['4.90', 'USD']], 'USD 4.90'],
-            [[['1.3', 'USD', new AutoContext()], ['7.119', 'USD', new AutoContext()], ['4.90', 'USD']], 'USD 7.119'],
+            [[['1.3', 'USD', new AutoContext()], ['3.50', 'USD'], ['4.90', 'USD']], MoneyMismatchException::class],
+            [[['1.3', 'USD', new AutoContext()], ['7.119', 'USD', new AutoContext()], ['4.90', 'USD']], MoneyMismatchException::class],
             [[['1.00', 'USD'], ['1.00', 'EUR']], MoneyMismatchException::class],
         ];
     }
