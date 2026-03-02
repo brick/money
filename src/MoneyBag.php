@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Brick\Money;
 
 use Brick\Math\BigRational;
+use Brick\Money\Exception\UnknownCurrencyException;
 use Override;
 use ReflectionClass;
 
@@ -64,6 +65,8 @@ final class MoneyBag implements Monetary
      * Returns the contained amount in the given currency as a RationalMoney.
      *
      * @param Currency|string $currency The Currency instance, or ISO currency code.
+     *
+     * @throws UnknownCurrencyException If an unknown currency code is given.
      */
     public function getMoney(Currency|string $currency): RationalMoney
     {

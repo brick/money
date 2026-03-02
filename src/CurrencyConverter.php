@@ -9,6 +9,7 @@ use Brick\Math\Exception\RoundingNecessaryException;
 use Brick\Math\RoundingMode;
 use Brick\Money\Context\DefaultContext;
 use Brick\Money\Exception\CurrencyConversionException;
+use Brick\Money\Exception\UnknownCurrencyException;
 
 use function trigger_error;
 
@@ -35,6 +36,7 @@ final readonly class CurrencyConverter
      * @param Context|null    $context      A context to create the money in, defaults to DefaultContext.
      * @param RoundingMode    $roundingMode The rounding mode, if necessary.
      *
+     * @throws UnknownCurrencyException    If an unknown currency code is given.
      * @throws CurrencyConversionException If the exchange rate is not available.
      * @throws RoundingNecessaryException  If rounding is necessary and RoundingMode::Unnecessary is used.
      */
@@ -64,6 +66,7 @@ final readonly class CurrencyConverter
      * @param Monetary        $money    The Money, RationalMoney or MoneyBag to convert.
      * @param Currency|string $currency The Currency instance or ISO currency code.
      *
+     * @throws UnknownCurrencyException    If an unknown currency code is given.
      * @throws CurrencyConversionException If the exchange rate is not available.
      */
     public function convertToRational(Monetary $money, Currency|string $currency): RationalMoney

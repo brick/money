@@ -9,7 +9,6 @@ use Brick\Math\BigInteger;
 use Brick\Math\BigNumber;
 use Brick\Math\BigRational;
 use Brick\Math\Exception\MathException;
-use Brick\Math\Exception\NumberFormatException;
 use Brick\Math\Exception\RoundingNecessaryException;
 use Brick\Math\RoundingMode;
 use Brick\Money\Context\DefaultContext;
@@ -184,7 +183,7 @@ final readonly class Money extends AbstractMoney
      * @param Context|null         $context      An optional Context, defaults to DefaultContext.
      * @param RoundingMode         $roundingMode An optional RoundingMode, if the amount does not fit the context.
      *
-     * @throws NumberFormatException      If the amount is a string in a non-supported format.
+     * @throws MathException              If the amount is not a valid number.
      * @throws UnknownCurrencyException   If the currency is an unknown currency code.
      * @throws RoundingNecessaryException If the rounding mode is RoundingMode::Unnecessary, and rounding is necessary
      *                                    to represent the amount at the requested scale.
@@ -225,7 +224,7 @@ final readonly class Money extends AbstractMoney
      * @param Context|null         $context      An optional Context, defaults to DefaultContext.
      * @param RoundingMode         $roundingMode An optional RoundingMode, if the amount does not fit the context.
      *
-     * @throws NumberFormatException      If the amount is a string in a non-supported format.
+     * @throws MathException              If the amount is not a valid number.
      * @throws UnknownCurrencyException   If the currency is an unknown currency code.
      * @throws RoundingNecessaryException If the rounding mode is RoundingMode::Unnecessary, and rounding is necessary
      *                                    to represent the amount at the requested scale.

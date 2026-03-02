@@ -8,6 +8,7 @@ use Brick\Math\BigNumber;
 use Brick\Math\BigRational;
 use Brick\Math\Exception\MathException;
 use Brick\Money\Exception\MoneyMismatchException;
+use Brick\Money\Exception\UnknownCurrencyException;
 use Override;
 
 use function trigger_error;
@@ -37,6 +38,9 @@ final readonly class RationalMoney extends AbstractMoney
      *
      * @param BigNumber|int|string $amount   The monetary amount.
      * @param Currency|string      $currency The Currency instance or ISO currency code.
+     *
+     * @throws MathException            If the amount is not a valid number.
+     * @throws UnknownCurrencyException If an unknown currency code is given.
      */
     public static function of(BigNumber|int|string $amount, Currency|string $currency): RationalMoney
     {
@@ -53,6 +57,8 @@ final readonly class RationalMoney extends AbstractMoney
      * Returns a RationalMoney with zero value, in the given currency.
      *
      * @param Currency|string $currency The Currency instance or ISO currency code.
+     *
+     * @throws UnknownCurrencyException If an unknown currency code is given.
      */
     public static function zero(Currency|string $currency): RationalMoney
     {
@@ -141,7 +147,8 @@ final readonly class RationalMoney extends AbstractMoney
      * @param Currency|string      $currency     The Currency instance or ISO currency code.
      * @param BigNumber|int|string $exchangeRate The exchange rate to multiply by.
      *
-     * @throws MathException If the exchange rate is not a valid number.
+     * @throws UnknownCurrencyException If an unknown currency code is given.
+     * @throws MathException            If the exchange rate is not a valid number.
      */
     public function convertedTo(Currency|string $currency, BigNumber|int|string $exchangeRate): RationalMoney
     {
