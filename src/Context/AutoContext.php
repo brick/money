@@ -9,7 +9,7 @@ use Brick\Math\BigNumber;
 use Brick\Math\RoundingMode;
 use Brick\Money\Context;
 use Brick\Money\Currency;
-use Brick\Money\Exception\InvalidArgumentException;
+use Brick\Money\Exception\ContextException;
 use Override;
 
 /**
@@ -21,7 +21,7 @@ final readonly class AutoContext implements Context
     public function applyTo(BigNumber $amount, Currency $currency, RoundingMode $roundingMode): BigDecimal
     {
         if ($roundingMode !== RoundingMode::Unnecessary) {
-            throw InvalidArgumentException::autoContextRoundingMode();
+            throw ContextException::autoContextRoundingMode();
         }
 
         return $amount->toBigDecimal()->strippedOfTrailingZeros();

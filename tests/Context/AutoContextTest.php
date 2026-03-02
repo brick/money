@@ -10,8 +10,8 @@ use Brick\Math\RoundingMode;
 use Brick\Money\Context\AutoContext;
 use Brick\Money\Context\CashContext;
 use Brick\Money\Currency;
+use Brick\Money\Exception\ContextException;
 use Brick\Money\Tests\AbstractTestCase;
-use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
@@ -45,7 +45,7 @@ class AutoContextTest extends AbstractTestCase
             ['1.23', 'JPY', RoundingMode::Unnecessary, '1.23'],
             ['123/5000', 'EUR', RoundingMode::Unnecessary, '0.0246'],
             ['5/7', 'EUR', RoundingMode::Unnecessary, RoundingNecessaryException::class],
-            ['5/7', 'EUR', RoundingMode::Down, InvalidArgumentException::class],
+            ['5/7', 'EUR', RoundingMode::Down, ContextException::class],
         ];
     }
 

@@ -65,6 +65,7 @@ Deprecated methods removed:
   - `MoneyBag::fromMonies()`
   - `MoneyBag::plus()`
   - `MoneyBag::minus()`
+- New exception: `ContextException` thrown when a context cannot be applied
 
 ## [0.11.2](https://github.com/brick/money/releases/tag/0.11.2) - 2026-03-02
 

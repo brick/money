@@ -9,6 +9,7 @@ use Brick\Math\Exception\RoundingNecessaryException;
 use Brick\Math\RoundingMode;
 use Brick\Money\Context\CashContext;
 use Brick\Money\Currency;
+use Brick\Money\Exception\ContextException;
 use Brick\Money\Tests\AbstractTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -60,6 +61,7 @@ class CashContextTest extends AbstractTestCase
             [100, '-1.5', 'CZK', RoundingMode::Unnecessary, RoundingNecessaryException::class],
             [100, '-1.5', 'CZK', RoundingMode::Down, '-1.00'],
             [100, '-1.5', 'CZK', RoundingMode::Up, '-2.00'],
+            [3, '1', 'USD', RoundingMode::Unnecessary, ContextException::class],
         ];
     }
 

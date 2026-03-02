@@ -9,6 +9,7 @@ use Brick\Math\BigNumber;
 use Brick\Math\RoundingMode;
 use Brick\Money\Context;
 use Brick\Money\Currency;
+use Brick\Money\Exception\ContextException;
 use Brick\Money\Exception\InvalidArgumentException;
 use Override;
 
@@ -43,7 +44,7 @@ final readonly class CashContext implements Context
         }
 
         if (! $this->isValidStepForScale($this->step, $scale)) {
-            throw InvalidArgumentException::invalidStepForScale($this->step, $scale);
+            throw ContextException::invalidStepForScale($this->step, $scale);
         }
 
         return $amount

@@ -31,11 +31,6 @@ final class InvalidArgumentException extends \InvalidArgumentException implement
         return new self('The default fraction digits cannot be less than zero.');
     }
 
-    public static function autoContextRoundingMode(): self
-    {
-        return new self('AutoContext only supports RoundingMode::Unnecessary.');
-    }
-
     public static function allocateEmptyRatios(string $method): self
     {
         return new self(sprintf('Cannot %s() an empty list of ratios.', $method));

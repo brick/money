@@ -17,6 +17,7 @@ use Brick\Money\Context\CashContext;
 use Brick\Money\Context\CustomContext;
 use Brick\Money\Context\DefaultContext;
 use Brick\Money\Currency;
+use Brick\Money\Exception\ContextException;
 use Brick\Money\Exception\MoneyMismatchException;
 use Brick\Money\Money;
 use Generator;
@@ -204,7 +205,7 @@ class MoneyTest extends AbstractTestCase
             [['1', 'JPY'], '2.5', RoundingMode::Unnecessary, RoundingNecessaryException::class],
             [['1.20', 'USD'], ['1.80', 'USD'], RoundingMode::Unnecessary, 'USD 3.00'],
             [['1.20', 'USD'], ['0.80', 'EUR'], RoundingMode::Unnecessary, MoneyMismatchException::class],
-            [['1.23', 'USD', new AutoContext()], '0.01', RoundingMode::Up, InvalidArgumentException::class],
+            [['1.23', 'USD', new AutoContext()], '0.01', RoundingMode::Up, ContextException::class],
             [['123.00', 'CZK', new CashContext(100)], '12.50', RoundingMode::Unnecessary, RoundingNecessaryException::class],
             [['123.00', 'CZK', new CashContext(100)], '12.50', RoundingMode::Down, 'CZK 135.00'],
             [['123.00', 'CZK', new CashContext(1)], '12.50', RoundingMode::Unnecessary, 'CZK 135.50'],

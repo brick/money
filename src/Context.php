@@ -8,6 +8,7 @@ use Brick\Math\BigDecimal;
 use Brick\Math\BigNumber;
 use Brick\Math\Exception\RoundingNecessaryException;
 use Brick\Math\RoundingMode;
+use Brick\Money\Exception\ContextException;
 
 /**
  * Adjusts a rational number to a decimal amount.
@@ -25,6 +26,7 @@ interface Context
      * @param Currency     $currency     The target currency.
      * @param RoundingMode $roundingMode The rounding mode.
      *
+     * @throws ContextException           If the context cannot be applied with the given currency or rounding mode.
      * @throws RoundingNecessaryException If the result cannot be represented at the required scale without rounding.
      */
     public function applyTo(BigNumber $amount, Currency $currency, RoundingMode $roundingMode): BigDecimal;
