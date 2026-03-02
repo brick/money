@@ -11,6 +11,8 @@ use Brick\Money\MoneyBag;
 use Brick\Money\RationalMoney;
 use PHPUnit\Framework\Attributes\Depends;
 
+use function json_encode;
+
 /**
  * Tests for class MoneyBag.
  */
@@ -137,5 +139,40 @@ class MoneyBagTest extends AbstractTestCase
 
         self::assertMoneyBagContains([Money::of(20, 'EUR')], $moneyBag);
         self::assertMoneyBagContains([Money::of(15, 'EUR')], $newMoneyBag);
+    }
+
+    public function testJsonSerializeEmpty(): void
+    {
+        $moneyBag = MoneyBag::zero();
+
+        self::assertSame([], $moneyBag->jsonSerialize());
+        self::assertSame('[]', json_encode($moneyBag));
+    }
+
+    public function testJsonSerializeSingleCurrency(): void
+    {
+        $moneyBag = MoneyBag::zero()->plus(Money::of('1.23', 'USD'));
+
+        $expected = [['amount' => '123/100', 'currency' => 'USD']];
+
+        self::assertSame($expected, $moneyBag->jsonSerialize());
+        self::assertSame(json_encode($expected), json_encode($moneyBag));
+    }
+
+    public function testJsonSerializeMultipleCurrencies(): void
+    {
+        $moneyBag = MoneyBag::zero()
+            ->plus(Money::of('1.23', 'USD'))
+            ->plus(RationalMoney::of('3/7', 'EUR'))
+            ->plus(Money::of('100', 'JPY'));
+
+        $expected = [
+            ['amount' => '123/100', 'currency' => 'USD'],
+            ['amount' => '3/7', 'currency' => 'EUR'],
+            ['amount' => '100', 'currency' => 'JPY'],
+        ];
+
+        self::assertSame($expected, $moneyBag->jsonSerialize());
+        self::assertSame(json_encode($expected), json_encode($moneyBag));
     }
 }

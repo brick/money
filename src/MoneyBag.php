@@ -6,9 +6,11 @@ namespace Brick\Money;
 
 use Brick\Math\BigRational;
 use Brick\Money\Exception\UnknownCurrencyException;
+use JsonSerializable;
 use Override;
 use ReflectionClass;
 
+use function array_map;
 use function array_values;
 use function trigger_error;
 
@@ -19,7 +21,7 @@ use const E_USER_DEPRECATED;
  *
  * This class is mutable.
  */
-final class MoneyBag implements Monetary
+final class MoneyBag implements Monetary, JsonSerializable
 {
     /**
      * The monies in this bag, indexed by currency code.
@@ -84,6 +86,18 @@ final class MoneyBag implements Monetary
     public function getMonies(): array
     {
         return array_values($this->monies);
+    }
+
+    /**
+     * @return list<array{amount: string, currency: string}>
+     */
+    #[Override]
+    public function jsonSerialize(): array
+    {
+        return array_map(
+            static fn (RationalMoney $money) => $money->jsonSerialize(),
+            array_values($this->monies),
+        );
     }
 
     /**

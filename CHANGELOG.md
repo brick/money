@@ -80,6 +80,7 @@ Deprecated methods removed:
   - `forCurrencyPair()`
   - `forFixedSourceCurrency()`
   - `forFixedTargetCurrency()`
+- `MoneyBag` now implements `JsonSerializable`
 
 ## [0.11.2](https://github.com/brick/money/releases/tag/0.11.2) - 2026-03-02
 
