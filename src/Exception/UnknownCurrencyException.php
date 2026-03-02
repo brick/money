@@ -15,12 +15,12 @@ final class UnknownCurrencyException extends RuntimeException implements MoneyEx
 {
     public static function unknownCurrency(string|int $currencyCode): self
     {
-        return new self('Unknown currency code: ' . $currencyCode);
+        return new self('Unknown currency code: ' . $currencyCode . '.');
     }
 
     public static function noCurrencyForCountry(string $countryCode): self
     {
-        return new self('No currency found for country ' . $countryCode);
+        return new self('No currency found for country ' . $countryCode . '.');
     }
 
     /**
@@ -28,6 +28,6 @@ final class UnknownCurrencyException extends RuntimeException implements MoneyEx
      */
     public static function noSingleCurrencyForCountry(string $countryCode, array $currencyCodes): self
     {
-        return new self('No single currency for country ' . $countryCode . ': ' . implode(', ', $currencyCodes));
+        return new self('No single currency for country ' . $countryCode . ': ' . implode(', ', $currencyCodes) . '.');
     }
 }

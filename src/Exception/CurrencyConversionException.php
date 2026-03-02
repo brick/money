@@ -35,6 +35,8 @@ final class CurrencyConversionException extends RuntimeException implements Mone
             $message .= ' (' . $info . ')';
         }
 
+        $message .= '.';
+
         return new self($message, $sourceCurrencyCode, $targetCurrencyCode, $previous);
     }
 
