@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.11.2](https://github.com/brick/money/releases/tag/0.11.2) - 2026-03-02
+
+⚠️ **Deprecations**
+
+- `Money::create()` is now marked as `@internal`, and will be made `protected` in version `0.12`
+
 ## [0.11.1](https://github.com/brick/money/releases/tag/0.11.1) - 2026-02-12
 
 ⚠️ **Deprecations**
