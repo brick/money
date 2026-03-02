@@ -25,7 +25,7 @@ final readonly class MoneyLocaleFormatter implements MoneyFormatter
      * @param string $locale           The locale to format to, for example 'fr_FR' or 'en_US'.
      * @param bool   $allowWholeNumber Whether to allow formatting as a whole number if the amount has no fraction.
      */
-    public function __construct(string $locale, bool $allowWholeNumber)
+    public function __construct(string $locale, bool $allowWholeNumber = false)
     {
         $this->allowWholeNumber = $allowWholeNumber;
         $this->numberFormatter = new NumberFormatter($locale, NumberFormatter::CURRENCY);
