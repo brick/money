@@ -335,7 +335,7 @@ $configuration = new PDOProviderConfiguration(
 $provider = new PDOProvider($pdo, $configuration);
 ```
 
-PDOProvider also supports fixed source or target currency, and dynamic `WHERE` conditions. Check the [PDOProviderConfiguration](https://github.com/brick/money/blob/0.10.0/src/ExchangeRateProvider/PDOProviderConfiguration.php) class for more information.
+PDOProvider also supports fixed source or target currency, and dynamic `WHERE` conditions. Check the [PDOProviderConfiguration](https://github.com/brick/money/blob/0.11.0/src/ExchangeRateProvider/PDOProviderConfiguration.php) class for more information.
 
 ### BaseCurrencyProvider
 
