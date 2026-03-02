@@ -18,7 +18,7 @@ use function var_export;
 /**
  * Reads exchange rates from a PDO database connection.
  */
-final class PDOProvider implements ExchangeRateProvider
+final class PdoProvider implements ExchangeRateProvider
 {
     /**
      * The SELECT statement.
@@ -42,7 +42,7 @@ final class PDOProvider implements ExchangeRateProvider
      */
     private array $parameters = [];
 
-    public function __construct(PDO $pdo, PDOProviderConfiguration $configuration)
+    public function __construct(PDO $pdo, PdoProviderConfiguration $configuration)
     {
         $conditions = [];
 

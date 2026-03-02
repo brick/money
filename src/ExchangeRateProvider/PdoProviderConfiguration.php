@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Brick\Money\ExchangeRateProvider;
 
 /**
- * Configuration for the PDOExchangeRateProvider.
+ * Configuration for the PdoProvider.
  */
-final readonly class PDOProviderConfiguration
+final readonly class PdoProviderConfiguration
 {
     private function __construct(
         /**

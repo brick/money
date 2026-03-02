@@ -5,22 +5,22 @@ declare(strict_types=1);
 namespace Brick\Money\Tests\ExchangeRateProvider;
 
 use Brick\Money\Exception\CurrencyConversionException;
-use Brick\Money\ExchangeRateProvider\PDOProvider;
-use Brick\Money\ExchangeRateProvider\PDOProviderConfiguration;
+use Brick\Money\ExchangeRateProvider\PdoProvider;
+use Brick\Money\ExchangeRateProvider\PdoProviderConfiguration;
 use Brick\Money\Tests\AbstractTestCase;
 use PDO;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 
 /**
- * Tests for class PDOProvider.
+ * Tests for class PdoProvider.
  */
 #[RequiresPhpExtension('pdo_sqlite')]
-class PDOProviderTest extends AbstractTestCase
+class PdoProviderTest extends AbstractTestCase
 {
     public function testConfigurationFactoryForCurrencyPair(): void
     {
-        $configuration = PDOProviderConfiguration::forCurrencyPair(
+        $configuration = PdoProviderConfiguration::forCurrencyPair(
             tableName: 'exchange_rates',
             exchangeRateColumnName: 'exchange_rate',
             sourceCurrencyColumnName: 'source_currency',
@@ -39,7 +39,7 @@ class PDOProviderTest extends AbstractTestCase
 
     public function testConfigurationFactoryForFixedSourceCurrency(): void
     {
-        $configuration = PDOProviderConfiguration::forFixedSourceCurrency(
+        $configuration = PdoProviderConfiguration::forFixedSourceCurrency(
             tableName: 'exchange_rates',
             exchangeRateColumnName: 'exchange_rate',
             sourceCurrencyCode: 'EUR',
@@ -58,7 +58,7 @@ class PDOProviderTest extends AbstractTestCase
 
     public function testConfigurationFactoryForFixedTargetCurrency(): void
     {
-        $configuration = PDOProviderConfiguration::forFixedTargetCurrency(
+        $configuration = PdoProviderConfiguration::forFixedTargetCurrency(
             tableName: 'exchange_rates',
             exchangeRateColumnName: 'exchange_rate',
             sourceCurrencyColumnName: 'source_currency',
@@ -99,14 +99,14 @@ class PDOProviderTest extends AbstractTestCase
         $statement->execute(['USD', 'EUR', '0.9']);
         $statement->execute(['USD', 'CAD', '1.2']);
 
-        $configuration = PDOProviderConfiguration::forCurrencyPair(
+        $configuration = PdoProviderConfiguration::forCurrencyPair(
             tableName: 'exchange_rates',
             exchangeRateColumnName: 'exchange_rate',
             sourceCurrencyColumnName: 'source_currency',
             targetCurrencyColumnName: 'target_currency',
         );
 
-        $provider = new PDOProvider($pdo, $configuration);
+        $provider = new PdoProvider($pdo, $configuration);
 
         if (self::isExceptionClass($expectedResult)) {
             $this->expectException($expectedResult);
@@ -152,14 +152,14 @@ class PDOProviderTest extends AbstractTestCase
         $statement->execute(['USD', '1.1']);
         $statement->execute(['CAD', '1.2']);
 
-        $configuration = PDOProviderConfiguration::forFixedSourceCurrency(
+        $configuration = PdoProviderConfiguration::forFixedSourceCurrency(
             tableName: 'exchange_rates',
             exchangeRateColumnName: 'exchange_rate',
             sourceCurrencyCode: 'EUR',
             targetCurrencyColumnName: 'target_currency',
         );
 
-        $provider = new PDOProvider($pdo, $configuration);
+        $provider = new PdoProvider($pdo, $configuration);
 
         if (self::isExceptionClass($expectedResult)) {
             $this->expectException($expectedResult);
@@ -205,14 +205,14 @@ class PDOProviderTest extends AbstractTestCase
         $statement->execute(['USD', '0.9']);
         $statement->execute(['CAD', '0.8']);
 
-        $configuration = PDOProviderConfiguration::forFixedTargetCurrency(
+        $configuration = PdoProviderConfiguration::forFixedTargetCurrency(
             tableName: 'exchange_rates',
             exchangeRateColumnName: 'exchange_rate',
             sourceCurrencyColumnName: 'source_currency',
             targetCurrencyCode: 'EUR',
         );
 
-        $provider = new PDOProvider($pdo, $configuration);
+        $provider = new PdoProvider($pdo, $configuration);
 
         if (self::isExceptionClass($expectedResult)) {
             $this->expectException($expectedResult);
@@ -264,7 +264,7 @@ class PDOProviderTest extends AbstractTestCase
         $statement->execute([2017, 9, 'EUR', 'USD', '1.15']);
         $statement->execute([2017, 9, 'EUR', 'CAD', '1.25']);
 
-        $configuration = PDOProviderConfiguration::forCurrencyPair(
+        $configuration = PdoProviderConfiguration::forCurrencyPair(
             tableName: 'exchange_rates',
             exchangeRateColumnName: 'exchange_rate',
             sourceCurrencyColumnName: 'source_currency',
@@ -272,7 +272,7 @@ class PDOProviderTest extends AbstractTestCase
             whereConditions: 'year = ? AND month = ?',
         );
 
-        $provider = new PDOProvider($pdo, $configuration);
+        $provider = new PdoProvider($pdo, $configuration);
         $provider->setParameters(...$parameters);
 
         if (self::isExceptionClass($expectedResult)) {

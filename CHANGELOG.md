@@ -21,8 +21,13 @@
   - `IsoCurrencyProvider::getCurrency()`
 - **`RationalMoney` is now always simplified to lowest terms:** `USD 25/100` is automatically simplified to `USD 1/4`
 - **`Currency::$numericCode` is now nullable**
-- **`PDOProviderConfiguration` now has a private constructor, use a factory method instead**
+- **`PdoProviderConfiguration` now has a private constructor, use a factory method instead**
+
+Class name case changes:
+
 - `ISOCurrencyProvider` has been renamed to `IsoCurrencyProvider`
+- `PDOProvider` has been renamed to `PdoProvider`
+- `PDOProviderConfiguration` has been renamed to `PdoProviderConfiguration`
 
 Deprecated methods removed:
 

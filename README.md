@@ -318,27 +318,27 @@ $provider->setExchangeRate('EUR', 'USD', '1.0987');
 $provider->setExchangeRate('USD', 'EUR', '0.9123');
 ```
 
-### PDOProvider
+### PdoProvider
 
 This provider reads exchange rates from a database table:
 
 ```php
-use Brick\Money\ExchangeRateProvider\PDOProvider;
-use Brick\Money\ExchangeRateProvider\PDOProviderConfiguration;
+use Brick\Money\ExchangeRateProvider\PdoProvider;
+use Brick\Money\ExchangeRateProvider\PdoProviderConfiguration;
 
 $pdo = new \PDO(...);
 
-$configuration = PDOProviderConfiguration::forCurrencyPair(
+$configuration = PdoProviderConfiguration::forCurrencyPair(
     tableName: 'exchange_rates',
     exchangeRateColumnName: 'exchange_rate',
     sourceCurrencyColumnName: 'source_currency_code',
     targetCurrencyColumnName: 'target_currency_code',
 );
 
-$provider = new PDOProvider($pdo, $configuration);
+$provider = new PdoProvider($pdo, $configuration);
 ```
 
-PDOProvider also supports fixed source or target currency, and dynamic `WHERE` conditions. Check the [PDOProviderConfiguration](https://github.com/brick/money/blob/0.11.0/src/ExchangeRateProvider/PDOProviderConfiguration.php) class for more information.
+PdoProvider also supports fixed source or target currency, and dynamic `WHERE` conditions. Check the [PdoProviderConfiguration](https://github.com/brick/money/blob/0.12.0/src/ExchangeRateProvider/PdoProviderConfiguration.php) class for more information.
 
 ### BaseCurrencyProvider
 
