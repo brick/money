@@ -175,14 +175,14 @@ final readonly class RationalMoney extends AbstractMoney
     }
 
     #[Override]
-    public function __toString(): string
+    public function toRational(): RationalMoney
     {
-        return $this->currency . ' ' . $this->amount;
+        return $this;
     }
 
     #[Override]
-    protected function toRational(): RationalMoney
+    public function __toString(): string
     {
-        return $this;
+        return $this->currency . ' ' . $this->amount;
     }
 }

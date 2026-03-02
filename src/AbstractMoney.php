@@ -219,9 +219,9 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
     }
 
     /**
-     * Converts this money object to a RationalMoney.
+     * Converts this money to a RationalMoney.
      */
-    abstract protected function toRational(): RationalMoney;
+    abstract public function toRational(): RationalMoney;
 
     /**
      * Returns the amount of the given parameter.
