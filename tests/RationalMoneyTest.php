@@ -160,6 +160,40 @@ class RationalMoneyTest extends AbstractTestCase
         ];
     }
 
+    #[DataProvider('providerAbs')]
+    public function testAbs(array $rationalMoney, string $expected): void
+    {
+        self::assertRationalMoneyEquals($expected, RationalMoney::of(...$rationalMoney)->abs());
+    }
+
+    public static function providerAbs(): array
+    {
+        return [
+            [['3/7', 'USD'], 'USD 3/7'],
+            [['-3/7', 'USD'], 'USD 3/7'],
+            [['0', 'EUR'], 'EUR 0'],
+            [['-1.23', 'GBP'], 'GBP 123/100'],
+            [['1.23', 'GBP'], 'GBP 123/100'],
+        ];
+    }
+
+    #[DataProvider('providerNegated')]
+    public function testNegated(array $rationalMoney, string $expected): void
+    {
+        self::assertRationalMoneyEquals($expected, RationalMoney::of(...$rationalMoney)->negated());
+    }
+
+    public static function providerNegated(): array
+    {
+        return [
+            [['3/7', 'USD'], 'USD -3/7'],
+            [['-3/7', 'USD'], 'USD 3/7'],
+            [['0', 'EUR'], 'EUR 0'],
+            [['1.23', 'GBP'], 'GBP -123/100'],
+            [['-1.23', 'GBP'], 'GBP 123/100'],
+        ];
+    }
+
     #[DataProvider('providerConvertedTo')]
     public function testConvertedTo(array $rationalMoney, mixed $currency, mixed $exchangeRate, string $expected): void
     {

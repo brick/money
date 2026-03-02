@@ -142,6 +142,22 @@ final readonly class RationalMoney extends AbstractMoney
     }
 
     /**
+     * Returns a RationalMoney whose value is the absolute value of this RationalMoney.
+     */
+    public function abs(): RationalMoney
+    {
+        return new self($this->amount->abs(), $this->currency);
+    }
+
+    /**
+     * Returns a RationalMoney whose value is the negated value of this RationalMoney.
+     */
+    public function negated(): RationalMoney
+    {
+        return new self($this->amount->negated(), $this->currency);
+    }
+
+    /**
      * Converts this RationalMoney to another currency, using an exchange rate.
      *
      * @param Currency|string      $currency     The Currency instance or ISO currency code.
