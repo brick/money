@@ -2,6 +2,10 @@
 
 ## UNRELEASED (0.12.2)
 
+✨ **New features**
+
+- `Money::allocate()` & `allocateWithRemainder()` now accept `BigNumber|int|string` and support decimal & rational ratios
+
 📌 **Compatibility**
 
 - Compatibility with `brick/math` version `0.17`

@@ -6,6 +6,7 @@ namespace Brick\Money\Tests;
 
 use Brick\Math\BigDecimal;
 use Brick\Math\BigInteger;
+use Brick\Math\BigNumber;
 use Brick\Math\BigRational;
 use Brick\Math\Exception\DivisionByZeroException;
 use Brick\Math\Exception\NumberFormatException;
@@ -393,6 +394,10 @@ class MoneyTest extends AbstractTestCase
             [['0.02', 'EUR'], [1, 1, 3, 1], ['EUR 0.01', 'EUR 0.00', 'EUR 0.01', 'EUR 0.00']],
             [[-100, 'USD'], [30, 20, 40, 40], ['USD -23.08', 'USD -15.39', 'USD -30.77', 'USD -30.76']],
             [['0.03', 'GBP'], [75, 25], ['GBP 0.03', 'GBP 0.00']],
+            [[100, 'USD'], ['30', BigNumber::of(20), '40'], ['USD 33.34', 'USD 22.22', 'USD 44.44']],
+            [[100, 'USD'], ['0.5', BigRational::of('3/2')], ['USD 25.00', 'USD 75.00']],
+            [[100, 'USD'], [BigRational::of('1/3'), BigRational::of('2/3')], ['USD 33.34', 'USD 66.66']],
+            [[100, 'USD'], [BigRational::of('1/3'), BigRational::of('2/7')], ['USD 53.85', 'USD 46.15']],
         ];
     }
 
@@ -448,6 +453,10 @@ class MoneyTest extends AbstractTestCase
             [['0.02', 'EUR'], [1, 1, 3, 1], ['EUR 0.00', 'EUR 0.00', 'EUR 0.00', 'EUR 0.00', 'EUR 0.02']],
             [[-100, 'USD'], [30, 20, 40, 40], ['USD -23.07', 'USD -15.38', 'USD -30.76', 'USD -30.76', 'USD -0.03']],
             [['0.03', 'GBP'], [75, 25], ['GBP 0.00', 'GBP 0.00', 'GBP 0.03']],
+            [[100, 'USD'], ['30', BigNumber::of(20), '40'], ['USD 33.33', 'USD 22.22', 'USD 44.44', 'USD 0.01']],
+            [['100.01', 'USD'], ['0.5', BigRational::of('3/2')], ['USD 25.00', 'USD 75.00', 'USD 0.01']],
+            [[100, 'USD'], [BigRational::of('1/3'), BigRational::of('2/3')], ['USD 33.33', 'USD 66.66', 'USD 0.01']],
+            [[100, 'USD'], [BigRational::of('1/3'), BigRational::of('2/7')], ['USD 53.83', 'USD 46.14', 'USD 0.03']],
         ];
     }
 

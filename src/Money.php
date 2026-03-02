@@ -20,9 +20,7 @@ use Override;
 
 use function array_fill;
 use function array_map;
-use function array_sum;
 use function array_values;
-use function intdiv;
 use function trigger_error;
 
 use const E_USER_DEPRECATED;
@@ -521,7 +519,7 @@ final readonly class Money extends AbstractMoney
      *
      * The resulting monies have the same context as this Money.
      *
-     * @param non-negative-int ...$ratios The ratios.
+     * @param BigNumber|int|string ...$ratios The ratios. Must be non-negative and sum to a non-zero value.
      *
      * @return Money[]
      *
@@ -529,24 +527,10 @@ final readonly class Money extends AbstractMoney
      *
      * @pure
      */
-    public function allocate(int ...$ratios): array
+    public function allocate(BigNumber|int|string ...$ratios): array
     {
-        if (! $ratios) {
-            throw InvalidArgumentException::allocateEmptyRatios(__FUNCTION__);
-        }
-
-        foreach ($ratios as $ratio) {
-            /** @phpstan-ignore smaller.alwaysFalse */
-            if ($ratio < 0) {
-                throw InvalidArgumentException::allocateNegativeRatios(__FUNCTION__);
-            }
-        }
-
-        $total = array_sum($ratios);
-
-        if ($total === 0) {
-            throw InvalidArgumentException::allocateAllZeroRatios(__FUNCTION__);
-        }
+        $ratios = $this->normalizeRatios($ratios, __FUNCTION__);
+        $total = BigInteger::sum(...$ratios);
 
         $step = $this->context->getStep();
 
@@ -589,7 +573,7 @@ final readonly class Money extends AbstractMoney
      *
      * The resulting monies have the same context as this Money.
      *
-     * @param non-negative-int ...$ratios The ratios.
+     * @param BigNumber|int|string ...$ratios The ratios. Must be non-negative and sum to a non-zero value.
      *
      * @return Money[]
      *
@@ -597,34 +581,17 @@ final readonly class Money extends AbstractMoney
      *
      * @pure
      */
-    public function allocateWithRemainder(int ...$ratios): array
+    public function allocateWithRemainder(BigNumber|int|string ...$ratios): array
     {
-        if (! $ratios) {
-            throw InvalidArgumentException::allocateEmptyRatios(__FUNCTION__);
-        }
-
-        foreach ($ratios as $ratio) {
-            /** @phpstan-ignore smaller.alwaysFalse */
-            if ($ratio < 0) {
-                throw InvalidArgumentException::allocateNegativeRatios(__FUNCTION__);
-            }
-        }
-
-        $total = array_sum($ratios);
-
-        if ($total === 0) {
-            throw InvalidArgumentException::allocateAllZeroRatios(__FUNCTION__);
-        }
-
-        $ratios = $this->simplifyRatios(array_values($ratios));
-        $total = array_sum($ratios);
+        $ratios = $this->normalizeRatios($ratios, __FUNCTION__);
+        $total = BigInteger::sum(...$ratios);
 
         [, $remainder] = $this->quotientAndRemainder($total);
 
         $toAllocate = $this->minus($remainder);
 
         $monies = array_map(
-            fn (int $ratio) => $toAllocate->multipliedBy($ratio)->dividedBy($total),
+            fn (BigInteger $ratio) => $toAllocate->multipliedBy($ratio)->dividedBy($total),
             $ratios,
         );
 
@@ -824,28 +791,45 @@ final readonly class Money extends AbstractMoney
     }
 
     /**
-     * @param non-empty-list<int> $ratios
+     * @param (BigNumber|int|string)[] $ratios
      *
-     * @return non-empty-list<int>
-     *
-     * @pure
-     */
-    private function simplifyRatios(array $ratios): array
-    {
-        $gcd = $this->gcdOfMultipleInt($ratios);
-
-        return array_map(fn (int $ratio) => intdiv($ratio, $gcd), $ratios);
-    }
-
-    /**
-     * @param non-empty-list<int> $values
+     * @return non-empty-list<BigInteger>
      *
      * @pure
      */
-    private function gcdOfMultipleInt(array $values): int
+    private function normalizeRatios(array $ratios, string $method): array
     {
-        $values = array_map(fn (int $value) => BigInteger::of($value), $values);
+        if ($ratios === []) {
+            throw InvalidArgumentException::allocateEmptyRatios($method);
+        }
 
-        return BigInteger::gcdAll(...$values)->toInt();
+        $ratios = array_map(
+            fn (BigNumber|int|string $ratio) => BigRational::of($ratio),
+            array_values($ratios),
+        );
+
+        foreach ($ratios as $ratio) {
+            if ($ratio->isNegative()) {
+                throw InvalidArgumentException::allocateNegativeRatios($method);
+            }
+        }
+
+        $total = BigRational::sum(...$ratios);
+
+        if ($total->isZero()) {
+            throw InvalidArgumentException::allocateAllZeroRatios($method);
+        }
+
+        $denominators = array_map(fn (BigRational $ratio) => $ratio->getDenominator(), $ratios);
+        $multiplier = BigInteger::lcmAll(...$denominators);
+
+        $ratios = array_map(
+            fn (BigRational $ratio) => $ratio->getNumerator()->multipliedBy($multiplier->quotient($ratio->getDenominator())),
+            $ratios,
+        );
+
+        $gcd = BigInteger::gcdAll(...$ratios);
+
+        return array_map(fn (BigInteger $ratio) => $ratio->quotient($gcd), $ratios);
     }
 }
