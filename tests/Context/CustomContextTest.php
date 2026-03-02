@@ -99,7 +99,7 @@ class CustomContextTest extends AbstractTestCase
     {
         if (! $isValid) {
             $this->expectException(MoneyException::class);
-            $this->expectExceptionMessage(sprintf('Invalid step: %d.', $step));
+            $this->expectExceptionMessage(sprintf('Invalid step %d for scale %d.', $step, $scale));
         }
 
         $context = new CustomContext($scale, $step);

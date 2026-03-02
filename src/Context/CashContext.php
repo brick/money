@@ -9,6 +9,7 @@ use Brick\Math\BigNumber;
 use Brick\Math\RoundingMode;
 use Brick\Money\Context;
 use Brick\Money\Currency;
+use Brick\Money\Exception\InvalidArgumentException;
 use Override;
 
 /**
@@ -16,13 +17,20 @@ use Override;
  */
 final readonly class CashContext implements Context
 {
+    use StepValidation;
+
     /**
-     * @param positive-int $step The cash rounding step, in minor units. Must be a multiple of 2 and/or 5.
+     * @param positive-int $step The cash rounding step, in minor units. Must either divide 10^scale or be a multiple
+     *                           of 10^scale, where scale is the scale of the money this context is applied to.
      *                           For example, step 5 on CHF would allow CHF 0.00, CHF 0.05, CHF 0.10, etc.
      */
     public function __construct(
         private int $step,
     ) {
+        /** @phpstan-ignore smaller.alwaysFalse */
+        if ($step < 1) {
+            throw InvalidArgumentException::invalidStep($step);
+        }
     }
 
     #[Override]
@@ -32,6 +40,10 @@ final readonly class CashContext implements Context
 
         if ($this->step === 1) {
             return $amount->toScale($scale, $roundingMode);
+        }
+
+        if (! $this->isValidStepForScale($this->step, $scale)) {
+            throw InvalidArgumentException::invalidStepForScale($this->step, $scale);
         }
 
         return $amount

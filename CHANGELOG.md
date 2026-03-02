@@ -53,6 +53,7 @@ Deprecated methods removed:
 👌 **Improvements**
 
 - All `InvalidArgumentException` thrown now implement `MoneyException`
+- `CashContext::applyTo()` now performs step ⟷ scale validation
 
 ✨ **New features**
 

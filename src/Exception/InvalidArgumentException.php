@@ -20,4 +20,9 @@ final class InvalidArgumentException extends \InvalidArgumentException implement
     {
         return new self(sprintf('Invalid step: %d.', $step));
     }
+
+    public static function invalidStepForScale(int $step, int $scale): self
+    {
+        return new self(sprintf('Invalid step %d for scale %d.', $step, $scale));
+    }
 }

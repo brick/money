@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Brick\Money\Context;
 
 use Brick\Math\BigDecimal;
-use Brick\Math\BigInteger;
 use Brick\Math\BigNumber;
 use Brick\Math\RoundingMode;
 use Brick\Money\Context;
@@ -18,6 +17,8 @@ use Override;
  */
 final readonly class CustomContext implements Context
 {
+    use StepValidation;
+
     /**
      * @param non-negative-int $scale The scale of the monies using this context.
      * @param positive-int     $step  An optional cash rounding step. Must either divide 10^scale or be a multiple of 10^scale.
@@ -34,8 +35,8 @@ final readonly class CustomContext implements Context
         }
 
         /** @phpstan-ignore smaller.alwaysFalse */
-        if ($step < 1 || ! $this->isValidStepForScale($scale, $step)) {
-            throw InvalidArgumentException::invalidStep($step);
+        if ($step < 1 || ! $this->isValidStepForScale($step, $scale)) {
+            throw InvalidArgumentException::invalidStepForScale($step, $scale);
         }
     }
 
@@ -73,17 +74,5 @@ final readonly class CustomContext implements Context
     public function getScale(): int
     {
         return $this->scale;
-    }
-
-    /**
-     * @param non-negative-int $scale
-     * @param positive-int     $step
-     */
-    private function isValidStepForScale(int $scale, int $step): bool
-    {
-        $step = BigInteger::of($step);
-        $power = BigInteger::ten()->power($scale);
-
-        return $power->mod($step)->isZero() || $step->mod($power)->isZero();
     }
 }
