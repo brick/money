@@ -15,11 +15,11 @@ use function assert;
  * Note that this formatter uses NumberFormatter, which internally represents values using floating point arithmetic,
  * so discrepancies can appear when formatting very large monetary values.
  */
-final class MoneyLocaleFormatter implements MoneyFormatter
+final readonly class MoneyLocaleFormatter implements MoneyFormatter
 {
-    protected readonly bool $allowWholeNumber;
+    protected bool $allowWholeNumber;
 
-    protected readonly NumberFormatter $numberFormatter;
+    protected NumberFormatter $numberFormatter;
 
     /**
      * @param string $locale           The locale to format to, for example 'fr_FR' or 'en_US'.

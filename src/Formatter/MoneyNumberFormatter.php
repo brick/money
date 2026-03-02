@@ -17,7 +17,7 @@ use function assert;
  * Note that NumberFormatter internally represents values using floating point arithmetic, so discrepancies can appear
  * when formatting very large monetary values.
  */
-final class MoneyNumberFormatter implements MoneyFormatter
+final readonly class MoneyNumberFormatter implements MoneyFormatter
 {
     protected NumberFormatter $numberFormatter;
 
