@@ -35,7 +35,11 @@ final readonly class CustomContext implements Context
         }
 
         /** @phpstan-ignore smaller.alwaysFalse */
-        if ($step < 1 || ! $this->isValidStepForScale($step, $scale)) {
+        if ($step < 1) {
+            throw InvalidArgumentException::invalidStep($step);
+        }
+
+        if (! $this->isValidStepForScale($step, $scale)) {
             throw InvalidArgumentException::invalidStepForScale($step, $scale);
         }
     }
