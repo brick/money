@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Brick\Money\ExchangeRateProvider;
 
 use Brick\Money\Exception\CurrencyConversionException;
-use Brick\Money\Exception\InvalidArgumentException;
 use Brick\Money\ExchangeRateProvider;
 use Override;
 use PDO;
@@ -43,9 +42,6 @@ final class PDOProvider implements ExchangeRateProvider
      */
     private array $parameters = [];
 
-    /**
-     * @throws InvalidArgumentException
-     */
     public function __construct(PDO $pdo, PDOProviderConfiguration $configuration)
     {
         $conditions = [];

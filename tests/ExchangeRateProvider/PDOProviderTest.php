@@ -8,8 +8,6 @@ use Brick\Money\Exception\CurrencyConversionException;
 use Brick\Money\ExchangeRateProvider\PDOProvider;
 use Brick\Money\ExchangeRateProvider\PDOProviderConfiguration;
 use Brick\Money\Tests\AbstractTestCase;
-use Closure;
-use InvalidArgumentException;
 use PDO;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
@@ -20,52 +18,61 @@ use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 #[RequiresPhpExtension('pdo_sqlite')]
 class PDOProviderTest extends AbstractTestCase
 {
-    /**
-     * @param Closure(): PDOProviderConfiguration $getConfiguration
-     */
-    #[DataProvider('providerConstructorWithInvalidConfiguration')]
-    public function testConfigurationConstructorThrows(Closure $getConfiguration, string $exceptionMessage): void
+    public function testConfigurationFactoryForCurrencyPair(): void
     {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage($exceptionMessage);
+        $configuration = PDOProviderConfiguration::forCurrencyPair(
+            tableName: 'exchange_rates',
+            exchangeRateColumnName: 'exchange_rate',
+            sourceCurrencyColumnName: 'source_currency',
+            targetCurrencyColumnName: 'target_currency',
+            whereConditions: 'year = ?',
+        );
 
-        $getConfiguration();
+        self::assertSame('exchange_rates', $configuration->tableName);
+        self::assertSame('exchange_rate', $configuration->exchangeRateColumnName);
+        self::assertNull($configuration->sourceCurrencyCode);
+        self::assertSame('source_currency', $configuration->sourceCurrencyColumnName);
+        self::assertNull($configuration->targetCurrencyCode);
+        self::assertSame('target_currency', $configuration->targetCurrencyColumnName);
+        self::assertSame('year = ?', $configuration->whereConditions);
     }
 
-    public static function providerConstructorWithInvalidConfiguration(): array
+    public function testConfigurationFactoryForFixedSourceCurrency(): void
     {
-        return [
-            [fn () => new PDOProviderConfiguration(
-                tableName: 'exchange_rate',
-                exchangeRateColumnName: 'exchange_rate',
-                targetCurrencyCode: 'EUR',
-            ), 'Invalid configuration: one of $sourceCurrencyCode or $sourceCurrencyColumnName must be set.'],
-            [fn () => new PDOProviderConfiguration(
-                tableName: 'exchange_rate',
-                exchangeRateColumnName: 'exchange_rate',
-                sourceCurrencyCode: 'EUR',
-                sourceCurrencyColumnName: 'source_currency_code',
-                targetCurrencyCode: 'EUR',
-            ), 'Invalid configuration: $sourceCurrencyCode and $sourceCurrencyColumnName cannot be both set.'],
-            [fn () => new PDOProviderConfiguration(
-                tableName: 'exchange_rate',
-                exchangeRateColumnName: 'exchange_rate',
-                sourceCurrencyCode: 'EUR',
-            ), 'Invalid configuration: one of $targetCurrencyCode or $targetCurrencyColumnName must be set.'],
-            [fn () => new PDOProviderConfiguration(
-                tableName: 'exchange_rate',
-                exchangeRateColumnName: 'exchange_rate',
-                sourceCurrencyCode: 'EUR',
-                targetCurrencyCode: 'EUR',
-                targetCurrencyColumnName: 'target_currency_code',
-            ), 'Invalid configuration: $targetCurrencyCode and $targetCurrencyColumnName cannot be both set.'],
-            [fn () => new PDOProviderConfiguration(
-                tableName: 'exchange_rate',
-                exchangeRateColumnName: 'exchange_rate',
-                sourceCurrencyCode: 'EUR',
-                targetCurrencyCode: 'EUR',
-            ), 'Invalid configuration: $sourceCurrencyCode and $targetCurrencyCode cannot be both set.'],
-        ];
+        $configuration = PDOProviderConfiguration::forFixedSourceCurrency(
+            tableName: 'exchange_rates',
+            exchangeRateColumnName: 'exchange_rate',
+            sourceCurrencyCode: 'EUR',
+            targetCurrencyColumnName: 'target_currency',
+            whereConditions: 'year = ?',
+        );
+
+        self::assertSame('exchange_rates', $configuration->tableName);
+        self::assertSame('exchange_rate', $configuration->exchangeRateColumnName);
+        self::assertSame('EUR', $configuration->sourceCurrencyCode);
+        self::assertNull($configuration->sourceCurrencyColumnName);
+        self::assertNull($configuration->targetCurrencyCode);
+        self::assertSame('target_currency', $configuration->targetCurrencyColumnName);
+        self::assertSame('year = ?', $configuration->whereConditions);
+    }
+
+    public function testConfigurationFactoryForFixedTargetCurrency(): void
+    {
+        $configuration = PDOProviderConfiguration::forFixedTargetCurrency(
+            tableName: 'exchange_rates',
+            exchangeRateColumnName: 'exchange_rate',
+            sourceCurrencyColumnName: 'source_currency',
+            targetCurrencyCode: 'EUR',
+            whereConditions: 'year = ?',
+        );
+
+        self::assertSame('exchange_rates', $configuration->tableName);
+        self::assertSame('exchange_rate', $configuration->exchangeRateColumnName);
+        self::assertNull($configuration->sourceCurrencyCode);
+        self::assertSame('source_currency', $configuration->sourceCurrencyColumnName);
+        self::assertSame('EUR', $configuration->targetCurrencyCode);
+        self::assertNull($configuration->targetCurrencyColumnName);
+        self::assertSame('year = ?', $configuration->whereConditions);
     }
 
     /**
@@ -79,21 +86,21 @@ class PDOProviderTest extends AbstractTestCase
         $pdo = new PDO('sqlite::memory:');
 
         $pdo->query('
-            CREATE TABLE exchange_rate (
+            CREATE TABLE exchange_rates (
                 source_currency TEXT NOT NULL,
                 target_currency TEXT NOT NULL,
                 exchange_rate REAL NOT NULL
             )
         ');
 
-        $statement = $pdo->prepare('INSERT INTO exchange_rate VALUES (?, ?, ?)');
+        $statement = $pdo->prepare('INSERT INTO exchange_rates VALUES (?, ?, ?)');
 
         $statement->execute(['EUR', 'USD', '1.1']);
         $statement->execute(['USD', 'EUR', '0.9']);
         $statement->execute(['USD', 'CAD', '1.2']);
 
-        $configuration = new PDOProviderConfiguration(
-            tableName: 'exchange_rate',
+        $configuration = PDOProviderConfiguration::forCurrencyPair(
+            tableName: 'exchange_rates',
             exchangeRateColumnName: 'exchange_rate',
             sourceCurrencyColumnName: 'source_currency',
             targetCurrencyColumnName: 'target_currency',
@@ -134,19 +141,19 @@ class PDOProviderTest extends AbstractTestCase
         $pdo = new PDO('sqlite::memory:');
 
         $pdo->query('
-            CREATE TABLE exchange_rate (
+            CREATE TABLE exchange_rates (
                 target_currency TEXT NOT NULL,
                 exchange_rate REAL NOT NULL
             )
         ');
 
-        $statement = $pdo->prepare('INSERT INTO exchange_rate VALUES (?, ?)');
+        $statement = $pdo->prepare('INSERT INTO exchange_rates VALUES (?, ?)');
 
         $statement->execute(['USD', '1.1']);
         $statement->execute(['CAD', '1.2']);
 
-        $configuration = new PDOProviderConfiguration(
-            tableName: 'exchange_rate',
+        $configuration = PDOProviderConfiguration::forFixedSourceCurrency(
+            tableName: 'exchange_rates',
             exchangeRateColumnName: 'exchange_rate',
             sourceCurrencyCode: 'EUR',
             targetCurrencyColumnName: 'target_currency',
@@ -187,19 +194,19 @@ class PDOProviderTest extends AbstractTestCase
         $pdo = new PDO('sqlite::memory:');
 
         $pdo->query('
-            CREATE TABLE exchange_rate (
+            CREATE TABLE exchange_rates (
                 source_currency TEXT NOT NULL,
                 exchange_rate REAL NOT NULL
             )
         ');
 
-        $statement = $pdo->prepare('INSERT INTO exchange_rate VALUES (?, ?)');
+        $statement = $pdo->prepare('INSERT INTO exchange_rates VALUES (?, ?)');
 
         $statement->execute(['USD', '0.9']);
         $statement->execute(['CAD', '0.8']);
 
-        $configuration = new PDOProviderConfiguration(
-            tableName: 'exchange_rate',
+        $configuration = PDOProviderConfiguration::forFixedTargetCurrency(
+            tableName: 'exchange_rates',
             exchangeRateColumnName: 'exchange_rate',
             sourceCurrencyColumnName: 'source_currency',
             targetCurrencyCode: 'EUR',
@@ -241,7 +248,7 @@ class PDOProviderTest extends AbstractTestCase
         $pdo = new PDO('sqlite::memory:');
 
         $pdo->query('
-            CREATE TABLE exchange_rate (
+            CREATE TABLE exchange_rates (
                 year INTEGER NOT NULL,
                 month INTEGER NOT NULL,
                 source_currency TEXT NOT NULL,
@@ -250,15 +257,15 @@ class PDOProviderTest extends AbstractTestCase
             )
         ');
 
-        $statement = $pdo->prepare('INSERT INTO exchange_rate VALUES (?, ?, ?, ?, ?)');
+        $statement = $pdo->prepare('INSERT INTO exchange_rates VALUES (?, ?, ?, ?, ?)');
 
         $statement->execute([2017, 8, 'EUR', 'USD', '1.1']);
         $statement->execute([2017, 8, 'EUR', 'CAD', '1.2']);
         $statement->execute([2017, 9, 'EUR', 'USD', '1.15']);
         $statement->execute([2017, 9, 'EUR', 'CAD', '1.25']);
 
-        $configuration = new PDOProviderConfiguration(
-            tableName: 'exchange_rate',
+        $configuration = PDOProviderConfiguration::forCurrencyPair(
+            tableName: 'exchange_rates',
             exchangeRateColumnName: 'exchange_rate',
             sourceCurrencyColumnName: 'source_currency',
             targetCurrencyColumnName: 'target_currency',

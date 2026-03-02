@@ -21,6 +21,7 @@
   - `IsoCurrencyProvider::getCurrency()`
 - **`RationalMoney` is now always simplified to lowest terms:** `USD 25/100` is automatically simplified to `USD 1/4`
 - **`Currency::$numericCode` is now nullable**
+- **`PDOProviderConfiguration` now has a private constructor, use a factory method instead**
 - `ISOCurrencyProvider` has been renamed to `IsoCurrencyProvider`
 
 Deprecated methods removed:
@@ -66,6 +67,10 @@ Deprecated methods removed:
   - `MoneyBag::plus()`
   - `MoneyBag::minus()`
 - New exception: `ContextException` thrown when a context cannot be applied
+- New `PDOProviderConfiguration` factory methods:
+  - `forCurrencyPair()`
+  - `forFixedSourceCurrency()`
+  - `forFixedTargetCurrency()`
 
 ## [0.11.2](https://github.com/brick/money/releases/tag/0.11.2) - 2026-03-02
 

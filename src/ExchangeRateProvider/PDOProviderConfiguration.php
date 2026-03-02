@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace Brick\Money\ExchangeRateProvider;
 
-use Brick\Money\Exception\InvalidArgumentException;
-
 /**
  * Configuration for the PDOExchangeRateProvider.
  */
 final readonly class PDOProviderConfiguration
 {
-    public function __construct(
+    private function __construct(
         /**
          * The name of the table that holds the exchange rates. Required.
          */
@@ -61,34 +59,62 @@ final readonly class PDOProviderConfiguration
          */
         public ?string $whereConditions = null,
     ) {
-        if ($sourceCurrencyCode === null && $sourceCurrencyColumnName === null) {
-            throw new InvalidArgumentException(
-                'Invalid configuration: one of $sourceCurrencyCode or $sourceCurrencyColumnName must be set.',
-            );
-        }
+    }
 
-        if ($sourceCurrencyCode !== null && $sourceCurrencyColumnName !== null) {
-            throw new InvalidArgumentException(
-                'Invalid configuration: $sourceCurrencyCode and $sourceCurrencyColumnName cannot be both set.',
-            );
-        }
+    /**
+     * Creates a configuration with dynamic source and target currency columns.
+     */
+    public static function forCurrencyPair(
+        string $tableName,
+        string $exchangeRateColumnName,
+        string $sourceCurrencyColumnName,
+        string $targetCurrencyColumnName,
+        ?string $whereConditions = null,
+    ): self {
+        return new self(
+            tableName: $tableName,
+            exchangeRateColumnName: $exchangeRateColumnName,
+            sourceCurrencyColumnName: $sourceCurrencyColumnName,
+            targetCurrencyColumnName: $targetCurrencyColumnName,
+            whereConditions: $whereConditions,
+        );
+    }
 
-        if ($targetCurrencyCode === null && $targetCurrencyColumnName === null) {
-            throw new InvalidArgumentException(
-                'Invalid configuration: one of $targetCurrencyCode or $targetCurrencyColumnName must be set.',
-            );
-        }
+    /**
+     * Creates a configuration with a fixed source currency code and a dynamic target currency column.
+     */
+    public static function forFixedSourceCurrency(
+        string $tableName,
+        string $exchangeRateColumnName,
+        string $sourceCurrencyCode,
+        string $targetCurrencyColumnName,
+        ?string $whereConditions = null,
+    ): self {
+        return new self(
+            tableName: $tableName,
+            exchangeRateColumnName: $exchangeRateColumnName,
+            sourceCurrencyCode: $sourceCurrencyCode,
+            targetCurrencyColumnName: $targetCurrencyColumnName,
+            whereConditions: $whereConditions,
+        );
+    }
 
-        if ($targetCurrencyCode !== null && $targetCurrencyColumnName !== null) {
-            throw new InvalidArgumentException(
-                'Invalid configuration: $targetCurrencyCode and $targetCurrencyColumnName cannot be both set.',
-            );
-        }
-
-        if ($sourceCurrencyCode !== null && $targetCurrencyCode !== null) {
-            throw new InvalidArgumentException(
-                'Invalid configuration: $sourceCurrencyCode and $targetCurrencyCode cannot be both set.',
-            );
-        }
+    /**
+     * Creates a configuration with a dynamic source currency column and a fixed target currency code.
+     */
+    public static function forFixedTargetCurrency(
+        string $tableName,
+        string $exchangeRateColumnName,
+        string $sourceCurrencyColumnName,
+        string $targetCurrencyCode,
+        ?string $whereConditions = null,
+    ): self {
+        return new self(
+            tableName: $tableName,
+            exchangeRateColumnName: $exchangeRateColumnName,
+            sourceCurrencyColumnName: $sourceCurrencyColumnName,
+            targetCurrencyCode: $targetCurrencyCode,
+            whereConditions: $whereConditions,
+        );
     }
 }

@@ -328,7 +328,7 @@ use Brick\Money\ExchangeRateProvider\PDOProviderConfiguration;
 
 $pdo = new \PDO(...);
 
-$configuration = new PDOProviderConfiguration(
+$configuration = PDOProviderConfiguration::forCurrencyPair(
     tableName: 'exchange_rates',
     exchangeRateColumnName: 'exchange_rate',
     sourceCurrencyColumnName: 'source_currency_code',
