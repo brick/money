@@ -150,25 +150,6 @@ final readonly class Money extends AbstractMoney
     }
 
     /**
-     * Creates a Money from a rational amount, a currency, and a context.
-     *
-     * @internal This method is internal and will be made protected in a future release.
-     *
-     * @param BigNumber    $amount       The amount.
-     * @param Currency     $currency     The currency.
-     * @param Context      $context      The context.
-     * @param RoundingMode $roundingMode An optional rounding mode if the amount does not fit the context.
-     *
-     * @throws RoundingNecessaryException If RoundingMode::Unnecessary is used but rounding is necessary.
-     */
-    public static function create(BigNumber $amount, Currency $currency, Context $context, RoundingMode $roundingMode = RoundingMode::Unnecessary): Money
-    {
-        $amount = $context->applyTo($amount, $currency, $roundingMode);
-
-        return new Money($amount, $currency, $context);
-    }
-
-    /**
      * Returns a Money of the given amount and currency.
      *
      * By default, the money is created with a DefaultContext. This means that the amount is scaled to match the
@@ -760,6 +741,23 @@ final readonly class Money extends AbstractMoney
     public function __toString(): string
     {
         return $this->currency . ' ' . $this->amount;
+    }
+
+    /**
+     * Creates a Money from a rational amount, a currency, and a context.
+     *
+     * @param BigNumber    $amount       The amount.
+     * @param Currency     $currency     The currency.
+     * @param Context      $context      The context.
+     * @param RoundingMode $roundingMode An optional rounding mode if the amount does not fit the context.
+     *
+     * @throws RoundingNecessaryException If RoundingMode::Unnecessary is used but rounding is necessary.
+     */
+    protected static function create(BigNumber $amount, Currency $currency, Context $context, RoundingMode $roundingMode = RoundingMode::Unnecessary): Money
+    {
+        $amount = $context->applyTo($amount, $currency, $roundingMode);
+
+        return new Money($amount, $currency, $context);
     }
 
     /**

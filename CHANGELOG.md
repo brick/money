@@ -22,6 +22,7 @@
 - **`RationalMoney` is now always simplified to lowest terms:** `USD 25/100` is automatically simplified to `USD 1/4`
 - **`Currency::$numericCode` is now nullable**
 - **`PdoProviderConfiguration` now has a private constructor, use a factory method instead**
+- **Internal method `Money::create()` is now `protected`**
 
 Class name case changes:
 
