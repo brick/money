@@ -17,9 +17,9 @@ use function assert;
  */
 final readonly class MoneyLocaleFormatter implements MoneyFormatter
 {
-    protected bool $allowWholeNumber;
+    private bool $allowWholeNumber;
 
-    protected NumberFormatter $numberFormatter;
+    private NumberFormatter $numberFormatter;
 
     /**
      * @param string $locale           The locale to format to, for example 'fr_FR' or 'en_US'.

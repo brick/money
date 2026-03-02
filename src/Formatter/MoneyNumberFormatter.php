@@ -19,7 +19,7 @@ use function assert;
  */
 final readonly class MoneyNumberFormatter implements MoneyFormatter
 {
-    protected NumberFormatter $numberFormatter;
+    private NumberFormatter $numberFormatter;
 
     public function __construct(NumberFormatter $numberFormatter)
     {
