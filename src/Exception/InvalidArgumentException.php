@@ -25,4 +25,34 @@ final class InvalidArgumentException extends \InvalidArgumentException implement
     {
         return new self(sprintf('Invalid step %d for scale %d.', $step, $scale));
     }
+
+    public static function negativeFractionDigits(): self
+    {
+        return new self('The default fraction digits cannot be less than zero.');
+    }
+
+    public static function autoContextRoundingMode(): self
+    {
+        return new self('AutoContext only supports RoundingMode::Unnecessary.');
+    }
+
+    public static function allocateEmptyRatios(string $method): self
+    {
+        return new self(sprintf('Cannot %s() an empty list of ratios.', $method));
+    }
+
+    public static function allocateNegativeRatios(string $method): self
+    {
+        return new self(sprintf('Cannot %s() negative ratios.', $method));
+    }
+
+    public static function allocateAllZeroRatios(string $method): self
+    {
+        return new self(sprintf('Cannot %s() to zero ratios only.', $method));
+    }
+
+    public static function splitTooFewParts(string $method): self
+    {
+        return new self(sprintf('Cannot %s() into less than 1 part.', $method));
+    }
 }

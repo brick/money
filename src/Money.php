@@ -522,20 +522,20 @@ final readonly class Money extends AbstractMoney
     public function allocate(int ...$ratios): array
     {
         if (! $ratios) {
-            throw new InvalidArgumentException('Cannot allocate() an empty list of ratios.');
+            throw InvalidArgumentException::allocateEmptyRatios(__FUNCTION__);
         }
 
         foreach ($ratios as $ratio) {
             /** @phpstan-ignore smaller.alwaysFalse */
             if ($ratio < 0) {
-                throw new InvalidArgumentException('Cannot allocate() negative ratios.');
+                throw InvalidArgumentException::allocateNegativeRatios(__FUNCTION__);
             }
         }
 
         $total = array_sum($ratios);
 
         if ($total === 0) {
-            throw new InvalidArgumentException('Cannot allocate() to zero ratios only.');
+            throw InvalidArgumentException::allocateAllZeroRatios(__FUNCTION__);
         }
 
         $step = $this->context->getStep();
@@ -588,20 +588,20 @@ final readonly class Money extends AbstractMoney
     public function allocateWithRemainder(int ...$ratios): array
     {
         if (! $ratios) {
-            throw new InvalidArgumentException('Cannot allocateWithRemainder() an empty list of ratios.');
+            throw InvalidArgumentException::allocateEmptyRatios(__FUNCTION__);
         }
 
         foreach ($ratios as $ratio) {
             /** @phpstan-ignore smaller.alwaysFalse */
             if ($ratio < 0) {
-                throw new InvalidArgumentException('Cannot allocateWithRemainder() negative ratios.');
+                throw InvalidArgumentException::allocateNegativeRatios(__FUNCTION__);
             }
         }
 
         $total = array_sum($ratios);
 
         if ($total === 0) {
-            throw new InvalidArgumentException('Cannot allocateWithRemainder() to zero ratios only.');
+            throw InvalidArgumentException::allocateAllZeroRatios(__FUNCTION__);
         }
 
         $ratios = $this->simplifyRatios(array_values($ratios));
@@ -642,7 +642,7 @@ final readonly class Money extends AbstractMoney
     {
         /** @phpstan-ignore smaller.alwaysFalse */
         if ($parts < 1) {
-            throw new InvalidArgumentException('Cannot split() into less than 1 part.');
+            throw InvalidArgumentException::splitTooFewParts(__FUNCTION__);
         }
 
         return $this->allocate(...array_fill(0, $parts, 1));
@@ -666,7 +666,7 @@ final readonly class Money extends AbstractMoney
     {
         /** @phpstan-ignore smaller.alwaysFalse */
         if ($parts < 1) {
-            throw new InvalidArgumentException('Cannot splitWithRemainder() into less than 1 part.');
+            throw InvalidArgumentException::splitTooFewParts(__FUNCTION__);
         }
 
         return $this->allocateWithRemainder(...array_fill(0, $parts, 1));
