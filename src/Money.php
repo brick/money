@@ -125,6 +125,8 @@ final readonly class Money extends AbstractMoney
     /**
      * Creates a Money from a rational amount, a currency, and a context.
      *
+     * @internal This method is internal and will be made protected in a future release.
+     *
      * @param BigNumber    $amount       The amount.
      * @param Currency     $currency     The currency.
      * @param Context      $context      The context.
