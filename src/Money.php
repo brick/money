@@ -66,7 +66,7 @@ final readonly class Money extends AbstractMoney
      *
      * @throws MoneyMismatchException If all the monies are not in the same currency.
      *
-     * @psalm-pure
+     * @pure
      */
     public static function min(Money $money, Money ...$monies): Money
     {
@@ -91,7 +91,7 @@ final readonly class Money extends AbstractMoney
      *
      * @throws MoneyMismatchException If all the monies are not in the same currency.
      *
-     * @psalm-pure
+     * @pure
      */
     public static function max(Money $money, Money ...$monies): Money
     {
@@ -139,7 +139,7 @@ final readonly class Money extends AbstractMoney
      *
      * @throws MoneyMismatchException If all the monies are not in the same currency and context.
      *
-     * @psalm-pure
+     * @pure
      */
     public static function total(Money $money, Money ...$monies): Money
     {
@@ -177,7 +177,7 @@ final readonly class Money extends AbstractMoney
      * @throws RoundingNecessaryException If the rounding mode is RoundingMode::Unnecessary, and rounding is necessary
      *                                    to represent the amount at the requested scale.
      *
-     * @psalm-pure
+     * @pure
      */
     public static function of(
         BigNumber|int|string $amount,
@@ -220,7 +220,7 @@ final readonly class Money extends AbstractMoney
      * @throws RoundingNecessaryException If the rounding mode is RoundingMode::Unnecessary, and rounding is necessary
      *                                    to represent the amount at the requested scale.
      *
-     * @psalm-pure
+     * @pure
      */
     public static function ofMinor(
         BigNumber|int|string $minorAmount,
@@ -256,7 +256,7 @@ final readonly class Money extends AbstractMoney
      * @param Currency|string $currency The Currency instance or ISO currency code.
      * @param Context|null    $context  An optional context, defaults to DefaultContext.
      *
-     * @psalm-pure
+     * @pure
      */
     public static function zero(Currency|string $currency, ?Context $context = new DefaultContext()): Money
     {
@@ -770,7 +770,7 @@ final readonly class Money extends AbstractMoney
      *
      * @throws RoundingNecessaryException If RoundingMode::Unnecessary is used but rounding is necessary.
      *
-     * @psalm-pure
+     * @pure
      */
     protected static function create(BigNumber $amount, Currency $currency, Context $context, RoundingMode $roundingMode = RoundingMode::Unnecessary): Money
     {
