@@ -12,8 +12,6 @@ use Stringable;
 
 /**
  * A currency. This class is immutable.
- *
- * @psalm-immutable
  */
 final readonly class Currency implements Stringable, JsonSerializable
 {

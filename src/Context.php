@@ -12,8 +12,6 @@ use Brick\Money\Exception\ContextException;
 
 /**
  * Adjusts a rational number to a decimal amount.
- *
- * @psalm-immutable
  */
 interface Context
 {
