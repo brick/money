@@ -59,7 +59,7 @@ final readonly class Currency implements Stringable, JsonSerializable
      *
      * @throws UnknownCurrencyException If an unknown currency code is given.
      *
-     * @psalm-pure
+     * @pure
      */
     public static function of(string $currencyCode): Currency
     {
@@ -79,7 +79,7 @@ final readonly class Currency implements Stringable, JsonSerializable
      *
      * @throws UnknownCurrencyException If the country code is unknown, or there is no single currency for the country.
      *
-     * @psalm-pure
+     * @pure
      */
     public static function ofCountry(string $countryCode): Currency
     {
