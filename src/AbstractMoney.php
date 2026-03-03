@@ -28,8 +28,14 @@ use const E_USER_DEPRECATED;
  */
 abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSerializable
 {
+    /**
+     * @pure
+     */
     abstract public function getAmount(): BigNumber;
 
+    /**
+     * @pure
+     */
     abstract public function getCurrency(): Currency;
 
     /**
@@ -39,6 +45,8 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
      * @param RoundingMode $roundingMode The rounding mode, if necessary.
      *
      * @throws RoundingNecessaryException If RoundingMode::Unnecessary is used but rounding is necessary.
+     *
+     * @pure
      */
     final public function toContext(Context $context, RoundingMode $roundingMode = RoundingMode::Unnecessary): Money
     {
@@ -54,6 +62,8 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
      * @param RoundingMode $roundingMode The rounding mode, if necessary.
      *
      * @throws RoundingNecessaryException If RoundingMode::Unnecessary is used but rounding is necessary.
+     *
+     * @pure
      */
     final public function to(Context $context, RoundingMode $roundingMode = RoundingMode::Unnecessary): Money
     {
@@ -80,6 +90,8 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
      * Returns the sign of this money.
      *
      * @return -1|0|1 -1 if the number is negative, 0 if zero, 1 if positive.
+     *
+     * @pure
      */
     final public function getSign(): int
     {
@@ -88,6 +100,8 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
 
     /**
      * Returns whether this money has zero value.
+     *
+     * @pure
      */
     final public function isZero(): bool
     {
@@ -96,6 +110,8 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
 
     /**
      * Returns whether this money has a negative value.
+     *
+     * @pure
      */
     final public function isNegative(): bool
     {
@@ -104,6 +120,8 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
 
     /**
      * Returns whether this money has a negative or zero value.
+     *
+     * @pure
      */
     final public function isNegativeOrZero(): bool
     {
@@ -112,6 +130,8 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
 
     /**
      * Returns whether this money has a positive value.
+     *
+     * @pure
      */
     final public function isPositive(): bool
     {
@@ -120,6 +140,8 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
 
     /**
      * Returns whether this money has a positive or zero value.
+     *
+     * @pure
      */
     final public function isPositiveOrZero(): bool
     {
@@ -133,6 +155,8 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
      *
      * @throws MathException          If the argument is an invalid number.
      * @throws MoneyMismatchException If the argument is a money in a different currency.
+     *
+     * @pure
      */
     final public function compareTo(AbstractMoney|BigNumber|int|string $that): int
     {
@@ -144,6 +168,8 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
      *
      * @throws MathException          If the argument is an invalid number.
      * @throws MoneyMismatchException If the argument is a money in a different currency.
+     *
+     * @pure
      */
     final public function isEqualTo(AbstractMoney|BigNumber|int|string $that): bool
     {
@@ -155,6 +181,8 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
      *
      * @throws MathException          If the argument is an invalid number.
      * @throws MoneyMismatchException If the argument is a money in a different currency.
+     *
+     * @pure
      */
     final public function isLessThan(AbstractMoney|BigNumber|int|string $that): bool
     {
@@ -166,6 +194,8 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
      *
      * @throws MathException          If the argument is an invalid number.
      * @throws MoneyMismatchException If the argument is a money in a different currency.
+     *
+     * @pure
      */
     final public function isLessThanOrEqualTo(AbstractMoney|BigNumber|int|string $that): bool
     {
@@ -177,6 +207,8 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
      *
      * @throws MathException          If the argument is an invalid number.
      * @throws MoneyMismatchException If the argument is a money in a different currency.
+     *
+     * @pure
      */
     final public function isGreaterThan(AbstractMoney|BigNumber|int|string $that): bool
     {
@@ -188,6 +220,8 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
      *
      * @throws MathException          If the argument is an invalid number.
      * @throws MoneyMismatchException If the argument is a money in a different currency.
+     *
+     * @pure
      */
     final public function isGreaterThanOrEqualTo(AbstractMoney|BigNumber|int|string $that): bool
     {
@@ -199,6 +233,8 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
      *
      * Unlike isEqualTo(), this method only accepts a money, and returns false if the given money is in another
      * currency, instead of throwing a MoneyMismatchException.
+     *
+     * @pure
      */
     final public function isAmountAndCurrencyEqualTo(AbstractMoney $that): bool
     {
@@ -220,6 +256,8 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
 
     /**
      * Converts this money to a RationalMoney.
+     *
+     * @pure
      */
     abstract public function toRational(): RationalMoney;
 
@@ -231,6 +269,8 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
      * @param AbstractMoney|BigNumber|int|string $that A money or amount.
      *
      * @throws MoneyMismatchException If currencies don't match.
+     *
+     * @pure
      */
     final protected function getAmountOf(AbstractMoney|BigNumber|int|string $that): BigNumber|int|string
     {

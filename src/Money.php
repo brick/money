@@ -46,6 +46,8 @@ final readonly class Money extends AbstractMoney
      * @param BigDecimal $amount   The amount.
      * @param Currency   $currency The currency.
      * @param Context    $context  The context that defines the capability of this Money.
+     *
+     * @pure
      */
     private function __construct(
         private BigDecimal $amount,
@@ -113,6 +115,8 @@ final readonly class Money extends AbstractMoney
      * @param Money ...$monies The subsequent monies.
      *
      * @throws MoneyMismatchException If all the monies are not in the same currency and context.
+     *
+     * @pure
      */
     public static function sum(Money $money, Money ...$monies): Money
     {
@@ -276,9 +280,6 @@ final readonly class Money extends AbstractMoney
         return self::create($amount, $currency, $context);
     }
 
-    /**
-     * Returns the amount of this Money, as a BigDecimal.
-     */
     #[Override]
     public function getAmount(): BigDecimal
     {
@@ -292,6 +293,8 @@ final readonly class Money extends AbstractMoney
      * will have a non-zero scale.
      *
      * For example, `USD 1.23` will return a BigDecimal of `123`, while `USD 1.2345` will return `123.45`.
+     *
+     * @pure
      */
     public function getMinorAmount(): BigDecimal
     {
@@ -304,6 +307,8 @@ final readonly class Money extends AbstractMoney
      * For example, `123.4567 USD` will return a BigInteger of `1234567`.
      *
      * @deprecated Use getAmount()->getUnscaledValue() instead.
+     *
+     * @pure
      */
     public function getUnscaledAmount(): BigInteger
     {
@@ -316,9 +321,6 @@ final readonly class Money extends AbstractMoney
         return $this->amount->getUnscaledValue();
     }
 
-    /**
-     * Returns the Currency of this Money.
-     */
     #[Override]
     public function getCurrency(): Currency
     {
@@ -327,6 +329,8 @@ final readonly class Money extends AbstractMoney
 
     /**
      * Returns the Context of this Money.
+     *
+     * @pure
      */
     public function getContext(): Context
     {
@@ -349,6 +353,8 @@ final readonly class Money extends AbstractMoney
      *
      * @throws MathException          If the argument is an invalid number or rounding is necessary.
      * @throws MoneyMismatchException If the argument is a money in a different currency or in a different context.
+     *
+     * @pure
      */
     public function plus(AbstractMoney|BigNumber|int|string $that, RoundingMode $roundingMode = RoundingMode::Unnecessary): Money
     {
@@ -383,6 +389,8 @@ final readonly class Money extends AbstractMoney
      *
      * @throws MathException          If the argument is an invalid number or rounding is necessary.
      * @throws MoneyMismatchException If the argument is a money in a different currency or in a different context.
+     *
+     * @pure
      */
     public function minus(AbstractMoney|BigNumber|int|string $that, RoundingMode $roundingMode = RoundingMode::Unnecessary): Money
     {
@@ -412,6 +420,8 @@ final readonly class Money extends AbstractMoney
      * @param RoundingMode         $roundingMode An optional RoundingMode constant.
      *
      * @throws MathException If the argument is an invalid number or rounding is necessary.
+     *
+     * @pure
      */
     public function multipliedBy(BigNumber|int|string $that, RoundingMode $roundingMode = RoundingMode::Unnecessary): Money
     {
@@ -431,6 +441,8 @@ final readonly class Money extends AbstractMoney
      * @param RoundingMode         $roundingMode An optional RoundingMode constant.
      *
      * @throws MathException If the argument is an invalid number or is zero, or rounding is necessary.
+     *
+     * @pure
      */
     public function dividedBy(BigNumber|int|string $that, RoundingMode $roundingMode = RoundingMode::Unnecessary): Money
     {
@@ -448,6 +460,8 @@ final readonly class Money extends AbstractMoney
      * @param BigNumber|int|string $that The divisor. Must be convertible to a BigInteger.
      *
      * @throws MathException If the divisor cannot be converted to a BigInteger.
+     *
+     * @pure
      */
     public function quotient(BigNumber|int|string $that): Money
     {
@@ -474,6 +488,8 @@ final readonly class Money extends AbstractMoney
      * @return array{Money, Money} The quotient and the remainder.
      *
      * @throws MathException If the divisor cannot be converted to a BigInteger.
+     *
+     * @pure
      */
     public function quotientAndRemainder(BigNumber|int|string $that): array
     {
@@ -510,6 +526,8 @@ final readonly class Money extends AbstractMoney
      * @return Money[]
      *
      * @throws InvalidArgumentException If called with invalid parameters.
+     *
+     * @pure
      */
     public function allocate(int ...$ratios): array
     {
@@ -576,6 +594,8 @@ final readonly class Money extends AbstractMoney
      * @return Money[]
      *
      * @throws InvalidArgumentException If called with invalid parameters.
+     *
+     * @pure
      */
     public function allocateWithRemainder(int ...$ratios): array
     {
@@ -629,6 +649,8 @@ final readonly class Money extends AbstractMoney
      * @return Money[]
      *
      * @throws InvalidArgumentException If called with invalid parameters.
+     *
+     * @pure
      */
     public function split(int $parts): array
     {
@@ -653,6 +675,8 @@ final readonly class Money extends AbstractMoney
      * @return Money[]
      *
      * @throws InvalidArgumentException If called with invalid parameters.
+     *
+     * @pure
      */
     public function splitWithRemainder(int $parts): array
     {
@@ -668,6 +692,8 @@ final readonly class Money extends AbstractMoney
      * Returns a Money whose value is the absolute value of this Money.
      *
      * The resulting Money has the same context as this Money.
+     *
+     * @pure
      */
     public function abs(): Money
     {
@@ -678,6 +704,8 @@ final readonly class Money extends AbstractMoney
      * Returns a Money whose value is the negated value of this Money.
      *
      * The resulting Money has the same context as this Money.
+     *
+     * @pure
      */
     public function negated(): Money
     {
@@ -700,6 +728,8 @@ final readonly class Money extends AbstractMoney
      *
      * @throws UnknownCurrencyException If an unknown currency code is given.
      * @throws MathException            If the exchange rate or rounding mode is invalid, or rounding is necessary.
+     *
+     * @pure
      */
     public function convertedTo(
         Currency|string $currency,
@@ -735,8 +765,7 @@ final readonly class Money extends AbstractMoney
      * @param string $locale           The locale to format to, for example 'fr_FR' or 'en_US'.
      * @param bool   $allowWholeNumber Whether to allow formatting as a whole number if the amount has no fraction.
      *
-     * @psalm-suppress ImpureMethodCall - \NumberFormatter is impure, but we use it here in a side effect free way
-     * @psalm-suppress ImpureStaticVariable - static variables are used for optimization reasons
+     * @pure
      */
     public function formatToLocale(string $locale, bool $allowWholeNumber = false): string
     {
@@ -751,6 +780,8 @@ final readonly class Money extends AbstractMoney
 
     /**
      * Returns a non-localized string representation of this Money, e.g. "EUR 23.00".
+     *
+     * @pure
      */
     #[Override]
     public function __toString(): string
@@ -782,6 +813,8 @@ final readonly class Money extends AbstractMoney
      * @param string  $method  The invoked method name.
      *
      * @throws MoneyMismatchException If monies don't match.
+     *
+     * @pure
      */
     protected function checkContext(Context $context, string $method): void
     {
@@ -794,6 +827,8 @@ final readonly class Money extends AbstractMoney
      * @param non-empty-list<int> $ratios
      *
      * @return non-empty-list<int>
+     *
+     * @pure
      */
     private function simplifyRatios(array $ratios): array
     {
@@ -804,6 +839,8 @@ final readonly class Money extends AbstractMoney
 
     /**
      * @param non-empty-list<int> $values
+     *
+     * @pure
      */
     private function gcdOfMultipleInt(array $values): int
     {

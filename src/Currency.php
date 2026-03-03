@@ -36,6 +36,8 @@ final readonly class Currency implements Stringable, JsonSerializable
      *                                                     the currency is currently in use (IsoCurrent) or has been withdrawn
      *                                                     (IsoHistorical). For non-ISO currencies defined by the application,
      *                                                     the type is Custom.
+     *
+     * @pure
      */
     public function __construct(
         private string $currencyCode,
@@ -61,10 +63,6 @@ final readonly class Currency implements Stringable, JsonSerializable
      */
     public static function of(string $currencyCode): Currency
     {
-        /**
-         * @psalm-suppress ImpureMethodCall
-         * @see https://github.com/brick/money/pull/75
-         */
         return IsoCurrencyProvider::getInstance()->getCurrency($currencyCode);
     }
 
@@ -81,10 +79,6 @@ final readonly class Currency implements Stringable, JsonSerializable
      */
     public static function ofCountry(string $countryCode): Currency
     {
-        /**
-         * @psalm-suppress ImpureMethodCall
-         * @see https://github.com/brick/money/pull/75
-         */
         return IsoCurrencyProvider::getInstance()->getCurrencyForCountry($countryCode);
     }
 
@@ -99,6 +93,8 @@ final readonly class Currency implements Stringable, JsonSerializable
      * @param int $currencyCode The numeric ISO 4217 currency code.
      *
      * @throws UnknownCurrencyException If an unknown currency code is given.
+     *
+     * @pure
      */
     public static function ofNumericCode(int $currencyCode): Currency
     {
@@ -110,6 +106,8 @@ final readonly class Currency implements Stringable, JsonSerializable
      *
      * For ISO currencies this will be the 3-letter uppercase ISO 4217 currency code.
      * For non-ISO currencies no constraints are defined.
+     *
+     * @pure
      */
     public function getCurrencyCode(): string
     {
@@ -123,6 +121,8 @@ final readonly class Currency implements Stringable, JsonSerializable
      * For non-ISO currencies no constraints are defined.
      *
      * @return non-negative-int|null
+     *
+     * @pure
      */
     public function getNumericCode(): ?int
     {
@@ -134,6 +134,8 @@ final readonly class Currency implements Stringable, JsonSerializable
      *
      * For ISO currencies this will be the official English name of the currency.
      * For non-ISO currencies no constraints are defined.
+     *
+     * @pure
      */
     public function getName(): string
     {
@@ -146,6 +148,8 @@ final readonly class Currency implements Stringable, JsonSerializable
      * For example, the default number of fraction digits for the Euro is 2, while for the Japanese Yen it is 0.
      *
      * @return non-negative-int
+     *
+     * @pure
      */
     public function getDefaultFractionDigits(): int
     {
@@ -160,6 +164,8 @@ final readonly class Currency implements Stringable, JsonSerializable
      * because numeric codes may outlive a particular currency and be reused across currency changes.
      *
      * @param Currency|string $currency The Currency instance or ISO currency code.
+     *
+     * @pure
      */
     public function isEqualTo(Currency|string $currency): bool
     {
@@ -173,6 +179,8 @@ final readonly class Currency implements Stringable, JsonSerializable
      *
      * For ISO currencies, this will be either IsoCurrent (in use) or IsoHistorical (withdrawn).
      * For application-defined currencies, the type is Custom.
+     *
+     * @pure
      */
     public function getCurrencyType(): CurrencyType
     {
@@ -187,6 +195,8 @@ final readonly class Currency implements Stringable, JsonSerializable
 
     /**
      * Returns the currency code.
+     *
+     * @pure
      */
     #[Override]
     public function __toString(): string

@@ -24,6 +24,8 @@ final readonly class CashContext implements Context
      * @param positive-int $step The cash rounding step, in minor units. Must either divide 10^scale or be a multiple
      *                           of 10^scale, where scale is the scale of the money this context is applied to.
      *                           For example, step 5 on CHF would allow CHF 0.00, CHF 0.05, CHF 0.10, etc.
+     *
+     * @pure
      */
     public function __construct(
         private int $step,

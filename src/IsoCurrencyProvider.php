@@ -81,6 +81,8 @@ final class IsoCurrencyProvider
 
     /**
      * Returns the singleton instance of IsoCurrencyProvider.
+     *
+     * @pure
      */
     public static function getInstance(): IsoCurrencyProvider
     {
@@ -99,6 +101,8 @@ final class IsoCurrencyProvider
      * @return Currency The currency.
      *
      * @throws UnknownCurrencyException If the currency code is not known.
+     *
+     * @pure
      */
     public function getCurrency(string $currencyCode): Currency
     {
@@ -128,6 +132,8 @@ final class IsoCurrencyProvider
      * @return Currency The currency.
      *
      * @throws UnknownCurrencyException If the currency code is not known.
+     *
+     * @pure
      */
     public function getCurrencyByNumericCode(int $currencyCode): Currency
     {
@@ -149,6 +155,8 @@ final class IsoCurrencyProvider
      * Returns all the available currencies.
      *
      * @return array<string, Currency> The currencies, indexed by currency code.
+     *
+     * @pure
      */
     public function getAvailableCurrencies(): array
     {
@@ -175,6 +183,8 @@ final class IsoCurrencyProvider
      * @param string $countryCode The 2-letter ISO 3166-1 country code.
      *
      * @throws UnknownCurrencyException If the country code is not known, or the country has no single currency.
+     *
+     * @pure
      */
     public function getCurrencyForCountry(string $countryCode): Currency
     {
@@ -209,6 +219,8 @@ final class IsoCurrencyProvider
      * @param string $countryCode The 2-letter ISO 3166-1 country code.
      *
      * @return Currency[]
+     *
+     * @pure
      */
     public function getCurrenciesForCountry(string $countryCode): array
     {
@@ -239,6 +251,8 @@ final class IsoCurrencyProvider
      * @param string $countryCode The 2-letter ISO 3166-1 country code.
      *
      * @return Currency[]
+     *
+     * @pure
      */
     public function getHistoricalCurrenciesForCountry(string $countryCode): array
     {

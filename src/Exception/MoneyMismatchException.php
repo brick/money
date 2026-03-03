@@ -14,6 +14,9 @@ use function sprintf;
  */
 final class MoneyMismatchException extends RuntimeException implements MoneyException
 {
+    /**
+     * @pure
+     */
     public static function currencyMismatch(Currency $expected, Currency $actual): self
     {
         return new self(sprintf(
@@ -23,6 +26,9 @@ final class MoneyMismatchException extends RuntimeException implements MoneyExce
         ));
     }
 
+    /**
+     * @pure
+     */
     public static function contextMismatch(string $method): self
     {
         return new self(sprintf(

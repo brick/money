@@ -24,6 +24,8 @@ final readonly class CustomContext implements Context
      * @param positive-int     $step  An optional cash rounding step. Must either divide 10^scale or be a multiple of 10^scale.
      *                                For example, scale=2 and step=5 allows 0.00, 0.05, 0.10, etc.
      *                                And scale=2 and step=1000 allows 0.00, 10.00, 20.00, etc.
+     *
+     * @pure
      */
     public function __construct(
         private int $scale,
@@ -74,6 +76,8 @@ final readonly class CustomContext implements Context
      * Returns the scale used by this context.
      *
      * @return non-negative-int
+     *
+     * @pure
      */
     public function getScale(): int
     {

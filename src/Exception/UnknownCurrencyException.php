@@ -13,11 +13,17 @@ use function implode;
  */
 final class UnknownCurrencyException extends RuntimeException implements MoneyException
 {
+    /**
+     * @pure
+     */
     public static function unknownCurrency(string|int $currencyCode): self
     {
         return new self('Unknown currency code: ' . $currencyCode . '.');
     }
 
+    /**
+     * @pure
+     */
     public static function noCurrencyForCountry(string $countryCode): self
     {
         return new self('No currency found for country ' . $countryCode . '.');
@@ -25,6 +31,8 @@ final class UnknownCurrencyException extends RuntimeException implements MoneyEx
 
     /**
      * @param string[] $currencyCodes
+     *
+     * @pure
      */
     public static function noSingleCurrencyForCountry(string $countryCode, array $currencyCodes): self
     {
