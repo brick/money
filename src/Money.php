@@ -39,8 +39,6 @@ use const E_USER_DEPRECATED;
  * - CashContext is similar to DefaultContext, but supports a cash rounding step.
  * - CustomContext handles monies with a custom scale and optionally step.
  * - AutoContext automatically adjusts the scale of the money to the minimum required.
- *
- * @psalm-immutable
  */
 final readonly class Money extends AbstractMoney
 {

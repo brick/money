@@ -14,8 +14,6 @@ use Override;
 
 /**
  * Automatically adjusts the scale of a number to the strict minimum.
- *
- * @psalm-immutable
  */
 final readonly class AutoContext implements Context
 {

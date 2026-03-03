@@ -13,8 +13,6 @@ use Override;
 
 /**
  * Adjusts a number to the default scale for the currency.
- *
- * @psalm-immutable
  */
 final readonly class DefaultContext implements Context
 {

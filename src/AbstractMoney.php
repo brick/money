@@ -25,8 +25,6 @@ use const E_USER_DEPRECATED;
  * patch releases.
  *
  * @phpstan-sealed Money|RationalMoney
- *
- * @psalm-immutable
  */
 abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSerializable
 {

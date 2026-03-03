@@ -15,8 +15,6 @@ use Override;
 
 /**
  * Adjusts a number to the default scale for the currency, respecting a cash rounding.
- *
- * @psalm-immutable
  */
 final readonly class CashContext implements Context
 {
