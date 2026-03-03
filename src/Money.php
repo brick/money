@@ -11,6 +11,11 @@ use Brick\Math\BigRational;
 use Brick\Math\Exception\MathException;
 use Brick\Math\Exception\RoundingNecessaryException;
 use Brick\Math\RoundingMode;
+use Brick\Money\Allocation\BlockSeparateStrategy;
+use Brick\Money\Allocation\FloorSeparateStrategy;
+use Brick\Money\Allocation\FloorToFirstStrategy;
+use Brick\Money\Allocation\FloorToLargestRatioStrategy;
+use Brick\Money\Allocation\FloorToLargestRemainderStrategy;
 use Brick\Money\Context\DefaultContext;
 use Brick\Money\Exception\InvalidArgumentException;
 use Brick\Money\Exception\MoneyMismatchException;
@@ -21,6 +26,7 @@ use Override;
 use function array_fill;
 use function array_map;
 use function array_values;
+use function count;
 
 /**
  * A monetary value in a given currency. This class is immutable.
@@ -440,156 +446,105 @@ final readonly class Money extends AbstractMoney
     /**
      * Allocates this Money according to a list of ratios.
      *
-     * If the allocation yields a remainder, its amount is split over the first monies in the list,
-     * so that the total of the resulting monies is always equal to this Money.
+     * The `$method` parameter controls the allocation algorithm.
      *
-     * For example, given a `USD 49.99` money in the default context,
-     * `allocate(1, 2, 3, 4)` returns [`USD 5.00`, `USD 10.00`, `USD 15.00`, `USD 19.99`]
+     * For example, given a `USD 1.00` money and `$ratios = [2, 3, 1]` in the default context:
+     *
+     * | Method                                      | Result                                           |
+     * |---------------------------------------------|--------------------------------------------------|
+     * | `AllocationMethod::FloorToFirst`            | [`USD 0.34`, `USD 0.50`, `USD 0.16`]             |
+     * | `AllocationMethod::FloorToLargestRemainder` | [`USD 0.33`, `USD 0.50`, `USD 0.17`]             |
+     * | `AllocationMethod::FloorToLargestRatio`     | [`USD 0.33`, `USD 0.51`, `USD 0.16`]             |
+     * | `AllocationMethod::FloorSeparate`           | [`USD 0.33`, `USD 0.50`, `USD 0.16`, `USD 0.01`] |
+     * | `AllocationMethod::BlockSeparate`           | [`USD 0.32`, `USD 0.48`, `USD 0.16`, `USD 0.04`] |
      *
      * The resulting monies have the same context as this Money.
      *
-     * @param BigNumber|int|string ...$ratios The ratios. Must be convertible to non-negative numbers.
+     * If this money is negative, the absolute value is allocated and the sign is restored on each result:
+     * allocating `USD -1.00` by `[1, 2]` with `FloorToFirst` yields `[USD -0.34, USD -0.66]`.
      *
-     * @return Money[]
+     * @param (BigNumber|int|string)[] $ratios The ratios. Must be non-negative numbers.
+     * @param AllocationMethod         $method Which allocation method to use.
+     *
+     * @return list<Money> The allocated monies, in the same order as the input ratios.
      *
      * @throws InvalidArgumentException If called with invalid parameters.
      *
      * @pure
      */
-    public function allocate(BigNumber|int|string ...$ratios): array
+    public function allocate(array $ratios, AllocationMethod $method): array
     {
-        if (! $ratios) {
-            throw InvalidArgumentException::allocateEmptyRatios(__FUNCTION__);
-        }
+        $ratios = $this->normalizeRatios($ratios);
 
-        $ratios = $this->normalizeRatios(array_values($ratios), __FUNCTION__);
-        $total = BigInteger::sum(...$ratios);
+        $isNeg = $this->amount->isNegative();
+        $absAmount = $isNeg ? $this->amount->abs() : $this->amount;
 
+        $scale = $absAmount->getScale();
         $step = $this->context->getStep();
+        $amountInSteps = BigInteger::of($absAmount->withPointMovedRight($scale)->dividedBy($step, 0));
 
-        $monies = [];
+        $strategy = match ($method) {
+            AllocationMethod::FloorToFirst => new FloorToFirstStrategy(),
+            AllocationMethod::FloorToLargestRemainder => new FloorToLargestRemainderStrategy(),
+            AllocationMethod::FloorToLargestRatio => new FloorToLargestRatioStrategy(),
+            AllocationMethod::FloorSeparate => new FloorSeparateStrategy(),
+            AllocationMethod::BlockSeparate => new BlockSeparateStrategy(),
+        };
 
-        $unit = BigDecimal::ofUnscaledValue($step, $this->amount->getScale());
-        $unit = new Money($unit, $this->currency, $this->context);
+        $stepCounts = $strategy->allocate($amountInSteps, $ratios);
 
-        if ($this->isNegative()) {
-            $unit = $unit->negated();
-        }
+        return array_map(
+            function (BigInteger $steps) use ($isNeg, $scale, $step): Money {
+                $amount = BigDecimal::of($steps->multipliedBy($step))->withPointMovedLeft($scale);
 
-        $remainder = $this;
-
-        foreach ($ratios as $ratio) {
-            $money = $this->multipliedBy($ratio)->quotient($total);
-            $remainder = $remainder->minus($money);
-            $monies[] = $money;
-        }
-
-        foreach ($monies as $key => $money) {
-            if ($remainder->isZero()) {
-                break;
-            }
-
-            $monies[$key] = $money->plus($unit);
-            $remainder = $remainder->minus($unit);
-        }
-
-        return $monies;
-    }
-
-    /**
-     * Allocates this Money according to a list of ratios.
-     *
-     * The remainder is also present, appended at the end of the list.
-     *
-     * For example, given a `USD 49.99` money in the default context,
-     * `allocateWithRemainder(1, 2, 3, 4)` returns [`USD 4.99`, `USD 9.98`, `USD 14.97`, `USD 19.96`, `USD 0.09`]
-     *
-     * The resulting monies have the same context as this Money.
-     *
-     * @param BigNumber|int|string ...$ratios The ratios. Must be convertible to non-negative numbers.
-     *
-     * @return Money[]
-     *
-     * @throws InvalidArgumentException If called with invalid parameters.
-     *
-     * @pure
-     */
-    public function allocateWithRemainder(BigNumber|int|string ...$ratios): array
-    {
-        if (! $ratios) {
-            throw InvalidArgumentException::allocateEmptyRatios(__FUNCTION__);
-        }
-
-        $ratios = $this->normalizeRatios(array_values($ratios), __FUNCTION__);
-        $total = BigInteger::sum(...$ratios);
-
-        [, $remainder] = $this->quotientAndRemainder($total);
-
-        $toAllocate = $this->minus($remainder);
-
-        $monies = array_map(
-            fn (BigInteger $ratio) => $toAllocate->multipliedBy($ratio)->dividedBy($total),
-            $ratios,
+                return self::create($isNeg ? $amount->negated() : $amount, $this->currency, $this->context);
+            },
+            $stepCounts,
         );
-
-        $monies[] = $remainder;
-
-        return $monies;
     }
 
     /**
      * Splits this Money into a number of parts.
      *
-     * If the division of this Money by the number of parts yields a remainder, its amount is split over the first
-     * monies in the list, so that the total of the resulting monies is always equal to this Money.
+     * The `$mode` parameter controls how the remainder is handled.
      *
-     * For example, given a `USD 100.00` money in the default context,
-     * `split(3)` returns [`USD 33.34`, `USD 33.33`, `USD 33.33`]
+     * For example, given a `USD 1.00` money split in 3 parts in the default context:
+     *
+     * | Mode                  | Result                                           |
+     * |-----------------------|--------------------------------------------------|
+     * | `SplitMode::ToFirst`  | [`USD 0.34`, `USD 0.33`, `USD 0.33`]             |
+     * | `SplitMode::Separate` | [`USD 0.33`, `USD 0.33`, `USD 0.33`, `USD 0.01`] |
      *
      * The resulting monies have the same context as this Money.
      *
-     * @param positive-int $parts The number of parts.
+     * If this money is negative, the absolute value is split and the sign is restored on each result:
+     * splitting `USD -1.00` into 3 parts with `ToFirst` yields `[USD -0.34, USD -0.33, USD -0.33]`.
      *
-     * @return Money[]
+     * @param positive-int $parts The number of parts.
+     * @param SplitMode    $mode  The split mode.
+     *
+     * @return list<Money>
      *
      * @throws InvalidArgumentException If called with invalid parameters.
      *
      * @pure
      */
-    public function split(int $parts): array
+    public function split(int $parts, SplitMode $mode): array
     {
         /** @phpstan-ignore smaller.alwaysFalse */
         if ($parts < 1) {
-            throw InvalidArgumentException::splitTooFewParts(__FUNCTION__);
+            throw InvalidArgumentException::splitTooFewParts();
         }
 
-        return $this->allocate(...array_fill(0, $parts, 1));
-    }
+        // With equal ratios [1, 1, …, 1], FloorToLargestRemainder and FloorToLargestRatio produce the same result as
+        // FloorToFirst (all remainders and ratios are equal, so ties always break on original index). Likewise,
+        // BlockSeparate produces the same result as FloorSeparate. There are therefore only two distinct outcomes.
+        $allocationMode = match ($mode) {
+            SplitMode::ToFirst => AllocationMethod::FloorToFirst,
+            SplitMode::Separate => AllocationMethod::FloorSeparate,
+        };
 
-    /**
-     * Splits this Money into a number of parts and a remainder.
-     *
-     * For example, given a `USD 100.00` money in the default context,
-     * `splitWithRemainder(3)` returns [`USD 33.33`, `USD 33.33`, `USD 33.33`, `USD 0.01`]
-     *
-     * The resulting monies have the same context as this Money.
-     *
-     * @param positive-int $parts The number of parts.
-     *
-     * @return Money[]
-     *
-     * @throws InvalidArgumentException If called with invalid parameters.
-     *
-     * @pure
-     */
-    public function splitWithRemainder(int $parts): array
-    {
-        /** @phpstan-ignore smaller.alwaysFalse */
-        if ($parts < 1) {
-            throw InvalidArgumentException::splitTooFewParts(__FUNCTION__);
-        }
-
-        return $this->allocateWithRemainder(...array_fill(0, $parts, 1));
+        return $this->allocate(array_fill(0, $parts, 1), $allocationMode);
     }
 
     /**
@@ -718,26 +673,31 @@ final readonly class Money extends AbstractMoney
     }
 
     /**
-     * @param list<BigNumber|int|string> $ratios
+     * @param (BigNumber|int|string)[] $ratios
      *
-     * @return list<BigInteger>
+     * @return non-empty-list<BigInteger>
      *
      * @pure
      */
-    private function normalizeRatios(array $ratios, string $method): array
+    private function normalizeRatios(array $ratios): array
     {
-        $ratios = array_map(fn (BigNumber|int|string $ratio) => BigRational::of($ratio), $ratios);
+        if (count($ratios) === 0) {
+            throw InvalidArgumentException::allocateEmptyRatios();
+        }
+
+        $ratios = array_values($ratios);
+        $ratios = array_map(BigRational::of(...), $ratios);
 
         foreach ($ratios as $ratio) {
             if ($ratio->isNegative()) {
-                throw InvalidArgumentException::allocateNegativeRatios($method);
+                throw InvalidArgumentException::allocateNegativeRatios();
             }
         }
 
         $total = BigRational::sum(...$ratios);
 
         if ($total->isZero()) {
-            throw InvalidArgumentException::allocateAllZeroRatios($method);
+            throw InvalidArgumentException::allocateAllZeroRatios();
         }
 
         $denominators = array_map(fn (BigRational $ratio) => $ratio->getDenominator(), $ratios);

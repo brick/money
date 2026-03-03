@@ -6,6 +6,7 @@ use PhpCsFixer\Fixer\ClassNotation\OrderedTypesFixer;
 use PhpCsFixer\Fixer\Phpdoc\PhpdocTypesOrderFixer;
 use PhpCsFixer\Fixer\PhpUnit\PhpUnitStrictFixer;
 use PhpCsFixer\Fixer\Strict\StrictComparisonFixer;
+use SlevomatCodingStandard\Sniffs\Whitespaces\DuplicateSpacesSniff;
 use Symplify\EasyCodingStandard\Config\ECSConfig;
 
 return static function (ECSConfig $ecsConfig): void {
@@ -19,6 +20,15 @@ return static function (ECSConfig $ecsConfig): void {
             $libRootPath . '/tests',
             $libRootPath . '/import-currencies.php',
             __FILE__,
+        ],
+    );
+
+    // Keep formatting of tables in docblocks
+    $ecsConfig->ruleWithConfiguration(
+        DuplicateSpacesSniff::class,
+        [
+            'ignoreSpacesInAnnotation' => true,
+            'ignoreSpacesInComment' => true,
         ],
     );
 

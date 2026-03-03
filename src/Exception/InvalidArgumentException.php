@@ -46,32 +46,32 @@ final class InvalidArgumentException extends \InvalidArgumentException implement
     /**
      * @pure
      */
-    public static function allocateEmptyRatios(string $method): self
+    public static function allocateEmptyRatios(): self
     {
-        return new self(sprintf('Cannot %s() an empty list of ratios.', $method));
+        return new self('Cannot allocate() an empty list of ratios.');
     }
 
     /**
      * @pure
      */
-    public static function allocateNegativeRatios(string $method): self
+    public static function allocateNegativeRatios(): self
     {
-        return new self(sprintf('Cannot %s() negative ratios.', $method));
+        return new self('Cannot allocate() negative ratios.');
     }
 
     /**
      * @pure
      */
-    public static function allocateAllZeroRatios(string $method): self
+    public static function allocateAllZeroRatios(): self
     {
-        return new self(sprintf('Cannot %s() to zero ratios only.', $method));
+        return new self('Cannot allocate() to zero ratios only.');
     }
 
     /**
      * @pure
      */
-    public static function splitTooFewParts(string $method): self
+    public static function splitTooFewParts(): self
     {
-        return new self(sprintf('Cannot %s() into less than 1 part.', $method));
+        return new self('Cannot split() into less than 1 part.');
     }
 }
