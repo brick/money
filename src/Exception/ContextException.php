@@ -13,11 +13,17 @@ use function sprintf;
  */
 final class ContextException extends RuntimeException implements MoneyException
 {
+    /**
+     * @pure
+     */
     public static function invalidStepForScale(int $step, int $scale): self
     {
         return new self(sprintf('Invalid step %d for scale %d.', $step, $scale));
     }
 
+    /**
+     * @pure
+     */
     public static function autoContextRoundingMode(): self
     {
         return new self('AutoContext only supports RoundingMode::Unnecessary.');

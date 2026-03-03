@@ -28,6 +28,8 @@ interface Context
      *
      * @throws ContextException           If the context cannot be applied with the given currency or rounding mode.
      * @throws RoundingNecessaryException If the result cannot be represented at the required scale without rounding.
+     *
+     * @pure
      */
     public function applyTo(BigNumber $amount, Currency $currency, RoundingMode $roundingMode): BigDecimal;
 
@@ -38,6 +40,8 @@ interface Context
      * This value is used by money allocation methods that do not go through the applyTo() method.
      *
      * @return positive-int
+     *
+     * @pure
      */
     public function getStep(): int;
 
@@ -46,6 +50,8 @@ interface Context
      *
      * When the scale and step are fixed, it is considered safe to add or subtract monies amounts directly —as long as
      * they are in the same context— without going through the applyTo() method, allowing for an optimization.
+     *
+     * @pure
      */
     public function isFixedScale(): bool;
 }

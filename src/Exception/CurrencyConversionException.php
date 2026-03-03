@@ -14,6 +14,9 @@ use function sprintf;
  */
 final class CurrencyConversionException extends RuntimeException implements MoneyException
 {
+    /**
+     * @pure
+     */
     public function __construct(
         string $message,
         private readonly string $sourceCurrencyCode,
@@ -23,6 +26,9 @@ final class CurrencyConversionException extends RuntimeException implements Mone
         parent::__construct($message, 0, $previous);
     }
 
+    /**
+     * @pure
+     */
     public static function exchangeRateNotAvailable(string $sourceCurrencyCode, string $targetCurrencyCode, ?string $info = null, ?Throwable $previous = null): self
     {
         $message = sprintf(
@@ -40,11 +46,17 @@ final class CurrencyConversionException extends RuntimeException implements Mone
         return new self($message, $sourceCurrencyCode, $targetCurrencyCode, $previous);
     }
 
+    /**
+     * @pure
+     */
     public function getSourceCurrencyCode(): string
     {
         return $this->sourceCurrencyCode;
     }
 
+    /**
+     * @pure
+     */
     public function getTargetCurrencyCode(): string
     {
         return $this->targetCurrencyCode;

@@ -26,6 +26,8 @@ final readonly class RationalMoney extends AbstractMoney
     /**
      * @param BigRational $amount   The amount.
      * @param Currency    $currency The currency.
+     *
+     * @pure
      */
     public function __construct(
         private BigRational $amount,
@@ -61,6 +63,8 @@ final readonly class RationalMoney extends AbstractMoney
      * @param Currency|string $currency The Currency instance or ISO currency code.
      *
      * @throws UnknownCurrencyException If an unknown currency code is given.
+     *
+     * @pure
      */
     public static function zero(Currency|string $currency): RationalMoney
     {
@@ -90,6 +94,8 @@ final readonly class RationalMoney extends AbstractMoney
      *
      * @throws MathException          If the argument is not a valid number.
      * @throws MoneyMismatchException If the argument is a money in another currency.
+     *
+     * @pure
      */
     public function plus(AbstractMoney|BigNumber|int|string $that): RationalMoney
     {
@@ -106,6 +112,8 @@ final readonly class RationalMoney extends AbstractMoney
      *
      * @throws MathException          If the argument is not a valid number.
      * @throws MoneyMismatchException If the argument is a money in another currency.
+     *
+     * @pure
      */
     public function minus(AbstractMoney|BigNumber|int|string $that): RationalMoney
     {
@@ -121,6 +129,8 @@ final readonly class RationalMoney extends AbstractMoney
      * @param BigNumber|int|string $that The multiplier.
      *
      * @throws MathException If the argument is not a valid number.
+     *
+     * @pure
      */
     public function multipliedBy(BigNumber|int|string $that): RationalMoney
     {
@@ -135,6 +145,8 @@ final readonly class RationalMoney extends AbstractMoney
      * @param BigNumber|int|string $that The divisor.
      *
      * @throws MathException If the argument is not a valid number.
+     *
+     * @pure
      */
     public function dividedBy(BigNumber|int|string $that): RationalMoney
     {
@@ -145,6 +157,8 @@ final readonly class RationalMoney extends AbstractMoney
 
     /**
      * Returns a RationalMoney whose value is the absolute value of this RationalMoney.
+     *
+     * @pure
      */
     public function abs(): RationalMoney
     {
@@ -153,6 +167,8 @@ final readonly class RationalMoney extends AbstractMoney
 
     /**
      * Returns a RationalMoney whose value is the negated value of this RationalMoney.
+     *
+     * @pure
      */
     public function negated(): RationalMoney
     {
@@ -167,6 +183,8 @@ final readonly class RationalMoney extends AbstractMoney
      *
      * @throws UnknownCurrencyException If an unknown currency code is given.
      * @throws MathException            If the exchange rate is not a valid number.
+     *
+     * @pure
      */
     public function convertedTo(Currency|string $currency, BigNumber|int|string $exchangeRate): RationalMoney
     {
@@ -198,6 +216,9 @@ final readonly class RationalMoney extends AbstractMoney
         return $this;
     }
 
+    /**
+     * @pure
+     */
     #[Override]
     public function __toString(): string
     {

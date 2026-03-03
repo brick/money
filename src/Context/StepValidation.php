@@ -14,6 +14,8 @@ trait StepValidation
     /**
      * @param positive-int     $step
      * @param non-negative-int $scale
+     *
+     * @pure
      */
     private function isValidStepForScale(int $step, int $scale): bool
     {

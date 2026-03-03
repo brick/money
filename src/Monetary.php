@@ -11,6 +11,8 @@ interface Monetary
 {
     /**
      * @return list<RationalMoney>
+     *
+     * @pure
      */
     public function getMonies(): array;
 }
