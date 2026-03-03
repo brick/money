@@ -6,9 +6,10 @@ parameters:
         # Methods that return void are considered impure.
         # https://phpstan.org/blog/remembering-and-forgetting-returned-values
         - '#^Impure call to method .*::checkContext\(\) in pure method .*\.$#'
-        # PHPStan does not consider array_map() as pure.
+        # PHPStan does not consider array_map() or usort() as pure.
         # https://github.com/phpstan/phpstan/issues/11100
         - '#^Possibly impure call to function array_map\(\) in pure method .*\.$#'
+        - '#^Possibly impure call to function usort\(\) in pure method Brick\\Money\\Allocation\\.*\.$#'
         # IsoCurrencyProvider uses lazy caches and a singleton internally.
         - '#^Impure .* in pure method Brick\\Money\\IsoCurrencyProvider::.*\.$#'
         - '#^Possibly impure .* in pure method Brick\\Money\\IsoCurrencyProvider::.*\.$#'

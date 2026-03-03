@@ -12,6 +12,10 @@
   - `Money::ofMinor()`
   - `Money::zero()`
   - `Money::convertedTo()`
+- `Money::allocate()` signature has changed: replace `allocate(1, 2, 3)` with `allocate([1, 2, 3], AllocationMethod::FloorToFirst)` to keep the same behaviour as before
+- `Money::allocateWithRemainder()` has been removed: replace `allocateWithRemainder(1, 2, 3)` with `allocate([1, 2, 3], AllocationMethod::BlockSeparate)` to keep the same behaviour as before
+- `Money::split()` signature has changed: replace `split(3)` with `split(3, SplitMode::ToFirst)` to keep the same behaviour as before
+- `Money::splitWithRemainder()` has been removed: replace `splitWithRemainder(3)` with `split(3, SplitMode::Separate)` to keep the same behaviour as before
 
 Deprecated methods removed:
 
@@ -22,6 +26,18 @@ Deprecated methods removed:
 - `RationalMoney::simplified()` has been removed, `RationalMoney` is always in its simplest form now
 - `MoneyBag::add()` has been removed, use `plus()` instead, which returns a new instance
 - `MoneyBag::subtract()` has been removed, use `minus()` instead, which returns a new instance
+
+✨ **New features**
+
+- New `Money::allocate()` API with five algorithms, exposed through the new `AllocationMethod` enum:
+  - `FloorToFirst` (this is the implementation `allocate()` used previously)
+  - `FloorToLargestRatio`
+  - `FloorToLargestRemainder`
+  - `FloorSeparate`
+  - `BlockSeparate` (this is the implementation `allocateWithRemainder()` used previously)
+- New `Money::split()` API with two algorithms, exposed through the new `SplitMode` enum:
+  - `ToFirst` (this is the implementation `split()` used previously)
+  - `Separate` (this is the implementation `splitWithRemainder()` used previously)
 
 ## [0.12.3](https://github.com/brick/money/releases/tag/0.12.3) - 2026-03-23
 
