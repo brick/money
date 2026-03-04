@@ -87,6 +87,14 @@ final readonly class CustomContext implements Context
     }
 
     #[Override]
+    public function isEqualTo(Context $context): bool
+    {
+        return $context instanceof CustomContext
+            && $context->scale === $this->scale
+            && $context->step === $this->step;
+    }
+
+    #[Override]
     public function __toString(): string
     {
         return sprintf('CustomContext(scale=%d, step=%d)', $this->scale, $this->step);

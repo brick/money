@@ -19,6 +19,7 @@ use PHPUnit\Framework\TestCase;
 use function array_is_list;
 use function array_map;
 use function is_string;
+use function sprintf;
 use function str_ends_with;
 
 /**
@@ -52,7 +53,7 @@ abstract class AbstractTestCase extends TestCase
         self::assertSame($expected, (string) $actual);
 
         if ($context !== null) {
-            self::assertEquals($context, $actual->getContext());
+            self::assertTrue($actual->getContext()->isEqualTo($context), sprintf('Context mismatch: %s != %s', $actual->getContext(), $context));
         }
     }
 

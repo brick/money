@@ -35,6 +35,12 @@ final readonly class DefaultContext implements Context
     }
 
     #[Override]
+    public function isEqualTo(Context $context): bool
+    {
+        return $context instanceof DefaultContext;
+    }
+
+    #[Override]
     public function __toString(): string
     {
         return 'DefaultContext';
