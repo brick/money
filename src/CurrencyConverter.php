@@ -8,6 +8,7 @@ use Brick\Math\BigRational;
 use Brick\Math\Exception\RoundingNecessaryException;
 use Brick\Math\RoundingMode;
 use Brick\Money\Context\DefaultContext;
+use Brick\Money\Exception\ContextException;
 use Brick\Money\Exception\CurrencyConversionException;
 use Brick\Money\Exception\UnknownCurrencyException;
 
@@ -35,6 +36,7 @@ final readonly class CurrencyConverter
      * @throws UnknownCurrencyException    If an unknown currency code is given.
      * @throws CurrencyConversionException If the exchange rate is not available.
      * @throws RoundingNecessaryException  If rounding is necessary and RoundingMode::Unnecessary is used.
+     * @throws ContextException            If the context does not apply.
      */
     public function convert(
         Monetary $money,

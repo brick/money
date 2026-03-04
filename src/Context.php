@@ -26,7 +26,7 @@ interface Context
      * @param Currency     $currency     The target currency.
      * @param RoundingMode $roundingMode The rounding mode.
      *
-     * @throws ContextException           If the context cannot be applied with the given currency or rounding mode.
+     * @throws ContextException           If the context does not apply.
      * @throws RoundingNecessaryException If the result cannot be represented at the required scale without rounding.
      *
      * @pure
