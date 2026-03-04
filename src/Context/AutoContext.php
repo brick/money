@@ -40,4 +40,10 @@ final readonly class AutoContext implements Context
     {
         return false;
     }
+
+    #[Override]
+    public function __toString(): string
+    {
+        return 'AutoContext';
+    }
 }

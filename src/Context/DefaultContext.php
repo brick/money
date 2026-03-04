@@ -33,4 +33,10 @@ final readonly class DefaultContext implements Context
     {
         return true;
     }
+
+    #[Override]
+    public function __toString(): string
+    {
+        return 'DefaultContext';
+    }
 }
