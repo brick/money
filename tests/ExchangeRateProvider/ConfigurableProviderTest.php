@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Brick\Money\Tests\ExchangeRateProvider;
 
-use Brick\Math\BigRational;
-use Brick\Math\RoundingMode;
-use Brick\Money\Exception\CurrencyConversionException;
+use Brick\Money\Currency;
 use Brick\Money\ExchangeRateProvider;
 use Brick\Money\ExchangeRateProvider\ConfigurableProvider;
 use Brick\Money\Tests\AbstractTestCase;
@@ -20,36 +18,33 @@ class ConfigurableProviderTest extends AbstractTestCase
     /**
      * @param string $sourceCurrencyCode The code of the source currency.
      * @param string $targetCurrencyCode The code of the target currency.
-     * @param string $exchangeRate       The expected exchange rate, rounded DOWN to 3 decimals.
+     * @param string $expectedRate       The expected exchange rate, rounded DOWN to 3 decimals.
      */
     #[DataProvider('providerGetExchangeRate')]
-    public function testGetExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode, string $exchangeRate): void
+    public function testGetExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode, ?string $expectedRate): void
     {
-        $rate = $this->getExchangeRateProvider()->getExchangeRate($sourceCurrencyCode, $targetCurrencyCode);
-        self::assertSame($exchangeRate, (string) BigRational::of($rate)->toScale(3, RoundingMode::Down));
+        $sourceCurrency = Currency::of($sourceCurrencyCode);
+        $targetCurrency = Currency::of($targetCurrencyCode);
+
+        $actualRate = $this->getExchangeRateProvider()->getExchangeRate($sourceCurrency, $targetCurrency);
+
+        if ($expectedRate === null) {
+            self::assertNull($actualRate);
+        } else {
+            self::assertNotNull($actualRate);
+            self::assertSame($expectedRate, $actualRate->toBigDecimal()->toString());
+        }
     }
 
     public static function providerGetExchangeRate(): array
     {
         return [
-            ['USD', 'EUR', '0.800'],
-            ['USD', 'GBP', '0.600'],
-            ['USD', 'CAD', '1.200'],
+            ['USD', 'EUR', '0.8'],
+            ['USD', 'GBP', '0.6'],
+            ['USD', 'CAD', '1.2'],
+            ['USD', 'BSD', '1'],
+            ['EUR', 'USD', null],
         ];
-    }
-
-    public function testUnknownCurrencyPair(): void
-    {
-        try {
-            $this->getExchangeRateProvider()->getExchangeRate('EUR', 'USD');
-        } catch (CurrencyConversionException $e) {
-            self::assertSame('EUR', $e->getSourceCurrencyCode());
-            self::assertSame('USD', $e->getTargetCurrencyCode());
-
-            return;
-        }
-
-        self::fail('Expected CurrencyConversionException');
     }
 
     private function getExchangeRateProvider(): ExchangeRateProvider
@@ -59,6 +54,7 @@ class ConfigurableProviderTest extends AbstractTestCase
         $provider->setExchangeRate('USD', 'EUR', '0.8');
         $provider->setExchangeRate('USD', 'GBP', '0.6');
         $provider->setExchangeRate('USD', 'CAD', '1.2');
+        $provider->setExchangeRate('USD', 'BSD', 1);
 
         return $provider;
     }

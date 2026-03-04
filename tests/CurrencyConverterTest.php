@@ -11,7 +11,7 @@ use Brick\Money\Context\AutoContext;
 use Brick\Money\Context\CustomContext;
 use Brick\Money\Context\DefaultContext;
 use Brick\Money\CurrencyConverter;
-use Brick\Money\Exception\CurrencyConversionException;
+use Brick\Money\Exception\ExchangeRateNotFoundException;
 use Brick\Money\ExchangeRateProvider\ConfigurableProvider;
 use Brick\Money\Money;
 use Brick\Money\MoneyBag;
@@ -58,7 +58,7 @@ class CurrencyConverterTest extends AbstractTestCase
             [['123.57', 'USD'], 'EUR', RoundingMode::Unnecessary, RoundingNecessaryException::class],
             [['1724657496.87', 'USD', new AutoContext()], 'EUR', RoundingMode::Unnecessary, 'EUR 1567870451.70'],
             [['127.367429', 'BSD', new AutoContext()], 'USD', RoundingMode::Up, 'USD 127.37'],
-            [['1.23', 'USD'], 'BSD', RoundingMode::Down, CurrencyConversionException::class],
+            [['1.23', 'USD'], 'BSD', RoundingMode::Down, ExchangeRateNotFoundException::class],
             [['1.23', 'EUR'], 'EUR', RoundingMode::Unnecessary, 'EUR 1.23'],
             [['123456.789', 'JPY', new AutoContext()], 'JPY', RoundingMode::HalfEven, 'JPY 123457'],
         ];

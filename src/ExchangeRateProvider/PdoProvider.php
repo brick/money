@@ -4,22 +4,32 @@ declare(strict_types=1);
 
 namespace Brick\Money\ExchangeRateProvider;
 
-use Brick\Money\Exception\CurrencyConversionException;
+use Brick\Math\BigNumber;
+use Brick\Math\Exception\MathException;
+use Brick\Money\Currency;
+use Brick\Money\Exception\ExchangeRateProviderException;
 use Brick\Money\ExchangeRateProvider;
+use Closure;
 use Override;
 use PDO;
+use PDOException;
 use PDOStatement;
 
+use function assert;
 use function implode;
 use function is_float;
 use function sprintf;
-use function var_export;
 
 /**
  * Reads exchange rates from a PDO database connection.
  */
 final class PdoProvider implements ExchangeRateProvider
 {
+    /**
+     * The PDO connection.
+     */
+    private readonly PDO $pdo;
+
     /**
      * The SELECT statement.
      */
@@ -42,8 +52,13 @@ final class PdoProvider implements ExchangeRateProvider
      */
     private array $parameters = [];
 
+    /**
+     * @throws PDOException
+     */
     public function __construct(PDO $pdo, PdoProviderConfiguration $configuration)
     {
+        $this->pdo = $pdo;
+
         $conditions = [];
 
         if ($configuration->whereConditions !== null) {
@@ -77,7 +92,10 @@ final class PdoProvider implements ExchangeRateProvider
             $conditions,
         );
 
-        $this->statement = $pdo->prepare($query);
+        $statement = $this->exec(fn () => $pdo->prepare($query));
+        assert($statement !== false);
+
+        $this->statement = $statement;
     }
 
     /**
@@ -92,49 +110,73 @@ final class PdoProvider implements ExchangeRateProvider
     }
 
     #[Override]
-    public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode): int|string
+    public function getExchangeRate(Currency $sourceCurrency, Currency $targetCurrency): ?BigNumber
     {
+        $sourceCurrencyCode = $sourceCurrency->getCurrencyCode();
+        $targetCurrencyCode = $targetCurrency->getCurrencyCode();
+
         $parameters = $this->parameters;
 
         if ($this->sourceCurrencyCode === null) {
             $parameters[] = $sourceCurrencyCode;
         } elseif ($this->sourceCurrencyCode !== $sourceCurrencyCode) {
-            $info = 'source currency must be ' . $this->sourceCurrencyCode;
-
-            throw CurrencyConversionException::exchangeRateNotAvailable($sourceCurrencyCode, $targetCurrencyCode, $info);
+            return null;
         }
 
         if ($this->targetCurrencyCode === null) {
             $parameters[] = $targetCurrencyCode;
         } elseif ($this->targetCurrencyCode !== $targetCurrencyCode) {
-            $info = 'target currency must be ' . $this->targetCurrencyCode;
-
-            throw CurrencyConversionException::exchangeRateNotAvailable($sourceCurrencyCode, $targetCurrencyCode, $info);
+            return null;
         }
 
-        $this->statement->execute($parameters);
+        try {
+            /** @var int|float|numeric-string|false $exchangeRate */
+            $exchangeRate = $this->exec(function () use ($parameters) {
+                $this->statement->execute($parameters);
 
-        /** @var int|float|numeric-string|false $exchangeRate */
-        $exchangeRate = $this->statement->fetchColumn();
+                return $this->statement->fetchColumn();
+            });
+        } catch (PDOException $e) {
+            throw new ExchangeRateProviderException('Could not retrieve the exchange rate due to a PDO exception.', $e);
+        }
 
         if ($exchangeRate === false) {
-            if ($this->parameters !== []) {
-                $info = [];
-                foreach ($this->parameters as $parameter) {
-                    $info[] = var_export($parameter, true);
-                }
-                $info = 'parameters: ' . implode(', ', $info);
-            } else {
-                $info = null;
-            }
-
-            throw CurrencyConversionException::exchangeRateNotAvailable($sourceCurrencyCode, $targetCurrencyCode, $info);
+            return null;
         }
 
         if (is_float($exchangeRate)) {
-            return (string) $exchangeRate;
+            $exchangeRate = (string) $exchangeRate;
         }
 
-        return $exchangeRate;
+        try {
+            return BigNumber::of($exchangeRate);
+        } catch (MathException $e) {
+            throw new ExchangeRateProviderException('The database returned an invalid exchange rate.', $e);
+        }
+    }
+
+    /**
+     * Executes a callback with PDO configured to throw exceptions, then restores the previous error mode.
+     *
+     * @template T
+     *
+     * @param Closure(): T $callback
+     *
+     * @return T
+     *
+     * @throws PDOException
+     */
+    private function exec(Closure $callback): mixed
+    {
+        /** @var int $previousErrMode */
+        $previousErrMode = $this->pdo->getAttribute(PDO::ATTR_ERRMODE);
+
+        $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        try {
+            return $callback();
+        } finally {
+            $this->pdo->setAttribute(PDO::ATTR_ERRMODE, $previousErrMode);
+        }
     }
 }

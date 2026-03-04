@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Brick\Money;
 
 use Brick\Math\BigNumber;
-use Brick\Money\Exception\CurrencyConversionException;
+use Brick\Money\Exception\ExchangeRateProviderException;
 
 /**
  * Interface for exchange rate providers.
@@ -13,12 +13,9 @@ use Brick\Money\Exception\CurrencyConversionException;
 interface ExchangeRateProvider
 {
     /**
-     * @param string $sourceCurrencyCode The source currency code.
-     * @param string $targetCurrencyCode The target currency code.
+     * @return BigNumber|null The exchange rate, or null if not available.
      *
-     * @return BigNumber|int|string The exchange rate.
-     *
-     * @throws CurrencyConversionException If the exchange rate is not available.
+     * @throws ExchangeRateProviderException If an error occurs while retrieving the exchange rate.
      */
-    public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode): BigNumber|int|string;
+    public function getExchangeRate(Currency $sourceCurrency, Currency $targetCurrency): ?BigNumber;
 }

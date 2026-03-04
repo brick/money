@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Brick\Money\Tests\ExchangeRateProvider;
 
-use Brick\Money\Exception\CurrencyConversionException;
+use Brick\Money\Currency;
 use Brick\Money\ExchangeRateProvider;
 use Brick\Money\ExchangeRateProvider\ConfigurableProvider;
 use Brick\Money\ExchangeRateProvider\ProviderChain;
@@ -39,8 +39,7 @@ class ProviderChainTest extends AbstractTestCase
     {
         $providerChain = new ProviderChain();
 
-        $this->expectException(CurrencyConversionException::class);
-        $providerChain->getExchangeRate('USD', 'GBP');
+        self::assertNull($providerChain->getExchangeRate(Currency::of('USD'), Currency::of('GBP')));
     }
 
     public function testAddFirstProvider(): ProviderChain
@@ -48,8 +47,8 @@ class ProviderChainTest extends AbstractTestCase
         $provider = new ProviderChain();
         $provider->addExchangeRateProvider(self::$provider1);
 
-        self::assertSame('0.7', $provider->getExchangeRate('USD', 'GBP'));
-        self::assertSame('0.9', $provider->getExchangeRate('USD', 'EUR'));
+        self::assertBigNumberEquals('0.7', $provider->getExchangeRate(Currency::of('USD'), Currency::of('GBP')));
+        self::assertBigNumberEquals('0.9', $provider->getExchangeRate(Currency::of('USD'), Currency::of('EUR')));
 
         return $provider;
     }
@@ -59,9 +58,9 @@ class ProviderChainTest extends AbstractTestCase
     {
         $provider->addExchangeRateProvider(self::$provider2);
 
-        self::assertSame('0.7', $provider->getExchangeRate('USD', 'GBP'));
-        self::assertSame('0.9', $provider->getExchangeRate('USD', 'EUR'));
-        self::assertSame('1.2', $provider->getExchangeRate('EUR', 'USD'));
+        self::assertBigNumberEquals('0.7', $provider->getExchangeRate(Currency::of('USD'), Currency::of('GBP')));
+        self::assertBigNumberEquals('0.9', $provider->getExchangeRate(Currency::of('USD'), Currency::of('EUR')));
+        self::assertBigNumberEquals('1.2', $provider->getExchangeRate(Currency::of('EUR'), Currency::of('USD')));
 
         return $provider;
     }
@@ -71,7 +70,7 @@ class ProviderChainTest extends AbstractTestCase
     {
         $provider->removeExchangeRateProvider(self::$provider1);
 
-        self::assertSame('0.8', $provider->getExchangeRate('USD', 'EUR'));
-        self::assertSame('1.2', $provider->getExchangeRate('EUR', 'USD'));
+        self::assertBigNumberEquals('0.8', $provider->getExchangeRate(Currency::of('USD'), Currency::of('EUR')));
+        self::assertBigNumberEquals('1.2', $provider->getExchangeRate(Currency::of('EUR'), Currency::of('USD')));
     }
 }

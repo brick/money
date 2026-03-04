@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Brick\Money\Tests\ExchangeRateProvider;
 
-use Brick\Math\BigNumber;
-use Brick\Math\RoundingMode;
+use Brick\Money\Currency;
 use Brick\Money\ExchangeRateProvider;
 use Brick\Money\ExchangeRateProvider\BaseCurrencyProvider;
 use Brick\Money\ExchangeRateProvider\ConfigurableProvider;
@@ -18,52 +17,59 @@ use PHPUnit\Framework\Attributes\DataProvider;
 class BaseCurrencyProviderTest extends AbstractTestCase
 {
     /**
-     * @param string $sourceCurrencyCode The code of the source currency.
-     * @param string $targetCurrencyCode The code of the target currency.
-     * @param string $exchangeRate       The expected exchange rate, rounded DOWN to 6 decimals.
+     * @param string      $sourceCurrencyCode The code of the source currency.
+     * @param string      $targetCurrencyCode The code of the target currency.
+     * @param string|null $expectedRate       The expected exchange rate, rounded DOWN to 6 decimals, or null if not found.
      */
     #[DataProvider('providerGetExchangeRate')]
-    public function testGetExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode, string $exchangeRate): void
+    public function testGetExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode, ?string $expectedRate): void
     {
-        $rate = $this->getExchangeRateProvider()->getExchangeRate($sourceCurrencyCode, $targetCurrencyCode);
-        self::assertSame($exchangeRate, (string) $rate->toScale(6, RoundingMode::Down));
+        $sourceCurrency = Currency::of($sourceCurrencyCode);
+        $targetCurrency = Currency::of($targetCurrencyCode);
+
+        $actualRate = $this->getExchangeRateProvider()->getExchangeRate($sourceCurrency, $targetCurrency);
+
+        if ($expectedRate === null) {
+            self::assertNull($actualRate);
+        } else {
+            self::assertNotNull($actualRate);
+            self::assertSame($expectedRate, $actualRate->toBigRational()->toString());
+        }
     }
 
     public static function providerGetExchangeRate(): array
     {
         return [
-            ['USD', 'EUR', '0.900000'],
-            ['USD', 'GBP', '0.800000'],
-            ['USD', 'CAD', '1.100000'],
+            ['USD', 'EUR', '9/10'],
+            ['USD', 'GBP', '4/5'],
+            ['USD', 'CAD', '11/10'],
+            ['USD', 'USD', '1'],
+            ['USD', 'JPY', null],
 
-            ['EUR', 'USD', '1.111111'],
-            ['GBP', 'USD', '1.250000'],
-            ['CAD', 'USD', '0.909090'],
+            ['EUR', 'USD', '10/9'],
+            ['EUR', 'GBP', '8/9'],
+            ['EUR', 'CAD', '11/9'],
+            ['EUR', 'EUR', '1'],
+            ['EUR', 'JPY', null],
 
-            ['EUR', 'GBP', '0.888888'],
-            ['EUR', 'CAD', '1.222222'],
-            ['GBP', 'EUR', '1.125000'],
-            ['GBP', 'CAD', '1.375000'],
-            ['CAD', 'EUR', '0.818181'],
-            ['CAD', 'GBP', '0.727272'],
+            ['GBP', 'USD', '5/4'],
+            ['GBP', 'EUR', '9/8'],
+            ['GBP', 'CAD', '11/8'],
+            ['GBP', 'GBP', '1'],
+            ['GBP', 'JPY', null],
+
+            ['CAD', 'USD', '10/11'],
+            ['CAD', 'EUR', '9/11'],
+            ['CAD', 'GBP', '8/11'],
+            ['CAD', 'CAD', '1'],
+            ['CAD', 'JPY', null],
+
+            ['JPY', 'USD', null],
+            ['JPY', 'EUR', null],
+            ['JPY', 'GBP', null],
+            ['JPY', 'CAD', null],
+            ['JPY', 'JPY', '1'],
         ];
-    }
-
-    #[DataProvider('providerReturnBigNumber')]
-    public function testReturnBigNumber(BigNumber|int|string $rate): void
-    {
-        $configurableProvider = new ConfigurableProvider();
-        $configurableProvider->setExchangeRate('USD', 'EUR', $rate);
-        $baseProvider = new BaseCurrencyProvider($configurableProvider, 'USD');
-
-        $rate = $baseProvider->getExchangeRate('USD', 'EUR');
-
-        self::assertInstanceOf(BigNumber::class, $rate);
-    }
-
-    public static function providerReturnBigNumber(): array
-    {
-        return [[1], ['1.1'], ['1.0'], [BigNumber::of('1')]];
     }
 
     private function getExchangeRateProvider(): ExchangeRateProvider
@@ -74,6 +80,6 @@ class BaseCurrencyProviderTest extends AbstractTestCase
         $provider->setExchangeRate('USD', 'GBP', '0.8');
         $provider->setExchangeRate('USD', 'CAD', '1.1');
 
-        return new BaseCurrencyProvider($provider, 'USD');
+        return new BaseCurrencyProvider($provider, Currency::of('USD'));
     }
 }

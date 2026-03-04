@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace Brick\Money\Tests;
 
 use Brick\Money\Context\AutoContext;
-use Brick\Money\Exception\CurrencyConversionException;
+use Brick\Money\Currency;
+use Brick\Money\Exception\ExchangeRateNotFoundException;
 use Brick\Money\ExchangeRateProvider\ConfigurableProvider;
 use Brick\Money\Money;
 use Brick\Money\MoneyComparator;
@@ -67,7 +68,7 @@ class MoneyComparatorTest extends AbstractTestCase
             [['800200.098764', 'GBP', new AutoContext()], ['960240.118516', 'EUR', new AutoContext()], 1],
             [['800200.098764', 'GBP', new AutoContext()], ['960240.118517', 'EUR', new AutoContext()], -1],
 
-            [['1.0', 'EUR'], ['1.0', 'BSD'], CurrencyConversionException::class],
+            [['1.0', 'EUR'], ['1.0', 'BSD'], ExchangeRateNotFoundException::class],
         ];
     }
 
@@ -103,7 +104,7 @@ class MoneyComparatorTest extends AbstractTestCase
             [[['1.00', 'EUR'], ['1.10', 'USD']], 'EUR 1.00'],
             [[['1.00', 'EUR'], ['1.11', 'USD']], 'EUR 1.00'],
             [[['1.00', 'EUR'], ['1.09', 'USD'], ['1.20', 'BSD']], 'USD 1.09'],
-            [[['1.00', 'EUR'], ['1.12', 'USD'], ['1.20', 'BSD']], CurrencyConversionException::class],
+            [[['1.00', 'EUR'], ['1.12', 'USD'], ['1.20', 'BSD']], ExchangeRateNotFoundException::class],
             [[['1.05', 'EUR'], ['1.00', 'GBP'], ['1.19', 'EUR']], 'EUR 1.05'],
         ];
     }
@@ -139,7 +140,7 @@ class MoneyComparatorTest extends AbstractTestCase
             [[['1.00', 'EUR'], ['1.09', 'USD']], 'EUR 1.00'],
             [[['1.00', 'EUR'], ['1.10', 'USD']], 'EUR 1.00'],
             [[['1.00', 'EUR'], ['1.11', 'USD']], 'USD 1.11'],
-            [[['1.00', 'EUR'], ['1.09', 'USD'], ['1.20', 'BSD']], CurrencyConversionException::class],
+            [[['1.00', 'EUR'], ['1.09', 'USD'], ['1.20', 'BSD']], ExchangeRateNotFoundException::class],
             [[['1.00', 'EUR'], ['1.22', 'USD'], ['1.20', 'BSD']], 'USD 1.22'],
             [[['1.00', 'EUR'], ['1.12', 'USD'], ['1.20', 'BSD']], 'BSD 1.20'],
             [[['1.05', 'EUR'], ['1.00', 'GBP'], ['1.19', 'EUR']], 'GBP 1.00'],
@@ -151,14 +152,19 @@ class MoneyComparatorTest extends AbstractTestCase
     {
         $provider = new ConfigurableProvider();
 
-        $provider->setExchangeRate('EUR', 'USD', '1.1');
-        $provider->setExchangeRate('USD', 'EUR', '0.9');
+        $eur = Currency::of('EUR');
+        $usd = Currency::of('USD');
+        $gbp = Currency::of('GBP');
+        $bsd = Currency::of('BSD');
 
-        $provider->setExchangeRate('USD', 'BSD', 1);
-        $provider->setExchangeRate('BSD', 'USD', 1);
+        $provider->setExchangeRate($eur, $usd, '1.1');
+        $provider->setExchangeRate($usd, $eur, '0.9');
 
-        $provider->setExchangeRate('EUR', 'GBP', '0.8');
-        $provider->setExchangeRate('GBP', 'EUR', '1.2');
+        $provider->setExchangeRate($usd, $bsd, 1);
+        $provider->setExchangeRate($bsd, $usd, 1);
+
+        $provider->setExchangeRate($eur, $gbp, '0.8');
+        $provider->setExchangeRate($gbp, $eur, '1.2');
 
         return $provider;
     }

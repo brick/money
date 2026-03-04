@@ -23,6 +23,8 @@
   - `allocate()`
   - `split()`
 - `MoneyBag` no longer retains zero-balance currencies after `plus()`/`minus()` operations
+- `ExchangeRateProvider::getExchangeRate()` signature has changed: it now accepts `Currency` instances, and returns `BigNumber|null`
+- `CurrencyConversionException` has been removed, and replaced with `ExchangeRateProviderException` and `ExchangeRateNotFoundException`
 
 Deprecated methods removed:
 
