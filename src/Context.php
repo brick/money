@@ -45,10 +45,13 @@ interface Context
     public function getStep(): int;
 
     /**
-     * Returns whether this context uses a fixed scale and step.
+     * Returns whether this context produces a deterministic scale regardless of the input value.
      *
-     * When the scale and step are fixed, it is considered safe to add or subtract monies amounts directly —as long as
-     * they are in the same context— without going through the applyTo() method, allowing for an optimization.
+     * DefaultContext, CashContext, and CustomContext are all fixed.
+     * AutoContext is not fixed: the scale depends on the value being stored.
+     *
+     * When false, operations such as quotient(), remainder(), allocate(), and split() throw a ContextException.
+     * Their results depend on the scale, which with a non-fixed-scale context is a property of the runtime value.
      *
      * @pure
      */
