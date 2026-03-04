@@ -44,6 +44,7 @@ Deprecated methods removed:
 - New `Money::split()` API with two algorithms, exposed through the new `SplitMode` enum:
   - `ToFirst` (this is the implementation `split()` used previously)
   - `Separate` (this is the implementation `splitWithRemainder()` used previously)
+- `MoneyMismatchException` now has explicit `CurrencyMismatchException` and `ContextMismatchException` subclasses
 
 ## [0.12.3](https://github.com/brick/money/releases/tag/0.12.3) - 2026-03-23
 

@@ -13,7 +13,7 @@ use Brick\Money\Context\CashContext;
 use Brick\Money\Context\CustomContext;
 use Brick\Money\Context\DefaultContext;
 use Brick\Money\Currency;
-use Brick\Money\Exception\MoneyMismatchException;
+use Brick\Money\Exception\CurrencyMismatchException;
 use Brick\Money\Exception\UnknownCurrencyException;
 use Brick\Money\Money;
 use Brick\Money\RationalMoney;
@@ -74,9 +74,9 @@ class RationalMoneyTest extends AbstractTestCase
             [['123/456', 'GBP'], '14.99', 'GBP 57987/3800'],
             [['123/456', 'GBP'], '567/890', 'GBP 61337/67640'],
             [['1.123', 'CHF'], RationalMoney::of('0.1', 'CHF'), 'CHF 1223/1000'],
-            [['1.123', 'CHF'], RationalMoney::of('0.1', 'CAD'), MoneyMismatchException::class],
+            [['1.123', 'CHF'], RationalMoney::of('0.1', 'CAD'), CurrencyMismatchException::class],
             [['9.876', 'CAD'], Money::of(3, 'CAD'), 'CAD 3219/250'],
-            [['9.876', 'CAD'], Money::of(3, 'USD'), MoneyMismatchException::class],
+            [['9.876', 'CAD'], Money::of(3, 'USD'), CurrencyMismatchException::class],
         ];
     }
 
@@ -103,9 +103,9 @@ class RationalMoneyTest extends AbstractTestCase
             [['123/456', 'GBP'], '14.99', 'GBP -55937/3800'],
             [['123/456', 'GBP'], '567/890', 'GBP -24847/67640'],
             [['1.123', 'CHF'], RationalMoney::of('0.1', 'CHF'), 'CHF 1023/1000'],
-            [['1.123', 'CHF'], RationalMoney::of('0.1', 'CAD'), MoneyMismatchException::class],
+            [['1.123', 'CHF'], RationalMoney::of('0.1', 'CAD'), CurrencyMismatchException::class],
             [['9.876', 'CAD'], Money::of(3, 'CAD'), 'CAD 1719/250'],
-            [['9.876', 'CAD'], Money::of(3, 'USD'), MoneyMismatchException::class],
+            [['9.876', 'CAD'], Money::of(3, 'USD'), CurrencyMismatchException::class],
         ];
     }
 
