@@ -14,8 +14,9 @@ use Brick\Math\Exception\RoundingNecessaryException;
 use Brick\Math\RoundingMode;
 use Brick\Money\Context\DefaultContext;
 use Brick\Money\Exception\ContextException;
+use Brick\Money\Exception\ContextMismatchException;
+use Brick\Money\Exception\CurrencyMismatchException;
 use Brick\Money\Exception\InvalidArgumentException;
-use Brick\Money\Exception\MoneyMismatchException;
 use Brick\Money\Exception\UnknownCurrencyException;
 use Brick\Money\Formatter\MoneyLocaleFormatter;
 use Override;
@@ -62,7 +63,7 @@ final readonly class Money extends AbstractMoney
      * @param Money $money     The first money.
      * @param Money ...$monies The subsequent monies.
      *
-     * @throws MoneyMismatchException If all the monies are not in the same currency.
+     * @throws CurrencyMismatchException If the monies do not all share the same currency.
      *
      * @pure
      */
@@ -87,7 +88,7 @@ final readonly class Money extends AbstractMoney
      * @param Money $money     The first money.
      * @param Money ...$monies The subsequent monies.
      *
-     * @throws MoneyMismatchException If all the monies are not in the same currency.
+     * @throws CurrencyMismatchException If the monies do not all share the same currency.
      *
      * @pure
      */
@@ -112,7 +113,8 @@ final readonly class Money extends AbstractMoney
      * @param Money $money     The first money.
      * @param Money ...$monies The subsequent monies.
      *
-     * @throws MoneyMismatchException If all the monies are not in the same currency and context.
+     * @throws CurrencyMismatchException If the monies do not all share the same currency.
+     * @throws ContextMismatchException  If the monies do not all share the same context.
      *
      * @pure
      */
@@ -282,7 +284,8 @@ final readonly class Money extends AbstractMoney
      *
      * @throws MathException              If the argument is an invalid number.
      * @throws RoundingNecessaryException If the rounding mode is RoundingMode::Unnecessary, and rounding is necessary.
-     * @throws MoneyMismatchException     If the argument is a money in a different currency or in a different context.
+     * @throws CurrencyMismatchException  If the argument is a money in a different currency.
+     * @throws ContextMismatchException   If the argument is a money in a different context.
      * @throws ContextException           If the context does not apply.
      *
      * @pure
@@ -317,7 +320,8 @@ final readonly class Money extends AbstractMoney
      *
      * @throws MathException              If the argument is an invalid number.
      * @throws RoundingNecessaryException If the rounding mode is RoundingMode::Unnecessary, and rounding is necessary.
-     * @throws MoneyMismatchException     If the argument is a money in a different currency or in a different context.
+     * @throws CurrencyMismatchException  If the argument is a money in a different currency.
+     * @throws ContextMismatchException   If the argument is a money in a different context.
      * @throws ContextException           If the context does not apply.
      *
      * @pure
@@ -709,14 +713,14 @@ final readonly class Money extends AbstractMoney
      * @param Context $context The Context to check against this Money.
      * @param string  $method  The invoked method name.
      *
-     * @throws MoneyMismatchException If monies don't match.
+     * @throws ContextMismatchException If monies don't share the same context.
      *
      * @pure
      */
     protected function checkContext(Context $context, string $method): void
     {
         if ($this->context != $context) { // non-strict equality on purpose
-            throw MoneyMismatchException::contextMismatch($method);
+            throw ContextMismatchException::contextMismatch($method);
         }
     }
 

@@ -19,7 +19,8 @@ use Brick\Money\Context\CustomContext;
 use Brick\Money\Context\DefaultContext;
 use Brick\Money\Currency;
 use Brick\Money\Exception\ContextException;
-use Brick\Money\Exception\MoneyMismatchException;
+use Brick\Money\Exception\ContextMismatchException;
+use Brick\Money\Exception\CurrencyMismatchException;
 use Brick\Money\Money;
 use Brick\Money\SplitMode;
 use Generator;
@@ -190,7 +191,7 @@ class MoneyTest extends AbstractTestCase
             [['1', 'JPY'], '2', RoundingMode::Unnecessary, 'JPY 3'],
             [['1', 'JPY'], '2.5', RoundingMode::Unnecessary, RoundingNecessaryException::class],
             [['1.20', 'USD'], ['1.80', 'USD'], RoundingMode::Unnecessary, 'USD 3.00'],
-            [['1.20', 'USD'], ['0.80', 'EUR'], RoundingMode::Unnecessary, MoneyMismatchException::class],
+            [['1.20', 'USD'], ['0.80', 'EUR'], RoundingMode::Unnecessary, CurrencyMismatchException::class],
             [['1.23', 'USD', new AutoContext()], '0.01', RoundingMode::Up, ContextException::class],
             [['123.00', 'CZK', new CashContext(100)], '12.50', RoundingMode::Unnecessary, RoundingNecessaryException::class],
             [['123.00', 'CZK', new CashContext(100)], '12.50', RoundingMode::Down, 'CZK 135.00'],
@@ -204,7 +205,7 @@ class MoneyTest extends AbstractTestCase
         $a = Money::of(50, 'CHF', new CashContext(5));
         $b = Money::of(20, 'CHF');
 
-        $this->expectException(MoneyMismatchException::class);
+        $this->expectException(ContextMismatchException::class);
         $a->plus($b);
     }
 
@@ -247,7 +248,7 @@ class MoneyTest extends AbstractTestCase
             [['1', 'EUR'], '2', RoundingMode::Unnecessary, 'EUR -1.00'],
             [['2', 'JPY'], '1.5', RoundingMode::Unnecessary, RoundingNecessaryException::class],
             [['1.50', 'JPY', new AutoContext()], ['0.50', 'JPY', new AutoContext()], RoundingMode::Unnecessary, 'JPY 1'],
-            [['2', 'JPY'], ['1', 'USD'], RoundingMode::Unnecessary, MoneyMismatchException::class],
+            [['2', 'JPY'], ['1', 'USD'], RoundingMode::Unnecessary, CurrencyMismatchException::class],
         ];
     }
 
@@ -655,7 +656,7 @@ class MoneyTest extends AbstractTestCase
 
     public function testCompareToOtherCurrency(): void
     {
-        $this->expectException(MoneyMismatchException::class);
+        $this->expectException(CurrencyMismatchException::class);
         Money::of('1.00', 'EUR')->compareTo(Money::of('1.00', 'USD'));
     }
 
@@ -672,7 +673,7 @@ class MoneyTest extends AbstractTestCase
 
     public function testIsEqualToOtherCurrency(): void
     {
-        $this->expectException(MoneyMismatchException::class);
+        $this->expectException(CurrencyMismatchException::class);
         Money::of('1.00', 'EUR')->isEqualTo(Money::of('1.00', 'USD'));
     }
 
@@ -689,7 +690,7 @@ class MoneyTest extends AbstractTestCase
 
     public function testIsLessThanOtherCurrency(): void
     {
-        $this->expectException(MoneyMismatchException::class);
+        $this->expectException(CurrencyMismatchException::class);
         Money::of('1.00', 'EUR')->isLessThan(Money::of('1.00', 'USD'));
     }
 
@@ -706,7 +707,7 @@ class MoneyTest extends AbstractTestCase
 
     public function testIsLessThanOrEqualToOtherCurrency(): void
     {
-        $this->expectException(MoneyMismatchException::class);
+        $this->expectException(CurrencyMismatchException::class);
         Money::of('1.00', 'EUR')->isLessThanOrEqualTo(Money::of('1.00', 'USD'));
     }
 
@@ -723,7 +724,7 @@ class MoneyTest extends AbstractTestCase
 
     public function testIsGreaterThanOtherCurrency(): void
     {
-        $this->expectException(MoneyMismatchException::class);
+        $this->expectException(CurrencyMismatchException::class);
         Money::of('1.00', 'EUR')->isGreaterThan(Money::of('1.00', 'USD'));
     }
 
@@ -740,7 +741,7 @@ class MoneyTest extends AbstractTestCase
 
     public function testIsGreaterThanOrEqualToOtherCurrency(): void
     {
-        $this->expectException(MoneyMismatchException::class);
+        $this->expectException(CurrencyMismatchException::class);
         Money::of('1.00', 'EUR')->isGreaterThanOrEqualTo(Money::of('1.00', 'USD'));
     }
 
@@ -883,7 +884,7 @@ class MoneyTest extends AbstractTestCase
             [[['1.0', 'USD', new AutoContext()], ['3.50', 'USD'], ['4.00', 'USD']], 'USD 1'],
             [[['5.00', 'USD'], ['3.50', 'USD'], ['4.00', 'USD']], 'USD 3.50'],
             [[['5.00', 'USD'], ['3.50', 'USD'], ['3.499', 'USD', new AutoContext()]], 'USD 3.499'],
-            [[['1.00', 'USD'], ['1.00', 'EUR']], MoneyMismatchException::class],
+            [[['1.00', 'USD'], ['1.00', 'EUR']], CurrencyMismatchException::class],
         ];
     }
 
@@ -916,7 +917,7 @@ class MoneyTest extends AbstractTestCase
             [[['5.50', 'USD'], ['3.50', 'USD'], ['4.90', 'USD']], 'USD 5.50'],
             [[['1.3', 'USD', new AutoContext()], ['3.50', 'USD'], ['4.90', 'USD']], 'USD 4.90'],
             [[['1.3', 'USD', new AutoContext()], ['7.119', 'USD', new AutoContext()], ['4.90', 'USD']], 'USD 7.119'],
-            [[['1.00', 'USD'], ['1.00', 'EUR']], MoneyMismatchException::class],
+            [[['1.00', 'USD'], ['1.00', 'EUR']], CurrencyMismatchException::class],
         ];
     }
 
@@ -933,7 +934,7 @@ class MoneyTest extends AbstractTestCase
 
     public function testSumOfDifferentCurrenciesThrowsException(): void
     {
-        $this->expectException(MoneyMismatchException::class);
+        $this->expectException(CurrencyMismatchException::class);
 
         Money::sum(
             Money::of('1.00', 'EUR'),

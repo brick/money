@@ -7,7 +7,7 @@ namespace Brick\Money;
 use Brick\Math\BigNumber;
 use Brick\Math\BigRational;
 use Brick\Math\Exception\MathException;
-use Brick\Money\Exception\MoneyMismatchException;
+use Brick\Money\Exception\CurrencyMismatchException;
 use Brick\Money\Exception\UnknownCurrencyException;
 use Override;
 
@@ -88,8 +88,8 @@ final readonly class RationalMoney extends AbstractMoney
      *
      * @param AbstractMoney|BigNumber|int|string $that The money or amount to add.
      *
-     * @throws MathException          If the argument is not a valid number.
-     * @throws MoneyMismatchException If the argument is a money in another currency.
+     * @throws MathException             If the argument is not a valid number.
+     * @throws CurrencyMismatchException If the argument is a money in another currency.
      *
      * @pure
      */
@@ -106,8 +106,8 @@ final readonly class RationalMoney extends AbstractMoney
      *
      * @param AbstractMoney|BigNumber|int|string $that The money or amount to subtract.
      *
-     * @throws MathException          If the argument is not a valid number.
-     * @throws MoneyMismatchException If the argument is a money in another currency.
+     * @throws MathException             If the argument is not a valid number.
+     * @throws CurrencyMismatchException If the argument is a money in another currency.
      *
      * @pure
      */
