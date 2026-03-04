@@ -9,11 +9,12 @@ use Brick\Math\BigNumber;
 use Brick\Math\Exception\RoundingNecessaryException;
 use Brick\Math\RoundingMode;
 use Brick\Money\Exception\ContextException;
+use Stringable;
 
 /**
  * Adjusts a rational number to a decimal amount.
  */
-interface Context
+interface Context extends Stringable
 {
     /**
      * Applies this context to a rational amount, and returns a decimal number.
@@ -57,4 +58,11 @@ interface Context
      * @pure
      */
     public function isFixedScale(): bool;
+
+    /**
+     * Returns a string representation of this Context, for debugging purposes.
+     *
+     * @pure
+     */
+    public function __toString(): string;
 }

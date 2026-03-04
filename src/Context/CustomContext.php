@@ -12,6 +12,8 @@ use Brick\Money\Currency;
 use Brick\Money\Exception\InvalidArgumentException;
 use Override;
 
+use function sprintf;
+
 /**
  * Adjusts a number to a custom scale and optionally step.
  */
@@ -82,5 +84,11 @@ final readonly class CustomContext implements Context
     public function getScale(): int
     {
         return $this->scale;
+    }
+
+    #[Override]
+    public function __toString(): string
+    {
+        return sprintf('CustomContext(scale=%d, step=%d)', $this->scale, $this->step);
     }
 }
