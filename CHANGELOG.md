@@ -5,6 +5,7 @@
 ✨ **New features**
 
 - `Money::allocate()` & `allocateWithRemainder()` now accept `BigNumber|int|string` and support decimal & rational ratios
+- New method: `Money::remainder()`
 
 📌 **Compatibility**
 

@@ -453,7 +453,6 @@ final readonly class Money extends AbstractMoney
      * Returns the quotient of the division of this Money by the given number.
      *
      * The given number must be a integer value. The resulting Money has the same context as this Money.
-     * This method can serve as a basis for a money allocation algorithm.
      *
      * @param BigNumber|int|string $that The divisor. Must be convertible to a BigInteger.
      *
@@ -476,10 +475,34 @@ final readonly class Money extends AbstractMoney
     }
 
     /**
+     * Returns the remainder of the division of this Money by the given number.
+     *
+     * The given number must be an integer value. The resulting Money has the same context as this Money.
+     *
+     * @param BigNumber|int|string $that The divisor. Must be convertible to a BigInteger.
+     *
+     * @throws MathException If the divisor cannot be converted to a BigInteger.
+     *
+     * @pure
+     */
+    public function remainder(BigNumber|int|string $that): Money
+    {
+        $that = BigInteger::of($that);
+        $step = $this->context->getStep();
+
+        $scale = $this->amount->getScale();
+        $amount = $this->amount->withPointMovedRight($scale)->dividedBy($step, 0);
+
+        $r = $amount->remainder($that);
+        $r = $r->multipliedBy($step)->withPointMovedLeft($scale);
+
+        return new Money($r, $this->currency, $this->context);
+    }
+
+    /**
      * Returns the quotient and the remainder of the division of this Money by the given number.
      *
      * The given number must be an integer value. The resulting monies have the same context as this Money.
-     * This method can serve as a basis for a money allocation algorithm.
      *
      * @param BigNumber|int|string $that The divisor. Must be convertible to a BigInteger.
      *
