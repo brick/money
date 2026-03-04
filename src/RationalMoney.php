@@ -156,7 +156,8 @@ final readonly class RationalMoney extends AbstractMoney
      *
      * @pure
      */
-    public function abs(): RationalMoney
+    #[Override]
+    public function abs(): static
     {
         return new self($this->amount->abs(), $this->currency);
     }
@@ -166,7 +167,8 @@ final readonly class RationalMoney extends AbstractMoney
      *
      * @pure
      */
-    public function negated(): RationalMoney
+    #[Override]
+    public function negated(): static
     {
         return new self($this->amount->negated(), $this->currency);
     }
