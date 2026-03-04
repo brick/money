@@ -16,6 +16,12 @@
 - `Money::allocateWithRemainder()` has been removed: replace `allocateWithRemainder(1, 2, 3)` with `allocate([1, 2, 3], AllocationMethod::BlockSeparate)` to keep the same behaviour as before
 - `Money::split()` signature has changed: replace `split(3)` with `split(3, SplitMode::ToFirst)` to keep the same behaviour as before
 - `Money::splitWithRemainder()` has been removed: replace `splitWithRemainder(3)` with `split(3, SplitMode::Separate)` to keep the same behaviour as before
+- The following methods now throw an exception when used on a `Money` with `AutoContext`:
+  - `quotient()`
+  - `remainder()`
+  - `quotientAndRemainder()`
+  - `allocate()`
+  - `split()`
 
 Deprecated methods removed:
 
