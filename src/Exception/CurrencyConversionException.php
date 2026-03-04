@@ -17,7 +17,7 @@ final class CurrencyConversionException extends RuntimeException implements Mone
     /**
      * @pure
      */
-    public function __construct(
+    private function __construct(
         string $message,
         private readonly string $sourceCurrencyCode,
         private readonly string $targetCurrencyCode,
