@@ -157,20 +157,18 @@ final readonly class RationalMoney extends AbstractMoney
 
     /**
      * Returns a RationalMoney whose value is the absolute value of this RationalMoney.
-     *
-     * @pure
      */
-    public function abs(): RationalMoney
+    #[Override]
+    public function abs(): static
     {
         return new self($this->amount->abs(), $this->currency);
     }
 
     /**
      * Returns a RationalMoney whose value is the negated value of this RationalMoney.
-     *
-     * @pure
      */
-    public function negated(): RationalMoney
+    #[Override]
+    public function negated(): static
     {
         return new self($this->amount->negated(), $this->currency);
     }

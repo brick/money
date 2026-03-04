@@ -6,6 +6,7 @@
 
 - `Money::allocate()` & `allocateWithRemainder()` now accept `BigNumber|int|string` and support decimal & rational ratios
 - New method: `Money::remainder()`
+- Methods `abs()` and `negated()` are now available on `AbstractMoney`
 
 📌 **Compatibility**
 

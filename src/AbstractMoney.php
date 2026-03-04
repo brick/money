@@ -265,6 +265,20 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
     }
 
     /**
+     * Returns a money whose value is the absolute value of this money.
+     *
+     * @pure
+     */
+    abstract public function abs(): static;
+
+    /**
+     * Returns a money whose value is the negated value of this money.
+     *
+     * @pure
+     */
+    abstract public function negated(): static;
+
+    /**
      * Converts this money to a RationalMoney.
      *
      * @pure

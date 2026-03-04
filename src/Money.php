@@ -682,10 +682,9 @@ final readonly class Money extends AbstractMoney
      * Returns a Money whose value is the absolute value of this Money.
      *
      * The resulting Money has the same context as this Money.
-     *
-     * @pure
      */
-    public function abs(): Money
+    #[Override]
+    public function abs(): static
     {
         return new Money($this->amount->abs(), $this->currency, $this->context);
     }
@@ -694,10 +693,9 @@ final readonly class Money extends AbstractMoney
      * Returns a Money whose value is the negated value of this Money.
      *
      * The resulting Money has the same context as this Money.
-     *
-     * @pure
      */
-    public function negated(): Money
+    #[Override]
+    public function negated(): static
     {
         return new Money($this->amount->negated(), $this->currency, $this->context);
     }
