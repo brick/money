@@ -8,6 +8,7 @@ use Brick\Math\BigNumber;
 use Brick\Math\Exception\MathException;
 use Brick\Math\Exception\RoundingNecessaryException;
 use Brick\Math\RoundingMode;
+use Brick\Money\Exception\ContextException;
 use Brick\Money\Exception\MoneyMismatchException;
 use JsonSerializable;
 use Override;
@@ -45,6 +46,7 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
      * @param RoundingMode $roundingMode The rounding mode, if necessary.
      *
      * @throws RoundingNecessaryException If RoundingMode::Unnecessary is used but rounding is necessary.
+     * @throws ContextException           If the context does not apply.
      *
      * @pure
      */
