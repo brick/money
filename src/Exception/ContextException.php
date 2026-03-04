@@ -28,4 +28,15 @@ final class ContextException extends RuntimeException implements MoneyException
     {
         return new self('AutoContext only supports RoundingMode::Unnecessary.');
     }
+
+    /**
+     * @pure
+     */
+    public static function notFixedContext(string $method): self
+    {
+        return new self(sprintf(
+            '%s() requires a fixed context; use toContext() to convert to a fixed context first.',
+            $method,
+        ));
+    }
 }

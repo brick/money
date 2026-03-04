@@ -362,6 +362,24 @@ class MoneyTest extends AbstractTestCase
         $money->quotientAndRemainder('1.1');
     }
 
+    public function testQuotientThrowsOnAutoContext(): void
+    {
+        $this->expectException(ContextException::class);
+        Money::of('1.5', 'USD', new AutoContext())->quotient(3);
+    }
+
+    public function testRemainderThrowsOnAutoContext(): void
+    {
+        $this->expectException(ContextException::class);
+        Money::of('1.5', 'USD', new AutoContext())->remainder(3);
+    }
+
+    public function testQuotientAndRemainderThrowsOnAutoContext(): void
+    {
+        $this->expectException(ContextException::class);
+        Money::of('1.5', 'USD', new AutoContext())->quotientAndRemainder(3);
+    }
+
     #[DataProvider('providerAllocate')]
     public function testAllocate(array $money, array $ratios, AllocationMethod $mode, array $expected): void
     {
@@ -380,7 +398,6 @@ class MoneyTest extends AbstractTestCase
             [[100, 'USD'], [30, 20, 40, 40], AllocationMethod::FloorToFirst, ['USD 23.08', 'USD 15.39', 'USD 30.77', 'USD 30.76']],
             [[100, 'USD'], [30, 20, 40, 0, 40, 0], AllocationMethod::FloorToFirst, ['USD 23.08', 'USD 15.39', 'USD 30.77', 'USD 0.00', 'USD 30.76', 'USD 0.00']],
             [[100, 'CHF', new CashContext(5)], [1, 2, 3, 7], AllocationMethod::FloorToFirst, ['CHF 7.70', 'CHF 15.40', 'CHF 23.10', 'CHF 53.80']],
-            [['100.123', 'EUR', new AutoContext()], [2, 3, 1, 1], AllocationMethod::FloorToFirst, ['EUR 28.607', 'EUR 42.91', 'EUR 14.303', 'EUR 14.303']],
             [['0.02', 'EUR'], [1, 1, 1, 1], AllocationMethod::FloorToFirst, ['EUR 0.01', 'EUR 0.01', 'EUR 0.00', 'EUR 0.00']],
             [['0.02', 'EUR'], [1, 1, 3, 1], AllocationMethod::FloorToFirst, ['EUR 0.01', 'EUR 0.00', 'EUR 0.01', 'EUR 0.00']],
             [[-100, 'USD'], [30, 20, 40, 40], AllocationMethod::FloorToFirst, ['USD -23.08', 'USD -15.39', 'USD -30.77', 'USD -30.76']],
@@ -428,7 +445,6 @@ class MoneyTest extends AbstractTestCase
             [[100, 'USD'], [30, 20, 40, 40], AllocationMethod::BlockSeparate, ['USD 23.07', 'USD 15.38', 'USD 30.76', 'USD 30.76', 'USD 0.03']],
             [[100, 'USD'], [30, 20, 40, 0, 0, 40], AllocationMethod::BlockSeparate, ['USD 23.07', 'USD 15.38', 'USD 30.76', 'USD 0.00', 'USD 0.00', 'USD 30.76', 'USD 0.03']],
             [[100, 'CHF', new CashContext(5)], [1, 2, 3, 7], AllocationMethod::BlockSeparate, ['CHF 7.65', 'CHF 15.30', 'CHF 22.95', 'CHF 53.55', 'CHF 0.55']],
-            [['100.123', 'EUR', new AutoContext()], [2, 3, 1, 1], AllocationMethod::BlockSeparate, ['EUR 28.606', 'EUR 42.909', 'EUR 14.303', 'EUR 14.303', 'EUR 0.002']],
             [['0.02', 'EUR'], [1, 1, 1, 1], AllocationMethod::BlockSeparate, ['EUR 0.00', 'EUR 0.00', 'EUR 0.00', 'EUR 0.00', 'EUR 0.02']],
             [['0.02', 'EUR'], [1, 1, 3, 1], AllocationMethod::BlockSeparate, ['EUR 0.00', 'EUR 0.00', 'EUR 0.00', 'EUR 0.00', 'EUR 0.02']],
             [[-100, 'USD'], [30, 20, 40, 40], AllocationMethod::BlockSeparate, ['USD -23.07', 'USD -15.38', 'USD -30.76', 'USD -30.76', 'USD -0.03']],
@@ -471,6 +487,12 @@ class MoneyTest extends AbstractTestCase
         $money->allocate([0, 0, 0, 0, 0], AllocationMethod::FloorToFirst);
     }
 
+    public function testAllocateThrowsOnAutoContext(): void
+    {
+        $this->expectException(ContextException::class);
+        Money::of('100.123', 'EUR', new AutoContext())->allocate([1, 2, 3], AllocationMethod::FloorToFirst);
+    }
+
     #[DataProvider('providerSplit')]
     public function testSplit(array $money, int $targets, SplitMode $mode, array $expected): void
     {
@@ -489,7 +511,6 @@ class MoneyTest extends AbstractTestCase
             [['99.99', 'USD'], 4, SplitMode::ToFirst, ['USD 25.00', 'USD 25.00', 'USD 25.00', 'USD 24.99']],
             [[100, 'CHF', new CashContext(5)], 3, SplitMode::ToFirst, ['CHF 33.35', 'CHF 33.35', 'CHF 33.30']],
             [[100, 'CHF', new CashContext(5)], 7, SplitMode::ToFirst, ['CHF 14.30', 'CHF 14.30', 'CHF 14.30', 'CHF 14.30', 'CHF 14.30', 'CHF 14.25', 'CHF 14.25']],
-            [['100.123', 'EUR', new AutoContext()], 4, SplitMode::ToFirst, ['EUR 25.031', 'EUR 25.031', 'EUR 25.031', 'EUR 25.03']],
             [['0.02', 'EUR'], 4, SplitMode::ToFirst, ['EUR 0.01', 'EUR 0.01', 'EUR 0.00', 'EUR 0.00']],
             // Separate: equal parts, remainder as last element
             [['99.99', 'USD'], 1, SplitMode::Separate, ['USD 99.99', 'USD 0.00']],
@@ -498,7 +519,6 @@ class MoneyTest extends AbstractTestCase
             [['99.99', 'USD'], 4, SplitMode::Separate, ['USD 24.99', 'USD 24.99', 'USD 24.99', 'USD 24.99', 'USD 0.03']],
             [[100, 'CHF', new CashContext(5)], 3, SplitMode::Separate, ['CHF 33.30', 'CHF 33.30', 'CHF 33.30', 'CHF 0.10']],
             [[100, 'CHF', new CashContext(5)], 7, SplitMode::Separate, ['CHF 14.25', 'CHF 14.25', 'CHF 14.25', 'CHF 14.25', 'CHF 14.25', 'CHF 14.25', 'CHF 14.25', 'CHF 0.25']],
-            [['100.123', 'EUR', new AutoContext()], 4, SplitMode::Separate, ['EUR 25.03', 'EUR 25.03', 'EUR 25.03', 'EUR 25.03', 'EUR 0.003']],
             [['0.02', 'EUR'], 4, SplitMode::Separate, ['EUR 0.00', 'EUR 0.00', 'EUR 0.00', 'EUR 0.00', 'EUR 0.02']],
         ];
     }
@@ -520,6 +540,12 @@ class MoneyTest extends AbstractTestCase
             [-1],
             [0],
         ];
+    }
+
+    public function testSplitThrowsOnAutoContext(): void
+    {
+        $this->expectException(ContextException::class);
+        Money::of('100.123', 'EUR', new AutoContext())->split(3, SplitMode::ToFirst);
     }
 
     #[DataProvider('providerAbs')]

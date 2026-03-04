@@ -406,6 +406,7 @@ final readonly class Money extends AbstractMoney
      *
      * @param BigNumber|int|string $that The divisor. Must be convertible to a BigInteger.
      *
+     * @throws ContextException        If the context is not fixed (e.g. AutoContext).
      * @throws MathException           If the divisor cannot be converted to a BigInteger.
      * @throws DivisionByZeroException If the divisor is zero.
      *
@@ -413,6 +414,10 @@ final readonly class Money extends AbstractMoney
      */
     public function quotient(BigNumber|int|string $that): Money
     {
+        if (! $this->context->isFixedScale()) {
+            throw ContextException::notFixedContext(__FUNCTION__);
+        }
+
         $that = BigInteger::of($that);
         $step = $this->context->getStep();
 
@@ -432,6 +437,7 @@ final readonly class Money extends AbstractMoney
      *
      * @param BigNumber|int|string $that The divisor. Must be convertible to a BigInteger.
      *
+     * @throws ContextException        If the context is not fixed (e.g. AutoContext).
      * @throws MathException           If the divisor cannot be converted to a BigInteger.
      * @throws DivisionByZeroException If the divisor is zero.
      *
@@ -439,6 +445,10 @@ final readonly class Money extends AbstractMoney
      */
     public function remainder(BigNumber|int|string $that): Money
     {
+        if (! $this->context->isFixedScale()) {
+            throw ContextException::notFixedContext(__FUNCTION__);
+        }
+
         $that = BigInteger::of($that);
         $step = $this->context->getStep();
 
@@ -460,6 +470,7 @@ final readonly class Money extends AbstractMoney
      *
      * @return array{Money, Money} The quotient and the remainder.
      *
+     * @throws ContextException        If the context is not fixed (e.g. AutoContext).
      * @throws MathException           If the divisor cannot be converted to a BigInteger.
      * @throws DivisionByZeroException If the divisor is zero.
      *
@@ -467,6 +478,10 @@ final readonly class Money extends AbstractMoney
      */
     public function quotientAndRemainder(BigNumber|int|string $that): array
     {
+        if (! $this->context->isFixedScale()) {
+            throw ContextException::notFixedContext(__FUNCTION__);
+        }
+
         $that = BigInteger::of($that);
         $step = $this->context->getStep();
 
@@ -509,6 +524,7 @@ final readonly class Money extends AbstractMoney
      *
      * @return list<Money> The allocated monies, in the same order as the input ratios.
      *
+     * @throws ContextException         If the context is not fixed (e.g. AutoContext).
      * @throws MathException            If a ratio is not a valid number.
      * @throws InvalidArgumentException If the ratio list is empty, contains negative values, or sums to zero.
      *
@@ -516,6 +532,10 @@ final readonly class Money extends AbstractMoney
      */
     public function allocate(array $ratios, AllocationMethod $method): array
     {
+        if (! $this->context->isFixedScale()) {
+            throw ContextException::notFixedContext(__FUNCTION__);
+        }
+
         $ratios = $this->normalizeRatios($ratios);
 
         $isNeg = $this->amount->isNegative();
@@ -567,12 +587,17 @@ final readonly class Money extends AbstractMoney
      *
      * @return list<Money>
      *
+     * @throws ContextException         If the context is not fixed (e.g. AutoContext).
      * @throws InvalidArgumentException If $parts is less than 1.
      *
      * @pure
      */
     public function split(int $parts, SplitMode $mode): array
     {
+        if (! $this->context->isFixedScale()) {
+            throw ContextException::notFixedContext(__FUNCTION__);
+        }
+
         /** @phpstan-ignore smaller.alwaysFalse */
         if ($parts < 1) {
             throw InvalidArgumentException::splitTooFewParts();
