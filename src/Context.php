@@ -60,6 +60,13 @@ interface Context extends Stringable
     public function isFixedScale(): bool;
 
     /**
+     * Returns whether this context is equal to the given context.
+     *
+     * @pure
+     */
+    public function isEqualTo(Context $other): bool;
+
+    /**
      * Returns a string representation of this Context, for debugging purposes.
      *
      * @pure

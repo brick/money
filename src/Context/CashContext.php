@@ -71,6 +71,13 @@ final readonly class CashContext implements Context
     }
 
     #[Override]
+    public function isEqualTo(Context $other): bool
+    {
+        return $other instanceof CashContext
+            && $other->step === $this->step;
+    }
+
+    #[Override]
     public function __toString(): string
     {
         return sprintf('CashContext(step=%d)', $this->step);
