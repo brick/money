@@ -719,7 +719,7 @@ final readonly class Money extends AbstractMoney
      */
     protected function checkContext(Context $context, string $method): void
     {
-        if ($this->context != $context) { // non-strict equality on purpose
+        if (! $this->context->isEqualTo($context)) {
             throw ContextMismatchException::contextMismatch($this->context, $context, $method);
         }
     }

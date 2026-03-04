@@ -42,6 +42,12 @@ final readonly class AutoContext implements Context
     }
 
     #[Override]
+    public function isEqualTo(Context $context): bool
+    {
+        return $context instanceof AutoContext;
+    }
+
+    #[Override]
     public function __toString(): string
     {
         return 'AutoContext';
