@@ -13,6 +13,8 @@ use Brick\Money\Exception\ContextException;
 use Brick\Money\Exception\InvalidArgumentException;
 use Override;
 
+use function sprintf;
+
 /**
  * Adjusts a number to the default scale for the currency, respecting a cash rounding.
  */
@@ -66,5 +68,11 @@ final readonly class CashContext implements Context
     public function isFixedScale(): bool
     {
         return true;
+    }
+
+    #[Override]
+    public function __toString(): string
+    {
+        return sprintf('CashContext(step=%d)', $this->step);
     }
 }

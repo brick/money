@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Brick\Money\Exception;
 
+use Brick\Money\Context;
+
 use function sprintf;
 
 /**
@@ -14,9 +16,24 @@ final class ContextMismatchException extends MoneyMismatchException
     /**
      * @pure
      */
-    public static function contextMismatch(?string $method): self
+    private function __construct(
+        string $message,
+        private readonly Context $expectedContext,
+        private readonly Context $actualContext,
+    ) {
+        parent::__construct($message);
+    }
+
+    /**
+     * @pure
+     */
+    public static function contextMismatch(Context $expected, Context $actual, ?string $method): self
     {
-        $message = 'The monies do not share the same context.';
+        $message = sprintf(
+            'The monies do not share the same context: expected %s, got %s.',
+            $expected,
+            $actual,
+        );
 
         if ($method !== null) {
             $message .= sprintf(
@@ -26,6 +43,22 @@ final class ContextMismatchException extends MoneyMismatchException
             );
         }
 
-        return new self($message);
+        return new self($message, $expected, $actual);
+    }
+
+    /**
+     * @pure
+     */
+    public function getExpectedContext(): Context
+    {
+        return $this->expectedContext;
+    }
+
+    /**
+     * @pure
+     */
+    public function getActualContext(): Context
+    {
+        return $this->actualContext;
     }
 }
