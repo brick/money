@@ -83,7 +83,7 @@ final readonly class Currency implements Stringable, JsonSerializable
     }
 
     /**
-     * Returns a Currency instance matching the given ISO currency code.
+     * Returns a Currency instance matching the given ISO numeric currency code.
      *
      * Note: Numeric codes often mirror the ISO 3166-1 numeric code of the issuing
      * country/territory, so they may outlive a particular currency and be kept/reused

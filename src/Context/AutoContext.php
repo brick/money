@@ -13,7 +13,9 @@ use Brick\Money\Exception\ContextException;
 use Override;
 
 /**
- * Automatically adjusts the scale of a number to the strict minimum.
+ * Automatically adjusts the scale of a number to the minimum required to represent it exactly as a finite decimal.
+ *
+ * Amounts that are not exactly representable as a finite decimal (such as 1/3) will throw a RoundingNecessaryException.
  */
 final readonly class AutoContext implements Context
 {

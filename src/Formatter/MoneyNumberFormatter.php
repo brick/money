@@ -14,6 +14,9 @@ use function assert;
 /**
  * Basic convenience wrapper of NumberFormatter.
  *
+ * The injected NumberFormatter is used directly and not cloned. Callers retain full control over it:
+ * attributes set on the instance after construction will affect subsequent format() calls.
+ *
  * Note that NumberFormatter internally represents values using floating point arithmetic, so discrepancies can appear
  * when formatting very large monetary values.
  */

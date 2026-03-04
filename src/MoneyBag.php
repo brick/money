@@ -66,6 +66,8 @@ final class MoneyBag implements Monetary, JsonSerializable
     /**
      * Returns the contained amount in the given currency as a RationalMoney.
      *
+     * If no amount in the given currency has been added to this bag, a zero-valued RationalMoney is returned.
+     *
      * @param Currency|string $currency The Currency instance, or ISO currency code.
      *
      * @throws UnknownCurrencyException If an unknown currency code is given.
