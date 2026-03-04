@@ -218,7 +218,7 @@ final class IsoCurrencyProvider
      *
      * @param string $countryCode The 2-letter ISO 3166-1 country code.
      *
-     * @return Currency[]
+     * @return list<Currency>
      *
      * @pure
      */
@@ -250,7 +250,7 @@ final class IsoCurrencyProvider
      *
      * @param string $countryCode The 2-letter ISO 3166-1 country code.
      *
-     * @return Currency[]
+     * @return list<Currency>
      *
      * @pure
      */
