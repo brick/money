@@ -79,7 +79,7 @@ final readonly class Money extends AbstractMoney
 
         foreach ($monies as $money) {
             $cmp = $min->compareTo($money);
-            $min->checkContext($money->getContext(), null);
+            $min->checkContext($money);
 
             if ($cmp > 0) {
                 $min = $money;
@@ -108,7 +108,7 @@ final readonly class Money extends AbstractMoney
 
         foreach ($monies as $money) {
             $cmp = $max->compareTo($money);
-            $max->checkContext($money->getContext(), null);
+            $max->checkContext($money);
 
             if ($cmp < 0) {
                 $max = $money;
@@ -308,7 +308,7 @@ final readonly class Money extends AbstractMoney
         $amount = $this->getAmountOf($that);
 
         if ($that instanceof Money) {
-            $this->checkContext($that->getContext(), __FUNCTION__);
+            $this->checkContext($that, __FUNCTION__);
 
             if ($this->context->isFixedScale()) {
                 return new Money($this->amount->plus($that->amount), $this->currency, $this->context);
@@ -347,7 +347,7 @@ final readonly class Money extends AbstractMoney
         $amount = $this->getAmountOf($that);
 
         if ($that instanceof Money) {
-            $this->checkContext($that->getContext(), __FUNCTION__);
+            $this->checkContext($that, __FUNCTION__);
 
             if ($this->context->isFixedScale()) {
                 return new Money($this->amount->minus($that->amount), $this->currency, $this->context);
@@ -736,17 +736,17 @@ final readonly class Money extends AbstractMoney
     }
 
     /**
-     * @param Context     $context The Context to check against this Money.
-     * @param string|null $method  The invoked method name, if a hint is needed.
+     * @param Money       $money  The money to get the context from.
+     * @param string|null $method The invoked method name, if a hint is needed.
      *
      * @throws ContextMismatchException If monies don't share the same context.
      *
      * @pure
      */
-    protected function checkContext(Context $context, ?string $method): void
+    protected function checkContext(Money $money, ?string $method = null): void
     {
-        if (! $this->context->isEqualTo($context)) {
-            throw ContextMismatchException::contextMismatch($this->context, $context, $method);
+        if (! $this->context->isEqualTo($money->getContext())) {
+            throw ContextMismatchException::contextMismatch($this->context, $money->getContext(), $method);
         }
     }
 
