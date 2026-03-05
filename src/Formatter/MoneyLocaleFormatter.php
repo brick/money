@@ -9,8 +9,6 @@ use Brick\Money\MoneyFormatter;
 use NumberFormatter;
 use Override;
 
-use function assert;
-
 /**
  * Note that this formatter uses NumberFormatter, which internally represents values using floating point arithmetic,
  * so discrepancies can appear when formatting very large monetary values.
@@ -21,21 +19,19 @@ final readonly class MoneyLocaleFormatter implements MoneyFormatter
 
     private NumberFormatter $numberFormatter;
 
+    private MoneyNumberFormatter $moneyNumberFormatter;
+
     /**
      * @param string $locale           The locale to format to, for example 'fr_FR' or 'en_US'.
      * @param bool   $allowWholeNumber Whether to allow formatting as a whole number if the amount has no fraction.
-     *
-     * @pure
      */
     public function __construct(string $locale, bool $allowWholeNumber = false)
     {
         $this->allowWholeNumber = $allowWholeNumber;
         $this->numberFormatter = new NumberFormatter($locale, NumberFormatter::CURRENCY);
+        $this->moneyNumberFormatter = new MoneyNumberFormatter($this->numberFormatter);
     }
 
-    /**
-     * @pure
-     */
     #[Override]
     public function format(Money $money): string
     {
@@ -45,20 +41,9 @@ final readonly class MoneyLocaleFormatter implements MoneyFormatter
             $scale = $money->getAmount()->getScale();
         }
 
-        // @phpstan-ignore possiblyImpure.methodCall
         $this->numberFormatter->setAttribute(NumberFormatter::MIN_FRACTION_DIGITS, $scale);
-
-        // @phpstan-ignore possiblyImpure.methodCall
         $this->numberFormatter->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, $scale);
 
-        $formatted = $this->numberFormatter->formatCurrency(
-            $money->getAmount()->toFloat(),
-            $money->getCurrency()->getCurrencyCode(),
-        );
-
-        // @phpstan-ignore possiblyImpure.functionCall
-        assert($formatted !== false);
-
-        return $formatted;
+        return $this->moneyNumberFormatter->format($money);
     }
 }
