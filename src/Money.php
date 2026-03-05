@@ -295,7 +295,7 @@ final readonly class Money extends AbstractMoney
         $amount = $this->getAmountOf($that);
 
         if ($that instanceof Money) {
-            $this->checkContext($that->getContext(), __FUNCTION__);
+            $this->checkContext($that, __FUNCTION__);
             $amount = $this->amount->plus($amount);
         } else {
             $amount = $this->amount->toBigRational()->plus($amount);
@@ -331,7 +331,7 @@ final readonly class Money extends AbstractMoney
         $amount = $this->getAmountOf($that);
 
         if ($that instanceof Money) {
-            $this->checkContext($that->getContext(), __FUNCTION__);
+            $this->checkContext($that, __FUNCTION__);
             $amount = $this->amount->minus($amount);
         } else {
             $amount = $this->amount->toBigRational()->minus($amount);
@@ -710,17 +710,17 @@ final readonly class Money extends AbstractMoney
     }
 
     /**
-     * @param Context $context The Context to check against this Money.
-     * @param string  $method  The invoked method name.
+     * @param Money  $money  The money to get the context from.
+     * @param string $method The invoked method name.
      *
      * @throws ContextMismatchException If monies don't share the same context.
      *
      * @pure
      */
-    protected function checkContext(Context $context, string $method): void
+    protected function checkContext(Money $money, ?string $method = null): void
     {
-        if (! $this->context->isEqualTo($context)) {
-            throw ContextMismatchException::contextMismatch($this->context, $context, $method);
+        if (! $this->context->isEqualTo($money->getContext())) {
+            throw ContextMismatchException::contextMismatch($this->context, $money->getContext(), $method);
         }
     }
 
