@@ -856,89 +856,168 @@ class MoneyTest extends AbstractTestCase
     }
 
     /**
-     * @param array  $monies         The monies to compare.
-     * @param string $expectedResult The expected money result, or an exception class.
+     * @param array   $monies          The monies to compare.
+     * @param string  $expectedResult  The expected money result.
+     * @param Context $expectedContext The expected money context.
      */
     #[DataProvider('providerMin')]
-    public function testMin(array $monies, string $expectedResult): void
+    public function testMin(array $monies, string $expectedResult, Context $expectedContext): void
     {
         $monies = array_map(
             fn (array $money) => Money::of(...$money),
             $monies,
         );
 
-        if (self::isExceptionClass($expectedResult)) {
-            $this->expectException($expectedResult);
-        }
-
         $actualResult = Money::min(...$monies);
-
-        if (! self::isExceptionClass($expectedResult)) {
-            self::assertMoneyIs($expectedResult, $actualResult);
-        }
+        self::assertMoneyIs($expectedResult, $actualResult, $expectedContext);
     }
 
     public static function providerMin(): array
     {
         return [
-            [[['1.0', 'USD', new AutoContext()], ['3.50', 'USD'], ['4.00', 'USD']], 'USD 1'],
-            [[['5.00', 'USD'], ['3.50', 'USD'], ['4.00', 'USD']], 'USD 3.50'],
-            [[['5.00', 'USD'], ['3.50', 'USD'], ['3.499', 'USD', new AutoContext()]], 'USD 3.499'],
-            [[['1.00', 'USD'], ['1.00', 'EUR']], CurrencyMismatchException::class],
+            [[['1.0', 'USD', new AutoContext()], ['3.50', 'USD'], ['4.00', 'USD']], 'USD 1', new AutoContext()],
+            [[['5.00', 'USD'], ['3.50', 'USD'], ['4.00', 'USD']], 'USD 3.50', new DefaultContext()],
+            [[['5.00', 'USD'], ['3.50', 'USD'], ['3.499', 'USD', new AutoContext()]], 'USD 3.499', new AutoContext()],
+            [[['5.00', 'USD'], ['3.40', 'USD'], ['3.499', 'USD', new AutoContext()]], 'USD 3.40', new DefaultContext()],
+            [[['2.345', 'GBP', new CustomContext(4)], ['1.234', 'GBP', new CustomContext(3)]], 'GBP 1.234', new CustomContext(3)],
         ];
     }
 
+    public function testMinWithDifferentCurrencies(): void
+    {
+        self::assertException(
+            function (): void {
+                Money::min(
+                    Money::of('1.00', 'USD'),
+                    Money::of('1.00', 'EUR'),
+                );
+            },
+            function (CurrencyMismatchException $e): void {
+                self::assertSame('USD', $e->getExpectedCurrency()->getCurrencyCode());
+                self::assertSame('EUR', $e->getActualCurrency()->getCurrencyCode());
+            },
+        );
+    }
+
     /**
-     * @param array  $monies         The monies to compare.
-     * @param string $expectedResult The expected money result, or an exception class.
+     * @param array   $monies          The monies to compare.
+     * @param string  $expectedResult  The expected money result.
+     * @param Context $expectedContext The expected money context.
      */
     #[DataProvider('providerMax')]
-    public function testMax(array $monies, string $expectedResult): void
+    public function testMax(array $monies, string $expectedResult, Context $expectedContext): void
     {
         $monies = array_map(
             fn (array $money) => Money::of(...$money),
             $monies,
         );
 
-        if (self::isExceptionClass($expectedResult)) {
-            $this->expectException($expectedResult);
-        }
-
         $actualResult = Money::max(...$monies);
-
-        if (! self::isExceptionClass($expectedResult)) {
-            self::assertMoneyIs($expectedResult, $actualResult);
-        }
+        self::assertMoneyIs($expectedResult, $actualResult, $expectedContext);
     }
 
     public static function providerMax(): array
     {
         return [
-            [[['5.50', 'USD'], ['3.50', 'USD'], ['4.90', 'USD']], 'USD 5.50'],
-            [[['1.3', 'USD', new AutoContext()], ['3.50', 'USD'], ['4.90', 'USD']], 'USD 4.90'],
-            [[['1.3', 'USD', new AutoContext()], ['7.119', 'USD', new AutoContext()], ['4.90', 'USD']], 'USD 7.119'],
-            [[['1.00', 'USD'], ['1.00', 'EUR']], CurrencyMismatchException::class],
+            [[['5.50', 'USD'], ['3.50', 'USD'], ['4.90', 'USD']], 'USD 5.50', new DefaultContext()],
+            [[['5.00', 'USD'], ['3.50', 'USD'], ['4.00', 'USD']], 'USD 5.00', new DefaultContext()],
+            [[['3.50', 'USD'], ['5.00', 'USD'], ['4.00', 'USD']], 'USD 5.00', new DefaultContext()],
+            [[['1.3', 'USD'], ['3.50', 'USD'], ['4.90', 'USD', new AutoContext()]], 'USD 4.9', new AutoContext()],
+            [[['1.3', 'USD'], ['7.119', 'USD', new AutoContext()], ['4.90', 'USD']], 'USD 7.119', new AutoContext()],
+            [[['3.50', 'EUR'], ['4.80', 'EUR', new AutoContext()], ['1.50', 'EUR']], 'EUR 4.8', new AutoContext()],
+            [[['2.345', 'GBP', new CustomContext(3)], ['1.234', 'GBP', new CustomContext(5)]], 'GBP 2.345', new CustomContext(3)],
         ];
     }
 
-    public function testSum(): void
+    public function testMaxWithDifferentCurrencies(): void
     {
-        $total = Money::sum(
-            Money::of('5.50', 'USD'),
-            Money::of('3.50', 'USD'),
-            Money::of('4.90', 'USD'),
+        self::assertException(
+            function (): void {
+                Money::max(
+                    Money::of('1.00', 'USD'),
+                    Money::of('1.00', 'EUR'),
+                );
+            },
+            function (CurrencyMismatchException $e): void {
+                self::assertSame('USD', $e->getExpectedCurrency()->getCurrencyCode());
+                self::assertSame('EUR', $e->getActualCurrency()->getCurrencyCode());
+            },
         );
-
-        self::assertMoneyEquals('13.90', 'USD', $total);
     }
 
-    public function testSumOfDifferentCurrenciesThrowsException(): void
+    /**
+     * @param array   $monies         The monies to sum.
+     * @param string  $expectedResult The expected money result.
+     * @param Context $context        The context to use.
+     */
+    #[DataProvider('providerSum')]
+    public function testSum(array $monies, string $expectedResult, Context $context): void
     {
-        $this->expectException(CurrencyMismatchException::class);
+        $monies = array_map(
+            fn (array $money) => Money::of($money[0], $money[1], $context),
+            $monies,
+        );
 
-        Money::sum(
-            Money::of('1.00', 'EUR'),
-            Money::of('1.00', 'USD'),
+        $actualResult = Money::sum(...$monies);
+        self::assertMoneyIs($expectedResult, $actualResult, $context);
+    }
+
+    public static function providerSum(): array
+    {
+        return [
+            [[['5.00', 'USD'], ['3.50', 'USD'], ['4.00', 'USD']], 'USD 12.50', new DefaultContext()],
+            [[['3.50', 'EUR'], ['4.80', 'EUR'], ['1.50', 'EUR']], 'EUR 9.8', new AutoContext()],
+            [[['2.345', 'GBP'], ['1.234', 'GBP']], 'GBP 3.579', new CustomContext(3)],
+        ];
+    }
+
+    public function testSumWithDifferentCurrencies(): void
+    {
+        self::assertException(
+            function (): void {
+                Money::sum(
+                    Money::of('1.00', 'USD'),
+                    Money::of('1.00', 'EUR'),
+                );
+            },
+            function (CurrencyMismatchException $e): void {
+                self::assertSame('USD', $e->getExpectedCurrency()->getCurrencyCode());
+                self::assertSame('EUR', $e->getActualCurrency()->getCurrencyCode());
+            },
+        );
+    }
+
+    public function testSumWithDifferentContexts(): void
+    {
+        self::assertException(
+            function (): void {
+                Money::sum(
+                    Money::of('5.00', 'USD'),
+                    Money::of('3.50', 'USD'),
+                    Money::of('3.499', 'USD', new AutoContext()),
+                );
+            },
+            function (ContextMismatchException $e): void {
+                self::assertInstanceOf(DefaultContext::class, $e->getExpectedContext());
+                self::assertInstanceOf(AutoContext::class, $e->getActualContext());
+            },
+        );
+    }
+
+    public function testSumWithDifferentCurrenciesAndContexts(): void
+    {
+        self::assertException(
+            function (): void {
+                Money::sum(
+                    Money::of('5.00', 'USD'),
+                    Money::of('3.50', 'USD'),
+                    Money::of('3.499', 'EUR', new AutoContext()),
+                );
+            },
+            function (CurrencyMismatchException $e): void {
+                self::assertSame('USD', $e->getExpectedCurrency()->getCurrencyCode());
+                self::assertSame('EUR', $e->getActualCurrency()->getCurrencyCode());
+            },
         );
     }
 

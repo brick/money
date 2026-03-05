@@ -72,7 +72,7 @@ final readonly class Money extends AbstractMoney
         $min = $money;
 
         foreach ($monies as $money) {
-            if ($money->isLessThan($min)) {
+            if ($min->isGreaterThan($money)) {
                 $min = $money;
             }
         }
@@ -97,7 +97,7 @@ final readonly class Money extends AbstractMoney
         $max = $money;
 
         foreach ($monies as $money) {
-            if ($money->isGreaterThan($max)) {
+            if ($max->isLessThan($money)) {
                 $max = $money;
             }
         }
