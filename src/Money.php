@@ -78,10 +78,10 @@ final readonly class Money extends AbstractMoney
         $min = $money;
 
         foreach ($monies as $money) {
-            $isLess = $money->isLessThan($min);
+            $cmp = $min->compareTo($money);
             $min->checkContext($money->getContext(), null);
 
-            if ($isLess) {
+            if ($cmp > 0) {
                 $min = $money;
             }
         }
@@ -107,10 +107,10 @@ final readonly class Money extends AbstractMoney
         $max = $money;
 
         foreach ($monies as $money) {
-            $isGreater = $money->isGreaterThan($max);
+            $cmp = $max->compareTo($money);
             $max->checkContext($money->getContext(), null);
 
-            if ($isGreater) {
+            if ($cmp < 0) {
                 $max = $money;
             }
         }
