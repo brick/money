@@ -141,6 +141,23 @@ class MoneyBagTest extends AbstractTestCase
         self::assertMoneyBagContains([Money::of(15, 'EUR')], $newMoneyBag);
     }
 
+    public function testZeroBalanceEntriesAreNotRetained(): void
+    {
+        $moneyBag = MoneyBag::zero()->plus(Money::zero('EUR'));
+        self::assertMoneyBagContains([], $moneyBag);
+
+        $moneyBag = MoneyBag::zero()
+            ->plus(Money::of('5.00', 'EUR'))
+            ->minus(Money::of('5.00', 'EUR'));
+        self::assertMoneyBagContains([], $moneyBag);
+
+        $moneyBag = MoneyBag::zero()
+            ->plus(Money::of('5.00', 'EUR'))
+            ->plus(Money::of('3', 'JPY'))
+            ->minus(Money::of('5.00', 'EUR'));
+        self::assertMoneyBagContains([Money::of('3', 'JPY')], $moneyBag);
+    }
+
     public function testJsonSerializeEmpty(): void
     {
         $moneyBag = MoneyBag::zero();
