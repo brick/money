@@ -11,7 +11,7 @@ parameters:
         - '#^Possibly impure call to function array_map\(\) in pure method .*\.$#'
         - '#^Possibly impure call to function usort\(\) in pure method Brick\\Money\\Allocation\\.*\.$#'
         - '#^Possibly impure call to method Brick\\Money\\Allocation\\AbstractFloorAbsorbStrategy::priorityIndices\(\) in pure method Brick\\Money\\Allocation\\AbstractFloorAbsorbStrategy::allocate\(\)\.$#'
-# IsoCurrencyProvider uses lazy caches and a singleton internally.
+        # IsoCurrencyProvider uses lazy caches and a singleton internally.
         - '#^Impure .* in pure method Brick\\Money\\IsoCurrencyProvider::.*\.$#'
         - '#^Possibly impure .* in pure method Brick\\Money\\IsoCurrencyProvider::.*\.$#'
     scanFiles:

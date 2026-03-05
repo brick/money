@@ -14,10 +14,14 @@ use Override;
 use PDO;
 use PDOException;
 use PDOStatement;
+use Throwable;
 
+use function array_diff_key;
+use function array_keys;
 use function assert;
 use function implode;
 use function is_float;
+use function ksort;
 use function sprintf;
 
 /**
@@ -31,113 +35,141 @@ final class PdoProvider implements ExchangeRateProvider
     private readonly PDO $pdo;
 
     /**
-     * The SELECT statement.
+     * The configuration object.
      */
-    private readonly PDOStatement $statement;
+    private readonly PdoProviderConfiguration $configuration;
 
     /**
-     * The source currency code if fixed, or null if dynamic.
-     */
-    private readonly ?string $sourceCurrencyCode;
-
-    /**
-     * The target currency code if fixed, or null if dynamic.
-     */
-    private readonly ?string $targetCurrencyCode;
-
-    /**
-     * Extra parameters set dynamically to resolve the query placeholders.
+     * The cached prepared statements indexed by SQL query.
      *
-     * @phpstan-ignore missingType.iterableValue
+     * @var array<string, PDOStatement>
      */
-    private array $parameters = [];
+    private array $statements = [];
 
-    /**
-     * @throws PDOException
-     */
     public function __construct(PDO $pdo, PdoProviderConfiguration $configuration)
     {
         $this->pdo = $pdo;
-
-        $conditions = [];
-
-        if ($configuration->whereConditions !== null) {
-            $conditions[] = sprintf('(%s)', $configuration->whereConditions);
-        }
-
-        $sourceCurrencyCode = null;
-        $targetCurrencyCode = null;
-
-        if ($configuration->sourceCurrencyCode !== null) {
-            $sourceCurrencyCode = $configuration->sourceCurrencyCode;
-        } elseif ($configuration->sourceCurrencyColumnName !== null) {
-            $conditions[] = sprintf('%s = ?', $configuration->sourceCurrencyColumnName);
-        }
-
-        if ($configuration->targetCurrencyCode !== null) {
-            $targetCurrencyCode = $configuration->targetCurrencyCode;
-        } elseif ($configuration->targetCurrencyColumnName !== null) {
-            $conditions[] = sprintf('%s = ?', $configuration->targetCurrencyColumnName);
-        }
-
-        $this->sourceCurrencyCode = $sourceCurrencyCode;
-        $this->targetCurrencyCode = $targetCurrencyCode;
-
-        $conditions = implode(' AND ', $conditions);
-
-        $query = sprintf(
-            'SELECT %s FROM %s WHERE %s',
-            $configuration->exchangeRateColumnName,
-            $configuration->tableName,
-            $conditions,
-        );
-
-        $statement = $this->exec(fn () => $pdo->prepare($query));
-        assert($statement !== false);
-
-        $this->statement = $statement;
-    }
-
-    /**
-     * Sets the parameters to dynamically resolve the extra query placeholders, if any.
-     *
-     * This is used in conjunction with $whereConditions in the configuration class.
-     * The number of parameters passed to this method must match the number of placeholders.
-     */
-    public function setParameters(mixed ...$parameters): void
-    {
-        $this->parameters = $parameters;
+        $this->configuration = $configuration;
     }
 
     #[Override]
-    public function getExchangeRate(Currency $sourceCurrency, Currency $targetCurrency): ?BigNumber
+    public function getExchangeRate(Currency $sourceCurrency, Currency $targetCurrency, array $dimensions = []): ?BigNumber
     {
         $sourceCurrencyCode = $sourceCurrency->getCurrencyCode();
         $targetCurrencyCode = $targetCurrency->getCurrencyCode();
 
-        $parameters = $this->parameters;
+        $conditions = [];
+        $parameters = [];
 
-        if ($this->sourceCurrencyCode === null) {
+        if ($this->configuration->staticCondition !== null) {
+            $conditions[] = sprintf('(%s)', $this->configuration->staticCondition->getSql());
+            $parameters = $this->configuration->staticCondition->getParameters();
+        }
+
+        if ($this->configuration->sourceCurrencyCode === null) {
+            $conditions[] = sprintf('%s = ?', $this->configuration->sourceCurrencyColumnName);
             $parameters[] = $sourceCurrencyCode;
-        } elseif ($this->sourceCurrencyCode !== $sourceCurrencyCode) {
+        } elseif ($this->configuration->sourceCurrencyCode !== $sourceCurrencyCode) {
             return null;
         }
 
-        if ($this->targetCurrencyCode === null) {
+        if ($this->configuration->targetCurrencyCode === null) {
+            $conditions[] = sprintf('%s = ?', $this->configuration->targetCurrencyColumnName);
             $parameters[] = $targetCurrencyCode;
-        } elseif ($this->targetCurrencyCode !== $targetCurrencyCode) {
+        } elseif ($this->configuration->targetCurrencyCode !== $targetCurrencyCode) {
             return null;
         }
+
+        ksort($dimensions);
+        $omittedDimensions = array_keys(array_diff_key($this->configuration->dimensionBindings, $dimensions));
+
+        foreach ($dimensions as $dimension => $value) {
+            if (! isset($this->configuration->dimensionBindings[$dimension])) {
+                return null;
+            }
+
+            $dimensionResolver = $this->configuration->dimensionBindings[$dimension];
+
+            try {
+                $sqlCondition = $dimensionResolver($value);
+            } catch (Throwable $e) {
+                if ($e instanceof ExchangeRateProviderException) {
+                    throw $e;
+                }
+
+                throw new ExchangeRateProviderException(sprintf(
+                    'An exception occurred while resolving SQL condition for dimension: %s.',
+                    $dimension,
+                ), $e);
+            }
+
+            if ($sqlCondition === null) {
+                continue;
+            }
+
+            $conditions[] = sprintf('(%s)', $sqlCondition->getSql());
+            foreach ($sqlCondition->getParameters() as $parameter) {
+                $parameters[] = $parameter;
+            }
+        }
+
+        $query = sprintf(
+            'SELECT %s FROM %s',
+            $this->configuration->exchangeRateColumnName,
+            $this->configuration->tableName,
+        );
+
+        if ($conditions !== []) {
+            $query .= ' WHERE ' . implode(' AND ', $conditions);
+        }
+
+        if ($this->configuration->orderBy !== null) {
+            $query .= ' ORDER BY ' . $this->configuration->orderBy;
+            $query .= ' LIMIT 1';
+        }
+
+        if (! isset($this->statements[$query])) {
+            try {
+                $statement = $this->exec(fn () => $this->pdo->prepare($query));
+            } catch (PDOException $e) {
+                throw new ExchangeRateProviderException('Failed to prepare exchange rate query due to a PDO exception.', $e);
+            }
+
+            assert($statement !== false);
+
+            $this->statements[$query] = $statement;
+        }
+
+        $statement = $this->statements[$query];
 
         try {
             /** @var int|float|numeric-string|false $exchangeRate */
-            $exchangeRate = $this->exec(function () use ($parameters) {
-                $this->statement->execute($parameters);
+            $exchangeRate = $this->exec(function () use ($statement, $parameters, $omittedDimensions) {
+                $statement->execute($parameters);
 
-                return $this->statement->fetchColumn();
+                $exchangeRate = $statement->fetchColumn();
+
+                if ($exchangeRate === false) {
+                    return false;
+                }
+
+                if ($statement->fetchColumn() !== false) {
+                    $message = 'Exchange rate lookup matched multiple rows.';
+
+                    if ($omittedDimensions !== []) {
+                        $message .= ' Missing dimensions may be required to disambiguate: ' .
+                            implode(', ', $omittedDimensions) . '.';
+                    }
+
+                    $message .= ' Configure orderBy() to select one row deterministically if that is intended.';
+
+                    throw new ExchangeRateProviderException($message);
+                }
+
+                return $exchangeRate;
             });
         } catch (PDOException $e) {
-            throw new ExchangeRateProviderException('Could not retrieve the exchange rate due to a PDO exception.', $e);
+            throw new ExchangeRateProviderException('Failed to retrieve exchange rate due to a PDO exception.', $e);
         }
 
         if ($exchangeRate === false) {
@@ -151,7 +183,7 @@ final class PdoProvider implements ExchangeRateProvider
         try {
             return BigNumber::of($exchangeRate);
         } catch (MathException $e) {
-            throw new ExchangeRateProviderException('The database returned an invalid exchange rate.', $e);
+            throw new ExchangeRateProviderException('Database returned an invalid exchange rate value.', $e);
         }
     }
 

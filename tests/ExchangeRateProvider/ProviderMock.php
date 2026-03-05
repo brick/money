@@ -35,7 +35,7 @@ class ProviderMock implements ExchangeRateProvider
     }
 
     #[Override]
-    public function getExchangeRate(Currency $sourceCurrency, Currency $targetCurrency): ?BigNumber
+    public function getExchangeRate(Currency $sourceCurrency, Currency $targetCurrency, array $dimensions = []): ?BigNumber
     {
         $this->calls++;
 

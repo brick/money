@@ -328,12 +328,10 @@ use Brick\Money\ExchangeRateProvider\PdoProviderConfiguration;
 
 $pdo = new \PDO(...);
 
-$configuration = PdoProviderConfiguration::forCurrencyPair(
-    tableName: 'exchange_rates',
-    exchangeRateColumnName: 'exchange_rate',
-    sourceCurrencyColumnName: 'source_currency_code',
-    targetCurrencyColumnName: 'target_currency_code',
-);
+$configuration = PdoProviderConfiguration::builder('exchange_rates', 'exchange_rate')
+    ->withSourceCurrencyColumn('source_currency_code')
+    ->withTargetCurrencyColumn('target_currency_code')
+    ->build();
 
 $provider = new PdoProvider($pdo, $configuration);
 ```
