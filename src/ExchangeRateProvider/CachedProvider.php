@@ -9,15 +9,17 @@ use Brick\Money\Currency;
 use Brick\Money\ExchangeRateProvider;
 use Override;
 
+use function array_key_exists;
+
 /**
  * Caches the results of another exchange rate provider.
  */
 final class CachedProvider implements ExchangeRateProvider
 {
     /**
-     * The cached exchange rates, indexed by source currency code and target currency code.
+     * The cached exchange rates, indexed by composed cache key.
      *
-     * @var array<string, array<string, BigNumber>>
+     * @var array<string, BigNumber|null>
      */
     private array $exchangeRates = [];
 
@@ -26,26 +28,40 @@ final class CachedProvider implements ExchangeRateProvider
      */
     public function __construct(
         private readonly ExchangeRateProvider $provider,
+        private readonly DimensionsCacheKeyGenerator $dimensionsCacheKeyGenerator = new DefaultDimensionsCacheKeyGenerator(),
     ) {
     }
 
     #[Override]
-    public function getExchangeRate(Currency $sourceCurrency, Currency $targetCurrency): ?BigNumber
+    public function getExchangeRate(Currency $sourceCurrency, Currency $targetCurrency, array $dimensions = []): ?BigNumber
     {
         $sourceCurrencyCode = $sourceCurrency->getCurrencyCode();
         $targetCurrencyCode = $targetCurrency->getCurrencyCode();
 
-        if (isset($this->exchangeRates[$sourceCurrencyCode][$targetCurrencyCode])) {
-            return $this->exchangeRates[$sourceCurrencyCode][$targetCurrencyCode];
+        if ($dimensions !== []) {
+            $dimensionsCacheKey = $this->dimensionsCacheKeyGenerator->generateCacheKey($dimensions);
+
+            if ($dimensionsCacheKey === null) {
+                // uncacheable dimensions
+                return $this->provider->getExchangeRate($sourceCurrency, $targetCurrency, $dimensions);
+            }
+        } else {
+            $dimensionsCacheKey = null;
         }
 
-        $exchangeRate = $this->provider->getExchangeRate($sourceCurrency, $targetCurrency);
+        $cacheKey = $sourceCurrencyCode . ':' . $targetCurrencyCode;
 
-        if ($exchangeRate === null) {
-            return null;
+        if ($dimensionsCacheKey !== null) {
+            $cacheKey .= ':' . $dimensionsCacheKey;
         }
 
-        $this->exchangeRates[$sourceCurrencyCode][$targetCurrencyCode] = $exchangeRate;
+        if (array_key_exists($cacheKey, $this->exchangeRates)) {
+            return $this->exchangeRates[$cacheKey];
+        }
+
+        $exchangeRate = $this->provider->getExchangeRate($sourceCurrency, $targetCurrency, $dimensions);
+
+        $this->exchangeRates[$cacheKey] = $exchangeRate;
 
         return $exchangeRate;
     }

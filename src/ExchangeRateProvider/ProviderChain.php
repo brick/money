@@ -58,10 +58,10 @@ final class ProviderChain implements ExchangeRateProvider
     }
 
     #[Override]
-    public function getExchangeRate(Currency $sourceCurrency, Currency $targetCurrency): ?BigNumber
+    public function getExchangeRate(Currency $sourceCurrency, Currency $targetCurrency, array $dimensions = []): ?BigNumber
     {
         foreach ($this->providers as $provider) {
-            $exchangeRate = $provider->getExchangeRate($sourceCurrency, $targetCurrency);
+            $exchangeRate = $provider->getExchangeRate($sourceCurrency, $targetCurrency, $dimensions);
 
             if ($exchangeRate !== null) {
                 return $exchangeRate;
