@@ -14,11 +14,16 @@ use Brick\Money\CurrencyType;
 use Brick\Money\Money;
 use Brick\Money\MoneyBag;
 use Brick\Money\RationalMoney;
+use Closure;
 use PHPUnit\Framework\TestCase;
+use ReflectionFunction;
+use ReflectionNamedType;
+use Throwable;
 
 use function array_is_list;
 use function array_map;
 use function is_string;
+use function sprintf;
 use function str_ends_with;
 
 /**
@@ -128,5 +133,44 @@ abstract class AbstractTestCase extends TestCase
     final protected static function isExceptionClass(mixed $value): bool
     {
         return is_string($value) && str_ends_with($value, 'Exception');
+    }
+
+    /**
+     * @param Closure(): void          $test
+     * @param Closure(Throwable): void $assertException
+     */
+    final protected static function assertException(Closure $test, Closure $assertException): void
+    {
+        $exceptionClass = self::getExpectedExceptionClass($assertException);
+
+        try {
+            $test();
+        } catch (Throwable $e) {
+            self::assertSame($exceptionClass, $e::class, sprintf('Expected exception %s, got %s.', $exceptionClass, $e::class));
+            $assertException($e);
+
+            return;
+        }
+
+        self::fail(sprintf('Expected exception %s was not thrown.', $exceptionClass));
+    }
+
+    /**
+     * @param Closure(Throwable): void $assertException
+     *
+     * @return class-string<Throwable>
+     */
+    private static function getExpectedExceptionClass(Closure $assertException): string
+    {
+        $reflectionFunction = new ReflectionFunction($assertException);
+        $reflectionParameters = $reflectionFunction->getParameters();
+
+        self::assertCount(1, $reflectionParameters);
+        $reflectionParameter = $reflectionParameters[0];
+
+        $exceptionType = $reflectionParameter->getType();
+        self::assertInstanceOf(ReflectionNamedType::class, $exceptionType);
+
+        return $exceptionType->getName();
     }
 }
