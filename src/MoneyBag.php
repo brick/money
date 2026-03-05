@@ -134,7 +134,13 @@ final readonly class MoneyBag implements Monetary, JsonSerializable
             $currency = $containedMoney->getCurrency();
             $currencyCode = $currency->getCurrencyCode();
 
-            $monies[$currencyCode] = $fn(self::get($monies, $currency), $containedMoney);
+            $result = $fn(self::get($monies, $currency), $containedMoney);
+
+            if ($result->isZero()) {
+                unset($monies[$currencyCode]);
+            } else {
+                $monies[$currencyCode] = $result;
+            }
         }
 
         return $monies;
