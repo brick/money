@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Brick\Money\Formatter;
 
+use Brick\Money\Exception\MoneyFormatException;
 use Brick\Money\Money;
 use Brick\Money\MoneyFormatter;
 use NumberFormatter;
 use Override;
 
-use function assert;
+use function intl_get_error_message;
+use function sprintf;
 
 /**
  * Basic convenience wrapper of NumberFormatter.
@@ -37,7 +39,12 @@ final readonly class MoneyNumberFormatter implements MoneyFormatter
             $money->getCurrency()->getCurrencyCode(),
         );
 
-        assert($formatted !== false);
+        if ($formatted === false) {
+            throw new MoneyFormatException(sprintf(
+                'NumberFormatter::formatCurrency() failed: %s',
+                intl_get_error_message(),
+            ));
+        }
 
         return $formatted;
     }

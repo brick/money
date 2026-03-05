@@ -48,6 +48,7 @@ Deprecated methods removed:
   - `ToFirst` (this is the implementation `split()` used previously)
   - `Separate` (this is the implementation `splitWithRemainder()` used previously)
 - `MoneyMismatchException` now has explicit `CurrencyMismatchException` and `ContextMismatchException` subclasses
+- New exception: `MoneyFormatException`, thrown by `MoneyFormatter::format()`
 
 ## [0.12.3](https://github.com/brick/money/releases/tag/0.12.3) - 2026-03-23
 

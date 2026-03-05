@@ -17,6 +17,7 @@ use Brick\Money\Exception\ContextException;
 use Brick\Money\Exception\ContextMismatchException;
 use Brick\Money\Exception\CurrencyMismatchException;
 use Brick\Money\Exception\InvalidArgumentException;
+use Brick\Money\Exception\MoneyFormatException;
 use Brick\Money\Exception\UnknownCurrencyException;
 use Brick\Money\Formatter\MoneyLocaleFormatter;
 use Override;
@@ -667,7 +668,7 @@ final readonly class Money extends AbstractMoney
      * @param string $locale           The locale to format to, for example 'fr_FR' or 'en_US'.
      * @param bool   $allowWholeNumber Whether to allow formatting as a whole number if the amount has no fraction.
      *
-     * @pure
+     * @throws MoneyFormatException If the money cannot be formatted to the locale.
      */
     public function formatToLocale(string $locale, bool $allowWholeNumber = false): string
     {
