@@ -25,6 +25,8 @@
 - `MoneyBag` no longer retains zero-balance currencies after `plus()`/`minus()` operations
 - `ExchangeRateProvider::getExchangeRate()` signature has changed: it now accepts `Currency` instances, and returns `BigNumber|null`
 - `CurrencyConversionException` has been removed, and replaced with `ExchangeRateProviderException` and `ExchangeRateNotFoundException`
+- `PdoProvider::setParameters()` has been removed, use the new dimensions configuration instead
+- `CurrencyConverter::convert()` signature has changed: parameter `$dimensions` now comes before `$context`
 
 Deprecated methods removed:
 
@@ -38,6 +40,7 @@ Deprecated methods removed:
 
 ✨ **New features**
 
+- Support for custom dimensions (date, rate type, ...) in `ExchangeRateProvider` and `CurrencyConverter`
 - New `Money::allocate()` API with five algorithms, exposed through the new `AllocationMethod` enum:
   - `FloorToFirst` (this is the implementation `allocate()` used previously)
   - `FloorToLargestRatio`

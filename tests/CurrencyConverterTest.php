@@ -86,7 +86,7 @@ class CurrencyConverterTest extends AbstractTestCase
         }
 
         $currencyConverter = new CurrencyConverter($exchangeRateProvider);
-        self::assertMoneyIs($total, $currencyConverter->convert($moneyBag, $currency, $context, $roundingMode));
+        self::assertMoneyIs($total, $currencyConverter->convert($moneyBag, $currency, [], $context, $roundingMode));
     }
 
     public static function providerConvertMoneyBag(): array
