@@ -22,6 +22,7 @@
   - `quotientAndRemainder()`
   - `allocate()`
   - `split()`
+- `MoneyBag` no longer retains zero-balance currencies after `plus()`/`minus()` operations
 
 Deprecated methods removed:
 
