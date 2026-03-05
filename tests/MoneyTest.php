@@ -69,6 +69,7 @@ class MoneyTest extends AbstractTestCase
             ['CUSTOM 0.4286', BigRational::of('3/7'), new Currency('CUSTOM', 0, '', 3), new CustomContext(4, 1), RoundingMode::Up],
             [RoundingNecessaryException::class, '1.2', 'JPY'],
             [NumberFormatException::class, '1..', 'JPY'],
+            [NumberFormatException::class, '1..', 'INVALID'],
         ];
     }
 
@@ -99,6 +100,7 @@ class MoneyTest extends AbstractTestCase
             ['USD 1.2350', '123.5', 'USD', new CustomContext(4)],
             [RoundingNecessaryException::class, '123.5', 'USD'],
             [NumberFormatException::class, '123..', 'USD'],
+            [NumberFormatException::class, '123..', 'INVALID'],
         ];
     }
 

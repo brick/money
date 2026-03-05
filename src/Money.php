@@ -158,11 +158,11 @@ final readonly class Money extends AbstractMoney
         Context $context = new DefaultContext(),
         RoundingMode $roundingMode = RoundingMode::Unnecessary,
     ): Money {
+        $amount = BigNumber::of($amount);
+
         if (! $currency instanceof Currency) {
             $currency = Currency::of($currency);
         }
-
-        $amount = BigNumber::of($amount);
 
         return self::create($amount, $currency, $context, $roundingMode);
     }
@@ -193,12 +193,14 @@ final readonly class Money extends AbstractMoney
         Context $context = new DefaultContext(),
         RoundingMode $roundingMode = RoundingMode::Unnecessary,
     ): Money {
+        $minorAmount = BigRational::of($minorAmount);
+
         if (! $currency instanceof Currency) {
             $currency = Currency::of($currency);
         }
 
         $divisor = BigInteger::ten()->power($currency->getDefaultFractionDigits());
-        $amount = BigRational::of($minorAmount)->dividedBy($divisor);
+        $amount = $minorAmount->dividedBy($divisor);
 
         return self::create($amount, $currency, $context, $roundingMode);
     }

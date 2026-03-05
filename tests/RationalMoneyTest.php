@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Brick\Money\Tests;
 
 use Brick\Math\BigRational;
+use Brick\Math\Exception\NumberFormatException;
 use Brick\Math\Exception\RoundingNecessaryException;
 use Brick\Math\RoundingMode;
 use Brick\Money\Context;
@@ -26,6 +27,36 @@ use function json_encode;
  */
 class RationalMoneyTest extends AbstractTestCase
 {
+    /**
+     * @param mixed  $amount   The amount.
+     * @param string $currency The currency code.
+     * @param string $expected The expected money as a string, or an exception class.
+     */
+    #[DataProvider('providerOf')]
+    public function testOf(mixed $amount, string $currency, string $expected): void
+    {
+        if (self::isExceptionClass($expected)) {
+            $this->expectException($expected);
+        }
+
+        $actual = RationalMoney::of($amount, $currency);
+
+        if (! self::isExceptionClass($expected)) {
+            self::assertRationalMoneyEquals($expected, $actual);
+        }
+    }
+
+    public static function providerOf(): array
+    {
+        return [
+            ['1.23', 'USD', 'USD 123/100'],
+            ['3/7', 'EUR', 'EUR 3/7'],
+            ['1..', 'USD', NumberFormatException::class],
+            ['1', 'INVALID', UnknownCurrencyException::class],
+            ['1..', 'INVALID', NumberFormatException::class],
+        ];
+    }
+
     #[DataProvider('providerZero')]
     public function testZero(string $currencyCode, string $expected): void
     {
