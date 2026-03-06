@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace Brick\Money\Exception;
 
 use Brick\Money\Currency;
-use RuntimeException;
 
 use function sprintf;
 
 /**
  * Exception thrown when no exchange rate can be found for a currency pair.
  */
-final class ExchangeRateNotFoundException extends RuntimeException implements MoneyException
+final class ExchangeRateNotFoundException extends ExchangeRateException
 {
     /**
      * @pure
