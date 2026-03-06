@@ -75,6 +75,16 @@ final readonly class MoneyBag implements Monetary, JsonSerializable
         return self::get($this->monies, $currency);
     }
 
+    /**
+     * Returns whether this MoneyBag has zero value (i.e. contains no non-zero amounts).
+     *
+     * @pure
+     */
+    public function isZero(): bool
+    {
+        return $this->monies === [];
+    }
+
     #[Override]
     public function getMonies(): array
     {
