@@ -19,12 +19,16 @@ use Brick\Money\Exception\ExchangeRateProviderException;
  */
 final readonly class MoneyComparator
 {
+    private CurrencyConverter $currencyConverter;
+
     /**
-     * @param ExchangeRateProvider $exchangeRateProvider The exchange rate provider.
+     * @param array<string, mixed> $dimensions Additional exchange-rate lookup dimensions (e.g., date or rate type).
      */
     public function __construct(
-        private ExchangeRateProvider $exchangeRateProvider,
+        ExchangeRateProvider $exchangeRateProvider,
+        private array $dimensions = [],
     ) {
+        $this->currencyConverter = new CurrencyConverter($exchangeRateProvider);
     }
 
     /**
@@ -42,37 +46,16 @@ final readonly class MoneyComparator
      * @throws ExchangeRateNotFoundException If the exchange rate is not available.
      * @throws ExchangeRateProviderException If an error occurs while retrieving exchange rates.
      */
-    public function compare(Money $a, Money $b): int
+    public function compare(AbstractMoney $a, AbstractMoney $b): int
     {
-        $aCurrency = $a->getCurrency();
-        $bCurrency = $b->getCurrency();
-
-        if ($aCurrency->isEqualTo($bCurrency)) {
-            return $a->compareTo($b);
-        }
-
-        $aAmount = $a->getAmount();
-        $bAmount = $b->getAmount();
-
-        $exchangeRate = $this->exchangeRateProvider->getExchangeRate($aCurrency, $bCurrency);
-
-        if ($exchangeRate === null) {
-            throw ExchangeRateNotFoundException::exchangeRateNotFound(
-                $aCurrency->getCurrencyCode(),
-                $bCurrency->getCurrencyCode(),
-            );
-        }
-
-        $aAmount = $aAmount->toBigRational()->multipliedBy($exchangeRate);
-
-        return $aAmount->compareTo($bAmount);
+        return $this->currencyConverter->convertToRational($a, $b->getCurrency(), $this->dimensions)->compareTo($b);
     }
 
     /**
      * @throws ExchangeRateNotFoundException If the exchange rate is not available.
      * @throws ExchangeRateProviderException If an error occurs while retrieving exchange rates.
      */
-    public function isEqual(Money $a, Money $b): bool
+    public function isEqual(AbstractMoney $a, AbstractMoney $b): bool
     {
         return $this->compare($a, $b) === 0;
     }
@@ -81,7 +64,7 @@ final readonly class MoneyComparator
      * @throws ExchangeRateNotFoundException If the exchange rate is not available.
      * @throws ExchangeRateProviderException If an error occurs while retrieving exchange rates.
      */
-    public function isLess(Money $a, Money $b): bool
+    public function isLess(AbstractMoney $a, AbstractMoney $b): bool
     {
         return $this->compare($a, $b) < 0;
     }
@@ -90,7 +73,7 @@ final readonly class MoneyComparator
      * @throws ExchangeRateNotFoundException If the exchange rate is not available.
      * @throws ExchangeRateProviderException If an error occurs while retrieving exchange rates.
      */
-    public function isLessOrEqual(Money $a, Money $b): bool
+    public function isLessOrEqual(AbstractMoney $a, AbstractMoney $b): bool
     {
         return $this->compare($a, $b) <= 0;
     }
@@ -99,7 +82,7 @@ final readonly class MoneyComparator
      * @throws ExchangeRateNotFoundException If the exchange rate is not available.
      * @throws ExchangeRateProviderException If an error occurs while retrieving exchange rates.
      */
-    public function isGreater(Money $a, Money $b): bool
+    public function isGreater(AbstractMoney $a, AbstractMoney $b): bool
     {
         return $this->compare($a, $b) > 0;
     }
@@ -108,7 +91,7 @@ final readonly class MoneyComparator
      * @throws ExchangeRateNotFoundException If the exchange rate is not available.
      * @throws ExchangeRateProviderException If an error occurs while retrieving exchange rates.
      */
-    public function isGreaterOrEqual(Money $a, Money $b): bool
+    public function isGreaterOrEqual(AbstractMoney $a, AbstractMoney $b): bool
     {
         return $this->compare($a, $b) >= 0;
     }
@@ -123,15 +106,17 @@ final readonly class MoneyComparator
      *
      * If several monies are equal to the minimum value, the first one is returned.
      *
-     * @param Money $money     The first money.
-     * @param Money ...$monies The subsequent monies.
+     * @template T of AbstractMoney
      *
-     * @return Money The smallest Money.
+     * @param T $money     The first money.
+     * @param T ...$monies The subsequent monies.
+     *
+     * @return T The smallest money.
      *
      * @throws ExchangeRateNotFoundException If an exchange rate is not available.
      * @throws ExchangeRateProviderException If an error occurs while retrieving exchange rates.
      */
-    public function min(Money $money, Money ...$monies): Money
+    public function min(AbstractMoney $money, AbstractMoney ...$monies): AbstractMoney
     {
         $min = $money;
 
@@ -154,15 +139,17 @@ final readonly class MoneyComparator
      *
      * If several monies are equal to the maximum value, the first one is returned.
      *
-     * @param Money $money     The first money.
-     * @param Money ...$monies The subsequent monies.
+     * @template T of AbstractMoney
      *
-     * @return Money The largest Money.
+     * @param T $money     The first money.
+     * @param T ...$monies The subsequent monies.
+     *
+     * @return T The largest money.
      *
      * @throws ExchangeRateNotFoundException If an exchange rate is not available.
      * @throws ExchangeRateProviderException If an error occurs while retrieving exchange rates.
      */
-    public function max(Money $money, Money ...$monies): Money
+    public function max(AbstractMoney $money, AbstractMoney ...$monies): AbstractMoney
     {
         $max = $money;
 
