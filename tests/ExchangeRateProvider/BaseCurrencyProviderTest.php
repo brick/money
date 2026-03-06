@@ -7,6 +7,7 @@ namespace Brick\Money\Tests\ExchangeRateProvider;
 use Brick\Math\BigNumber;
 use Brick\Math\RoundingMode;
 use Brick\Money\Currency;
+use Brick\Money\Exception\ExchangeRateProviderException;
 use Brick\Money\ExchangeRateProvider;
 use Brick\Money\ExchangeRateProvider\BaseCurrencyProvider;
 use Brick\Money\ExchangeRateProvider\ConfigurableProvider;
@@ -69,6 +70,33 @@ class BaseCurrencyProviderTest extends AbstractTestCase
     public static function providerReturnBigNumber(): array
     {
         return [[1], ['1.1'], ['1.0'], [BigNumber::of('1')]];
+    }
+
+    public function testThrowsProviderExceptionWhenReverseRateIsZero(): void
+    {
+        $provider = new ConfigurableProvider();
+        $provider->setExchangeRate('USD', 'EUR', '0');
+
+        $baseProvider = new BaseCurrencyProvider($provider, Currency::of('USD'));
+
+        $this->expectException(ExchangeRateProviderException::class);
+        $this->expectExceptionMessage('Failed to derive exchange rate from base-currency rates: encountered a zero rate.');
+
+        $baseProvider->getExchangeRate(Currency::of('EUR'), Currency::of('USD'));
+    }
+
+    public function testThrowsProviderExceptionWhenSourceRateIsZero(): void
+    {
+        $provider = new ConfigurableProvider();
+        $provider->setExchangeRate('USD', 'EUR', '0');
+        $provider->setExchangeRate('USD', 'GBP', '0.8');
+
+        $baseProvider = new BaseCurrencyProvider($provider, Currency::of('USD'));
+
+        $this->expectException(ExchangeRateProviderException::class);
+        $this->expectExceptionMessage('Failed to derive exchange rate from base-currency rates: encountered a zero rate.');
+
+        $baseProvider->getExchangeRate(Currency::of('EUR'), Currency::of('GBP'));
     }
 
     private function getExchangeRateProvider(): ExchangeRateProvider
