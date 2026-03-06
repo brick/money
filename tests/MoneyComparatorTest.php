@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Brick\Money\Tests;
 
+use Brick\Math\BigNumber;
 use Brick\Money\Context\AutoContext;
 use Brick\Money\Currency;
 use Brick\Money\Exception\ExchangeRateNotFoundException;
+use Brick\Money\ExchangeRateProvider;
 use Brick\Money\ExchangeRateProvider\ConfigurableProvider;
 use Brick\Money\Money;
 use Brick\Money\MoneyComparator;
+use Brick\Money\RationalMoney;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 use function array_map;
@@ -148,6 +151,49 @@ class MoneyComparatorTest extends AbstractTestCase
         ];
     }
 
+    #[DataProvider('providerCompareWithDimensions')]
+    public function testCompareWithDimensions(array $rationalMoney, array $money, array $dimensions, int $expected): void
+    {
+        $provider = $this->getExchangeRateProviderWithDimensions();
+
+        $a = RationalMoney::of(...$rationalMoney);
+        $b = Money::of(...$money);
+
+        $withDimensions = new MoneyComparator($provider, $dimensions);
+
+        self::assertSame($expected, $withDimensions->compare($a, $b));
+    }
+
+    public static function providerCompareWithDimensions(): array
+    {
+        return [
+            [['0.99', 'EUR'], ['1.10', 'USD'], ['rateType' => 'spot'], -1],
+            [['1.00', 'EUR'], ['1.10', 'USD'], ['rateType' => 'spot'], 0],
+            [['1.01', 'EUR'], ['1.10', 'USD'], ['rateType' => 'spot'], 1],
+            [['1.10', 'USD'], ['1.00', 'EUR'], ['rateType' => 'spot'], -1],
+            [['10/9', 'USD'], ['1.00', 'EUR'], ['rateType' => 'spot'], 0],
+            [['1.12', 'USD'], ['1.00', 'EUR'], ['rateType' => 'spot'], 1],
+            [['0.99', 'EUR'], ['1.20', 'USD'], ['rateType' => 'forward'], -1],
+            [['1.00', 'EUR'], ['1.20', 'USD'], ['rateType' => 'forward'], 0],
+            [['1.01', 'EUR'], ['1.20', 'USD'], ['rateType' => 'forward'], 1],
+            [['1.24', 'USD'], ['1.00', 'EUR'], ['rateType' => 'forward'], -1],
+            [['1.25', 'USD'], ['1.00', 'EUR'], ['rateType' => 'forward'], 0],
+            [['1.26', 'USD'], ['1.00', 'EUR'], ['rateType' => 'forward'], 1],
+        ];
+    }
+
+    public function testCompareWithDimensionsThrowsOnExchangeRateNotFound(): void
+    {
+        $provider = $this->getExchangeRateProviderWithDimensions();
+
+        $a = Money::of('1.00', 'EUR');
+        $b = Money::of('1.10', 'USD');
+
+        $withoutDimensions = new MoneyComparator($provider);
+        $this->expectException(ExchangeRateNotFoundException::class);
+        $withoutDimensions->compare($a, $b);
+    }
+
     private function getExchangeRateProvider(): ConfigurableProvider
     {
         $provider = new ConfigurableProvider();
@@ -167,5 +213,38 @@ class MoneyComparatorTest extends AbstractTestCase
         $provider->setExchangeRate($gbp, $eur, '1.2');
 
         return $provider;
+    }
+
+    private function getExchangeRateProviderWithDimensions(): ExchangeRateProvider
+    {
+        return new class() implements ExchangeRateProvider {
+            public function getExchangeRate(Currency $sourceCurrency, Currency $targetCurrency, array $dimensions = []): ?BigNumber
+            {
+                $rates = [
+                    ['EUR', 'USD', 'spot', '1.1'],
+                    ['EUR', 'USD', 'forward', '1.2'],
+                    ['USD', 'EUR', 'spot', '0.9'],
+                    ['USD', 'EUR', 'forward', '0.8'],
+                ];
+
+                foreach ($rates as [$sourceCurrencyCode, $targetCurrencyCode, $rateType, $rate]) {
+                    if ($sourceCurrency->getCurrencyCode() !== $sourceCurrencyCode) {
+                        continue;
+                    }
+
+                    if ($targetCurrency->getCurrencyCode() !== $targetCurrencyCode) {
+                        continue;
+                    }
+
+                    if (($dimensions['rateType'] ?? null) !== $rateType) {
+                        continue;
+                    }
+
+                    return BigNumber::of($rate);
+                }
+
+                return null;
+            }
+        };
     }
 }

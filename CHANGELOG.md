@@ -40,7 +40,8 @@ Deprecated methods removed:
 
 ✨ **New features**
 
-- Support for custom dimensions (date, rate type, ...) in `ExchangeRateProvider` and `CurrencyConverter`
+- Support for custom dimensions (date, rate type, ...) in `ExchangeRateProvider`, `CurrencyConverter` and `MoneyComparator`
+- Support for `Money` and `RationalMoney` in `MoneyComparator`
 - New `Money::allocate()` API with five algorithms, exposed through the new `AllocationMethod` enum:
   - `FloorToFirst` (this is the implementation `allocate()` used previously)
   - `FloorToLargestRatio`
