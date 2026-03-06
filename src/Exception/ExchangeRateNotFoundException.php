@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Brick\Money\Exception;
 
+use Brick\Money\Currency;
 use RuntimeException;
 
 use function sprintf;
@@ -18,8 +19,8 @@ final class ExchangeRateNotFoundException extends RuntimeException implements Mo
      */
     private function __construct(
         string $message,
-        private readonly string $sourceCurrencyCode,
-        private readonly string $targetCurrencyCode,
+        private readonly Currency $sourceCurrency,
+        private readonly Currency $targetCurrency,
     ) {
         parent::__construct($message);
     }
@@ -27,32 +28,32 @@ final class ExchangeRateNotFoundException extends RuntimeException implements Mo
     /**
      * @pure
      */
-    public static function exchangeRateNotFound(string $sourceCurrencyCode, string $targetCurrencyCode): self
+    public static function exchangeRateNotFound(Currency $sourceCurrency, Currency $targetCurrency): self
     {
         return new self(
             sprintf(
                 'No exchange rate available to convert %s to %s.',
-                $sourceCurrencyCode,
-                $targetCurrencyCode,
+                $sourceCurrency->getCurrencyCode(),
+                $targetCurrency->getCurrencyCode(),
             ),
-            $sourceCurrencyCode,
-            $targetCurrencyCode,
+            $sourceCurrency,
+            $targetCurrency,
         );
     }
 
     /**
      * @pure
      */
-    public function getSourceCurrencyCode(): string
+    public function getSourceCurrency(): Currency
     {
-        return $this->sourceCurrencyCode;
+        return $this->sourceCurrency;
     }
 
     /**
      * @pure
      */
-    public function getTargetCurrencyCode(): string
+    public function getTargetCurrency(): Currency
     {
-        return $this->targetCurrencyCode;
+        return $this->targetCurrency;
     }
 }
