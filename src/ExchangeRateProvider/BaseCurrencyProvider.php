@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Brick\Money\ExchangeRateProvider;
 
 use Brick\Math\BigNumber;
+use Brick\Math\Exception\DivisionByZeroException;
 use Brick\Money\Currency;
+use Brick\Money\Exception\ExchangeRateProviderException;
 use Brick\Money\ExchangeRateProvider;
 use Override;
 
@@ -43,7 +45,15 @@ final readonly class BaseCurrencyProvider implements ExchangeRateProvider
         if ($targetCurrency->isEqualTo($this->baseCurrency)) {
             $exchangeRate = $this->provider->getExchangeRate($targetCurrency, $sourceCurrency, $dimensions);
 
-            return $exchangeRate?->toBigRational()->reciprocal();
+            if ($exchangeRate === null) {
+                return null;
+            }
+
+            try {
+                return $exchangeRate->toBigRational()->reciprocal();
+            } catch (DivisionByZeroException $e) {
+                throw new ExchangeRateProviderException('Failed to derive exchange rate from base-currency rates: encountered a zero rate.', $e);
+            }
         }
 
         $baseToSource = $this->provider->getExchangeRate($this->baseCurrency, $sourceCurrency, $dimensions);
@@ -54,6 +64,14 @@ final readonly class BaseCurrencyProvider implements ExchangeRateProvider
 
         $baseToTarget = $this->provider->getExchangeRate($this->baseCurrency, $targetCurrency, $dimensions);
 
-        return $baseToTarget?->toBigRational()->dividedBy($baseToSource);
+        if ($baseToTarget === null) {
+            return null;
+        }
+
+        try {
+            return $baseToTarget->toBigRational()->dividedBy($baseToSource);
+        } catch (DivisionByZeroException $e) {
+            throw new ExchangeRateProviderException('Failed to derive exchange rate from base-currency rates: encountered a zero rate.', $e);
+        }
     }
 }
