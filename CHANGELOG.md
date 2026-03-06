@@ -24,7 +24,7 @@
   - `split()`
 - `MoneyBag` no longer retains zero-balance currencies after `plus()`/`minus()` operations
 - `ExchangeRateProvider::getExchangeRate()` signature has changed: it now accepts `Currency` instances, and returns `BigNumber|null`
-- `CurrencyConversionException` has been removed, and replaced with `ExchangeRateProviderException` and `ExchangeRateNotFoundException`
+- `CurrencyConversionException` has been renamed to `ExchangeRateException`, with `ExchangeRateProviderException` and `ExchangeRateNotFoundException` subclasses
 - `PdoProvider::setParameters()` has been removed, use the new dimensions configuration instead
 - `CurrencyConverter::convert()` signature has changed: parameter `$dimensions` now comes before `$context`
 
