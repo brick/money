@@ -27,23 +27,36 @@ final class ContextMismatchException extends MoneyMismatchException
     /**
      * @pure
      */
-    public static function contextMismatch(Context $expected, Context $actual, ?string $method): self
+    public static function contextMismatch(Context $expected, Context $actual): self
     {
-        $message = sprintf(
-            'The monies do not share the same context: expected %s, got %s.',
+        return new self(
+            sprintf(
+                'The monies do not share the same context: expected %s, got %s.',
+                $expected,
+                $actual,
+            ),
             $expected,
             $actual,
         );
+    }
 
-        if ($method !== null) {
-            $message .= sprintf(
+    /**
+     * @pure
+     */
+    public static function contextMismatchWithRationalHint(Context $expected, Context $actual, string $method): self
+    {
+        return new self(
+            sprintf(
+                'The monies do not share the same context: expected %s, got %s.' .
                 ' If this is intended, use %s($money->toRational()) instead of %s($money).',
+                $expected,
+                $actual,
                 $method,
                 $method,
-            );
-        }
-
-        return new self($message, $expected, $actual);
+            ),
+            $expected,
+            $actual,
+        );
     }
 
     /**

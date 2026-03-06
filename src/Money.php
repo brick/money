@@ -80,7 +80,7 @@ final readonly class Money extends AbstractMoney
 
         foreach ($monies as $money) {
             $cmp = $min->compareTo($money);
-            $min->checkContext($money);
+            self::assertSameContext($min, $money);
 
             if ($cmp > 0) {
                 $min = $money;
@@ -109,7 +109,7 @@ final readonly class Money extends AbstractMoney
 
         foreach ($monies as $money) {
             $cmp = $max->compareTo($money);
-            $max->checkContext($money);
+            self::assertSameContext($max, $money);
 
             if ($cmp < 0) {
                 $max = $money;
@@ -311,7 +311,7 @@ final readonly class Money extends AbstractMoney
         $amount = $this->getAmountOf($that);
 
         if ($that instanceof Money) {
-            $this->checkContext($that, __FUNCTION__);
+            self::assertSameContextForArithmetic($this, $that, __FUNCTION__);
             $amount = $this->amount->plus($amount);
         } else {
             $amount = $this->amount->toBigRational()->plus($amount);
@@ -347,7 +347,7 @@ final readonly class Money extends AbstractMoney
         $amount = $this->getAmountOf($that);
 
         if ($that instanceof Money) {
-            $this->checkContext($that, __FUNCTION__);
+            self::assertSameContextForArithmetic($this, $that, __FUNCTION__);
             $amount = $this->amount->minus($amount);
         } else {
             $amount = $this->amount->toBigRational()->minus($amount);
@@ -733,17 +733,26 @@ final readonly class Money extends AbstractMoney
     }
 
     /**
-     * @param Money       $money  The money to get the context from.
-     * @param string|null $method The invoked method name, if a hint is needed.
-     *
      * @throws ContextMismatchException If monies don't share the same context.
      *
      * @pure
      */
-    protected function checkContext(Money $money, ?string $method = null): void
+    private static function assertSameContext(Money $expected, Money $actual): void
     {
-        if (! $this->context->isEqualTo($money->getContext())) {
-            throw ContextMismatchException::contextMismatch($this->context, $money->getContext(), $method);
+        if (! $expected->context->isEqualTo($actual->context)) {
+            throw ContextMismatchException::contextMismatch($expected->context, $actual->context);
+        }
+    }
+
+    /**
+     * @throws ContextMismatchException If monies don't share the same context.
+     *
+     * @pure
+     */
+    private static function assertSameContextForArithmetic(Money $expected, Money $actual, string $method): void
+    {
+        if (! $expected->context->isEqualTo($actual->context)) {
+            throw ContextMismatchException::contextMismatchWithRationalHint($expected->context, $actual->context, $method);
         }
     }
 
