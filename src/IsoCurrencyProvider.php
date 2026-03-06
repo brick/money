@@ -12,6 +12,14 @@ use function ksort;
 
 /**
  * Provides ISO 4217 currencies.
+ *
+ * @phpstan-type CurrencyData array{
+ *      non-empty-string,
+ *      non-negative-int,
+ *      non-empty-string,
+ *      non-negative-int,
+ *      CurrencyType
+ *  }
  */
 final class IsoCurrencyProvider
 {
@@ -20,7 +28,7 @@ final class IsoCurrencyProvider
     /**
      * The raw currency data, indexed by currency code.
      *
-     * @var array<string, array{string, non-negative-int, string, non-negative-int, CurrencyType}>
+     * @var array<non-empty-string, CurrencyData>
      */
     private readonly array $currencyData;
 
@@ -29,7 +37,7 @@ final class IsoCurrencyProvider
      *
      * This property is set on-demand, as soon as required.
      *
-     * @var array<int, string>|null
+     * @var array<int, non-empty-string>|null
      */
     private ?array $numericToCurrency = null;
 
@@ -38,7 +46,7 @@ final class IsoCurrencyProvider
      *
      * This property is set on-demand, as soon as required.
      *
-     * @var array<string, list<string>>|null
+     * @var array<string, list<non-empty-string>>|null
      */
     private ?array $countryToCurrency = null;
 
@@ -48,7 +56,7 @@ final class IsoCurrencyProvider
      *
      * This property is set on-demand, as soon as required.
      *
-     * @var array<string, list<string>>|null
+     * @var array<string, list<non-empty-string>>|null
      */
     private ?array $countryToCurrencyHistorical = null;
 
@@ -73,7 +81,7 @@ final class IsoCurrencyProvider
      */
     private function __construct()
     {
-        /** @var array<string, array{string, non-negative-int, string, non-negative-int, CurrencyType}> $currencyData */
+        /** @var array<non-empty-string, CurrencyData> $currencyData */
         $currencyData = require __DIR__ . '/../data/iso-currencies.php';
 
         $this->currencyData = $currencyData;
@@ -138,7 +146,7 @@ final class IsoCurrencyProvider
     public function getCurrencyByNumericCode(int $currencyCode): Currency
     {
         if ($this->numericToCurrency === null) {
-            /** @var array<int, string> $numericToCurrency */
+            /** @var array<int, non-empty-string> $numericToCurrency */
             $numericToCurrency = require __DIR__ . '/../data/numeric-to-currency.php';
 
             $this->numericToCurrency = $numericToCurrency;
@@ -225,7 +233,7 @@ final class IsoCurrencyProvider
     public function getCurrenciesForCountry(string $countryCode): array
     {
         if ($this->countryToCurrency === null) {
-            /** @var array<string, list<string>> $countryToCurrency */
+            /** @var array<string, list<non-empty-string>> $countryToCurrency */
             $countryToCurrency = require __DIR__ . '/../data/country-to-currency.php';
 
             $this->countryToCurrency = $countryToCurrency;
@@ -257,7 +265,7 @@ final class IsoCurrencyProvider
     public function getHistoricalCurrenciesForCountry(string $countryCode): array
     {
         if ($this->countryToCurrencyHistorical === null) {
-            /** @var array<string, list<string>> $countryToCurrencyHistorical */
+            /** @var array<string, list<non-empty-string>> $countryToCurrencyHistorical */
             $countryToCurrencyHistorical = require __DIR__ . '/../data/country-to-currency-historical.php';
 
             $this->countryToCurrencyHistorical = $countryToCurrencyHistorical;

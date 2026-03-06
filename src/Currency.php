@@ -16,7 +16,7 @@ use Stringable;
 final readonly class Currency implements Stringable, JsonSerializable
 {
     /**
-     * @param string                $currencyCode          The currency code. For ISO currencies this will be the 3-letter
+     * @param non-empty-string      $currencyCode          The currency code. For ISO currencies this will be the 3-letter
      *                                                     uppercase ISO 4217 currency code. For non-ISO currencies no
      *                                                     constraints are defined, but the code must be unique across an
      *                                                     application and must not conflict with ISO currency codes.
@@ -25,7 +25,7 @@ final readonly class Currency implements Stringable, JsonSerializable
      *                                                     are defined, but the code must be unique across an application and
      *                                                     must not conflict with ISO currency codes. Set to null if the currency
      *                                                     does not have a numeric code.
-     * @param string                $name                  The currency name. For ISO currencies this will be the official
+     * @param non-empty-string      $name                  The currency name. For ISO currencies this will be the official
      *                                                     English name of the currency. For non-ISO currencies no constraints
      *                                                     are defined.
      * @param non-negative-int      $defaultFractionDigits The default number of fraction digits (typical scale) used with this
@@ -107,6 +107,8 @@ final readonly class Currency implements Stringable, JsonSerializable
      * For ISO currencies this will be the 3-letter uppercase ISO 4217 currency code.
      * For non-ISO currencies no constraints are defined.
      *
+     * @return non-empty-string
+     *
      * @pure
      */
     public function getCurrencyCode(): string
@@ -134,6 +136,8 @@ final readonly class Currency implements Stringable, JsonSerializable
      *
      * For ISO currencies this will be the official English name of the currency.
      * For non-ISO currencies no constraints are defined.
+     *
+     * @return non-empty-string
      *
      * @pure
      */
@@ -198,6 +202,8 @@ final readonly class Currency implements Stringable, JsonSerializable
 
     /**
      * Returns the currency code.
+     *
+     * @return non-empty-string
      *
      * @pure
      */
