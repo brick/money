@@ -12,6 +12,7 @@ use Override;
 
 use function array_map;
 use function array_values;
+use function ksort;
 
 /**
  * Container for monies in different currencies.
@@ -21,7 +22,7 @@ use function array_values;
 final readonly class MoneyBag implements Monetary, JsonSerializable
 {
     /**
-     * @param array<string, RationalMoney> $monies The monies in this bag, indexed by currency code.
+     * @param array<string, RationalMoney> $monies The monies in this bag, indexed and sorted by currency code.
      *
      * @pure
      */
@@ -130,6 +131,8 @@ final readonly class MoneyBag implements Monetary, JsonSerializable
      */
     private static function accumulate(array $monies, Monetary $money, Closure $fn): array
     {
+        $sort = false;
+
         foreach ($money->getMonies() as $containedMoney) {
             $currency = $containedMoney->getCurrency();
             $currencyCode = $currency->getCurrencyCode();
@@ -139,8 +142,14 @@ final readonly class MoneyBag implements Monetary, JsonSerializable
             if ($result->isZero()) {
                 unset($monies[$currencyCode]);
             } else {
+                $sort = $sort || ! isset($monies[$currencyCode]);
                 $monies[$currencyCode] = $result;
             }
+        }
+
+        if ($sort) {
+            // @phpstan-ignore possiblyImpure.functionCall
+            ksort($monies);
         }
 
         return $monies;

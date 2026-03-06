@@ -60,9 +60,9 @@ class MoneyBagTest extends AbstractTestCase
         $moneyBag = $moneyBag->plus(Money::of('0.1234', new Currency('BTC', 0, 'Bitcoin', 8)));
         self::assertMoneyBagContains(
             [
+                Money::of('0.1234', new Currency('BTC', 0, 'Bitcoin', 8)),
                 RationalMoney::of('21284003/60000', 'EUR'),
                 Money::of('4.1234', 'JPY', new AutoContext()),
-                Money::of('0.1234', new Currency('BTC', 0, 'Bitcoin', 8)),
             ],
             $moneyBag,
         );
@@ -111,9 +111,9 @@ class MoneyBagTest extends AbstractTestCase
         $moneyBag = $moneyBag->plus(Money::of('0.1234', new Currency('BTC', 0, 'Bitcoin', 8)));
         self::assertMoneyBagContains(
             [
+                Money::of('0.1234', new Currency('BTC', 0, 'Bitcoin', 8)),
                 RationalMoney::of('21284003/60000', 'EUR'),
                 Money::of('4.1234', 'JPY', new AutoContext()),
-                Money::of('0.1234', new Currency('BTC', 0, 'Bitcoin', 8)),
             ],
             $moneyBag,
         );
@@ -184,9 +184,9 @@ class MoneyBagTest extends AbstractTestCase
             ->plus(Money::of('100', 'JPY'));
 
         $expected = [
-            ['amount' => '123/100', 'currency' => 'USD'],
             ['amount' => '3/7', 'currency' => 'EUR'],
             ['amount' => '100', 'currency' => 'JPY'],
+            ['amount' => '123/100', 'currency' => 'USD'],
         ];
 
         self::assertSame($expected, $moneyBag->jsonSerialize());
