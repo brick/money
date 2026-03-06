@@ -38,11 +38,13 @@ final readonly class BaseCurrencyProvider implements ExchangeRateProvider
     #[Override]
     public function getExchangeRate(Currency $sourceCurrency, Currency $targetCurrency, array $dimensions = []): ?BigNumber
     {
-        if ($sourceCurrency->isEqualTo($this->baseCurrency)) {
+        $baseCurrencyCode = $this->baseCurrency->getCurrencyCode();
+
+        if ($sourceCurrency->getCurrencyCode() === $baseCurrencyCode) {
             return $this->provider->getExchangeRate($sourceCurrency, $targetCurrency, $dimensions);
         }
 
-        if ($targetCurrency->isEqualTo($this->baseCurrency)) {
+        if ($targetCurrency->getCurrencyCode() === $baseCurrencyCode) {
             $exchangeRate = $this->provider->getExchangeRate($targetCurrency, $sourceCurrency, $dimensions);
 
             if ($exchangeRate === null) {
