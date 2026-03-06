@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Brick\Money\Tests\ExchangeRateProvider;
 
 use Brick\Money\Currency;
+use Brick\Money\Exception\ExchangeRateProviderException;
 use Brick\Money\ExchangeRateProvider;
 use Brick\Money\ExchangeRateProvider\BaseCurrencyProvider;
 use Brick\Money\ExchangeRateProvider\ConfigurableProvider;
@@ -70,6 +71,33 @@ class BaseCurrencyProviderTest extends AbstractTestCase
             ['JPY', 'CAD', null],
             ['JPY', 'JPY', '1'],
         ];
+    }
+
+    public function testThrowsExceptionWhenReverseRateIsZero(): void
+    {
+        $provider = new ConfigurableProvider();
+        $provider->setExchangeRate('USD', 'EUR', '0');
+
+        $baseProvider = new BaseCurrencyProvider($provider, 'USD');
+
+        $this->expectException(ExchangeRateProviderException::class);
+        $this->expectExceptionMessage('Failed to derive exchange rate from base-currency rates: encountered a zero rate.');
+
+        $baseProvider->getExchangeRate(Currency::of('EUR'), Currency::of('USD'));
+    }
+
+    public function testThrowsExceptionWhenSourceRateIsZero(): void
+    {
+        $provider = new ConfigurableProvider();
+        $provider->setExchangeRate('USD', 'EUR', '0');
+        $provider->setExchangeRate('USD', 'GBP', '0.8');
+
+        $baseProvider = new BaseCurrencyProvider($provider, 'USD');
+
+        $this->expectException(ExchangeRateProviderException::class);
+        $this->expectExceptionMessage('Failed to derive exchange rate from base-currency rates: encountered a zero rate.');
+
+        $baseProvider->getExchangeRate(Currency::of('EUR'), Currency::of('GBP'));
     }
 
     private function getExchangeRateProvider(): ExchangeRateProvider
