@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Brick\Money;
 
 use Brick\Math\BigNumber;
-use Brick\Math\Exception\MathException;
+use Brick\Math\Exception\NumberFormatException;
 use Brick\Math\Exception\RoundingNecessaryException;
 use Brick\Math\RoundingMode;
 use Brick\Money\Exception\MoneyMismatchException;
@@ -153,7 +153,7 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
      *
      * @return -1|0|1 If `$this` is less than, equal to, or greater than `$that`.
      *
-     * @throws MathException          If the argument is an invalid number.
+     * @throws NumberFormatException  If the argument is not a valid number.
      * @throws MoneyMismatchException If the argument is a money in a different currency.
      *
      * @pure
@@ -166,7 +166,7 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
     /**
      * Returns whether this money is equal to the given amount.
      *
-     * @throws MathException          If the argument is an invalid number.
+     * @throws NumberFormatException  If the argument is not a valid number.
      * @throws MoneyMismatchException If the argument is a money in a different currency.
      *
      * @pure
@@ -179,7 +179,7 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
     /**
      * Returns whether this money is less than the given amount.
      *
-     * @throws MathException          If the argument is an invalid number.
+     * @throws NumberFormatException  If the argument is not a valid number.
      * @throws MoneyMismatchException If the argument is a money in a different currency.
      *
      * @pure
@@ -192,7 +192,7 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
     /**
      * Returns whether this money is less than or equal to the given amount.
      *
-     * @throws MathException          If the argument is an invalid number.
+     * @throws NumberFormatException  If the argument is not a valid number.
      * @throws MoneyMismatchException If the argument is a money in a different currency.
      *
      * @pure
@@ -205,7 +205,7 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
     /**
      * Returns whether this money is greater than the given amount.
      *
-     * @throws MathException          If the argument is an invalid number.
+     * @throws NumberFormatException  If the argument is not a valid number.
      * @throws MoneyMismatchException If the argument is a money in a different currency.
      *
      * @pure
@@ -218,7 +218,7 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
     /**
      * Returns whether this money is greater than or equal to the given amount.
      *
-     * @throws MathException          If the argument is an invalid number.
+     * @throws NumberFormatException  If the argument is not a valid number.
      * @throws MoneyMismatchException If the argument is a money in a different currency.
      *
      * @pure

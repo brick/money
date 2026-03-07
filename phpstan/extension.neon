@@ -1,0 +1,25 @@
+services:
+	-
+		class: Brick\Money\PHPStan\MoneyFactoryThrowTypeExtension
+		tags:
+			- phpstan.dynamicStaticMethodThrowTypeExtension
+
+	-
+		class: Brick\Money\PHPStan\MoneyFactoryRoundingModeThrowTypeExtension
+		tags:
+			- phpstan.dynamicStaticMethodThrowTypeExtension
+
+	-
+		class: Brick\Money\PHPStan\MoneyOperationThrowTypeExtension
+		tags:
+			- phpstan.dynamicMethodThrowTypeExtension
+
+	-
+		class: Brick\Money\PHPStan\MoneyRoundingModeThrowTypeExtension
+		tags:
+			- phpstan.dynamicMethodThrowTypeExtension
+
+	-
+		class: Brick\Money\PHPStan\CurrencyConverterThrowTypeExtension
+		tags:
+			- phpstan.dynamicMethodThrowTypeExtension

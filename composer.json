@@ -24,12 +24,20 @@
     },
     "autoload": {
         "psr-4": {
-            "Brick\\Money\\": "src/"
+            "Brick\\Money\\": "src/",
+            "Brick\\Money\\PHPStan\\": "phpstan/"
         }
     },
     "autoload-dev": {
         "psr-4": {
             "Brick\\Money\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "phpstan": {
+            "includes": [
+                "phpstan/extension.neon"
+            ]
         }
     },
     "config": {

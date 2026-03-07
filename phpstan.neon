@@ -1,7 +1,11 @@
+includes:
+    - phpstan/extension.neon
+
 parameters:
     level: 10
     paths:
         - src
+        - phpstan
     ignoreErrors:
         # Methods that return void are considered impure.
         # https://phpstan.org/blog/remembering-and-forgetting-returned-values

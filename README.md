@@ -490,6 +490,21 @@ If you're using an ORM such as Doctrine, it is advised to store the amount and c
   }
   ```
 
+## PHPStan extensions
+
+This library ships with PHPStan extensions that narrow throw types based on argument types.
+For example, PHPStan will know that `Money::of(100, 'USD')` cannot throw `UnknownCurrencyException`, or that
+`dividedBy($int, RoundingMode::Down)` can only throw `DivisionByZeroException`.
+
+If you use [`phpstan/extension-installer`](https://github.com/phpstan/extension-installer), the extension is registered automatically.
+
+Otherwise, include `phpstan/extension.neon` in your PHPStan configuration:
+
+```neon
+includes:
+    - vendor/brick/money/phpstan/extension.neon
+```
+
 ## FAQ
 
 > How does this project compare with [moneyphp/money](https://github.com/moneyphp/money)?

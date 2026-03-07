@@ -8,7 +8,8 @@ use Brick\Math\BigDecimal;
 use Brick\Math\BigInteger;
 use Brick\Math\BigNumber;
 use Brick\Math\BigRational;
-use Brick\Math\Exception\MathException;
+use Brick\Math\Exception\DivisionByZeroException;
+use Brick\Math\Exception\NumberFormatException;
 use Brick\Math\Exception\RoundingNecessaryException;
 use Brick\Math\RoundingMode;
 use Brick\Money\Context\DefaultContext;
@@ -174,7 +175,7 @@ final readonly class Money extends AbstractMoney
      * @param Context|null         $context      An optional Context, defaults to DefaultContext.
      * @param RoundingMode         $roundingMode An optional RoundingMode, if the amount does not fit the context.
      *
-     * @throws MathException              If the amount is not a valid number.
+     * @throws NumberFormatException      If the amount is not a valid number.
      * @throws UnknownCurrencyException   If the currency is an unknown currency code.
      * @throws RoundingNecessaryException If the rounding mode is RoundingMode::Unnecessary, and rounding is necessary
      *                                    to represent the amount at the requested scale.
@@ -217,7 +218,7 @@ final readonly class Money extends AbstractMoney
      * @param Context|null         $context      An optional Context, defaults to DefaultContext.
      * @param RoundingMode         $roundingMode An optional RoundingMode, if the amount does not fit the context.
      *
-     * @throws MathException              If the amount is not a valid number.
+     * @throws NumberFormatException      If the amount is not a valid number.
      * @throws UnknownCurrencyException   If the currency is an unknown currency code.
      * @throws RoundingNecessaryException If the rounding mode is RoundingMode::Unnecessary, and rounding is necessary
      *                                    to represent the amount at the requested scale.
@@ -351,8 +352,9 @@ final readonly class Money extends AbstractMoney
      * @param AbstractMoney|BigNumber|int|string $that         The money or amount to add.
      * @param RoundingMode                       $roundingMode An optional RoundingMode constant.
      *
-     * @throws MathException          If the argument is an invalid number or rounding is necessary.
-     * @throws MoneyMismatchException If the argument is a money in a different currency or in a different context.
+     * @throws NumberFormatException      If the argument is not a valid number.
+     * @throws RoundingNecessaryException If the rounding mode is RoundingMode::Unnecessary, and rounding is necessary.
+     * @throws MoneyMismatchException     If the argument is a money in a different currency or in a different context.
      *
      * @pure
      */
@@ -387,8 +389,9 @@ final readonly class Money extends AbstractMoney
      * @param AbstractMoney|BigNumber|int|string $that         The money or amount to subtract.
      * @param RoundingMode                       $roundingMode An optional RoundingMode constant.
      *
-     * @throws MathException          If the argument is an invalid number or rounding is necessary.
-     * @throws MoneyMismatchException If the argument is a money in a different currency or in a different context.
+     * @throws NumberFormatException      If the argument is not a valid number.
+     * @throws RoundingNecessaryException If the rounding mode is RoundingMode::Unnecessary, and rounding is necessary.
+     * @throws MoneyMismatchException     If the argument is a money in a different currency or in a different context.
      *
      * @pure
      */
@@ -419,7 +422,8 @@ final readonly class Money extends AbstractMoney
      * @param BigNumber|int|string $that         The multiplier.
      * @param RoundingMode         $roundingMode An optional RoundingMode constant.
      *
-     * @throws MathException If the argument is an invalid number or rounding is necessary.
+     * @throws NumberFormatException      If the argument is not a valid number.
+     * @throws RoundingNecessaryException If the rounding mode is RoundingMode::Unnecessary, and rounding is necessary.
      *
      * @pure
      */
@@ -440,7 +444,9 @@ final readonly class Money extends AbstractMoney
      * @param BigNumber|int|string $that         The divisor.
      * @param RoundingMode         $roundingMode An optional RoundingMode constant.
      *
-     * @throws MathException If the argument is an invalid number or is zero, or rounding is necessary.
+     * @throws NumberFormatException      If the argument is not a valid number.
+     * @throws DivisionByZeroException    If the divisor is zero.
+     * @throws RoundingNecessaryException If the rounding mode is RoundingMode::Unnecessary, and rounding is necessary.
      *
      * @pure
      */
@@ -459,7 +465,9 @@ final readonly class Money extends AbstractMoney
      *
      * @param BigNumber|int|string $that The divisor. Must be convertible to a BigInteger.
      *
-     * @throws MathException If the divisor cannot be converted to a BigInteger.
+     * @throws NumberFormatException      If the divisor is not a valid number.
+     * @throws RoundingNecessaryException If the divisor is not convertible to a BigInteger.
+     * @throws DivisionByZeroException    If the divisor is zero.
      *
      * @pure
      */
@@ -487,7 +495,9 @@ final readonly class Money extends AbstractMoney
      *
      * @return array{Money, Money} The quotient and the remainder.
      *
-     * @throws MathException If the divisor cannot be converted to a BigInteger.
+     * @throws NumberFormatException      If the divisor is not a valid number.
+     * @throws RoundingNecessaryException If the divisor is not convertible to a BigInteger.
+     * @throws DivisionByZeroException    If the divisor is zero.
      *
      * @pure
      */
@@ -726,8 +736,9 @@ final readonly class Money extends AbstractMoney
      * @param Context|null         $context      An optional context, defaults to DefaultContext.
      * @param RoundingMode         $roundingMode An optional rounding mode.
      *
-     * @throws UnknownCurrencyException If an unknown currency code is given.
-     * @throws MathException            If the exchange rate or rounding mode is invalid, or rounding is necessary.
+     * @throws UnknownCurrencyException   If an unknown currency code is given.
+     * @throws NumberFormatException      If the exchange rate is not a valid number.
+     * @throws RoundingNecessaryException If the rounding mode is RoundingMode::Unnecessary, and rounding is necessary.
      *
      * @pure
      */
