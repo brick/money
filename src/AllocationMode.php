@@ -7,7 +7,7 @@ namespace Brick\Money;
 /**
  * Determines the allocation algorithm and how the remainder is handled.
  */
-enum AllocationMethod
+enum AllocationMode
 {
     /**
      * Each allocatee receives a proportional floor amount; the remainder is distributed unit by unit to the first
