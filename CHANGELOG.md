@@ -12,8 +12,8 @@
   - `Money::ofMinor()`
   - `Money::zero()`
   - `Money::convertedTo()`
-- `Money::allocate()` signature has changed: replace `allocate(1, 2, 3)` with `allocate([1, 2, 3], AllocationMethod::FloorToFirst)` to keep the same behaviour as before
-- `Money::allocateWithRemainder()` has been removed: replace `allocateWithRemainder(1, 2, 3)` with `allocate([1, 2, 3], AllocationMethod::BlockSeparate)` to keep the same behaviour as before
+- `Money::allocate()` signature has changed: replace `allocate(1, 2, 3)` with `allocate([1, 2, 3], AllocationMode::FloorToFirst)` to keep the same behaviour as before
+- `Money::allocateWithRemainder()` has been removed: replace `allocateWithRemainder(1, 2, 3)` with `allocate([1, 2, 3], AllocationMode::BlockSeparate)` to keep the same behaviour as before
 - `Money::split()` signature has changed: replace `split(3)` with `split(3, SplitMode::ToFirst)` to keep the same behaviour as before
 - `Money::splitWithRemainder()` has been removed: replace `splitWithRemainder(3)` with `split(3, SplitMode::Separate)` to keep the same behaviour as before
 - The following methods now throw an exception when used on a `Money` with `AutoContext`:
@@ -42,7 +42,7 @@ Deprecated methods removed:
 
 - Support for custom dimensions (date, rate type, ...) in `ExchangeRateProvider`, `CurrencyConverter` and `MoneyComparator`
 - Support for `Money` and `RationalMoney` in `MoneyComparator`
-- New `Money::allocate()` API with five algorithms, exposed through the new `AllocationMethod` enum:
+- New `Money::allocate()` API with five algorithms, exposed through the new `AllocationMode` enum:
   - `FloorToFirst` (this is the implementation `allocate()` used previously)
   - `FloorToLargestRatio`
   - `FloorToLargestRemainder`

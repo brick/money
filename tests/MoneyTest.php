@@ -11,7 +11,7 @@ use Brick\Math\Exception\DivisionByZeroException;
 use Brick\Math\Exception\NumberFormatException;
 use Brick\Math\Exception\RoundingNecessaryException;
 use Brick\Math\RoundingMode;
-use Brick\Money\AllocationMethod;
+use Brick\Money\AllocationMode;
 use Brick\Money\Context;
 use Brick\Money\Context\AutoContext;
 use Brick\Money\Context\CashContext;
@@ -384,10 +384,10 @@ class MoneyTest extends AbstractTestCase
     }
 
     #[DataProvider('providerAllocate')]
-    public function testAllocate(array $money, array $ratios, AllocationMethod $method, array $expected): void
+    public function testAllocate(array $money, array $ratios, AllocationMode $mode, array $expected): void
     {
         $money = Money::of(...$money);
-        $monies = $money->allocate($ratios, $method);
+        $monies = $money->allocate($ratios, $mode);
         self::assertMoniesAre($expected, $monies);
     }
 
@@ -395,75 +395,75 @@ class MoneyTest extends AbstractTestCase
     {
         return [
             // FloorToFirst (Fowler): remainder to first allocatees in order.
-            [[1, 'USD'], [2, 3, 1], AllocationMethod::FloorToFirst, ['USD 0.34', 'USD 0.50', 'USD 0.16']],
-            [['99.99', 'USD'], [100], AllocationMethod::FloorToFirst, ['USD 99.99']],
-            [['99.99', 'USD'], [100, 100], AllocationMethod::FloorToFirst, ['USD 50.00', 'USD 49.99']],
-            [[100, 'USD'], [30, 20, 40], AllocationMethod::FloorToFirst, ['USD 33.34', 'USD 22.22', 'USD 44.44']],
-            [[100, 'USD'], [30, 20, 40, 40], AllocationMethod::FloorToFirst, ['USD 23.08', 'USD 15.39', 'USD 30.77', 'USD 30.76']],
-            [[100, 'USD'], [30, 20, 40, 0, 40, 0], AllocationMethod::FloorToFirst, ['USD 23.08', 'USD 15.39', 'USD 30.77', 'USD 0.00', 'USD 30.76', 'USD 0.00']],
-            [[100, 'CHF', new CashContext(5)], [1, 2, 3, 7], AllocationMethod::FloorToFirst, ['CHF 7.70', 'CHF 15.40', 'CHF 23.10', 'CHF 53.80']],
-            [['0.02', 'EUR'], [1, 1, 1, 1], AllocationMethod::FloorToFirst, ['EUR 0.01', 'EUR 0.01', 'EUR 0.00', 'EUR 0.00']],
-            [['0.02', 'EUR'], [1, 1, 3, 1], AllocationMethod::FloorToFirst, ['EUR 0.01', 'EUR 0.00', 'EUR 0.01', 'EUR 0.00']],
-            [[-100, 'USD'], [30, 20, 40, 40], AllocationMethod::FloorToFirst, ['USD -23.08', 'USD -15.39', 'USD -30.77', 'USD -30.76']],
-            [['0.03', 'GBP'], [75, 25], AllocationMethod::FloorToFirst, ['GBP 0.03', 'GBP 0.00']],
-            [[100, 'USD'], ['30', BigNumber::of(20), '40'], AllocationMethod::FloorToFirst, ['USD 33.34', 'USD 22.22', 'USD 44.44']],
-            [[100, 'USD'], ['0.5', BigRational::of('3/2')], AllocationMethod::FloorToFirst, ['USD 25.00', 'USD 75.00']],
-            [[100, 'USD'], [BigRational::of('1/3'), BigRational::of('2/3')], AllocationMethod::FloorToFirst, ['USD 33.34', 'USD 66.66']],
-            [[100, 'USD'], [BigRational::of('1/3'), BigRational::of('2/7')], AllocationMethod::FloorToFirst, ['USD 53.85', 'USD 46.15']],
-            [[100, 'USD'], [BigRational::of('2/7'), BigRational::of('1/3')], AllocationMethod::FloorToFirst, ['USD 46.16', 'USD 53.84']],
+            [[1, 'USD'], [2, 3, 1], AllocationMode::FloorToFirst, ['USD 0.34', 'USD 0.50', 'USD 0.16']],
+            [['99.99', 'USD'], [100], AllocationMode::FloorToFirst, ['USD 99.99']],
+            [['99.99', 'USD'], [100, 100], AllocationMode::FloorToFirst, ['USD 50.00', 'USD 49.99']],
+            [[100, 'USD'], [30, 20, 40], AllocationMode::FloorToFirst, ['USD 33.34', 'USD 22.22', 'USD 44.44']],
+            [[100, 'USD'], [30, 20, 40, 40], AllocationMode::FloorToFirst, ['USD 23.08', 'USD 15.39', 'USD 30.77', 'USD 30.76']],
+            [[100, 'USD'], [30, 20, 40, 0, 40, 0], AllocationMode::FloorToFirst, ['USD 23.08', 'USD 15.39', 'USD 30.77', 'USD 0.00', 'USD 30.76', 'USD 0.00']],
+            [[100, 'CHF', new CashContext(5)], [1, 2, 3, 7], AllocationMode::FloorToFirst, ['CHF 7.70', 'CHF 15.40', 'CHF 23.10', 'CHF 53.80']],
+            [['0.02', 'EUR'], [1, 1, 1, 1], AllocationMode::FloorToFirst, ['EUR 0.01', 'EUR 0.01', 'EUR 0.00', 'EUR 0.00']],
+            [['0.02', 'EUR'], [1, 1, 3, 1], AllocationMode::FloorToFirst, ['EUR 0.01', 'EUR 0.00', 'EUR 0.01', 'EUR 0.00']],
+            [[-100, 'USD'], [30, 20, 40, 40], AllocationMode::FloorToFirst, ['USD -23.08', 'USD -15.39', 'USD -30.77', 'USD -30.76']],
+            [['0.03', 'GBP'], [75, 25], AllocationMode::FloorToFirst, ['GBP 0.03', 'GBP 0.00']],
+            [[100, 'USD'], ['30', BigNumber::of(20), '40'], AllocationMode::FloorToFirst, ['USD 33.34', 'USD 22.22', 'USD 44.44']],
+            [[100, 'USD'], ['0.5', BigRational::of('3/2')], AllocationMode::FloorToFirst, ['USD 25.00', 'USD 75.00']],
+            [[100, 'USD'], [BigRational::of('1/3'), BigRational::of('2/3')], AllocationMode::FloorToFirst, ['USD 33.34', 'USD 66.66']],
+            [[100, 'USD'], [BigRational::of('1/3'), BigRational::of('2/7')], AllocationMode::FloorToFirst, ['USD 53.85', 'USD 46.15']],
+            [[100, 'USD'], [BigRational::of('2/7'), BigRational::of('1/3')], AllocationMode::FloorToFirst, ['USD 46.16', 'USD 53.84']],
 
             // FloorToLargestRemainder (Hamilton): remainder to allocatees with the largest fractional parts.
-            [[1, 'USD'], [2, 3, 1], AllocationMethod::FloorToLargestRemainder, ['USD 0.33', 'USD 0.50', 'USD 0.17']],
-            [['99.99', 'USD'], [100], AllocationMethod::FloorToLargestRemainder, ['USD 99.99']],
-            [['99.99', 'USD'], [100, 100], AllocationMethod::FloorToLargestRemainder, ['USD 50.00', 'USD 49.99']],
-            [[100, 'USD'], [30, 20, 40], AllocationMethod::FloorToLargestRemainder, ['USD 33.33', 'USD 22.22', 'USD 44.45']],
-            [[100, 'USD'], [30, 20, 40, 40], AllocationMethod::FloorToLargestRemainder, ['USD 23.08', 'USD 15.38', 'USD 30.77', 'USD 30.77']],
-            [[100, 'USD'], [30, 20, 40, 0, 0, 40], AllocationMethod::FloorToLargestRemainder, ['USD 23.08', 'USD 15.38', 'USD 30.77', 'USD 0.00', 'USD 0.00', 'USD 30.77']],
-            [[100, 'CHF', new CashContext(5)], [1, 2, 3, 7], AllocationMethod::FloorToLargestRemainder, ['CHF 7.70', 'CHF 15.40', 'CHF 23.05', 'CHF 53.85']],
-            [['0.02', 'EUR'], [1, 1, 1, 1], AllocationMethod::FloorToLargestRemainder, ['EUR 0.01', 'EUR 0.01', 'EUR 0.00', 'EUR 0.00']],
-            [['0.02', 'EUR'], [1, 1, 3, 1], AllocationMethod::FloorToLargestRemainder, ['EUR 0.01', 'EUR 0.00', 'EUR 0.01', 'EUR 0.00']],
-            [[-100, 'USD'], [30, 20, 40, 40], AllocationMethod::FloorToLargestRemainder, ['USD -23.08', 'USD -15.38', 'USD -30.77', 'USD -30.77']],
-            [['0.03', 'GBP'], [75, 25], AllocationMethod::FloorToLargestRemainder, ['GBP 0.02', 'GBP 0.01']],
-            [[100, 'USD'], [BigRational::of('1/3'), BigRational::of('2/3')], AllocationMethod::FloorToLargestRemainder, ['USD 33.33', 'USD 66.67']],
-            [[100, 'USD'], [BigRational::of('1/3'), BigRational::of('2/7')], AllocationMethod::FloorToLargestRemainder, ['USD 53.85', 'USD 46.15']],
-            [[100, 'USD'], [BigRational::of('2/7'), BigRational::of('1/3')], AllocationMethod::FloorToLargestRemainder, ['USD 46.15', 'USD 53.85']],
+            [[1, 'USD'], [2, 3, 1], AllocationMode::FloorToLargestRemainder, ['USD 0.33', 'USD 0.50', 'USD 0.17']],
+            [['99.99', 'USD'], [100], AllocationMode::FloorToLargestRemainder, ['USD 99.99']],
+            [['99.99', 'USD'], [100, 100], AllocationMode::FloorToLargestRemainder, ['USD 50.00', 'USD 49.99']],
+            [[100, 'USD'], [30, 20, 40], AllocationMode::FloorToLargestRemainder, ['USD 33.33', 'USD 22.22', 'USD 44.45']],
+            [[100, 'USD'], [30, 20, 40, 40], AllocationMode::FloorToLargestRemainder, ['USD 23.08', 'USD 15.38', 'USD 30.77', 'USD 30.77']],
+            [[100, 'USD'], [30, 20, 40, 0, 0, 40], AllocationMode::FloorToLargestRemainder, ['USD 23.08', 'USD 15.38', 'USD 30.77', 'USD 0.00', 'USD 0.00', 'USD 30.77']],
+            [[100, 'CHF', new CashContext(5)], [1, 2, 3, 7], AllocationMode::FloorToLargestRemainder, ['CHF 7.70', 'CHF 15.40', 'CHF 23.05', 'CHF 53.85']],
+            [['0.02', 'EUR'], [1, 1, 1, 1], AllocationMode::FloorToLargestRemainder, ['EUR 0.01', 'EUR 0.01', 'EUR 0.00', 'EUR 0.00']],
+            [['0.02', 'EUR'], [1, 1, 3, 1], AllocationMode::FloorToLargestRemainder, ['EUR 0.01', 'EUR 0.00', 'EUR 0.01', 'EUR 0.00']],
+            [[-100, 'USD'], [30, 20, 40, 40], AllocationMode::FloorToLargestRemainder, ['USD -23.08', 'USD -15.38', 'USD -30.77', 'USD -30.77']],
+            [['0.03', 'GBP'], [75, 25], AllocationMode::FloorToLargestRemainder, ['GBP 0.02', 'GBP 0.01']],
+            [[100, 'USD'], [BigRational::of('1/3'), BigRational::of('2/3')], AllocationMode::FloorToLargestRemainder, ['USD 33.33', 'USD 66.67']],
+            [[100, 'USD'], [BigRational::of('1/3'), BigRational::of('2/7')], AllocationMode::FloorToLargestRemainder, ['USD 53.85', 'USD 46.15']],
+            [[100, 'USD'], [BigRational::of('2/7'), BigRational::of('1/3')], AllocationMode::FloorToLargestRemainder, ['USD 46.15', 'USD 53.85']],
 
             // FloorToLargestRatio: remainder to allocatees with the largest ratios.
-            [[1, 'USD'], [2, 3, 1], AllocationMethod::FloorToLargestRatio, ['USD 0.33', 'USD 0.51', 'USD 0.16']],
-            [['99.99', 'USD'], [100, 100], AllocationMethod::FloorToLargestRatio, ['USD 50.00', 'USD 49.99']],
-            [[100, 'USD'], [30, 20, 40], AllocationMethod::FloorToLargestRatio, ['USD 33.33', 'USD 22.22', 'USD 44.45']],
-            [['0.05', 'USD'], [3, 3, 4], AllocationMethod::FloorToLargestRatio, ['USD 0.01', 'USD 0.01', 'USD 0.03']],
-            [['0.09', 'USD'], [3, 3, 4], AllocationMethod::FloorToLargestRatio, ['USD 0.03', 'USD 0.02', 'USD 0.04']],
-            [[-100, 'USD'], [30, 20, 40, 40], AllocationMethod::FloorToLargestRatio, ['USD -23.08', 'USD -15.38', 'USD -30.77', 'USD -30.77']],
+            [[1, 'USD'], [2, 3, 1], AllocationMode::FloorToLargestRatio, ['USD 0.33', 'USD 0.51', 'USD 0.16']],
+            [['99.99', 'USD'], [100, 100], AllocationMode::FloorToLargestRatio, ['USD 50.00', 'USD 49.99']],
+            [[100, 'USD'], [30, 20, 40], AllocationMode::FloorToLargestRatio, ['USD 33.33', 'USD 22.22', 'USD 44.45']],
+            [['0.05', 'USD'], [3, 3, 4], AllocationMode::FloorToLargestRatio, ['USD 0.01', 'USD 0.01', 'USD 0.03']],
+            [['0.09', 'USD'], [3, 3, 4], AllocationMode::FloorToLargestRatio, ['USD 0.03', 'USD 0.02', 'USD 0.04']],
+            [[-100, 'USD'], [30, 20, 40, 40], AllocationMode::FloorToLargestRatio, ['USD -23.08', 'USD -15.38', 'USD -30.77', 'USD -30.77']],
 
             // FloorSeparate: remainder as last element.
-            [[1, 'USD'], [2, 3, 1], AllocationMethod::FloorSeparate, ['USD 0.33', 'USD 0.50', 'USD 0.16', 'USD 0.01']],
-            [['99.99', 'USD'], [100], AllocationMethod::FloorSeparate, ['USD 99.99', 'USD 0.00']],
-            [['99.99', 'USD'], [100, 100], AllocationMethod::FloorSeparate, ['USD 49.99', 'USD 49.99', 'USD 0.01']],
-            [[100, 'USD'], [30, 20, 40], AllocationMethod::FloorSeparate, ['USD 33.33', 'USD 22.22', 'USD 44.44', 'USD 0.01']],
-            [['0.03', 'GBP'], [75, 25], AllocationMethod::FloorSeparate, ['GBP 0.02', 'GBP 0.00', 'GBP 0.01']],
-            [[-100, 'USD'], [30, 20, 40, 40], AllocationMethod::FloorSeparate, ['USD -23.07', 'USD -15.38', 'USD -30.76', 'USD -30.76', 'USD -0.03']],
-            [[100, 'USD'], [BigRational::of('1/3'), BigRational::of('2/7')], AllocationMethod::FloorSeparate, ['USD 53.84', 'USD 46.15', 'USD 0.01']],
+            [[1, 'USD'], [2, 3, 1], AllocationMode::FloorSeparate, ['USD 0.33', 'USD 0.50', 'USD 0.16', 'USD 0.01']],
+            [['99.99', 'USD'], [100], AllocationMode::FloorSeparate, ['USD 99.99', 'USD 0.00']],
+            [['99.99', 'USD'], [100, 100], AllocationMode::FloorSeparate, ['USD 49.99', 'USD 49.99', 'USD 0.01']],
+            [[100, 'USD'], [30, 20, 40], AllocationMode::FloorSeparate, ['USD 33.33', 'USD 22.22', 'USD 44.44', 'USD 0.01']],
+            [['0.03', 'GBP'], [75, 25], AllocationMode::FloorSeparate, ['GBP 0.02', 'GBP 0.00', 'GBP 0.01']],
+            [[-100, 'USD'], [30, 20, 40, 40], AllocationMode::FloorSeparate, ['USD -23.07', 'USD -15.38', 'USD -30.76', 'USD -30.76', 'USD -0.03']],
+            [[100, 'USD'], [BigRational::of('1/3'), BigRational::of('2/7')], AllocationMode::FloorSeparate, ['USD 53.84', 'USD 46.15', 'USD 0.01']],
             // Issue #68: floor allocation actually distributes proportionally, unlike BlockSeparate.
-            [[1, 'USD'], [400, 0, 40, 20, 2], AllocationMethod::FloorSeparate, ['USD 0.86', 'USD 0.00', 'USD 0.08', 'USD 0.04', 'USD 0.00', 'USD 0.02']],
+            [[1, 'USD'], [400, 0, 40, 20, 2], AllocationMode::FloorSeparate, ['USD 0.86', 'USD 0.00', 'USD 0.08', 'USD 0.04', 'USD 0.00', 'USD 0.02']],
 
             // BlockSeparate: only complete blocks of sum(ratios) allocated, rest as remainder.
-            [[1, 'USD'], [2, 3, 1], AllocationMethod::BlockSeparate, ['USD 0.32', 'USD 0.48', 'USD 0.16', 'USD 0.04']],
-            [['99.99', 'USD'], [100], AllocationMethod::BlockSeparate, ['USD 99.99', 'USD 0.00']],
-            [['99.99', 'USD'], [100, 100], AllocationMethod::BlockSeparate, ['USD 49.99', 'USD 49.99', 'USD 0.01']],
-            [[100, 'USD'], [30, 20, 40], AllocationMethod::BlockSeparate, ['USD 33.33', 'USD 22.22', 'USD 44.44', 'USD 0.01']],
-            [[100, 'USD'], [30, 20, 40, 40], AllocationMethod::BlockSeparate, ['USD 23.07', 'USD 15.38', 'USD 30.76', 'USD 30.76', 'USD 0.03']],
-            [[100, 'USD'], [30, 20, 40, 0, 0, 40], AllocationMethod::BlockSeparate, ['USD 23.07', 'USD 15.38', 'USD 30.76', 'USD 0.00', 'USD 0.00', 'USD 30.76', 'USD 0.03']],
-            [[100, 'CHF', new CashContext(5)], [1, 2, 3, 7], AllocationMethod::BlockSeparate, ['CHF 7.65', 'CHF 15.30', 'CHF 22.95', 'CHF 53.55', 'CHF 0.55']],
-            [['0.02', 'EUR'], [1, 1, 1, 1], AllocationMethod::BlockSeparate, ['EUR 0.00', 'EUR 0.00', 'EUR 0.00', 'EUR 0.00', 'EUR 0.02']],
-            [['0.02', 'EUR'], [1, 1, 3, 1], AllocationMethod::BlockSeparate, ['EUR 0.00', 'EUR 0.00', 'EUR 0.00', 'EUR 0.00', 'EUR 0.02']],
-            [[-100, 'USD'], [30, 20, 40, 40], AllocationMethod::BlockSeparate, ['USD -23.07', 'USD -15.38', 'USD -30.76', 'USD -30.76', 'USD -0.03']],
-            [[100, 'USD'], ['30', BigNumber::of(20), '40'], AllocationMethod::BlockSeparate, ['USD 33.33', 'USD 22.22', 'USD 44.44', 'USD 0.01']],
-            [['100.01', 'USD'], ['0.5', BigRational::of('3/2')], AllocationMethod::BlockSeparate, ['USD 25.00', 'USD 75.00', 'USD 0.01']],
-            [[100, 'USD'], [BigRational::of('1/3'), BigRational::of('2/3')], AllocationMethod::BlockSeparate, ['USD 33.33', 'USD 66.66', 'USD 0.01']],
-            [[100, 'USD'], [BigRational::of('1/3'), BigRational::of('2/7')], AllocationMethod::BlockSeparate, ['USD 53.83', 'USD 46.14', 'USD 0.03']],
+            [[1, 'USD'], [2, 3, 1], AllocationMode::BlockSeparate, ['USD 0.32', 'USD 0.48', 'USD 0.16', 'USD 0.04']],
+            [['99.99', 'USD'], [100], AllocationMode::BlockSeparate, ['USD 99.99', 'USD 0.00']],
+            [['99.99', 'USD'], [100, 100], AllocationMode::BlockSeparate, ['USD 49.99', 'USD 49.99', 'USD 0.01']],
+            [[100, 'USD'], [30, 20, 40], AllocationMode::BlockSeparate, ['USD 33.33', 'USD 22.22', 'USD 44.44', 'USD 0.01']],
+            [[100, 'USD'], [30, 20, 40, 40], AllocationMode::BlockSeparate, ['USD 23.07', 'USD 15.38', 'USD 30.76', 'USD 30.76', 'USD 0.03']],
+            [[100, 'USD'], [30, 20, 40, 0, 0, 40], AllocationMode::BlockSeparate, ['USD 23.07', 'USD 15.38', 'USD 30.76', 'USD 0.00', 'USD 0.00', 'USD 30.76', 'USD 0.03']],
+            [[100, 'CHF', new CashContext(5)], [1, 2, 3, 7], AllocationMode::BlockSeparate, ['CHF 7.65', 'CHF 15.30', 'CHF 22.95', 'CHF 53.55', 'CHF 0.55']],
+            [['0.02', 'EUR'], [1, 1, 1, 1], AllocationMode::BlockSeparate, ['EUR 0.00', 'EUR 0.00', 'EUR 0.00', 'EUR 0.00', 'EUR 0.02']],
+            [['0.02', 'EUR'], [1, 1, 3, 1], AllocationMode::BlockSeparate, ['EUR 0.00', 'EUR 0.00', 'EUR 0.00', 'EUR 0.00', 'EUR 0.02']],
+            [[-100, 'USD'], [30, 20, 40, 40], AllocationMode::BlockSeparate, ['USD -23.07', 'USD -15.38', 'USD -30.76', 'USD -30.76', 'USD -0.03']],
+            [[100, 'USD'], ['30', BigNumber::of(20), '40'], AllocationMode::BlockSeparate, ['USD 33.33', 'USD 22.22', 'USD 44.44', 'USD 0.01']],
+            [['100.01', 'USD'], ['0.5', BigRational::of('3/2')], AllocationMode::BlockSeparate, ['USD 25.00', 'USD 75.00', 'USD 0.01']],
+            [[100, 'USD'], [BigRational::of('1/3'), BigRational::of('2/3')], AllocationMode::BlockSeparate, ['USD 33.33', 'USD 66.66', 'USD 0.01']],
+            [[100, 'USD'], [BigRational::of('1/3'), BigRational::of('2/7')], AllocationMode::BlockSeparate, ['USD 53.83', 'USD 46.14', 'USD 0.03']],
             // PR #55: allocates nothing when sum(ratios) > base units.
-            [['0.03', 'GBP'], [75, 25], AllocationMethod::BlockSeparate, ['GBP 0.00', 'GBP 0.00', 'GBP 0.03']],
+            [['0.03', 'GBP'], [75, 25], AllocationMode::BlockSeparate, ['GBP 0.00', 'GBP 0.00', 'GBP 0.03']],
         ];
     }
 
@@ -474,7 +474,7 @@ class MoneyTest extends AbstractTestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Cannot allocate() an empty list of ratios.');
 
-        $money->allocate([], AllocationMethod::FloorToFirst);
+        $money->allocate([], AllocationMode::FloorToFirst);
     }
 
     public function testAllocateNegativeRatios(): void
@@ -484,7 +484,7 @@ class MoneyTest extends AbstractTestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Cannot allocate() negative ratios.');
 
-        $money->allocate([1, 2, -1], AllocationMethod::FloorToFirst);
+        $money->allocate([1, 2, -1], AllocationMode::FloorToFirst);
     }
 
     public function testAllocateZeroRatios(): void
@@ -494,13 +494,13 @@ class MoneyTest extends AbstractTestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Cannot allocate() to zero ratios only.');
 
-        $money->allocate([0, 0, 0, 0, 0], AllocationMethod::FloorToFirst);
+        $money->allocate([0, 0, 0, 0, 0], AllocationMode::FloorToFirst);
     }
 
     public function testAllocateThrowsOnAutoContext(): void
     {
         $this->expectException(ContextException::class);
-        Money::of('100.123', 'EUR', new AutoContext())->allocate([1, 2, 3], AllocationMethod::FloorToFirst);
+        Money::of('100.123', 'EUR', new AutoContext())->allocate([1, 2, 3], AllocationMode::FloorToFirst);
     }
 
     #[DataProvider('providerSplit')]
