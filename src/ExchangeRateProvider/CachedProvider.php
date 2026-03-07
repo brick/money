@@ -10,6 +10,9 @@ use Brick\Money\ExchangeRateProvider;
 use Override;
 
 use function array_key_exists;
+use function json_encode;
+
+use const JSON_THROW_ON_ERROR;
 
 /**
  * Caches the results of another exchange rate provider.
@@ -49,7 +52,7 @@ final class CachedProvider implements ExchangeRateProvider
             $dimensionsCacheKey = null;
         }
 
-        $cacheKey = $sourceCurrencyCode . ':' . $targetCurrencyCode;
+        $cacheKey = json_encode([$sourceCurrencyCode, $targetCurrencyCode], JSON_THROW_ON_ERROR);
 
         if ($dimensionsCacheKey !== null) {
             $cacheKey .= ':' . $dimensionsCacheKey;

@@ -98,6 +98,39 @@ class CachedProviderTest extends AbstractTestCase
         self::assertSame(1, $mock->getCalls());
     }
 
+    public function testCacheKeysAreUnambiguousForCustomCurrencyCodes(): void
+    {
+        $mock = new ProviderMock();
+        $mock->setExchangeRate('A:B', 'C', '1.5');
+        $mock->setExchangeRate('A', 'B:C', '2.5');
+
+        $provider = new CachedProvider($mock);
+
+        $ab = new Currency('A:B', null, 'A:B', 0);
+        $c = new Currency('C', null, 'C', 0);
+        $a = new Currency('A', null, 'A', 0);
+        $bc = new Currency('B:C', null, 'B:C', 0);
+
+        $rate1 = $provider->getExchangeRate($ab, $c);
+        self::assertNotNull($rate1);
+        self::assertBigNumberEquals('1.5', $rate1);
+        self::assertSame(1, $mock->getCalls());
+
+        $rate2 = $provider->getExchangeRate($a, $bc);
+        self::assertNotNull($rate2);
+        self::assertBigNumberEquals('2.5', $rate2);
+        self::assertSame(2, $mock->getCalls());
+
+        // Both pairs must be cached independently — a second lookup must not hit the provider again.
+        $cached1 = $provider->getExchangeRate($ab, $c);
+        $cached2 = $provider->getExchangeRate($a, $bc);
+        self::assertNotNull($cached1);
+        self::assertNotNull($cached2);
+        self::assertBigNumberEquals('1.5', $cached1);
+        self::assertBigNumberEquals('2.5', $cached2);
+        self::assertSame(2, $mock->getCalls());
+    }
+
     public function testSkipsCacheWhenDimensionsAreNotCacheable(): void
     {
         $mock = new ProviderMock();
