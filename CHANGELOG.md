@@ -53,7 +53,7 @@ Deprecated methods removed:
   - `Separate` (this is the implementation `splitWithRemainder()` used previously)
 - `MoneyMismatchException` now has explicit `CurrencyMismatchException` and `ContextMismatchException` subclasses
 - New exception: `MoneyFormatException`, thrown by `MoneyFormatter::format()`
-- New method: `MoneyBag::isZero()`
+- New methods in `MoneyBag`: `isZero()`, `multipliedBy()`, `dividedBy()`
 
 ## [0.12.3](https://github.com/brick/money/releases/tag/0.12.3) - 2026-03-23
 

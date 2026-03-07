@@ -169,6 +169,56 @@ class MoneyBagTest extends AbstractTestCase
         self::assertTrue($backToZero->isZero());
     }
 
+    public function testMultipliedBy(): void
+    {
+        $bag = MoneyBag::fromMonies(
+            Money::of('10.00', 'EUR'),
+            RationalMoney::of('1/3', 'USD'),
+        );
+
+        $result = $bag->multipliedBy(3);
+
+        self::assertMoneyBagContains([Money::of('30.00', 'EUR'), RationalMoney::of('1', 'USD')], $result);
+    }
+
+    public function testMultipliedByZero(): void
+    {
+        $bag = MoneyBag::fromMonies(
+            Money::of('10.00', 'EUR'),
+            Money::of('5', 'JPY'),
+        );
+
+        self::assertMoneyBagContains([], $bag->multipliedBy(0));
+    }
+
+    public function testMultipliedByIsImmutable(): void
+    {
+        $bag = MoneyBag::fromMonies(Money::of('10.00', 'EUR'));
+        $bag->multipliedBy(2);
+
+        self::assertMoneyBagContains([Money::of('10.00', 'EUR')], $bag);
+    }
+
+    public function testDividedBy(): void
+    {
+        $bag = MoneyBag::fromMonies(
+            Money::of('9.00', 'EUR'),
+            Money::of('5', 'JPY'),
+        );
+
+        $result = $bag->dividedBy(3);
+
+        self::assertMoneyBagContains([RationalMoney::of('3', 'EUR'), RationalMoney::of('5/3', 'JPY')], $result);
+    }
+
+    public function testDividedByIsImmutable(): void
+    {
+        $bag = MoneyBag::fromMonies(Money::of('9.00', 'EUR'));
+        $bag->dividedBy(3);
+
+        self::assertMoneyBagContains([Money::of('9.00', 'EUR')], $bag);
+    }
+
     public function testJsonSerializeEmpty(): void
     {
         $moneyBag = MoneyBag::zero();
