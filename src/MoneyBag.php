@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Brick\Money;
 
+use Brick\Math\BigNumber;
 use Brick\Math\BigRational;
+use Brick\Math\Exception\MathException;
 use Brick\Money\Exception\UnknownCurrencyException;
 use Closure;
 use JsonSerializable;
@@ -131,6 +133,46 @@ final readonly class MoneyBag implements Monetary, JsonSerializable
     public function minus(Monetary $money): MoneyBag
     {
         return new MoneyBag(self::accumulate($this->monies, $money, fn ($a, $b) => $a->minus($b)));
+    }
+
+    /**
+     * Returns a MoneyBag with each amount multiplied by the given number.
+     *
+     * If the factor is zero, an empty MoneyBag is returned.
+     *
+     * @param BigNumber|int|string $that The multiplier.
+     *
+     * @throws MathException If the argument is not a valid number.
+     *
+     * @pure
+     */
+    public function multipliedBy(BigNumber|int|string $that): MoneyBag
+    {
+        $that = BigNumber::of($that);
+
+        if ($that->isZero()) {
+            return new MoneyBag();
+        }
+
+        $monies = array_map(fn ($money) => $money->multipliedBy($that), $this->monies);
+
+        return new MoneyBag($monies);
+    }
+
+    /**
+     * Returns a MoneyBag with each amount divided by the given number.
+     *
+     * @param BigNumber|int|string $that The divisor.
+     *
+     * @throws MathException If the argument is not a valid number or is zero.
+     *
+     * @pure
+     */
+    public function dividedBy(BigNumber|int|string $that): MoneyBag
+    {
+        $monies = array_map(fn ($money) => $money->dividedBy($that), $this->monies);
+
+        return new MoneyBag($monies);
     }
 
     /**
