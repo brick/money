@@ -14,7 +14,7 @@ use Brick\Money\Allocation\FloorToLargestRemainderStrategy;
 /**
  * Determines the allocation algorithm and how the remainder is handled.
  */
-enum AllocationMethod
+enum AllocationMode
 {
     /**
      * Each allocatee receives a proportional floor amount; the remainder is distributed one step at a time to the
@@ -66,11 +66,11 @@ enum AllocationMethod
     public function getStrategy(): AllocationStrategy
     {
         return match ($this) {
-            AllocationMethod::FloorToFirst => new FloorToFirstStrategy(),
-            AllocationMethod::FloorToLargestRemainder => new FloorToLargestRemainderStrategy(),
-            AllocationMethod::FloorToLargestRatio => new FloorToLargestRatioStrategy(),
-            AllocationMethod::FloorSeparate => new FloorSeparateStrategy(),
-            AllocationMethod::BlockSeparate => new BlockSeparateStrategy(),
+            AllocationMode::FloorToFirst => new FloorToFirstStrategy(),
+            AllocationMode::FloorToLargestRemainder => new FloorToLargestRemainderStrategy(),
+            AllocationMode::FloorToLargestRatio => new FloorToLargestRatioStrategy(),
+            AllocationMode::FloorSeparate => new FloorSeparateStrategy(),
+            AllocationMode::BlockSeparate => new BlockSeparateStrategy(),
         };
     }
 }

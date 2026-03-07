@@ -493,17 +493,17 @@ final readonly class Money extends AbstractMoney
     /**
      * Allocates this Money according to a list of ratios.
      *
-     * The `$method` parameter controls the allocation algorithm.
+     * The `$mode` parameter controls the allocation algorithm.
      *
      * For example, given a `USD 1.00` money and `$ratios = [2, 3, 1]` in the default context:
      *
-     * | Method                                      | Result                                           |
-     * |---------------------------------------------|--------------------------------------------------|
-     * | `AllocationMethod::FloorToFirst`            | [`USD 0.34`, `USD 0.50`, `USD 0.16`]             |
-     * | `AllocationMethod::FloorToLargestRemainder` | [`USD 0.33`, `USD 0.50`, `USD 0.17`]             |
-     * | `AllocationMethod::FloorToLargestRatio`     | [`USD 0.33`, `USD 0.51`, `USD 0.16`]             |
-     * | `AllocationMethod::FloorSeparate`           | [`USD 0.33`, `USD 0.50`, `USD 0.16`, `USD 0.01`] |
-     * | `AllocationMethod::BlockSeparate`           | [`USD 0.32`, `USD 0.48`, `USD 0.16`, `USD 0.04`] |
+     * | Method                                    | Result                                           |
+     * |-------------------------------------------|--------------------------------------------------|
+     * | `AllocationMode::FloorToFirst`            | [`USD 0.34`, `USD 0.50`, `USD 0.16`]             |
+     * | `AllocationMode::FloorToLargestRemainder` | [`USD 0.33`, `USD 0.50`, `USD 0.17`]             |
+     * | `AllocationMode::FloorToLargestRatio`     | [`USD 0.33`, `USD 0.51`, `USD 0.16`]             |
+     * | `AllocationMode::FloorSeparate`           | [`USD 0.33`, `USD 0.50`, `USD 0.16`, `USD 0.01`] |
+     * | `AllocationMode::BlockSeparate`           | [`USD 0.32`, `USD 0.48`, `USD 0.16`, `USD 0.04`] |
      *
      * The resulting monies have the same context as this Money.
      *
@@ -511,7 +511,7 @@ final readonly class Money extends AbstractMoney
      * allocating `USD -1.00` by `[1, 2]` with `FloorToFirst` yields `[USD -0.34, USD -0.66]`.
      *
      * @param (BigNumber|int|string)[] $ratios The ratios. Must be non-negative and sum to a non-zero value.
-     * @param AllocationMethod         $method Which allocation method to use.
+     * @param AllocationMode           $mode   Which allocation mode to use.
      *
      * @return list<Money> The allocated monies, in the same order as the input ratios.
      *
@@ -521,7 +521,7 @@ final readonly class Money extends AbstractMoney
      *
      * @pure
      */
-    public function allocate(array $ratios, AllocationMethod $method): array
+    public function allocate(array $ratios, AllocationMode $mode): array
     {
         if (! $this->context->isFixedScale()) {
             throw ContextException::notFixedContext(__FUNCTION__);
@@ -534,7 +534,7 @@ final readonly class Money extends AbstractMoney
         $step = $this->context->getStep();
 
         $amountInSteps = $amount->getUnscaledValue()->dividedBy($step);
-        $stepCounts = $method->getStrategy()->allocate($amountInSteps, $ratios);
+        $stepCounts = $mode->getStrategy()->allocate($amountInSteps, $ratios);
 
         return array_map(
             function (BigInteger $stepCount) use ($scale, $step): Money {
@@ -593,12 +593,12 @@ final readonly class Money extends AbstractMoney
         // With equal ratios [1, 1, …, 1], FloorToLargestRemainder and FloorToLargestRatio produce the same result as
         // FloorToFirst (all remainders and ratios are equal, so ties always break on original index). Likewise,
         // BlockSeparate produces the same result as FloorSeparate. There are therefore only two distinct outcomes.
-        $allocationMethod = match ($mode) {
-            SplitMode::ToFirst => AllocationMethod::FloorToFirst,
-            SplitMode::Separate => AllocationMethod::FloorSeparate,
+        $allocationMode = match ($mode) {
+            SplitMode::ToFirst => AllocationMode::FloorToFirst,
+            SplitMode::Separate => AllocationMode::FloorSeparate,
         };
 
-        return $this->allocate(array_fill(0, $parts, 1), $allocationMethod);
+        return $this->allocate(array_fill(0, $parts, 1), $allocationMode);
     }
 
     /**
