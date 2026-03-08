@@ -6,6 +6,7 @@ namespace Brick\Money;
 
 use Brick\Math\BigNumber;
 use Brick\Math\BigRational;
+use Brick\Math\Exception\DivisionByZeroException;
 use Brick\Math\Exception\MathException;
 use Brick\Money\Exception\CurrencyMismatchException;
 use Brick\Money\Exception\UnknownCurrencyException;
@@ -37,7 +38,7 @@ final readonly class RationalMoney extends AbstractMoney
      * @param BigNumber|int|string $amount   The monetary amount.
      * @param Currency|string      $currency The Currency instance or ISO currency code.
      *
-     * @throws MathException            If the amount is not a valid number.
+     * @throws MathException            If the amount is an invalid number.
      * @throws UnknownCurrencyException If an unknown currency code is given.
      *
      * @pure
@@ -159,7 +160,7 @@ final readonly class RationalMoney extends AbstractMoney
      *
      * @param AbstractMoney|BigNumber|int|string $that The money or amount to add.
      *
-     * @throws MathException             If the argument is not a valid number.
+     * @throws MathException             If the argument is an invalid number.
      * @throws CurrencyMismatchException If the argument is a money in another currency.
      *
      * @pure
@@ -177,7 +178,7 @@ final readonly class RationalMoney extends AbstractMoney
      *
      * @param AbstractMoney|BigNumber|int|string $that The money or amount to subtract.
      *
-     * @throws MathException             If the argument is not a valid number.
+     * @throws MathException             If the argument is an invalid number.
      * @throws CurrencyMismatchException If the argument is a money in another currency.
      *
      * @pure
@@ -195,7 +196,7 @@ final readonly class RationalMoney extends AbstractMoney
      *
      * @param BigNumber|int|string $that The multiplier.
      *
-     * @throws MathException If the argument is not a valid number.
+     * @throws MathException If the argument is an invalid number.
      *
      * @pure
      */
@@ -211,7 +212,8 @@ final readonly class RationalMoney extends AbstractMoney
      *
      * @param BigNumber|int|string $that The divisor.
      *
-     * @throws MathException If the argument is not a valid number.
+     * @throws MathException           If the argument is an invalid number.
+     * @throws DivisionByZeroException If the argument is zero.
      *
      * @pure
      */
@@ -251,7 +253,7 @@ final readonly class RationalMoney extends AbstractMoney
      * @param BigNumber|int|string $exchangeRate The exchange rate to multiply by.
      *
      * @throws UnknownCurrencyException If an unknown currency code is given.
-     * @throws MathException            If the exchange rate is not a valid number.
+     * @throws MathException            If the exchange rate is an invalid number.
      *
      * @pure
      */

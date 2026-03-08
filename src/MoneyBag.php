@@ -20,7 +20,9 @@ use function ksort;
 /**
  * Container for monies in different currencies.
  *
- * This class is immutable.
+ * This class is immutable. The bag never stores zero-valued slots: when an arithmetic operation reduces a
+ * currency's net amount to zero, that slot is removed. A currency is present in the bag if and only if its
+ * net amount is non-zero.
  */
 final readonly class MoneyBag implements Monetary, JsonSerializable
 {
@@ -63,7 +65,7 @@ final readonly class MoneyBag implements Monetary, JsonSerializable
     /**
      * Returns the contained amount in the given currency as a RationalMoney.
      *
-     * If no amount in the given currency has been added to this bag, a zero-valued RationalMoney is returned.
+     * If this bag does not contain an amount in the given currency, a zero RationalMoney is returned.
      *
      * @param Currency|string $currency The Currency instance, or ISO currency code.
      *
@@ -178,7 +180,7 @@ final readonly class MoneyBag implements Monetary, JsonSerializable
      *
      * @param BigNumber|int|string $that The multiplier.
      *
-     * @throws MathException If the argument is not a valid number.
+     * @throws MathException If the argument is an invalid number.
      *
      * @pure
      */
@@ -200,7 +202,8 @@ final readonly class MoneyBag implements Monetary, JsonSerializable
      *
      * @param BigNumber|int|string $that The divisor.
      *
-     * @throws MathException If the argument is not a valid number or is zero.
+     * @throws MathException           If the argument is an invalid number.
+     * @throws DivisionByZeroException If the argument is zero.
      *
      * @pure
      */

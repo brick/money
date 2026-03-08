@@ -188,7 +188,7 @@ final class IsoCurrencyProvider
      *
      * @param string $countryCode The 2-letter ISO 3166-1 country code.
      *
-     * @throws UnknownCurrencyException If the country code is not known, or the country has no single currency.
+     * @throws UnknownCurrencyException If there is no single current currency available for the country.
      *
      * @pure
      */

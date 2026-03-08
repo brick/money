@@ -56,7 +56,7 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
     }
 
     /**
-     * Required by interface Monetary. Not intended for direct use.
+     * This method satisfies the Monetary interface.
      */
     #[Override]
     final public function getMonies(): array
@@ -131,6 +131,10 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
     /**
      * Compares this money to the given amount.
      *
+     * Only the amount and currency are compared; context is not checked. Two Money instances with the same currency
+     * and amount but different contexts compare as equal. This is intentional: the comparison result is
+     * mathematically well-defined regardless of context.
+     *
      * @return -1|0|1 If `$this` is less than, equal to, or greater than `$that`.
      *
      * @throws MathException             If the argument is an invalid number.
@@ -145,6 +149,8 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
 
     /**
      * Returns whether this money is equal to the given amount.
+     *
+     * Only the amount and currency are compared; context is not checked. See compareTo() for details.
      *
      * @throws MathException             If the argument is an invalid number.
      * @throws CurrencyMismatchException If the argument is a money in a different currency. This will change in a future
@@ -169,6 +175,8 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
     /**
      * Returns whether this money is less than the given amount.
      *
+     * Only the amount and currency are compared; context is not checked. See compareTo() for details.
+     *
      * @throws MathException             If the argument is an invalid number.
      * @throws CurrencyMismatchException If the argument is a money in a different currency.
      *
@@ -181,6 +189,8 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
 
     /**
      * Returns whether this money is less than or equal to the given amount.
+     *
+     * Only the amount and currency are compared; context is not checked. See compareTo() for details.
      *
      * @throws MathException             If the argument is an invalid number.
      * @throws CurrencyMismatchException If the argument is a money in a different currency.
@@ -195,6 +205,8 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
     /**
      * Returns whether this money is greater than the given amount.
      *
+     * Only the amount and currency are compared; context is not checked. See compareTo() for details.
+     *
      * @throws MathException             If the argument is an invalid number.
      * @throws CurrencyMismatchException If the argument is a money in a different currency.
      *
@@ -207,6 +219,8 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
 
     /**
      * Returns whether this money is greater than or equal to the given amount.
+     *
+     * Only the amount and currency are compared; context is not checked. See compareTo() for details.
      *
      * @throws MathException             If the argument is an invalid number.
      * @throws CurrencyMismatchException If the argument is a money in a different currency.

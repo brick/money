@@ -10,6 +10,9 @@ use function array_is_list;
 
 /**
  * A SQL condition fragment with its positional parameter values.
+ *
+ * The SQL fragment is interpolated directly into the generated query. Only the parameter values are bound safely
+ * through PDO placeholders. The SQL string must therefore be trusted and must not be derived from untrusted input.
  */
 final readonly class SqlCondition
 {

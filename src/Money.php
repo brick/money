@@ -64,6 +64,7 @@ final readonly class Money extends AbstractMoney
     /**
      * Returns the minimum of the given monies.
      *
+     * The monies must share the same currency and context.
      * If several monies are equal to the minimum value, the first one is returned.
      *
      * @param Money $money     The first money.
@@ -92,6 +93,7 @@ final readonly class Money extends AbstractMoney
     /**
      * Returns the maximum of the given monies.
      *
+     * The monies must share the same currency and context.
      * If several monies are equal to the maximum value, the first one is returned.
      *
      * @param Money $money     The first money.
@@ -159,7 +161,7 @@ final readonly class Money extends AbstractMoney
      * @param Context              $context      An optional Context, defaults to DefaultContext.
      * @param RoundingMode         $roundingMode An optional RoundingMode, if the amount does not fit the context.
      *
-     * @throws MathException              If the amount is not a valid number.
+     * @throws MathException              If the amount is an invalid number.
      * @throws UnknownCurrencyException   If the currency is an unknown currency code.
      * @throws RoundingNecessaryException If the rounding mode is RoundingMode::Unnecessary, and rounding is necessary
      *                                    to represent the amount at the requested scale.
@@ -194,7 +196,7 @@ final readonly class Money extends AbstractMoney
      * @param Context              $context      An optional Context, defaults to DefaultContext.
      * @param RoundingMode         $roundingMode An optional RoundingMode, if the amount does not fit the context.
      *
-     * @throws MathException              If the amount is not a valid number.
+     * @throws MathException              If the amount is an invalid number.
      * @throws UnknownCurrencyException   If the currency is an unknown currency code.
      * @throws RoundingNecessaryException If the rounding mode is RoundingMode::Unnecessary, and rounding is necessary
      *                                    to represent the amount at the requested scale.
@@ -290,7 +292,9 @@ final readonly class Money extends AbstractMoney
      *
      * If the operand is a Money, it must have the same context as this Money, or an exception is thrown.
      * This is by design, to ensure that contexts are not mixed accidentally.
-     * If you do need to add a Money in a different context, you can use `plus($money->toRational())`.
+     *
+     * If the operand is a RationalMoney, the context check is skipped and the result is fitted to this Money's context.
+     * This can be used intentionally to perform cross-context arithmetic: `plus($money->toRational())`.
      *
      * The resulting Money has the same context as this Money. If the result needs rounding to fit this context, a
      * rounding mode can be provided. If a rounding mode is not provided and rounding is necessary, an exception is
@@ -313,6 +317,8 @@ final readonly class Money extends AbstractMoney
 
         if ($that instanceof Money) {
             self::assertSameContextForArithmetic($this, $that);
+
+            // BigDecimal + BigDecimal: faster than going through BigRational
             $amount = $this->amount->plus($amount);
         } else {
             $amount = $this->amount->toBigRational()->plus($amount);
@@ -349,6 +355,8 @@ final readonly class Money extends AbstractMoney
 
         if ($that instanceof Money) {
             self::assertSameContextForArithmetic($this, $that);
+
+            // BigDecimal - BigDecimal: faster than going through BigRational
             $amount = $this->amount->minus($amount);
         } else {
             $amount = $this->amount->toBigRational()->minus($amount);
@@ -390,7 +398,8 @@ final readonly class Money extends AbstractMoney
      * @param BigNumber|int|string $that         The divisor.
      * @param RoundingMode         $roundingMode An optional RoundingMode constant.
      *
-     * @throws MathException              If the argument is an invalid number or is zero.
+     * @throws MathException              If the argument is an invalid number.
+     * @throws DivisionByZeroException    If the argument is zero.
      * @throws RoundingNecessaryException If the rounding mode is RoundingMode::Unnecessary, and rounding is necessary.
      * @throws ContextException           If the context does not apply.
      *
@@ -406,7 +415,7 @@ final readonly class Money extends AbstractMoney
     /**
      * Returns the quotient of the division of this Money by the given number.
      *
-     * The given number must be a integer value. The resulting Money has the same context as this Money.
+     * The given number must be an integer value. The resulting Money has the same context as this Money.
      *
      * @param BigNumber|int|string $that The divisor. Must be convertible to a BigInteger.
      *
@@ -529,7 +538,7 @@ final readonly class Money extends AbstractMoney
      * @return list<Money> The allocated monies, in the same order as the input ratios.
      *
      * @throws ContextException         If the context is not fixed (e.g. AutoContext).
-     * @throws MathException            If a ratio is not a valid number.
+     * @throws MathException            If a ratio is an invalid number.
      * @throws InvalidArgumentException If the ratio list is empty, contains negative values, or sums to zero.
      *
      * @pure

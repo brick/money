@@ -33,6 +33,12 @@ final class PdoProviderConfigurationBuilder
     private array $orderByClauses = [];
 
     /**
+     * The PDO provider builder accepts trusted SQL identifiers and SQL fragments. Table names, column names, ORDER BY
+     * columns, and any SQL contributed via SqlCondition are interpolated directly into the generated query.
+     *
+     * Only parameter values are bound through PDO placeholders. Callers must ensure that all identifier and SQL
+     * inputs passed to this builder are safe and not derived from untrusted input.
+     *
      * @param string $tableName              The table name containing exchange rates.
      * @param string $exchangeRateColumnName The column containing the exchange rate value.
      */
@@ -66,6 +72,7 @@ final class PdoProviderConfigurationBuilder
      * Sets the source currency code column name.
      *
      * Mutually exclusive with `setFixedSourceCurrency()`: only one source selector can be configured.
+     * The column name is interpolated directly into SQL and must therefore be trusted.
      */
     public function setSourceCurrencyColumn(string $sourceCurrencyColumnName): self
     {
@@ -106,6 +113,7 @@ final class PdoProviderConfigurationBuilder
      * Sets the target currency code column name.
      *
      * Mutually exclusive with `setFixedTargetCurrency()`: only one target selector can be configured.
+     * The column name is interpolated directly into SQL and must therefore be trusted.
      */
     public function setTargetCurrencyColumn(string $targetCurrencyColumnName): self
     {
@@ -122,6 +130,11 @@ final class PdoProviderConfigurationBuilder
         return $this;
     }
 
+    /**
+     * Sets a static SQL condition fragment that is always appended to the WHERE clause.
+     *
+     * The SQL fragment inside the given SqlCondition is interpolated directly into SQL and must therefore be trusted.
+     */
     public function setStaticCondition(SqlCondition $staticCondition): self
     {
         if ($this->staticCondition !== null) {
@@ -139,6 +152,9 @@ final class PdoProviderConfigurationBuilder
      * When getExchangeRate() receives this dimension key, the callback may:
      * - return a SqlCondition to append to the WHERE clause, or
      * - return null to contribute no condition for this dimension value.
+     *
+     * Any SQL fragment returned via SqlCondition is interpolated directly into SQL and must therefore be trusted. Only
+     * the SqlCondition parameter values are bound safely through PDO placeholders.
      *
      * @param callable(mixed): (SqlCondition|null) $resolver A callback that resolves the dimension value to an optional
      *                                                       SQL condition and its positional parameters.
@@ -160,6 +176,7 @@ final class PdoProviderConfigurationBuilder
      * Sets the ORDER BY clause that will be used when several rows match the exchange rate query.
      *
      * If no ORDER BY clause is set, and the query returns more than one row, an exception will be thrown.
+     * The column name is interpolated directly into SQL and must therefore be trusted.
      *
      * @param string       $column    The column name to order by.
      * @param 'ASC'|'DESC' $direction The order direction, either 'ASC' or 'DESC'.
@@ -175,6 +192,8 @@ final class PdoProviderConfigurationBuilder
 
     /**
      * Appends an additional ORDER BY clause after `orderBy()`.
+     *
+     * The column name is interpolated directly into SQL and must therefore be trusted.
      *
      * @param string       $column    The column name to order by.
      * @param 'ASC'|'DESC' $direction The order direction, either 'ASC' or 'DESC'.
