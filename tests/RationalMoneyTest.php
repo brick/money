@@ -20,6 +20,7 @@ use Brick\Money\Money;
 use Brick\Money\RationalMoney;
 use PHPUnit\Framework\Attributes\DataProvider;
 
+use function array_map;
 use function json_encode;
 
 /**
@@ -69,6 +70,108 @@ class RationalMoneyTest extends AbstractTestCase
             ['USD', 'USD 0'],
             ['EUR', 'EUR 0'],
         ];
+    }
+
+    #[DataProvider('providerMin')]
+    public function testMin(array $monies, string $expected): void
+    {
+        $monies = array_map(fn (array $args) => RationalMoney::of(...$args), $monies);
+
+        self::assertRationalMoneyEquals($expected, RationalMoney::min(...$monies));
+    }
+
+    public static function providerMin(): array
+    {
+        return [
+            [[['3/7', 'USD'], ['5/7', 'USD'], ['4/7', 'USD']], 'USD 3/7'],
+            [[['1.5', 'EUR'], ['0.5', 'EUR'], ['1', 'EUR']], 'EUR 1/2'],
+            [[['1/3', 'GBP']], 'GBP 1/3'],
+            [[['1/2', 'USD'], ['1/2', 'USD']], 'USD 1/2'],
+        ];
+    }
+
+    public function testMinWithDifferentCurrencies(): void
+    {
+        self::assertException(
+            function (): void {
+                RationalMoney::min(
+                    RationalMoney::of('1', 'USD'),
+                    RationalMoney::of('1', 'EUR'),
+                );
+            },
+            function (CurrencyMismatchException $e): void {
+                self::assertSame('USD', $e->getExpectedCurrency()->getCurrencyCode());
+                self::assertSame('EUR', $e->getActualCurrency()->getCurrencyCode());
+            },
+        );
+    }
+
+    #[DataProvider('providerMax')]
+    public function testMax(array $monies, string $expected): void
+    {
+        $monies = array_map(fn (array $args) => RationalMoney::of(...$args), $monies);
+
+        self::assertRationalMoneyEquals($expected, RationalMoney::max(...$monies));
+    }
+
+    public static function providerMax(): array
+    {
+        return [
+            [[['3/7', 'USD'], ['5/7', 'USD'], ['4/7', 'USD']], 'USD 5/7'],
+            [[['1.5', 'EUR'], ['0.5', 'EUR'], ['1', 'EUR']], 'EUR 3/2'],
+            [[['1/3', 'GBP']], 'GBP 1/3'],
+            [[['1/2', 'USD'], ['1/2', 'USD']], 'USD 1/2'],
+        ];
+    }
+
+    public function testMaxWithDifferentCurrencies(): void
+    {
+        self::assertException(
+            function (): void {
+                RationalMoney::max(
+                    RationalMoney::of('1', 'USD'),
+                    RationalMoney::of('1', 'EUR'),
+                );
+            },
+            function (CurrencyMismatchException $e): void {
+                self::assertSame('USD', $e->getExpectedCurrency()->getCurrencyCode());
+                self::assertSame('EUR', $e->getActualCurrency()->getCurrencyCode());
+            },
+        );
+    }
+
+    #[DataProvider('providerSum')]
+    public function testSum(array $monies, string $expected): void
+    {
+        $monies = array_map(fn (array $args) => RationalMoney::of(...$args), $monies);
+
+        self::assertRationalMoneyEquals($expected, RationalMoney::sum(...$monies));
+    }
+
+    public static function providerSum(): array
+    {
+        return [
+            [[['1/6', 'USD'], ['1/3', 'USD'], ['1/2', 'USD']], 'USD 1'],
+            [[['2/3', 'EUR'], ['1/6', 'EUR']], 'EUR 5/6'],
+            [[['1/3', 'GBP']], 'GBP 1/3'],
+            [[['1.23', 'USD'], ['4.56', 'USD']], 'USD 579/100'],
+        ];
+    }
+
+    public function testSumWithDifferentCurrencies(): void
+    {
+        self::assertException(
+            function (): void {
+                RationalMoney::sum(
+                    RationalMoney::of('1', 'USD'),
+                    RationalMoney::of('1', 'EUR'),
+                );
+            },
+            function (CurrencyMismatchException $e): void {
+                self::assertSame('USD', $e->getExpectedCurrency()->getCurrencyCode());
+                self::assertSame('EUR', $e->getActualCurrency()->getCurrencyCode());
+            },
+        );
     }
 
     public function testGetters(): void
