@@ -71,6 +71,77 @@ final readonly class RationalMoney extends AbstractMoney
         return new RationalMoney(BigRational::zero(), $currency);
     }
 
+    /**
+     * Returns the minimum of the given monies.
+     *
+     * If several monies are equal to the minimum value, the first one is returned.
+     *
+     * @param RationalMoney $money     The first money.
+     * @param RationalMoney ...$monies The subsequent monies.
+     *
+     * @throws CurrencyMismatchException If the monies do not share the same currency.
+     *
+     * @pure
+     */
+    public static function min(RationalMoney $money, RationalMoney ...$monies): RationalMoney
+    {
+        $min = $money;
+
+        foreach ($monies as $money) {
+            if ($min->isGreaterThan($money)) {
+                $min = $money;
+            }
+        }
+
+        return $min;
+    }
+
+    /**
+     * Returns the maximum of the given monies.
+     *
+     * If several monies are equal to the maximum value, the first one is returned.
+     *
+     * @param RationalMoney $money     The first money.
+     * @param RationalMoney ...$monies The subsequent monies.
+     *
+     * @throws CurrencyMismatchException If the monies do not share the same currency.
+     *
+     * @pure
+     */
+    public static function max(RationalMoney $money, RationalMoney ...$monies): RationalMoney
+    {
+        $max = $money;
+
+        foreach ($monies as $money) {
+            if ($max->isLessThan($money)) {
+                $max = $money;
+            }
+        }
+
+        return $max;
+    }
+
+    /**
+     * Returns the sum of the given monies.
+     *
+     * @param RationalMoney $money     The first money.
+     * @param RationalMoney ...$monies The subsequent monies.
+     *
+     * @throws CurrencyMismatchException If the monies do not share the same currency.
+     *
+     * @pure
+     */
+    public static function sum(RationalMoney $money, RationalMoney ...$monies): RationalMoney
+    {
+        $sum = $money;
+
+        foreach ($monies as $money) {
+            $sum = $sum->plus($money);
+        }
+
+        return $sum;
+    }
+
     #[Override]
     public function getAmount(): BigRational
     {
