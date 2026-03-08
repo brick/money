@@ -312,13 +312,10 @@ final readonly class Money extends AbstractMoney
 
         if ($that instanceof Money) {
             $this->checkContext($that, __FUNCTION__);
-
-            if ($this->context->isFixedScale()) {
-                return new Money($this->amount->plus($that->amount), $this->currency, $this->context);
-            }
+            $amount = $this->amount->plus($amount);
+        } else {
+            $amount = $this->amount->toBigRational()->plus($amount);
         }
-
-        $amount = $this->amount->toBigRational()->plus($amount);
 
         return self::create($amount, $this->currency, $this->context, $roundingMode);
     }
@@ -351,13 +348,10 @@ final readonly class Money extends AbstractMoney
 
         if ($that instanceof Money) {
             $this->checkContext($that, __FUNCTION__);
-
-            if ($this->context->isFixedScale()) {
-                return new Money($this->amount->minus($that->amount), $this->currency, $this->context);
-            }
+            $amount = $this->amount->minus($amount);
+        } else {
+            $amount = $this->amount->toBigRational()->minus($amount);
         }
-
-        $amount = $this->amount->toBigRational()->minus($amount);
 
         return self::create($amount, $this->currency, $this->context, $roundingMode);
     }
