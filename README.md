@@ -386,6 +386,9 @@ You can now use this Currency instead of a currency code:
 $money = Money::of('0.123', $bitcoin); // XBT 0.12300000
 ```
 
+> [!WARNING]
+> Do not create multiple `Currency` instances with the same currency code but different data. The library identifies currencies by code, so conflicting instances used together may lead to undefined behaviour.
+
 ## Formatting
 
 **Formatting requires the [intl extension](http://php.net/manual/en/book.intl.php).**
