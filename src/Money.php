@@ -79,10 +79,9 @@ final readonly class Money extends AbstractMoney
         $min = $money;
 
         foreach ($monies as $money) {
-            $cmp = $min->compareTo($money);
-            self::assertSameContext($min, $money);
+            self::assertSameCurrencyAndContext($min, $money);
 
-            if ($cmp > 0) {
+            if ($money->amount->isLessThan($min->amount)) {
                 $min = $money;
             }
         }
@@ -108,10 +107,9 @@ final readonly class Money extends AbstractMoney
         $max = $money;
 
         foreach ($monies as $money) {
-            $cmp = $max->compareTo($money);
-            self::assertSameContext($max, $money);
+            self::assertSameCurrencyAndContext($max, $money);
 
-            if ($cmp < 0) {
+            if ($money->amount->isGreaterThan($max->amount)) {
                 $max = $money;
             }
         }
@@ -137,7 +135,10 @@ final readonly class Money extends AbstractMoney
         $sum = $money;
 
         foreach ($monies as $money) {
-            $sum = $sum->plus($money);
+            // We check currency/context and perform arithmetic directly rather than delegating to plus(), because
+            // plus() would include a hint referencing plus() in the exception message, misleading to sum() callers.
+            self::assertSameCurrencyAndContext($sum, $money);
+            $sum = self::create($sum->amount->plus($money->amount), $sum->currency, $sum->context);
         }
 
         return $sum;
@@ -733,12 +734,17 @@ final readonly class Money extends AbstractMoney
     }
 
     /**
-     * @throws ContextMismatchException If monies don't share the same context.
+     * @throws CurrencyMismatchException If monies don't share the same currency.
+     * @throws ContextMismatchException  If monies don't share the same context.
      *
      * @pure
      */
-    private static function assertSameContext(Money $expected, Money $actual): void
+    private static function assertSameCurrencyAndContext(Money $expected, Money $actual): void
     {
+        if (! $expected->currency->isEqualTo($actual->currency)) {
+            throw CurrencyMismatchException::currencyMismatch($expected->currency, $actual->currency);
+        }
+
         if (! $expected->context->isEqualTo($actual->context)) {
             throw ContextMismatchException::contextMismatch($expected->context, $actual->context);
         }
