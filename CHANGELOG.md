@@ -27,6 +27,7 @@
 - `CurrencyConversionException` has been renamed to `ExchangeRateException`, with `ExchangeRateProviderException` and `ExchangeRateNotFoundException` subclasses
 - `PdoProvider::setParameters()` has been removed, use the new dimensions configuration instead
 - `CurrencyConverter::convert()` signature has changed: parameter `$dimensions` now comes before `$context`
+- `CachedProvider::invalidate()` has been removed, pass a PSR-16 cache implementation to the constructor if you need to invalidate the cache
 
 Deprecated methods removed:
 
@@ -54,6 +55,7 @@ Deprecated methods removed:
 - `MoneyMismatchException` now has explicit `CurrencyMismatchException` and `ContextMismatchException` subclasses
 - New exception: `MoneyFormatException`, thrown by `MoneyFormatter::format()`
 - New methods in `MoneyBag`: `isZero()`, `multipliedBy()`, `dividedBy()`
+- Support for custom PSR-16 cache implementations in `CachedProvider`
 
 ## [0.12.3](https://github.com/brick/money/releases/tag/0.12.3) - 2026-03-23
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Brick\Money\Tests\ExchangeRateProvider;
 
 use Brick\Money\Currency;
+use Brick\Money\ExchangeRateProvider\ArrayCache;
 use Brick\Money\ExchangeRateProvider\CachedProvider;
 use Brick\Money\Tests\AbstractTestCase;
 use DateTimeImmutable;
@@ -18,7 +19,8 @@ class CachedProviderTest extends AbstractTestCase
     public function testGetExchangeRateAndInvalidate(): void
     {
         $mock = new ProviderMock();
-        $provider = new CachedProvider($mock);
+        $cache = new ArrayCache();
+        $provider = new CachedProvider($mock, $cache);
 
         $eur = Currency::of('EUR');
         $usd = Currency::of('USD');
@@ -36,7 +38,7 @@ class CachedProviderTest extends AbstractTestCase
         self::assertBigNumberEquals('0.9', $provider->getExchangeRate($eur, $gbp));
         self::assertSame(2, $mock->getCalls());
 
-        $provider->invalidate();
+        $cache->clear();
 
         self::assertBigNumberEquals('0.9', $provider->getExchangeRate($eur, $gbp));
         self::assertSame(3, $mock->getCalls());
