@@ -8,6 +8,7 @@ use Brick\Math\BigNumber;
 use Brick\Math\Exception\DivisionByZeroException;
 use Brick\Money\Currency;
 use Brick\Money\Exception\ExchangeRateProviderException;
+use Brick\Money\Exception\UnknownCurrencyException;
 use Brick\Money\ExchangeRateProvider;
 use Override;
 
@@ -27,6 +28,8 @@ final readonly class BaseCurrencyProvider implements ExchangeRateProvider
     /**
      * @param ExchangeRateProvider $provider     The provider for rates relative to the base currency.
      * @param Currency|string      $baseCurrency The currency or currency code all the exchanges rates are based on.
+     *
+     * @throws UnknownCurrencyException If an unknown currency code is given.
      */
     public function __construct(
         private ExchangeRateProvider $provider,

@@ -26,6 +26,13 @@ use function sprintf;
 
 /**
  * Reads exchange rates from a PDO database connection.
+ *
+ * This API is intentionally low-level: table names, column names, ORDER BY clauses, and SQL condition fragments are
+ * interpolated into the generated SQL as trusted configuration. They are not quoted or escaped by this library.
+ * Only parameter values are bound safely through PDO placeholders.
+ *
+ * Callers are responsible for ensuring that all SQL identifiers and SQL fragments supplied to the builder are safe
+ * and never derived from untrusted input.
  */
 final class PdoProvider implements ExchangeRateProvider
 {

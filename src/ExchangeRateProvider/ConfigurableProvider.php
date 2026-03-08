@@ -29,7 +29,7 @@ final class ConfigurableProvider implements ExchangeRateProvider
      *
      * @return ConfigurableProvider This instance, for chaining.
      *
-     * @throws MathException If the exchange rate is not a valid number.
+     * @throws MathException If the exchange rate is an invalid number.
      */
     public function setExchangeRate(
         Currency|string $sourceCurrency,
