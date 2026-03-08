@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace Brick\Money\Tests\ExchangeRateProvider;
 
 use Brick\Money\Currency;
+use Brick\Money\ExchangeRateProvider\ArrayCache;
 use Brick\Money\ExchangeRateProvider\CachedProvider;
 use Brick\Money\Tests\AbstractTestCase;
+use DateInterval;
 use DateTimeImmutable;
+use Psr\SimpleCache\CacheInterface;
 use stdClass;
 
 /**
@@ -18,7 +21,8 @@ class CachedProviderTest extends AbstractTestCase
     public function testGetExchangeRateAndInvalidate(): void
     {
         $mock = new ProviderMock();
-        $provider = new CachedProvider($mock);
+        $cache = new ArrayCache();
+        $provider = new CachedProvider($mock, $cache);
 
         $eur = Currency::of('EUR');
         $usd = Currency::of('USD');
@@ -36,7 +40,7 @@ class CachedProviderTest extends AbstractTestCase
         self::assertBigNumberEquals('0.9', $provider->getExchangeRate($eur, $gbp));
         self::assertSame(2, $mock->getCalls());
 
-        $provider->invalidate();
+        $cache->clear();
 
         self::assertBigNumberEquals('0.9', $provider->getExchangeRate($eur, $gbp));
         self::assertSame(3, $mock->getCalls());
@@ -45,7 +49,7 @@ class CachedProviderTest extends AbstractTestCase
     public function testGetExchangeRateOfUnknownCurrencyPair(): void
     {
         $mock = new ProviderMock();
-        $provider = new CachedProvider($mock);
+        $provider = new CachedProvider($mock, new ArrayCache());
 
         $usd = Currency::of('USD');
         $eur = Currency::of('EUR');
@@ -60,7 +64,7 @@ class CachedProviderTest extends AbstractTestCase
     public function testCachesWithSupportedDimensions(): void
     {
         $mock = new ProviderMock();
-        $provider = new CachedProvider($mock);
+        $provider = new CachedProvider($mock, new ArrayCache());
         $eur = Currency::of('EUR');
         $usd = Currency::of('USD');
 
@@ -104,7 +108,7 @@ class CachedProviderTest extends AbstractTestCase
         $mock->setExchangeRate('A:B', 'C', '1.5');
         $mock->setExchangeRate('A', 'B:C', '2.5');
 
-        $provider = new CachedProvider($mock);
+        $provider = new CachedProvider($mock, new ArrayCache());
 
         $ab = new Currency('A:B', null, 'A:B', 0);
         $c = new Currency('C', null, 'C', 0);
@@ -131,10 +135,77 @@ class CachedProviderTest extends AbstractTestCase
         self::assertSame(2, $mock->getCalls());
     }
 
+    public function testTtlIsForwardedToCacheSet(): void
+    {
+        $eur = Currency::of('EUR');
+        $usd = Currency::of('USD');
+
+        foreach ([null, 60, new DateInterval('PT1H')] as $ttl) {
+            $recordedTtl = 'not set';
+
+            $cache = new class($recordedTtl) implements CacheInterface {
+                private array $items = [];
+
+                public function __construct(
+                    private mixed &$recordedTtl,
+                ) {
+                }
+
+                public function get(string $key, mixed $default = null): mixed
+                {
+                    return $this->items[$key] ?? $default;
+                }
+
+                public function set(string $key, mixed $value, null|int|DateInterval $ttl = null): bool
+                {
+                    $this->items[$key] = $value;
+                    $this->recordedTtl = $ttl;
+
+                    return true;
+                }
+
+                public function delete(string $key): bool
+                {
+                    return true;
+                }
+
+                public function clear(): bool
+                {
+                    return true;
+                }
+
+                public function getMultiple(iterable $keys, mixed $default = null): iterable
+                {
+                    return [];
+                }
+
+                public function setMultiple(iterable $values, null|int|DateInterval $ttl = null): bool
+                {
+                    return true;
+                }
+
+                public function deleteMultiple(iterable $keys): bool
+                {
+                    return true;
+                }
+
+                public function has(string $key): bool
+                {
+                    return false;
+                }
+            };
+
+            $provider = new CachedProvider(new ProviderMock(), $cache, ttl: $ttl);
+            $provider->getExchangeRate($eur, $usd);
+
+            self::assertSame($ttl, $recordedTtl);
+        }
+    }
+
     public function testSkipsCacheWhenDimensionsAreNotCacheable(): void
     {
         $mock = new ProviderMock();
-        $provider = new CachedProvider($mock);
+        $provider = new CachedProvider($mock, new ArrayCache());
         $eur = Currency::of('EUR');
         $usd = Currency::of('USD');
         $dimensions = ['opaque' => new stdClass()];
