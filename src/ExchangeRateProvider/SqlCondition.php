@@ -10,6 +10,9 @@ use function array_is_list;
 
 /**
  * A SQL condition fragment with its positional parameter values.
+ *
+ * The SQL fragment is interpolated directly into the generated query. Only the parameter values are bound safely
+ * through PDO placeholders. The SQL string must therefore be trusted and must not be derived from untrusted input.
  */
 final readonly class SqlCondition
 {
@@ -21,6 +24,7 @@ final readonly class SqlCondition
     /**
      * @param string      $sql           The SQL condition fragment that may include `?` placeholders.
      * @param scalar|null ...$parameters The positional parameter values, one for each `?` placeholder.
+     *                                   If the counts do not match, an error will occur during exchange rate lookup.
      */
     public function __construct(
         private string $sql,

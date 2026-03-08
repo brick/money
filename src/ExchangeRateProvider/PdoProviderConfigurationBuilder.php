@@ -33,6 +33,12 @@ final class PdoProviderConfigurationBuilder
     private array $orderBy = [];
 
     /**
+     * Note: The configured table names, column names, ORDER BY clauses, and SQL condition fragments are not quoted or
+     * escaped by this library. Only parameter values are bound safely through PDO placeholders.
+     *
+     * Callers are responsible for ensuring that all SQL identifiers and SQL fragments supplied to the builder are safe
+     * and never derived from untrusted input.
+     *
      * @param string $tableName              The table name containing exchange rates.
      * @param string $exchangeRateColumnName The column containing the exchange rate value.
      */
@@ -66,6 +72,7 @@ final class PdoProviderConfigurationBuilder
      * Sets the source currency code column name.
      *
      * Mutually exclusive with `setFixedSourceCurrency()`: only one source selector can be configured.
+     * The column name is interpolated directly into SQL and must therefore be trusted.
      */
     public function setSourceCurrencyColumn(string $sourceCurrencyColumnName): self
     {
@@ -106,6 +113,7 @@ final class PdoProviderConfigurationBuilder
      * Sets the target currency code column name.
      *
      * Mutually exclusive with `setFixedTargetCurrency()`: only one target selector can be configured.
+     * The column name is interpolated directly into SQL and must therefore be trusted.
      */
     public function setTargetCurrencyColumn(string $targetCurrencyColumnName): self
     {
@@ -122,6 +130,11 @@ final class PdoProviderConfigurationBuilder
         return $this;
     }
 
+    /**
+     * Sets a static SQL condition fragment that is always appended to the WHERE clause.
+     *
+     * The SQL fragment inside the given SqlCondition is interpolated directly into SQL and must therefore be trusted.
+     */
     public function setStaticCondition(SqlCondition $staticCondition): self
     {
         if ($this->staticCondition !== null) {
@@ -162,6 +175,7 @@ final class PdoProviderConfigurationBuilder
      * Sets the ORDER BY clause that will be used when several rows match the exchange rate query.
      *
      * If no ORDER BY clause is set, and the query returns more than one row, an exception will be thrown.
+     * The column name is interpolated directly into SQL and must therefore be trusted.
      *
      * @param string       $column    The column name to order by.
      * @param 'ASC'|'DESC' $direction The order direction, either 'ASC' or 'DESC'.
@@ -177,6 +191,8 @@ final class PdoProviderConfigurationBuilder
 
     /**
      * Appends an additional ORDER BY clause after `orderBy()`.
+     *
+     * The column name is interpolated directly into SQL and must therefore be trusted.
      *
      * @param string       $column    The column name to order by.
      * @param 'ASC'|'DESC' $direction The order direction, either 'ASC' or 'DESC'.

@@ -29,6 +29,12 @@ use function sprintf;
 
 /**
  * Reads exchange rates from a PDO database connection.
+ *
+ * Note: the configured table names, column names, ORDER BY clauses, and SQL condition fragments are not quoted or
+ * escaped by this library. Only parameter values are bound safely through PDO placeholders.
+ *
+ * Callers are responsible for ensuring that all SQL identifiers and SQL fragments supplied to the PdoProvider are safe
+ * and never derived from untrusted input.
  */
 final class PdoProvider implements ExchangeRateProvider
 {
