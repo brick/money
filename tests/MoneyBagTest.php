@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Brick\Money\Tests;
 
+use Brick\Math\Exception\DivisionByZeroException;
+use Brick\Math\Exception\NumberFormatException;
 use Brick\Money\Context\AutoContext;
 use Brick\Money\Currency;
 use Brick\Money\Money;
@@ -238,6 +240,34 @@ class MoneyBagTest extends AbstractTestCase
         $bag->dividedBy(3);
 
         self::assertMoneyBagContains([Money::of('9.00', 'EUR')], $bag);
+    }
+
+    public function testDividedByZeroThrowsOnNonEmptyBag(): void
+    {
+        $bag = MoneyBag::zero()->plus(Money::of('9.00', 'EUR'));
+
+        $this->expectException(DivisionByZeroException::class);
+        $bag->dividedBy(0);
+    }
+
+    public function testDividedByZeroThrowsOnEmptyBag(): void
+    {
+        $this->expectException(DivisionByZeroException::class);
+        MoneyBag::zero()->dividedBy(0);
+    }
+
+    public function testDividedByInvalidStringThrowsOnNonEmptyBag(): void
+    {
+        $bag = MoneyBag::zero()->plus(Money::of('9.00', 'EUR'));
+
+        $this->expectException(NumberFormatException::class);
+        $bag->dividedBy('garbage');
+    }
+
+    public function testDividedByInvalidStringThrowsOnEmptyBag(): void
+    {
+        $this->expectException(NumberFormatException::class);
+        MoneyBag::zero()->dividedBy('garbage');
     }
 
     public function testIsEqualToTwoEmptyBags(): void
