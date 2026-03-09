@@ -216,6 +216,12 @@ final readonly class MoneyBag implements Monetary, JsonSerializable
      */
     public function dividedBy(BigNumber|int|string $that): MoneyBag
     {
+        $that = BigNumber::of($that);
+
+        if ($that->isZero()) {
+            throw DivisionByZeroException::divisionByZero();
+        }
+
         $monies = array_map(fn ($money) => $money->dividedBy($that), $this->monies);
 
         return new MoneyBag($monies);
