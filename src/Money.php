@@ -312,7 +312,7 @@ final readonly class Money extends AbstractMoney
         $amount = $this->getAmountOf($that);
 
         if ($that instanceof Money) {
-            self::assertSameContextForArithmetic($this, $that, __FUNCTION__);
+            self::assertSameContextForArithmetic($this, $that);
             $amount = $this->amount->plus($amount);
         } else {
             $amount = $this->amount->toBigRational()->plus($amount);
@@ -348,7 +348,7 @@ final readonly class Money extends AbstractMoney
         $amount = $this->getAmountOf($that);
 
         if ($that instanceof Money) {
-            self::assertSameContextForArithmetic($this, $that, __FUNCTION__);
+            self::assertSameContextForArithmetic($this, $that);
             $amount = $this->amount->minus($amount);
         } else {
             $amount = $this->amount->toBigRational()->minus($amount);
@@ -755,10 +755,10 @@ final readonly class Money extends AbstractMoney
      *
      * @pure
      */
-    private static function assertSameContextForArithmetic(Money $expected, Money $actual, string $method): void
+    private static function assertSameContextForArithmetic(Money $expected, Money $actual): void
     {
         if (! $expected->context->isEqualTo($actual->context)) {
-            throw ContextMismatchException::contextMismatchWithRationalHint($expected->context, $actual->context, $method);
+            throw ContextMismatchException::contextMismatchWithRationalHint($expected->context, $actual->context);
         }
     }
 

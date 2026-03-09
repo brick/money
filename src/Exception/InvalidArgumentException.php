@@ -56,7 +56,7 @@ final class InvalidArgumentException extends \InvalidArgumentException implement
      */
     public static function allocateNegativeRatios(): self
     {
-        return new self('Cannot allocate() negative ratios.');
+        return new self('Cannot allocate() with negative ratios.');
     }
 
     /**

@@ -475,7 +475,7 @@ class MoneyTest extends AbstractTestCase
         $money = Money::of(50, 'USD');
 
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Cannot allocate() negative ratios.');
+        $this->expectExceptionMessage('Cannot allocate() with negative ratios.');
 
         $money->allocate([1, 2, -1], AllocationMode::FloorToFirst);
     }

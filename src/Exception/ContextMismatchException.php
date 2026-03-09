@@ -43,16 +43,14 @@ final class ContextMismatchException extends MoneyMismatchException
     /**
      * @pure
      */
-    public static function contextMismatchWithRationalHint(Context $expected, Context $actual, string $method): self
+    public static function contextMismatchWithRationalHint(Context $expected, Context $actual): self
     {
         return new self(
             sprintf(
                 'The monies do not share the same context: expected %s, got %s.' .
-                ' If this is intended, use %s($money->toRational()) instead of %s($money).',
+                ' Convert the operand to the same context first, or convert it to a RationalMoney to skip context checking.',
                 $expected,
                 $actual,
-                $method,
-                $method,
             ),
             $expected,
             $actual,

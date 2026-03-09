@@ -212,7 +212,7 @@ final class IsoCurrencyProvider
             $currencyCodes[] = $currency->getCurrencyCode();
         }
 
-        throw UnknownCurrencyException::noSingleCurrencyForCountry($countryCode, $currencyCodes);
+        throw UnknownCurrencyException::severalCurrenciesForCountry($countryCode, $currencyCodes);
     }
 
     /**
