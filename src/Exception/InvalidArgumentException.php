@@ -74,4 +74,15 @@ final class InvalidArgumentException extends \InvalidArgumentException implement
     {
         return new self('Cannot split() into less than 1 part.');
     }
+
+    /**
+     * @pure
+     */
+    public static function pairwiseDoesNotSupportMoneyBag(): self
+    {
+        return new self(
+            'PairwiseComparisonMode requires Money or RationalMoney operands; MoneyBag is not supported. ' .
+            'Convert the bag to a single currency first via CurrencyConverter::convert().',
+        );
+    }
 }

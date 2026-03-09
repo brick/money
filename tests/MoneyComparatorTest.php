@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Brick\Money\Tests;
 
 use Brick\Math\BigNumber;
+use Brick\Money\ComparisonMode\BaseCurrencyComparisonMode;
+use Brick\Money\ComparisonMode\PairwiseComparisonMode;
 use Brick\Money\Context\AutoContext;
 use Brick\Money\Currency;
 use Brick\Money\Exception\ExchangeRateNotFoundException;
@@ -29,7 +31,7 @@ class MoneyComparatorTest extends AbstractTestCase
     #[DataProvider('providerCompare')]
     public function testCompare(array $a, array $b, int|string $cmp): void
     {
-        $comparator = new MoneyComparator($this->getExchangeRateProvider());
+        $comparator = new MoneyComparator($this->getExchangeRateProvider(), new PairwiseComparisonMode());
 
         $a = Money::of(...$a);
         $b = Money::of(...$b);
@@ -81,7 +83,7 @@ class MoneyComparatorTest extends AbstractTestCase
     #[DataProvider('providerMin')]
     public function testMin(array $monies, string $expectedMin): void
     {
-        $comparator = new MoneyComparator($this->getExchangeRateProvider());
+        $comparator = new MoneyComparator($this->getExchangeRateProvider(), new PairwiseComparisonMode());
 
         $monies = array_map(
             fn (array $money) => Money::of(...$money),
@@ -118,7 +120,7 @@ class MoneyComparatorTest extends AbstractTestCase
     #[DataProvider('providerMax')]
     public function testMax(array $monies, string $expectedMin): void
     {
-        $comparator = new MoneyComparator($this->getExchangeRateProvider());
+        $comparator = new MoneyComparator($this->getExchangeRateProvider(), new PairwiseComparisonMode());
 
         $monies = array_map(
             fn (array $money) => Money::of(...$money),
@@ -173,7 +175,7 @@ class MoneyComparatorTest extends AbstractTestCase
         $a = Money::of('1.00', 'EUR');
         $b = Money::of('1.10', 'USD');
 
-        $withoutDimensions = new MoneyComparator($provider);
+        $withoutDimensions = new MoneyComparator($provider, new PairwiseComparisonMode());
         $this->expectException(ExchangeRateNotFoundException::class);
         $withoutDimensions->compare($a, $b);
     }
@@ -201,12 +203,80 @@ class MoneyComparatorTest extends AbstractTestCase
         $a = Money::of('1.00', 'EUR');
         $b = Money::of('1.10', 'USD');
 
-        $withDimensions = new MoneyComparator($provider, ['rateType' => 'spot']);
+        $withDimensions = new MoneyComparator($provider, new PairwiseComparisonMode(), ['rateType' => 'spot']);
 
         self::assertSame(0, $withDimensions->compare($a, $b));
         self::assertSame([
             ['rateType' => 'spot'],
         ], $provider->seenDimensions);
+    }
+
+    public function testCompareWithBaseCurrencyString(): void
+    {
+        $comparator = new MoneyComparator($this->getExchangeRateProvider(), new BaseCurrencyComparisonMode('USD'));
+
+        // EUR 1.00 → USD = 1.00 * 1.1 = 1.10
+        self::assertSame(0, $comparator->compare(Money::of('1.00', 'EUR'), Money::of('1.10', 'USD')));
+        self::assertSame(1, $comparator->compare(Money::of('1.00', 'EUR'), Money::of('1.09', 'USD')));
+        self::assertSame(-1, $comparator->compare(Money::of('1.00', 'EUR'), Money::of('1.11', 'USD')));
+    }
+
+    public function testCompareWithBaseCurrencyObject(): void
+    {
+        $comparator = new MoneyComparator($this->getExchangeRateProvider(), new BaseCurrencyComparisonMode(Currency::of('USD')));
+
+        self::assertSame(0, $comparator->compare(Money::of('1.10', 'USD'), Money::of('1.00', 'EUR')));
+    }
+
+    public function testBaseCurrencyModeVsPairwiseModeWithAsymmetricRates(): void
+    {
+        // EUR→USD = 1.1, USD→EUR = 0.9 (asymmetric)
+        //
+        // Pairwise: compare(EUR 1.00, USD 1.11) converts EUR to USD → 1.10, which is < 1.11 → result: -1
+        // Base=EUR:  EUR 1.00 stays 1.00; USD 1.11 → EUR = 1.11 * 0.9 = 0.999 → result: +1
+        //
+        // The two modes legitimately disagree when rates are asymmetric.
+        $provider = $this->getExchangeRateProvider();
+
+        $eur = Money::of('1.00', 'EUR');
+        $usd = Money::of('1.11', 'USD');
+
+        $pairwise = new MoneyComparator($provider, new PairwiseComparisonMode());
+        self::assertSame(-1, $pairwise->compare($eur, $usd));
+
+        $baseCurrency = new MoneyComparator($provider, new BaseCurrencyComparisonMode('EUR'));
+        self::assertSame(1, $baseCurrency->compare($eur, $usd));
+    }
+
+    public function testMinWithBaseCurrency(): void
+    {
+        $comparator = new MoneyComparator($this->getExchangeRateProvider(), new BaseCurrencyComparisonMode('USD'));
+
+        // EUR 1.00 → USD 1.10; USD 1.09 is less
+        self::assertMoneyIs('USD 1.09', $comparator->min(Money::of('1.00', 'EUR'), Money::of('1.09', 'USD')));
+
+        // EUR 1.00 → USD 1.10; USD 1.11 is more, so EUR 1.00 is min
+        self::assertMoneyIs('EUR 1.00', $comparator->min(Money::of('1.00', 'EUR'), Money::of('1.11', 'USD')));
+    }
+
+    public function testMaxWithBaseCurrency(): void
+    {
+        $comparator = new MoneyComparator($this->getExchangeRateProvider(), new BaseCurrencyComparisonMode('USD'));
+
+        // EUR 1.00 → USD 1.10; USD 1.09 is less, so EUR 1.00 is max
+        self::assertMoneyIs('EUR 1.00', $comparator->max(Money::of('1.00', 'EUR'), Money::of('1.09', 'USD')));
+
+        // EUR 1.00 → USD 1.10; USD 1.11 is more
+        self::assertMoneyIs('USD 1.11', $comparator->max(Money::of('1.00', 'EUR'), Money::of('1.11', 'USD')));
+    }
+
+    public function testBaseCurrencyRateNotFound(): void
+    {
+        // No GBP→USD rate in the provider
+        $comparator = new MoneyComparator($this->getExchangeRateProvider(), new BaseCurrencyComparisonMode('USD'));
+
+        $this->expectException(ExchangeRateNotFoundException::class);
+        $comparator->compare(Money::of('1.00', 'GBP'), Money::of('1.00', 'EUR'));
     }
 
     private function getExchangeRateProvider(): ConfigurableProvider
