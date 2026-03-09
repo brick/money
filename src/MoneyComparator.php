@@ -6,16 +6,20 @@ namespace Brick\Money;
 
 use Brick\Money\Exception\ExchangeRateNotFoundException;
 use Brick\Money\Exception\ExchangeRateProviderException;
+use Brick\Money\Exception\InvalidArgumentException;
 
 /**
- * Compares monies in different currencies.
+ * Compares monies, potentially in different currencies, using a ComparisonMode.
  *
- * The converted amounts are never rounded before comparison, so this comparator is more precise
- * than converting a Money to another Currency, then using the resulting Money's built-in comparison methods.
+ * Two built-in modes are available:
  *
- * Note that the comparison is always performed by converting the first Money into the currency of the second Money.
- * This order is important because some exchange rate providers may only have one-way rates,
- * or may use a different rate in each direction.
+ * - PairwiseComparisonMode: A is converted into B's currency without rounding, then compared. Most precise for
+ *   individual pairs, but with asymmetric rates, contradictory results are possible (A < B, B < C, C < A).
+ *   Only Money and RationalMoney are accepted.
+ *
+ * - BaseCurrencyComparisonMode: both operands are converted to a base currency before comparing. Results are
+ *   always consistent (if A ≤ B and B ≤ C then A ≤ C), so min()/max() do not depend on argument order.
+ *   Accepts Money, RationalMoney, and MoneyBag.
  */
 final readonly class MoneyComparator
 {
@@ -26,6 +30,7 @@ final readonly class MoneyComparator
      */
     public function __construct(
         ExchangeRateProvider $exchangeRateProvider,
+        private ComparisonMode $mode,
         private array $dimensions = [],
     ) {
         $this->currencyConverter = new CurrencyConverter($exchangeRateProvider);
@@ -34,64 +39,63 @@ final readonly class MoneyComparator
     /**
      * Compares the given monies.
      *
-     * The amount is not rounded before comparison, so the results are more relevant than when using
-     * `convert($a, $b->getCurrency())->compareTo($b)`.
-     *
-     * Note that the comparison is performed by converting A into B's currency.
-     * This order is important if the exchange rate provider uses different exchange rates
-     * when converting back and forth two currencies.
-     *
      * @return -1|0|1
      *
+     * @throws InvalidArgumentException      If the mode does not support the given operand types.
      * @throws ExchangeRateNotFoundException If the exchange rate is not available.
      * @throws ExchangeRateProviderException If an error occurs while retrieving exchange rates.
      */
-    public function compare(AbstractMoney $a, AbstractMoney $b): int
+    public function compare(Monetary $a, Monetary $b): int
     {
-        return $this->currencyConverter->convertToRational($a, $b->getCurrency(), $this->dimensions)->compareTo($b);
+        return $this->mode->compare($a, $b, $this->currencyConverter, $this->dimensions);
     }
 
     /**
+     * @throws InvalidArgumentException      If the mode does not support the given operand types.
      * @throws ExchangeRateNotFoundException If the exchange rate is not available.
      * @throws ExchangeRateProviderException If an error occurs while retrieving exchange rates.
      */
-    public function isEqual(AbstractMoney $a, AbstractMoney $b): bool
+    public function isEqual(Monetary $a, Monetary $b): bool
     {
         return $this->compare($a, $b) === 0;
     }
 
     /**
+     * @throws InvalidArgumentException      If the mode does not support the given operand types.
      * @throws ExchangeRateNotFoundException If the exchange rate is not available.
      * @throws ExchangeRateProviderException If an error occurs while retrieving exchange rates.
      */
-    public function isLess(AbstractMoney $a, AbstractMoney $b): bool
+    public function isLess(Monetary $a, Monetary $b): bool
     {
         return $this->compare($a, $b) < 0;
     }
 
     /**
+     * @throws InvalidArgumentException      If the mode does not support the given operand types.
      * @throws ExchangeRateNotFoundException If the exchange rate is not available.
      * @throws ExchangeRateProviderException If an error occurs while retrieving exchange rates.
      */
-    public function isLessOrEqual(AbstractMoney $a, AbstractMoney $b): bool
+    public function isLessOrEqual(Monetary $a, Monetary $b): bool
     {
         return $this->compare($a, $b) <= 0;
     }
 
     /**
+     * @throws InvalidArgumentException      If the mode does not support the given operand types.
      * @throws ExchangeRateNotFoundException If the exchange rate is not available.
      * @throws ExchangeRateProviderException If an error occurs while retrieving exchange rates.
      */
-    public function isGreater(AbstractMoney $a, AbstractMoney $b): bool
+    public function isGreater(Monetary $a, Monetary $b): bool
     {
         return $this->compare($a, $b) > 0;
     }
 
     /**
+     * @throws InvalidArgumentException      If the mode does not support the given operand types.
      * @throws ExchangeRateNotFoundException If the exchange rate is not available.
      * @throws ExchangeRateProviderException If an error occurs while retrieving exchange rates.
      */
-    public function isGreaterOrEqual(AbstractMoney $a, AbstractMoney $b): bool
+    public function isGreaterOrEqual(Monetary $a, Monetary $b): bool
     {
         return $this->compare($a, $b) >= 0;
     }
@@ -99,24 +103,21 @@ final readonly class MoneyComparator
     /**
      * Returns the smallest of the given monies.
      *
-     * The monies are compared from left to right. This distinction can be important if the exchange rate provider does
-     * not have bidirectional exchange rates, or applies different rates depending on the direction of the conversion.
+     * The monies are compared from left to right. If several monies are equal to the minimum value, the first one
+     * is returned.
      *
-     * For example, when comparing [A, B, C], this method will first compare A against B, then min(A,B) against C.
-     *
-     * If several monies are equal to the minimum value, the first one is returned.
-     *
-     * @template T of AbstractMoney
+     * @template T of Monetary
      *
      * @param T $money     The first money.
      * @param T ...$monies The subsequent monies.
      *
      * @return T The smallest money.
      *
+     * @throws InvalidArgumentException      If the mode does not support the given operand types.
      * @throws ExchangeRateNotFoundException If an exchange rate is not available.
      * @throws ExchangeRateProviderException If an error occurs while retrieving exchange rates.
      */
-    public function min(AbstractMoney $money, AbstractMoney ...$monies): AbstractMoney
+    public function min(Monetary $money, Monetary ...$monies): Monetary
     {
         $min = $money;
 
@@ -132,24 +133,21 @@ final readonly class MoneyComparator
     /**
      * Returns the largest of the given monies.
      *
-     * The monies are compared from left to right. This distinction can be important if the exchange rate provider does
-     * not have bidirectional exchange rates, or applies different rates depending on the direction of the conversion.
+     * The monies are compared from left to right. If several monies are equal to the maximum value, the first one
+     * is returned.
      *
-     * For example, when comparing [A, B, C], this method will first compare A against B, then max(A,B) against C.
-     *
-     * If several monies are equal to the maximum value, the first one is returned.
-     *
-     * @template T of AbstractMoney
+     * @template T of Monetary
      *
      * @param T $money     The first money.
      * @param T ...$monies The subsequent monies.
      *
      * @return T The largest money.
      *
+     * @throws InvalidArgumentException      If the mode does not support the given operand types.
      * @throws ExchangeRateNotFoundException If an exchange rate is not available.
      * @throws ExchangeRateProviderException If an error occurs while retrieving exchange rates.
      */
-    public function max(AbstractMoney $money, AbstractMoney ...$monies): AbstractMoney
+    public function max(Monetary $money, Monetary ...$monies): Monetary
     {
         $max = $money;
 
