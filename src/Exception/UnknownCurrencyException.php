@@ -7,6 +7,7 @@ namespace Brick\Money\Exception;
 use RuntimeException;
 
 use function implode;
+use function sprintf;
 
 /**
  * Exception thrown when attempting to create a Currency from an unknown currency code.
@@ -34,8 +35,12 @@ final class UnknownCurrencyException extends RuntimeException implements MoneyEx
      *
      * @pure
      */
-    public static function noSingleCurrencyForCountry(string $countryCode, array $currencyCodes): self
+    public static function severalCurrenciesForCountry(string $countryCode, array $currencyCodes): self
     {
-        return new self('No single currency for country ' . $countryCode . ': ' . implode(', ', $currencyCodes) . '.');
+        return new self(sprintf(
+            'Several currencies found for country %s: %s.',
+            $countryCode,
+            implode(', ', $currencyCodes),
+        ));
     }
 }
