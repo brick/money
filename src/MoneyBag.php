@@ -12,6 +12,7 @@ use Closure;
 use JsonSerializable;
 use Override;
 
+use function array_keys;
 use function array_map;
 use function array_values;
 use function ksort;
@@ -85,6 +86,31 @@ final readonly class MoneyBag implements Monetary, JsonSerializable
     public function isZero(): bool
     {
         return $this->monies === [];
+    }
+
+    /**
+     * Returns whether this MoneyBag is equal to the given MoneyBag.
+     *
+     * Two bags are equal if they contain exactly the same set of currencies with the same amount in each.
+     *
+     * Note: two bags with different currencies can represent the same economic value (e.g. USD 1.10 and EUR 1.00
+     * at a 1.10 rate), but are not equal by this method. Use MoneyComparator for cross-currency comparisons.
+     *
+     * @pure
+     */
+    public function isEqualTo(MoneyBag $other): bool
+    {
+        if (array_keys($this->monies) !== array_keys($other->monies)) {
+            return false;
+        }
+
+        foreach ($this->monies as $currencyCode => $money) {
+            if (! $money->getAmount()->isEqualTo($other->monies[$currencyCode]->getAmount())) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     #[Override]

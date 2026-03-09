@@ -240,6 +240,76 @@ class MoneyBagTest extends AbstractTestCase
         self::assertMoneyBagContains([Money::of('9.00', 'EUR')], $bag);
     }
 
+    public function testIsEqualToTwoEmptyBags(): void
+    {
+        self::assertTrue(MoneyBag::zero()->isEqualTo(MoneyBag::zero()));
+    }
+
+    public function testIsEqualToSameSingleCurrency(): void
+    {
+        $a = MoneyBag::zero()->plus(Money::of('1.23', 'USD'));
+        $b = MoneyBag::zero()->plus(Money::of('1.23', 'USD'));
+
+        self::assertTrue($a->isEqualTo($b));
+    }
+
+    public function testIsEqualToSameMultipleCurrencies(): void
+    {
+        $a = MoneyBag::zero()
+            ->plus(Money::of('1.23', 'USD'))
+            ->plus(Money::of('4.56', 'EUR'));
+
+        // Different insertion order must not matter (bag is sorted by currency code internally).
+        $b = MoneyBag::zero()
+            ->plus(Money::of('4.56', 'EUR'))
+            ->plus(Money::of('1.23', 'USD'));
+
+        self::assertTrue($a->isEqualTo($b));
+    }
+
+    public function testIsEqualToSameRationalAmounts(): void
+    {
+        $a = MoneyBag::zero()->plus(RationalMoney::of('1/3', 'EUR'));
+        $b = MoneyBag::zero()->plus(RationalMoney::of('1/3', 'EUR'));
+
+        self::assertTrue($a->isEqualTo($b));
+    }
+
+    public function testIsEqualToDifferentAmounts(): void
+    {
+        $a = MoneyBag::zero()->plus(Money::of('1.23', 'USD'));
+        $b = MoneyBag::zero()->plus(Money::of('1.24', 'USD'));
+
+        self::assertFalse($a->isEqualTo($b));
+    }
+
+    public function testIsEqualToDifferentCurrencies(): void
+    {
+        $a = MoneyBag::zero()->plus(Money::of('1.23', 'USD'));
+        $b = MoneyBag::zero()->plus(Money::of('1.23', 'EUR'));
+
+        self::assertFalse($a->isEqualTo($b));
+    }
+
+    public function testIsEqualToDifferentCurrencyCount(): void
+    {
+        $a = MoneyBag::zero()->plus(Money::of('1.23', 'USD'));
+        $b = MoneyBag::zero()
+            ->plus(Money::of('1.23', 'USD'))
+            ->plus(Money::of('4.56', 'EUR'));
+
+        self::assertFalse($a->isEqualTo($b));
+    }
+
+    public function testIsEqualToEmptyAndNonEmpty(): void
+    {
+        $empty = MoneyBag::zero();
+        $nonEmpty = MoneyBag::zero()->plus(Money::of('1.00', 'USD'));
+
+        self::assertFalse($empty->isEqualTo($nonEmpty));
+        self::assertFalse($nonEmpty->isEqualTo($empty));
+    }
+
     public function testJsonSerializeEmpty(): void
     {
         $moneyBag = MoneyBag::zero();
