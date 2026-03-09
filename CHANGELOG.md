@@ -28,6 +28,7 @@
 - `PdoProvider::setParameters()` has been removed, use the new dimensions configuration instead
 - `CurrencyConverter::convert()` signature has changed: parameter `$dimensions` now comes before `$context`
 - `CachedProvider::invalidate()` has been removed, pass a PSR-16 cache implementation to the constructor if you need to invalidate the cache
+- `MoneyComparator` constructor now requires a `ComparisonMode` instance, explicitly pass an instance of `PairwiseMode` to keep the same behaviour as before
 
 Deprecated methods removed:
 
@@ -42,7 +43,8 @@ Deprecated methods removed:
 ✨ **New features**
 
 - Support for custom dimensions (date, rate type, ...) in `ExchangeRateProvider`, `CurrencyConverter` and `MoneyComparator`
-- Support for `Money` and `RationalMoney` in `MoneyComparator`
+- Support for `Money`, `RationalMoney`, and `MoneyBag` in `MoneyComparator`
+- Support for multiple comparison modes in `MoneyComparator`
 - New `Money::allocate()` API with five algorithms, exposed through the new `AllocationMode` enum:
   - `FloorToFirst` (this is the implementation `allocate()` used previously)
   - `FloorToLargestRatio`
