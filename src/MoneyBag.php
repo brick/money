@@ -6,6 +6,7 @@ namespace Brick\Money;
 
 use Brick\Math\BigNumber;
 use Brick\Math\BigRational;
+use Brick\Math\Exception\DivisionByZeroException;
 use Brick\Math\Exception\MathException;
 use Brick\Money\Exception\UnknownCurrencyException;
 use Closure;
@@ -209,6 +210,12 @@ final readonly class MoneyBag implements Monetary, JsonSerializable
      */
     public function dividedBy(BigNumber|int|string $that): MoneyBag
     {
+        $that = BigNumber::of($that);
+
+        if ($that->isZero()) {
+            throw DivisionByZeroException::divisionByZero();
+        }
+
         $monies = array_map(fn ($money) => $money->dividedBy($that), $this->monies);
 
         return new MoneyBag($monies);
