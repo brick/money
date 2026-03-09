@@ -56,7 +56,7 @@ Deprecated methods removed:
   - `Separate` (this is the implementation `splitWithRemainder()` used previously)
 - `MoneyMismatchException` now has explicit `CurrencyMismatchException` and `ContextMismatchException` subclasses
 - New exception: `MoneyFormatException`, thrown by `MoneyFormatter::format()`
-- New methods in `MoneyBag`: `isZero()`, `multipliedBy()`, `dividedBy()`, `negated()`
+- New methods in `MoneyBag`: `isZero()`, `multipliedBy()`, `dividedBy()`, `negated()`, `isEqualTo()`
 - New methods in `RationalMoney`: `min()`, `max()`, `sum()`
 - Support for custom PSR-16 cache implementations in `CachedProvider`
 

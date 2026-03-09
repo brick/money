@@ -9,6 +9,7 @@ use Brick\Money\Currency;
 use Brick\Money\Money;
 use Brick\Money\MoneyBag;
 use Brick\Money\RationalMoney;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Depends;
 
 use function json_encode;
@@ -241,6 +242,30 @@ class MoneyBagTest extends AbstractTestCase
         $bag->dividedBy(3);
 
         self::assertMoneyBagContains([Money::of('9.00', 'EUR')], $bag);
+    }
+
+    #[DataProvider('providerIsEqualTo')]
+    public function testIsEqualTo(array $monies1, array $monies2, bool $expected): void
+    {
+        $bag1 = MoneyBag::fromMonies(...$monies1);
+        $bag2 = MoneyBag::fromMonies(...$monies2);
+
+        self::assertSame($expected, $bag1->isEqualTo($bag2));
+    }
+
+    public static function providerIsEqualTo(): array
+    {
+        return [
+            [[], [], true],
+            [[], [Money::of(1, 'EUR')], false],
+            [[Money::of(1, 'EUR')], [], false],
+            [[Money::of(1, 'EUR')], [Money::of(1, 'EUR')], true],
+            [[Money::of(1, 'EUR')], [Money::of('1.01', 'EUR')], false],
+            [[Money::of(1, 'EUR')], [Money::of(1, 'USD')], false],
+            [[Money::of(1, 'EUR')], [Money::of(1, 'EUR'), Money::of(0, 'USD')], true],
+            [[Money::of(1, 'EUR')], [Money::of(1, 'EUR'), Money::of(1, 'USD')], false],
+            [[Money::of('0.50', 'USD'), Money::of(1, 'EUR')], [Money::of(1, 'EUR'), RationalMoney::of('1/2', 'USD')], true],
+        ];
     }
 
     public function testJsonSerializeEmpty(): void
