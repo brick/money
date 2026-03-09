@@ -84,7 +84,7 @@ final readonly class CurrencyConverter
                 $exchangeRate = $this->exchangeRateProvider->getExchangeRate($sourceCurrency, $currency, $dimensions);
 
                 if ($exchangeRate === null) {
-                    throw ExchangeRateNotFoundException::exchangeRateNotFound($sourceCurrency, $currency);
+                    throw ExchangeRateNotFoundException::exchangeRateNotFound($sourceCurrency, $currency, $dimensions);
                 }
 
                 $amount = $amount->toBigRational()->multipliedBy($exchangeRate);
