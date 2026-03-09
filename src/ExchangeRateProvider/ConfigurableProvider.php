@@ -7,7 +7,6 @@ namespace Brick\Money\ExchangeRateProvider;
 use Brick\Math\BigNumber;
 use Brick\Math\Exception\MathException;
 use Brick\Money\Currency;
-use Brick\Money\Exception\ExchangeRateProviderException;
 use Brick\Money\ExchangeRateProvider;
 use Override;
 
@@ -49,7 +48,8 @@ final class ConfigurableProvider implements ExchangeRateProvider
     public function getExchangeRate(Currency $sourceCurrency, Currency $targetCurrency, array $dimensions = []): ?BigNumber
     {
         if ($dimensions !== []) {
-            throw new ExchangeRateProviderException('ConfigurableProvider does not support dimensions.');
+            // dimensions are not supported
+            return null;
         }
 
         $sourceCurrencyCode = $sourceCurrency->getCurrencyCode();
