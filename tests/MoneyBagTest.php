@@ -169,6 +169,30 @@ class MoneyBagTest extends AbstractTestCase
         self::assertTrue($backToZero->isZero());
     }
 
+    public function testNegated(): void
+    {
+        $bag = MoneyBag::zero()
+            ->plus(Money::of('10.00', 'EUR'))
+            ->plus(RationalMoney::of('1/3', 'USD'));
+
+        $result = $bag->negated();
+
+        self::assertMoneyBagContains([RationalMoney::of('-10', 'EUR'), RationalMoney::of('-1/3', 'USD')], $result);
+    }
+
+    public function testNegatedIsImmutable(): void
+    {
+        $bag = MoneyBag::zero()->plus(Money::of('10.00', 'EUR'));
+        $bag->negated();
+
+        self::assertMoneyBagContains([Money::of('10.00', 'EUR')], $bag);
+    }
+
+    public function testNegatedOnEmptyBagReturnsEmptyBag(): void
+    {
+        self::assertMoneyBagContains([], MoneyBag::zero()->negated());
+    }
+
     public function testMultipliedBy(): void
     {
         $bag = MoneyBag::zero()

@@ -134,6 +134,18 @@ final readonly class MoneyBag implements Monetary, JsonSerializable
     }
 
     /**
+     * Returns a MoneyBag with each amount negated.
+     *
+     * @pure
+     */
+    public function negated(): MoneyBag
+    {
+        $monies = array_map(fn ($money) => $money->negated(), $this->monies);
+
+        return new MoneyBag($monies);
+    }
+
+    /**
      * Returns a MoneyBag with each amount multiplied by the given number.
      *
      * If the factor is zero, an empty MoneyBag is returned.
