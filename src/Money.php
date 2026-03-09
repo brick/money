@@ -134,16 +134,16 @@ final readonly class Money extends AbstractMoney
      */
     public static function sum(Money $money, Money ...$monies): Money
     {
-        $sum = $money;
+        $amount = $money->amount;
 
-        foreach ($monies as $money) {
+        foreach ($monies as $other) {
             // We check currency/context and perform arithmetic directly rather than delegating to plus(), because
             // plus() would include a hint referencing plus() in the exception message, misleading to sum() callers.
-            self::assertSameCurrencyAndContext($sum, $money);
-            $sum = self::create($sum->amount->plus($money->amount), $sum->currency, $sum->context);
+            self::assertSameCurrencyAndContext($money, $other);
+            $amount = $amount->plus($other->amount);
         }
 
-        return $sum;
+        return self::create($amount, $money->currency, $money->context);
     }
 
     /**
