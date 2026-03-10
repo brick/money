@@ -43,6 +43,7 @@ Deprecated methods removed:
 ⚠️ **Deprecations**
 
 - Method `MoneyBag::fromMonies()` is deprecated, use `of()` instead
+- Class `ProviderChain` is deprecated, use `ChainProvider` instead
 
 ✨ **New features**
 
@@ -63,6 +64,7 @@ Deprecated methods removed:
 - New methods in `MoneyBag`: `isZero()`, `multipliedBy()`, `dividedBy()`, `negated()`, `isEqualTo()`, `of()` (replaces `fromMonies()`)
 - New methods in `RationalMoney`: `min()`, `max()`, `sum()`
 - Support for custom PSR-16 cache implementations in `CachedProvider`
+- New exchange rate provider: `ChainProvider` (replaces `ProviderChain`)
 
 ## [0.12.3](https://github.com/brick/money/releases/tag/0.12.3) - 2026-03-23
 
