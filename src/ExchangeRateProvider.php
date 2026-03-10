@@ -29,7 +29,7 @@ interface ExchangeRateProvider
      * @return BigNumber|null The exchange rate, or null if no rate is available for this currency pair and dimensions.
      *                        Returning null is the correct response both when the currency pair is not configured and
      *                        when the requested dimensions are not supported or fall outside the provider's scope.
-     *                        A null return allows a ProviderChain to continue to the next provider.
+     *                        A null return allows a ChainProvider to continue to the next provider.
      *
      * @throws ExchangeRateProviderException If an operational error occurs (e.g. a database or network failure).
      */

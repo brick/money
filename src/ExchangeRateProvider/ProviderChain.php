@@ -10,9 +10,14 @@ use Brick\Money\ExchangeRateProvider;
 use Override;
 
 use function spl_object_id;
+use function trigger_error;
+
+use const E_USER_DEPRECATED;
 
 /**
  * A chain of exchange rate providers.
+ *
+ * @deprecated Use ChainProvider instead.
  */
 final class ProviderChain implements ExchangeRateProvider
 {
@@ -22,6 +27,11 @@ final class ProviderChain implements ExchangeRateProvider
      * @var array<int, ExchangeRateProvider>
      */
     private array $providers = [];
+
+    public function __construct()
+    {
+        trigger_error('ProviderChain is deprecated. Use ChainProvider instead.', E_USER_DEPRECATED);
+    }
 
     /**
      * Adds an exchange rate provider to the chain.
