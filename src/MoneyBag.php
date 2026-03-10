@@ -17,6 +17,9 @@ use function array_keys;
 use function array_map;
 use function array_values;
 use function ksort;
+use function trigger_error;
+
+use const E_USER_DEPRECATED;
 
 /**
  * Container for monies in different currencies.
@@ -50,9 +53,24 @@ final readonly class MoneyBag implements Monetary, JsonSerializable
     /**
      * Creates a MoneyBag from a list of monies.
      *
-     * @pure
+     * @deprecated Use of() instead.
      */
     public static function fromMonies(Monetary ...$monies): MoneyBag
+    {
+        trigger_error('MoneyBag::fromMonies() is deprecated. Use MoneyBag::of() instead.', E_USER_DEPRECATED);
+
+        return self::of(...$monies);
+    }
+
+    /**
+     * Returns a MoneyBag containing the given monies.
+     *
+     * Monies in the same currency are added together into a single slot.
+     * If no arguments are given, an empty MoneyBag is returned.
+     *
+     * @pure
+     */
+    public static function of(Monetary ...$monies): MoneyBag
     {
         $result = [];
 
@@ -104,7 +122,7 @@ final readonly class MoneyBag implements Monetary, JsonSerializable
     public function isEqualTo(Monetary $that): bool
     {
         if (! $that instanceof MoneyBag) {
-            $that = MoneyBag::fromMonies($that);
+            $that = MoneyBag::of($that);
         }
 
         if (array_keys($this->monies) !== array_keys($that->monies)) {

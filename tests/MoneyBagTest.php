@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Brick\Money\Tests;
 
 use Brick\Math\Exception\DivisionByZeroException;
-use Brick\Math\Exception\NumberFormatException;
 use Brick\Money\Context\AutoContext;
 use Brick\Money\Currency;
 use Brick\Money\Money;
@@ -74,6 +73,17 @@ class MoneyBagTest extends AbstractTestCase
     public function testFromMonies(): void
     {
         $moneyBag = MoneyBag::fromMonies(
+            Money::of('123', 'EUR'),
+            Money::of('234.99', 'EUR'),
+            Money::of(3, 'JPY'),
+        );
+
+        self::assertMoneyBagContains([Money::of('357.99', 'EUR'), Money::of('3', 'JPY')], $moneyBag);
+    }
+
+    public function testOf(): void
+    {
+        $moneyBag = MoneyBag::of(
             Money::of('123', 'EUR'),
             Money::of('234.99', 'EUR'),
             Money::of(3, 'JPY'),
@@ -198,7 +208,7 @@ class MoneyBagTest extends AbstractTestCase
 
     public function testMultipliedBy(): void
     {
-        $bag = MoneyBag::fromMonies(
+        $bag = MoneyBag::of(
             Money::of('10.00', 'EUR'),
             RationalMoney::of('1/3', 'USD'),
         );
@@ -210,7 +220,7 @@ class MoneyBagTest extends AbstractTestCase
 
     public function testMultipliedByZero(): void
     {
-        $bag = MoneyBag::fromMonies(
+        $bag = MoneyBag::of(
             Money::of('10.00', 'EUR'),
             Money::of('5', 'JPY'),
         );
@@ -220,7 +230,7 @@ class MoneyBagTest extends AbstractTestCase
 
     public function testMultipliedByIsImmutable(): void
     {
-        $bag = MoneyBag::fromMonies(Money::of('10.00', 'EUR'));
+        $bag = MoneyBag::of(Money::of('10.00', 'EUR'));
         $bag->multipliedBy(2);
 
         self::assertMoneyBagContains([Money::of('10.00', 'EUR')], $bag);
@@ -228,7 +238,7 @@ class MoneyBagTest extends AbstractTestCase
 
     public function testDividedBy(): void
     {
-        $bag = MoneyBag::fromMonies(
+        $bag = MoneyBag::of(
             Money::of('9.00', 'EUR'),
             Money::of('5', 'JPY'),
         );
@@ -240,7 +250,7 @@ class MoneyBagTest extends AbstractTestCase
 
     public function testDividedByIsImmutable(): void
     {
-        $bag = MoneyBag::fromMonies(Money::of('9.00', 'EUR'));
+        $bag = MoneyBag::of(Money::of('9.00', 'EUR'));
         $bag->dividedBy(3);
 
         self::assertMoneyBagContains([Money::of('9.00', 'EUR')], $bag);
@@ -256,7 +266,7 @@ class MoneyBagTest extends AbstractTestCase
 
     public function testDividedByZeroThrowsOnNonEmptyBag(): void
     {
-        $bag = MoneyBag::fromMonies(Money::of('9.00', 'EUR'));
+        $bag = MoneyBag::of(Money::of('9.00', 'EUR'));
 
         $this->expectException(DivisionByZeroException::class);
         $bag->dividedBy(0);
@@ -265,8 +275,8 @@ class MoneyBagTest extends AbstractTestCase
     #[DataProvider('providerIsEqualTo')]
     public function testIsEqualTo(array $monies1, array $monies2, bool $expected): void
     {
-        $bag1 = MoneyBag::fromMonies(...$monies1);
-        $bag2 = MoneyBag::fromMonies(...$monies2);
+        $bag1 = MoneyBag::of(...$monies1);
+        $bag2 = MoneyBag::of(...$monies2);
 
         self::assertSame($expected, $bag1->isEqualTo($bag2));
     }
