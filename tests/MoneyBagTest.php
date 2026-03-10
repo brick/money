@@ -81,6 +81,17 @@ class MoneyBagTest extends AbstractTestCase
         self::assertMoneyBagContains([Money::of('357.99', 'EUR'), Money::of('3', 'JPY')], $moneyBag);
     }
 
+    public function testOf(): void
+    {
+        $moneyBag = MoneyBag::of(
+            Money::of('123', 'EUR'),
+            Money::of('234.99', 'EUR'),
+            Money::of(3, 'JPY'),
+        );
+
+        self::assertMoneyBagContains([Money::of('357.99', 'EUR'), Money::of('3', 'JPY')], $moneyBag);
+    }
+
     public function testPlusMinusMoney(): MoneyBag
     {
         $moneyBag = MoneyBag::zero();
