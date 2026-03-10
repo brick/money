@@ -226,8 +226,6 @@ final readonly class RationalMoney extends AbstractMoney
 
     /**
      * Returns a RationalMoney whose value is the absolute value of this RationalMoney.
-     *
-     * @pure
      */
     #[Override]
     public function abs(): static
@@ -237,8 +235,6 @@ final readonly class RationalMoney extends AbstractMoney
 
     /**
      * Returns a RationalMoney whose value is the negated value of this RationalMoney.
-     *
-     * @pure
      */
     #[Override]
     public function negated(): static

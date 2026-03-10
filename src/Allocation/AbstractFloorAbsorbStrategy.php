@@ -17,8 +17,6 @@ abstract class AbstractFloorAbsorbStrategy extends AbstractFloorStrategy
      * @param list<BigInteger> $ratios
      *
      * @return list<BigInteger>
-     *
-     * @pure
      */
     final public function allocate(BigInteger $amountInSteps, array $ratios): array
     {

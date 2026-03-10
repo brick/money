@@ -631,8 +631,6 @@ final readonly class Money extends AbstractMoney
      * Returns a Money whose value is the absolute value of this Money.
      *
      * The resulting Money has the same context as this Money.
-     *
-     * @pure
      */
     #[Override]
     public function abs(): static
@@ -644,8 +642,6 @@ final readonly class Money extends AbstractMoney
      * Returns a Money whose value is the negated value of this Money.
      *
      * The resulting Money has the same context as this Money.
-     *
-     * @pure
      */
     #[Override]
     public function negated(): static
