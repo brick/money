@@ -668,8 +668,9 @@ class MoneyTest extends AbstractTestCase
 
     public function testIsEqualToOtherCurrency(): void
     {
-        $this->expectException(CurrencyMismatchException::class);
-        Money::of('1.00', 'EUR')->isEqualTo(Money::of('1.00', 'USD'));
+        self::assertFalse(Money::of('1.00', 'EUR')->isEqualTo(Money::of('1.00', 'USD')));
+        self::assertFalse(Money::of('1.00', 'USD')->isEqualTo(Money::of('1.00', 'EUR')));
+        self::assertFalse(Money::of('0.00', 'EUR')->isEqualTo(Money::of('0.00', 'USD')));
     }
 
     /**

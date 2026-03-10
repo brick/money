@@ -131,10 +131,6 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
     /**
      * Compares this money to the given amount.
      *
-     * Only the amount and currency are compared; context is not checked. Two Money instances with the same currency
-     * and amount but different contexts compare as equal. This is intentional: the comparison result is
-     * mathematically well-defined regardless of context.
-     *
      * @return -1|0|1 If `$this` is less than, equal to, or greater than `$that`.
      *
      * @throws MathException             If the argument is an invalid number.
@@ -150,26 +146,32 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
     /**
      * Returns whether this money is equal to the given amount.
      *
-     * Only the amount and currency are compared; context is not checked. See compareTo() for details.
+     * Only the amount and currency are compared; context is not checked. Two Money instances with the same currency
+     * and amount but different contexts compare as equal. This is intentional: the comparison result is
+     * mathematically well-defined regardless of context.
      *
-     * @throws MathException             If the argument is an invalid number.
-     * @throws CurrencyMismatchException If the argument is a money in a different currency. This will change in a future
-     *                                   version: isEqualTo() will return false instead of throwing. Use compareTo() === 0
-     *                                   if you need the throwing behaviour.
+     * If the argument is a money in a different currency, this method returns false, even if both amounts are zero.
+     * It does not throw a CurrencyMismatchException, unlike ordering methods such as compareTo(), isLessThan(),
+     * isGreaterThan(), etc.
+     *
+     * If you need to throw when comparing different currencies, use compareTo() === 0 instead.
+     * If you need cross-currency comparison, use MoneyComparator.
+     *
+     * @throws MathException If the argument is an invalid number.
      *
      * @pure
      */
     final public function isEqualTo(AbstractMoney|BigNumber|int|string $that): bool
     {
-        if ($that instanceof AbstractMoney && ! $that->getCurrency()->isEqualTo($this->getCurrency())) {
-            trigger_error(
-                'isEqualTo() will return false instead of throwing for different currencies in a future version. ' .
-                'Use compareTo() === 0 if you need the throwing behaviour.',
-                E_USER_DEPRECATED,
-            );
+        if ($that instanceof AbstractMoney) {
+            if (! $that->getCurrency()->isEqualTo($this->getCurrency())) {
+                return false;
+            }
+
+            return $this->getAmount()->isEqualTo($that->getAmount());
         }
 
-        return $this->getAmount()->isEqualTo($this->getAmountOf($that));
+        return $this->getAmount()->isEqualTo($that);
     }
 
     /**
@@ -235,15 +237,16 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
     /**
      * Returns whether this money's amount and currency are equal to those of the given money.
      *
-     * Unlike isEqualTo(), this method only accepts a money, and returns false if the given money is in another
-     * currency, instead of throwing a CurrencyMismatchException.
-     *
-     * @pure
+     * @deprecated Use isEqualTo() instead, which now returns false on currency mismatch.
      */
     final public function isAmountAndCurrencyEqualTo(AbstractMoney $that): bool
     {
-        return $this->getAmount()->isEqualTo($that->getAmount())
-            && $this->getCurrency()->isEqualTo($that->getCurrency());
+        @trigger_error(
+            'isAmountAndCurrencyEqualTo() is deprecated, use isEqualTo() instead.',
+            E_USER_DEPRECATED,
+        );
+
+        return $this->isEqualTo($that);
     }
 
     /**
