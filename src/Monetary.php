@@ -15,7 +15,9 @@ namespace Brick\Money;
 interface Monetary
 {
     /**
-     * Returns the monies contained in this object, sorted by currency code.
+     * Returns the non-zero monetary components of this value, sorted by currency code.
+     *
+     * There must be at most one money per currency. Zero monies are not included.
      *
      * @return list<RationalMoney>
      *
