@@ -161,29 +161,29 @@ final readonly class MoneyBag implements Monetary, JsonSerializable
     /**
      * Returns a MoneyBag with the given monetary amount added.
      *
-     * @param Monetary $money A Money, RationalMoney, or MoneyBag instance.
+     * @param Monetary $that A Money, RationalMoney, or MoneyBag instance.
      *
      * @return MoneyBag The new MoneyBag instance.
      *
      * @pure
      */
-    public function plus(Monetary $money): MoneyBag
+    public function plus(Monetary $that): MoneyBag
     {
-        return new MoneyBag(self::accumulate($this->monies, $money, fn ($a, $b) => $a->plus($b)));
+        return new MoneyBag(self::accumulate($this->monies, $that, fn ($a, $b) => $a->plus($b)));
     }
 
     /**
      * Returns a MoneyBag with the given monetary amount subtracted.
      *
-     * @param Monetary $money A Money, RationalMoney, or MoneyBag instance.
+     * @param Monetary $that A Money, RationalMoney, or MoneyBag instance.
      *
      * @return MoneyBag The new MoneyBag instance.
      *
      * @pure
      */
-    public function minus(Monetary $money): MoneyBag
+    public function minus(Monetary $that): MoneyBag
     {
-        return new MoneyBag(self::accumulate($this->monies, $money, fn ($a, $b) => $a->minus($b)));
+        return new MoneyBag(self::accumulate($this->monies, $that, fn ($a, $b) => $a->minus($b)));
     }
 
     /**

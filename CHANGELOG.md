@@ -46,6 +46,7 @@ The following breaking changes only affect you if you're using named arguments:
 
 - `Currency::ofNumericCode()` now uses `$numericCode` as the parameter name
 - `IsoCurrencyProvider::getCurrencyByNumericCode()` now uses `$numericCode` as the parameter name
+- `MoneyBag::plus()` and `minus()` now use `$that` as the parameter name
 
 ⚠️ **Deprecations**
 
