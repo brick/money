@@ -90,15 +90,15 @@ final readonly class Currency implements Stringable, JsonSerializable
      * across currency changes. The resolved Currency therefore depends on the ISO 4217
      * dataset version and may change after an update in a minor version.
      *
-     * @param int $currencyCode The numeric ISO 4217 currency code.
+     * @param int $numericCode The numeric ISO 4217 currency code.
      *
      * @throws UnknownCurrencyException If an unknown currency code is given.
      *
      * @pure
      */
-    public static function ofNumericCode(int $currencyCode): Currency
+    public static function ofNumericCode(int $numericCode): Currency
     {
-        return IsoCurrencyProvider::getInstance()->getCurrencyByNumericCode($currencyCode);
+        return IsoCurrencyProvider::getInstance()->getCurrencyByNumericCode($numericCode);
     }
 
     /**
