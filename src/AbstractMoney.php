@@ -57,6 +57,10 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
     #[Override]
     final public function getMonies(): array
     {
+        if ($this->isZero()) {
+            return [];
+        }
+
         return [
             $this->toRational(),
         ];
