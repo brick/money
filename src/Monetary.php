@@ -6,6 +6,8 @@ namespace Brick\Money;
 
 /**
  * Common interface for Money, RationalMoney, and MoneyBag.
+ *
+ * @phpstan-sealed AbstractMoney|MoneyBag
  */
 interface Monetary
 {
