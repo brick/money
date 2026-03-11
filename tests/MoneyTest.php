@@ -23,7 +23,6 @@ use Brick\Money\Exception\ContextMismatchException;
 use Brick\Money\Exception\CurrencyMismatchException;
 use Brick\Money\Money;
 use Brick\Money\SplitMode;
-use Generator;
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
@@ -739,21 +738,6 @@ class MoneyTest extends AbstractTestCase
     {
         $this->expectException(CurrencyMismatchException::class);
         Money::of('1.00', 'EUR')->isGreaterThanOrEqualTo(Money::of('1.00', 'USD'));
-    }
-
-    #[DataProvider('providerIsAmountAndCurrencyEqualTo')]
-    public function testIsAmountAndCurrencyEqualTo(array $a, array $b, bool $c): void
-    {
-        self::assertSame($c, Money::of(...$a)->isAmountAndCurrencyEqualTo(Money::of(...$b)));
-    }
-
-    public static function providerIsAmountAndCurrencyEqualTo(): Generator
-    {
-        foreach (self::providerCompare() as [$a, $b, $c]) {
-            yield [$a, $b, $c === 0];
-        }
-
-        yield [[1, 'EUR'], [1, 'USD'], false];
     }
 
     public static function providerCompare(): array

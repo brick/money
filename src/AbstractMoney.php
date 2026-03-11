@@ -14,10 +14,6 @@ use JsonSerializable;
 use Override;
 use Stringable;
 
-use function trigger_error;
-
-use const E_USER_DEPRECATED;
-
 /**
  * Base class for Money and RationalMoney.
  *
@@ -236,21 +232,6 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
     final public function isGreaterThanOrEqualTo(AbstractMoney|BigNumber|int|string $that): bool
     {
         return $this->getAmount()->isGreaterThanOrEqualTo($this->getAmountOf($that));
-    }
-
-    /**
-     * Returns whether this money's amount and currency are equal to those of the given money.
-     *
-     * @deprecated Use isEqualTo() instead, which now returns false on currency mismatch.
-     */
-    final public function isAmountAndCurrencyEqualTo(AbstractMoney $that): bool
-    {
-        @trigger_error(
-            'isAmountAndCurrencyEqualTo() is deprecated, use isEqualTo() instead.',
-            E_USER_DEPRECATED,
-        );
-
-        return $this->isEqualTo($that);
     }
 
     /**
