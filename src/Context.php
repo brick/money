@@ -8,11 +8,20 @@ use Brick\Math\BigDecimal;
 use Brick\Math\BigNumber;
 use Brick\Math\Exception\RoundingNecessaryException;
 use Brick\Math\RoundingMode;
+use Brick\Money\Context\AutoContext;
+use Brick\Money\Context\CashContext;
+use Brick\Money\Context\CustomContext;
+use Brick\Money\Context\DefaultContext;
 use Brick\Money\Exception\ContextException;
 use Stringable;
 
 /**
  * Adjusts a rational number to a decimal amount.
+ *
+ * This interface is sealed: implementing it in userland code is not supported, and breaking changes to this interface
+ * can happen at any time, even in minor or patch releases.
+ *
+ * @phpstan-sealed DefaultContext|CashContext|CustomContext|AutoContext
  */
 interface Context extends Stringable
 {
