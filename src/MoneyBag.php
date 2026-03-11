@@ -114,17 +114,23 @@ final readonly class MoneyBag implements Monetary, JsonSerializable
     }
 
     /**
-     * Returns whether this MoneyBag is equal to the given MoneyBag.
+     * Returns whether this MoneyBag is equal to the given monetary value.
      *
-     * Two bags are equal if they contain exactly the same set of currencies with the same amount in each.
+     * Two values are equal if they contain exactly the same set of currencies with the same amount in each.
      *
-     * Note: two bags with different currencies can represent the same economic value (e.g. USD 1.10 and EUR 1.00
-     * at a 1.10 rate), but are not equal by this method. Use MoneyComparator for cross-currency comparisons.
+     * Zero-valued monies contribute no components, so zero amounts in different currencies compare equal by this method
+     * (for example, MoneyBag::zero(), USD 0, and EUR 0 are all equal). This differs from AbstractMoney::isEqualTo(),
+     * which treats currency as part of the value's identity even when the amount is zero.
+     *
+     * Note: two non-zero values with different currencies can represent the same economic value (e.g. USD 1.10 and
+     * EUR 1.00 at a 1.10 rate), but are not equal by this method. Use MoneyComparator for cross-currency comparisons.
      *
      * @pure
      */
-    public function isEqualTo(MoneyBag $other): bool
+    public function isEqualTo(Monetary $that): bool
     {
+        $other = $that instanceof MoneyBag ? $that : MoneyBag::of($that);
+
         if (array_keys($this->monies) !== array_keys($other->monies)) {
             return false;
         }
