@@ -79,9 +79,15 @@ class BaseCurrencyProviderTest extends AbstractTestCase
 
     public function testThrowsProviderExceptionWhenReverseRateIsZero(): void
     {
-        $provider = ConfigurableProvider::builder()
-            ->addExchangeRate('USD', 'EUR', '0')
-            ->build();
+        $provider = new class() implements ExchangeRateProvider {
+            public function getExchangeRate(Currency $sourceCurrency, Currency $targetCurrency, array $dimensions = []): ?BigNumber
+            {
+                return match ([$sourceCurrency->getCurrencyCode(), $targetCurrency->getCurrencyCode()]) {
+                    ['USD', 'EUR'] => BigNumber::of('0'),
+                    default => null,
+                };
+            }
+        };
 
         $baseProvider = new BaseCurrencyProvider($provider, Currency::of('USD'));
 
@@ -93,10 +99,16 @@ class BaseCurrencyProviderTest extends AbstractTestCase
 
     public function testThrowsProviderExceptionWhenSourceRateIsZero(): void
     {
-        $provider = ConfigurableProvider::builder()
-            ->addExchangeRate('USD', 'EUR', '0')
-            ->addExchangeRate('USD', 'GBP', '0.8')
-            ->build();
+        $provider = new class() implements ExchangeRateProvider {
+            public function getExchangeRate(Currency $sourceCurrency, Currency $targetCurrency, array $dimensions = []): ?BigNumber
+            {
+                return match ([$sourceCurrency->getCurrencyCode(), $targetCurrency->getCurrencyCode()]) {
+                    ['USD', 'EUR'] => BigNumber::of('0'),
+                    ['USD', 'GBP'] => BigNumber::of('0.8'),
+                    default => null,
+                };
+            }
+        };
 
         $baseProvider = new BaseCurrencyProvider($provider, Currency::of('USD'));
 

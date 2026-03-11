@@ -9,6 +9,7 @@ use Brick\Math\BigRational;
 use Brick\Math\Exception\DivisionByZeroException;
 use Brick\Math\Exception\MathException;
 use Brick\Money\Exception\CurrencyMismatchException;
+use Brick\Money\Exception\InvalidArgumentException;
 use Brick\Money\Exception\UnknownCurrencyException;
 use Override;
 
@@ -250,6 +251,7 @@ final readonly class RationalMoney extends AbstractMoney
      *
      * @throws UnknownCurrencyException If an unknown currency code is given.
      * @throws MathException            If the exchange rate is an invalid number.
+     * @throws InvalidArgumentException If the exchange rate is not strictly positive.
      *
      * @pure
      */
@@ -257,6 +259,12 @@ final readonly class RationalMoney extends AbstractMoney
     {
         if (! $currency instanceof Currency) {
             $currency = Currency::of($currency);
+        }
+
+        $exchangeRate = BigNumber::of($exchangeRate);
+
+        if ($exchangeRate->isNegativeOrZero()) {
+            throw InvalidArgumentException::nonPositiveExchangeRate();
         }
 
         return new self($this->amount->multipliedBy($exchangeRate), $currency);

@@ -66,6 +66,16 @@ final class InvalidArgumentException extends \InvalidArgumentException implement
      *
      * @pure
      */
+    public static function nonPositiveExchangeRate(): self
+    {
+        return new self('Exchange rate must be greater than zero.');
+    }
+
+    /**
+     * @internal
+     *
+     * @pure
+     */
     public static function allocateEmptyRatios(): self
     {
         return new self('Cannot allocate() an empty list of ratios.');

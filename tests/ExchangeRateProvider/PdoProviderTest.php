@@ -191,6 +191,32 @@ class PdoProviderTest extends AbstractTestCase
         }
     }
 
+    public function testRejectsNonPositiveExchangeRateFromDatabase(): void
+    {
+        $pdo = new PDO('sqlite::memory:');
+
+        $pdo->query('
+            CREATE TABLE exchange_rates (
+                source_currency TEXT NOT NULL,
+                target_currency TEXT NOT NULL,
+                exchange_rate REAL NOT NULL
+            )
+        ');
+
+        $statement = $pdo->prepare('INSERT INTO exchange_rates VALUES (?, ?, ?)');
+        $statement->execute(['USD', 'EUR', '0']);
+
+        $provider = PdoProvider::builder($pdo, 'exchange_rates', 'exchange_rate')
+            ->setSourceCurrencyColumn('source_currency')
+            ->setTargetCurrencyColumn('target_currency')
+            ->build();
+
+        $this->expectException(ExchangeRateProviderException::class);
+        $this->expectExceptionMessage('Database returned a non-positive exchange rate value.');
+
+        $provider->getExchangeRate(Currency::of('USD'), Currency::of('EUR'));
+    }
+
     public static function providerWithFixedTargetCurrency(): array
     {
         return [

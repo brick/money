@@ -7,6 +7,7 @@ namespace Brick\Money\ExchangeRateProvider\Configurable;
 use Brick\Math\BigNumber;
 use Brick\Math\Exception\MathException;
 use Brick\Money\Currency;
+use Brick\Money\Exception\InvalidArgumentException;
 use Brick\Money\ExchangeRateProvider\ConfigurableProvider;
 
 /**
@@ -34,7 +35,8 @@ final class ConfigurableProviderBuilder
      *
      * @return $this This builder, for chaining.
      *
-     * @throws MathException If the exchange rate is not a valid number.
+     * @throws MathException            If the exchange rate is not a valid number.
+     * @throws InvalidArgumentException If the exchange rate is not strictly positive.
      */
     public function addExchangeRate(
         Currency|string $sourceCurrency,
@@ -43,8 +45,13 @@ final class ConfigurableProviderBuilder
     ): self {
         $sourceCurrencyCode = $sourceCurrency instanceof Currency ? $sourceCurrency->getCurrencyCode() : $sourceCurrency;
         $targetCurrencyCode = $targetCurrency instanceof Currency ? $targetCurrency->getCurrencyCode() : $targetCurrency;
+        $exchangeRate = BigNumber::of($exchangeRate);
 
-        $this->exchangeRates[$sourceCurrencyCode][$targetCurrencyCode] = BigNumber::of($exchangeRate);
+        if ($exchangeRate->isNegativeOrZero()) {
+            throw InvalidArgumentException::nonPositiveExchangeRate();
+        }
+
+        $this->exchangeRates[$sourceCurrencyCode][$targetCurrencyCode] = $exchangeRate;
 
         return $this;
     }

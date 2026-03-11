@@ -238,10 +238,16 @@ final class PdoProvider implements ExchangeRateProvider
         }
 
         try {
-            return BigNumber::of($exchangeRate);
+            $exchangeRate = BigNumber::of($exchangeRate);
         } catch (MathException $e) {
             throw new ExchangeRateProviderException('Database returned an invalid exchange rate value.', $e);
         }
+
+        if ($exchangeRate->isNegativeOrZero()) {
+            throw new ExchangeRateProviderException('Database returned a non-positive exchange rate value.');
+        }
+
+        return $exchangeRate;
     }
 
     /**
