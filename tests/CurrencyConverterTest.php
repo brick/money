@@ -4,14 +4,18 @@ declare(strict_types=1);
 
 namespace Brick\Money\Tests;
 
+use Brick\Math\BigNumber;
 use Brick\Math\Exception\RoundingNecessaryException;
 use Brick\Math\RoundingMode;
 use Brick\Money\Context;
 use Brick\Money\Context\AutoContext;
 use Brick\Money\Context\CustomContext;
 use Brick\Money\Context\DefaultContext;
+use Brick\Money\Currency;
 use Brick\Money\CurrencyConverter;
 use Brick\Money\Exception\ExchangeRateNotFoundException;
+use Brick\Money\Exception\ExchangeRateProviderException;
+use Brick\Money\ExchangeRateProvider;
 use Brick\Money\ExchangeRateProvider\ConfigurableProvider;
 use Brick\Money\Money;
 use Brick\Money\MoneyBag;
@@ -157,6 +161,36 @@ class CurrencyConverterTest extends AbstractTestCase
         if (! self::isExceptionClass($expectedResult)) {
             self::assertMoneyIs($expectedResult, $actualResult);
         }
+    }
+
+    #[DataProvider('providerNonPositiveExchangeRateFromProvider')]
+    public function testConvertRejectsNonPositiveExchangeRate(array $dimensions, string $expectedMessage): void
+    {
+        $currencyConverter = new CurrencyConverter(new class() implements ExchangeRateProvider {
+            public function getExchangeRate(Currency $sourceCurrency, Currency $targetCurrency, array $dimensions = []): ?BigNumber
+            {
+                return BigNumber::of('0');
+            }
+        });
+
+        $this->expectException(ExchangeRateProviderException::class);
+        $this->expectExceptionMessage($expectedMessage);
+
+        $currencyConverter->convert(Money::of('1.23', 'USD'), 'EUR', $dimensions);
+    }
+
+    public static function providerNonPositiveExchangeRateFromProvider(): array
+    {
+        return [
+            'without dimensions' => [
+                [],
+                'Exchange rate provider returned a non-positive rate for USD to EUR.',
+            ],
+            'with dimensions' => [
+                ['date' => '2026-03-12'],
+                'Exchange rate provider returned a non-positive rate for USD to EUR with dimensions [date].',
+            ],
+        ];
     }
 
     public static function providerConvertRationalMoney(): array

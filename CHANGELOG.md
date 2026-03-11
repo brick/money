@@ -32,6 +32,11 @@
 - `CachedProvider::invalidate()` has been removed, pass a PSR-16 cache implementation to the constructor if you need to invalidate the cache
 - `MoneyComparator` constructor now requires a `ComparisonMode` instance, explicitly pass an instance of `PairwiseMode` to keep the same behaviour as before
 - `ConfigurableProvider` is now immutable: `setExchangeRate()` has been removed, use `ConfigurableProvider::builder()->addExchangeRate()->build()` instead
+- The following methods now throw an exception when the exchange rate is negative or zero:
+  - `Money::convertedTo()`
+  - `RationalMoney::convertedTo()`
+  - `CurrencyConverter::convert()`
+  - `CurrencyConverter::convertToRational()`
 - Constructors and factory methods of library-internal exceptions are now `@internal`
 - Interfaces `Context` and `Monetary` are now sealed: userland implementations are no longer supported
 - Built-in `ExchangeRateProvider` implementations now consistently return `1` for same-currency pairs
