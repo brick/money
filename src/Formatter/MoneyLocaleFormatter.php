@@ -39,7 +39,7 @@ final readonly class MoneyLocaleFormatter implements MoneyFormatter
     #[Override]
     public function format(Money $money): string
     {
-        if ($this->allowWholeNumber && ! $money->getAmount()->hasNonZeroFractionalPart()) {
+        if ($this->allowWholeNumber && $money->getAmount()->strippedOfTrailingZeros()->getScale() === 0) {
             $scale = 0;
         } else {
             $scale = $money->getAmount()->getScale();

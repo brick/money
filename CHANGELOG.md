@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.12.1](https://github.com/brick/money/releases/tag/0.12.1) - 2026-03-11
+
+📌 **Compatibility**
+
+- Compatibility with `brick/math` version `0.16`
+
 ## [0.12.0](https://github.com/brick/money/releases/tag/0.12.0) - 2026-03-03
 
 💥 **Breaking changes**
