@@ -14,9 +14,11 @@ use function sprintf;
 final class ContextMismatchException extends MoneyMismatchException
 {
     /**
+     * @internal
+     *
      * @pure
      */
-    private function __construct(
+    public function __construct(
         string $message,
         private readonly Context $expectedContext,
         private readonly Context $actualContext,
@@ -25,6 +27,8 @@ final class ContextMismatchException extends MoneyMismatchException
     }
 
     /**
+     * @internal
+     *
      * @pure
      */
     public static function contextMismatch(Context $expected, Context $actual): self
@@ -41,6 +45,8 @@ final class ContextMismatchException extends MoneyMismatchException
     }
 
     /**
+     * @internal
+     *
      * @pure
      */
     public static function contextMismatchWithRationalHint(Context $expected, Context $actual): self
