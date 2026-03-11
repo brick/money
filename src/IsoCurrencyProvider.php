@@ -135,7 +135,7 @@ final class IsoCurrencyProvider
      * across currency changes. The resolved Currency therefore depends on the ISO 4217
      * dataset version and may change after an update in a minor version.
      *
-     * @param int $currencyCode The numeric ISO 4217 currency code.
+     * @param int $numericCode The numeric ISO 4217 currency code.
      *
      * @return Currency The currency.
      *
@@ -143,7 +143,7 @@ final class IsoCurrencyProvider
      *
      * @pure
      */
-    public function getCurrencyByNumericCode(int $currencyCode): Currency
+    public function getCurrencyByNumericCode(int $numericCode): Currency
     {
         if ($this->numericToCurrency === null) {
             /** @var array<int, non-empty-string> $numericToCurrency */
@@ -152,11 +152,11 @@ final class IsoCurrencyProvider
             $this->numericToCurrency = $numericToCurrency;
         }
 
-        if (isset($this->numericToCurrency[$currencyCode])) {
-            return $this->getCurrency($this->numericToCurrency[$currencyCode]);
+        if (isset($this->numericToCurrency[$numericCode])) {
+            return $this->getCurrency($this->numericToCurrency[$numericCode]);
         }
 
-        throw UnknownCurrencyException::unknownCurrency($currencyCode);
+        throw UnknownCurrencyException::unknownCurrency($numericCode);
     }
 
     /**

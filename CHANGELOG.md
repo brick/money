@@ -41,6 +41,11 @@ Deprecated methods removed:
 - `MoneyBag::add()` has been removed, use `plus()` instead, which returns a new instance
 - `MoneyBag::subtract()` has been removed, use `minus()` instead, which returns a new instance
 
+The following breaking changes only affect you if you're using named arguments:
+
+- `Currency::ofNumericCode()` now uses `$numericCode` as the parameter name
+- `IsoCurrencyProvider::getCurrencyByNumericCode()` now uses `$numericCode` as the parameter name
+
 ⚠️ **Deprecations**
 
 - Method `MoneyBag::fromMonies()` is deprecated, use `of()` instead
