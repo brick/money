@@ -152,6 +152,8 @@ final readonly class MoneyBag implements Monetary, JsonSerializable
 
     /**
      * @return list<array{amount: string, currency: string}>
+     *
+     * @pure
      */
     #[Override]
     public function jsonSerialize(): array
