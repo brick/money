@@ -249,23 +249,14 @@ class MoneyComparatorTest extends AbstractTestCase
 
     private function getExchangeRateProvider(): ConfigurableProvider
     {
-        $provider = new ConfigurableProvider();
-
-        $eur = Currency::of('EUR');
-        $usd = Currency::of('USD');
-        $gbp = Currency::of('GBP');
-        $bsd = Currency::of('BSD');
-
-        $provider->setExchangeRate($eur, $usd, '1.1');
-        $provider->setExchangeRate($usd, $eur, '0.9');
-
-        $provider->setExchangeRate($usd, $bsd, 1);
-        $provider->setExchangeRate($bsd, $usd, 1);
-
-        $provider->setExchangeRate($eur, $gbp, '0.8');
-        $provider->setExchangeRate($gbp, $eur, '1.2');
-
-        return $provider;
+        return ConfigurableProvider::builder()
+            ->addExchangeRate('EUR', 'USD', '1.1')
+            ->addExchangeRate('USD', 'EUR', '0.9')
+            ->addExchangeRate('USD', 'BSD', 1)
+            ->addExchangeRate('BSD', 'USD', 1)
+            ->addExchangeRate('EUR', 'GBP', '0.8')
+            ->addExchangeRate('GBP', 'EUR', '1.2')
+            ->build();
     }
 
     private function getExchangeRateProviderWithDimensions(): ExchangeRateProvider

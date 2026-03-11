@@ -21,17 +21,15 @@ class ChainProviderTest extends AbstractTestCase
 
     public static function setUpBeforeClass(): void
     {
-        $provider = new ConfigurableProvider();
-        $provider->setExchangeRate('USD', 'GBP', '0.7');
-        $provider->setExchangeRate('USD', 'EUR', '0.9');
+        self::$provider1 = ConfigurableProvider::builder()
+            ->addExchangeRate('USD', 'GBP', '0.7')
+            ->addExchangeRate('USD', 'EUR', '0.9')
+            ->build();
 
-        self::$provider1 = $provider;
-
-        $provider = new ConfigurableProvider();
-        $provider->setExchangeRate('USD', 'EUR', '0.8');
-        $provider->setExchangeRate('EUR', 'USD', '1.2');
-
-        self::$provider2 = $provider;
+        self::$provider2 = ConfigurableProvider::builder()
+            ->addExchangeRate('USD', 'EUR', '0.8')
+            ->addExchangeRate('EUR', 'USD', '1.2')
+            ->build();
     }
 
     public function testUnknownExchangeRate(): void

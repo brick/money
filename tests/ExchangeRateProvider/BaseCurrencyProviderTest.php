@@ -75,8 +75,9 @@ class BaseCurrencyProviderTest extends AbstractTestCase
 
     public function testThrowsExceptionWhenReverseRateIsZero(): void
     {
-        $provider = new ConfigurableProvider();
-        $provider->setExchangeRate('USD', 'EUR', '0');
+        $provider = ConfigurableProvider::builder()
+            ->addExchangeRate('USD', 'EUR', '0')
+            ->build();
 
         $baseProvider = new BaseCurrencyProvider($provider, 'USD');
 
@@ -88,9 +89,10 @@ class BaseCurrencyProviderTest extends AbstractTestCase
 
     public function testThrowsExceptionWhenSourceRateIsZero(): void
     {
-        $provider = new ConfigurableProvider();
-        $provider->setExchangeRate('USD', 'EUR', '0');
-        $provider->setExchangeRate('USD', 'GBP', '0.8');
+        $provider = ConfigurableProvider::builder()
+            ->addExchangeRate('USD', 'EUR', '0')
+            ->addExchangeRate('USD', 'GBP', '0.8')
+            ->build();
 
         $baseProvider = new BaseCurrencyProvider($provider, 'USD');
 
@@ -102,11 +104,11 @@ class BaseCurrencyProviderTest extends AbstractTestCase
 
     private function getExchangeRateProvider(): ExchangeRateProvider
     {
-        $provider = new ConfigurableProvider();
-
-        $provider->setExchangeRate('USD', 'EUR', '0.9');
-        $provider->setExchangeRate('USD', 'GBP', '0.8');
-        $provider->setExchangeRate('USD', 'CAD', '1.1');
+        $provider = ConfigurableProvider::builder()
+            ->addExchangeRate('USD', 'EUR', '0.9')
+            ->addExchangeRate('USD', 'GBP', '0.8')
+            ->addExchangeRate('USD', 'CAD', '1.1')
+            ->build();
 
         return new BaseCurrencyProvider($provider, Currency::of('USD'));
     }

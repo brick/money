@@ -29,6 +29,7 @@
 - `CurrencyConverter::convert()` signature has changed: parameter `$dimensions` now comes before `$context`
 - `CachedProvider::invalidate()` has been removed, pass a PSR-16 cache implementation to the constructor if you need to invalidate the cache
 - `MoneyComparator` constructor now requires a `ComparisonMode` instance, explicitly pass an instance of `PairwiseMode` to keep the same behaviour as before
+- `ConfigurableProvider` is now immutable: `setExchangeRate()` has been removed, use `ConfigurableProvider::builder()->addExchangeRate()->build()` instead
 - Constructors and factory methods of library-internal exceptions are now `@internal`
 
 Deprecated methods removed:
