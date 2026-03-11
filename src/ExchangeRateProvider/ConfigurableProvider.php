@@ -5,43 +5,48 @@ declare(strict_types=1);
 namespace Brick\Money\ExchangeRateProvider;
 
 use Brick\Math\BigNumber;
-use Brick\Math\Exception\MathException;
 use Brick\Money\Currency;
 use Brick\Money\ExchangeRateProvider;
 use Override;
 
 /**
- * A configurable exchange rate provider.
+ * An immutable exchange rate provider configured with a fixed set of rates.
+ *
+ * Use ConfigurableProvider::builder() to create an instance.
  */
-final class ConfigurableProvider implements ExchangeRateProvider
+final readonly class ConfigurableProvider implements ExchangeRateProvider
 {
     /**
-     * The configured exchange rates, indexed by source currency code and target currency code.
+     * @param array<string, array<string, BigNumber>> $exchangeRates The exchange rates, indexed by source and target
+     *                                                               currency code.
      *
-     * @var array<string, array<string, BigNumber>>
+     * @pure
      */
-    private array $exchangeRates = [];
+    private function __construct(
+        private array $exchangeRates,
+    ) {
+    }
 
     /**
-     * Sets an exchange rate for a currency pair.
+     * Creates a ConfigurableProvider from the given builder.
      *
-     * This method allows non-ISO currency codes.
+     * @internal
      *
-     * @return ConfigurableProvider This instance, for chaining.
-     *
-     * @throws MathException If the exchange rate is an invalid number.
+     * @pure
      */
-    public function setExchangeRate(
-        Currency|string $sourceCurrency,
-        Currency|string $targetCurrency,
-        BigNumber|int|string $exchangeRate,
-    ): self {
-        $sourceCurrencyCode = $sourceCurrency instanceof Currency ? $sourceCurrency->getCurrencyCode() : $sourceCurrency;
-        $targetCurrencyCode = $targetCurrency instanceof Currency ? $targetCurrency->getCurrencyCode() : $targetCurrency;
+    public static function fromBuilder(ConfigurableProviderBuilder $builder): self
+    {
+        return new self($builder->getExchangeRates());
+    }
 
-        $this->exchangeRates[$sourceCurrencyCode][$targetCurrencyCode] = BigNumber::of($exchangeRate);
-
-        return $this;
+    /**
+     * Returns a new builder for creating a ConfigurableProvider.
+     *
+     * @pure
+     */
+    public static function builder(): ConfigurableProviderBuilder
+    {
+        return new ConfigurableProviderBuilder();
     }
 
     #[Override]

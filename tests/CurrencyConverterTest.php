@@ -74,9 +74,10 @@ class CurrencyConverterTest extends AbstractTestCase
     #[DataProvider('providerConvertMoneyBag')]
     public function testConvertMoneyBag(array $monies, string $currency, Context $context, RoundingMode $roundingMode, string $total): void
     {
-        $exchangeRateProvider = new ConfigurableProvider();
-        $exchangeRateProvider->setExchangeRate('EUR', 'USD', '1.23456789');
-        $exchangeRateProvider->setExchangeRate('JPY', 'USD', '0.00987654321');
+        $exchangeRateProvider = ConfigurableProvider::builder()
+            ->addExchangeRate('EUR', 'USD', '1.23456789')
+            ->addExchangeRate('JPY', 'USD', '0.00987654321')
+            ->build();
 
         $moneyBag = MoneyBag::zero();
 
@@ -108,9 +109,10 @@ class CurrencyConverterTest extends AbstractTestCase
     #[DataProvider('providerConvertMoneyBagToRational')]
     public function testConvertMoneyBagToRational(array $monies, string $currency, string $expectedTotal): void
     {
-        $exchangeRateProvider = new ConfigurableProvider();
-        $exchangeRateProvider->setExchangeRate('EUR', 'USD', '1.123456789');
-        $exchangeRateProvider->setExchangeRate('JPY', 'USD', '0.0098765432123456789');
+        $exchangeRateProvider = ConfigurableProvider::builder()
+            ->addExchangeRate('EUR', 'USD', '1.123456789')
+            ->addExchangeRate('JPY', 'USD', '0.0098765432123456789')
+            ->build();
 
         $moneyBag = MoneyBag::zero();
 
@@ -169,10 +171,11 @@ class CurrencyConverterTest extends AbstractTestCase
 
     private function createCurrencyConverter(): CurrencyConverter
     {
-        $exchangeRateProvider = new ConfigurableProvider();
-        $exchangeRateProvider->setExchangeRate('EUR', 'USD', '1.1');
-        $exchangeRateProvider->setExchangeRate('USD', 'EUR', '10/11');
-        $exchangeRateProvider->setExchangeRate('BSD', 'USD', 1);
+        $exchangeRateProvider = ConfigurableProvider::builder()
+            ->addExchangeRate('EUR', 'USD', '1.1')
+            ->addExchangeRate('USD', 'EUR', '10/11')
+            ->addExchangeRate('BSD', 'USD', 1)
+            ->build();
 
         return new CurrencyConverter($exchangeRateProvider);
     }
