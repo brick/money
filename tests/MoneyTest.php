@@ -820,6 +820,14 @@ class MoneyTest extends AbstractTestCase
         self::assertMoneyIs('JPY 154', $actual, new DefaultContext());
     }
 
+    public function testConvertedToRejectsNonPositiveExchangeRate(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Exchange rate must be greater than zero.');
+
+        Money::of('1.23', 'USD')->convertedTo('EUR', '0');
+    }
+
     /**
      * @param array  $money            The money to test.
      * @param string $locale           The target locale.

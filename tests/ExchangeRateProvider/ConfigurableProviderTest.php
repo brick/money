@@ -7,6 +7,7 @@ namespace Brick\Money\Tests\ExchangeRateProvider;
 use Brick\Math\BigRational;
 use Brick\Math\RoundingMode;
 use Brick\Money\Currency;
+use Brick\Money\Exception\InvalidArgumentException;
 use Brick\Money\ExchangeRateProvider;
 use Brick\Money\ExchangeRateProvider\ConfigurableProvider;
 use Brick\Money\Tests\AbstractTestCase;
@@ -62,6 +63,24 @@ class ConfigurableProviderTest extends AbstractTestCase
             '1',
             $this->getExchangeRateProvider()->getExchangeRate(Currency::of('EUR'), Currency::of('EUR'), ['date' => '2026-03-12']),
         );
+    }
+
+    #[DataProvider('providerInvalidExchangeRate')]
+    public function testBuilderRejectsNonPositiveExchangeRate(string $exchangeRate): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Exchange rate must be greater than zero.');
+
+        ConfigurableProvider::builder()
+            ->addExchangeRate('USD', 'EUR', $exchangeRate);
+    }
+
+    public static function providerInvalidExchangeRate(): array
+    {
+        return [
+            ['0'],
+            ['-0.1'],
+        ];
     }
 
     private function getExchangeRateProvider(): ExchangeRateProvider

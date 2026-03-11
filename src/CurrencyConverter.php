@@ -13,6 +13,10 @@ use Brick\Money\Exception\ExchangeRateNotFoundException;
 use Brick\Money\Exception\ExchangeRateProviderException;
 use Brick\Money\Exception\UnknownCurrencyException;
 
+use function array_keys;
+use function implode;
+use function sprintf;
+
 /**
  * Converts monies into different currencies, using an exchange rate provider.
  */
@@ -85,6 +89,20 @@ final readonly class CurrencyConverter
 
                 if ($exchangeRate === null) {
                     throw ExchangeRateNotFoundException::exchangeRateNotFound($sourceCurrency, $currency, $dimensions);
+                }
+
+                if ($exchangeRate->isNegativeOrZero()) {
+                    $message = sprintf(
+                        'Exchange rate provider returned a non-positive rate for %s to %s',
+                        $sourceCurrencyCode,
+                        $currencyCode,
+                    );
+
+                    if ($dimensions !== []) {
+                        $message .= ' with dimensions [' . implode(', ', array_keys($dimensions)) . ']';
+                    }
+
+                    throw new ExchangeRateProviderException($message . '.');
                 }
 
                 $amount = $amount->toBigRational()->multipliedBy($exchangeRate);
