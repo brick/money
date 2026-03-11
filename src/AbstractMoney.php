@@ -254,6 +254,8 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
 
     /**
      * @return array{amount: string, currency: string}
+     *
+     * @pure
      */
     #[Override]
     final public function jsonSerialize(): array
