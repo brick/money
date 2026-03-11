@@ -15,6 +15,18 @@ use function sprintf;
 final class UnknownCurrencyException extends RuntimeException implements MoneyException
 {
     /**
+     * @internal
+     *
+     * @pure
+     */
+    public function __construct(string $message)
+    {
+        parent::__construct($message);
+    }
+
+    /**
+     * @internal
+     *
      * @pure
      */
     public static function unknownCurrency(string|int $currencyCode): self
@@ -23,6 +35,8 @@ final class UnknownCurrencyException extends RuntimeException implements MoneyEx
     }
 
     /**
+     * @internal
+     *
      * @pure
      */
     public static function noCurrencyForCountry(string $countryCode): self
@@ -31,6 +45,8 @@ final class UnknownCurrencyException extends RuntimeException implements MoneyEx
     }
 
     /**
+     * @internal
+     *
      * @param string[] $currencyCodes
      *
      * @pure

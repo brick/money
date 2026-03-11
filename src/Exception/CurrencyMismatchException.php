@@ -14,9 +14,11 @@ use function sprintf;
 final class CurrencyMismatchException extends MoneyMismatchException
 {
     /**
+     * @internal
+     *
      * @pure
      */
-    private function __construct(
+    public function __construct(
         string $message,
         private readonly Currency $expectedCurrency,
         private readonly Currency $actualCurrency,
@@ -25,6 +27,8 @@ final class CurrencyMismatchException extends MoneyMismatchException
     }
 
     /**
+     * @internal
+     *
      * @pure
      */
     public static function currencyMismatch(Currency $expected, Currency $actual): self

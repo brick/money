@@ -14,6 +14,18 @@ use function sprintf;
 final class ContextException extends RuntimeException implements MoneyException
 {
     /**
+     * @internal
+     *
+     * @pure
+     */
+    public function __construct(string $message)
+    {
+        parent::__construct($message);
+    }
+
+    /**
+     * @internal
+     *
      * @pure
      */
     public static function invalidStepForScale(int $step, int $scale): self
@@ -22,6 +34,8 @@ final class ContextException extends RuntimeException implements MoneyException
     }
 
     /**
+     * @internal
+     *
      * @pure
      */
     public static function autoContextRoundingMode(): self
@@ -30,6 +44,8 @@ final class ContextException extends RuntimeException implements MoneyException
     }
 
     /**
+     * @internal
+     *
      * @pure
      */
     public static function notFixedContext(string $method): self

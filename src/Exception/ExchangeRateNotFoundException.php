@@ -16,11 +16,13 @@ use function sprintf;
 final class ExchangeRateNotFoundException extends ExchangeRateException
 {
     /**
+     * @internal
+     *
      * @param array<string, mixed> $dimensions
      *
      * @pure
      */
-    private function __construct(
+    public function __construct(
         string $message,
         private readonly Currency $sourceCurrency,
         private readonly Currency $targetCurrency,
@@ -30,6 +32,8 @@ final class ExchangeRateNotFoundException extends ExchangeRateException
     }
 
     /**
+     * @internal
+     *
      * @param array<string, mixed> $dimensions
      *
      * @pure

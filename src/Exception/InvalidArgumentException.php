@@ -12,6 +12,18 @@ use function sprintf;
 final class InvalidArgumentException extends \InvalidArgumentException implements MoneyException
 {
     /**
+     * @internal
+     *
+     * @pure
+     */
+    public function __construct(string $message)
+    {
+        parent::__construct($message);
+    }
+
+    /**
+     * @internal
+     *
      * @pure
      */
     public static function invalidScale(int $scale): self
@@ -20,6 +32,8 @@ final class InvalidArgumentException extends \InvalidArgumentException implement
     }
 
     /**
+     * @internal
+     *
      * @pure
      */
     public static function invalidStep(int $step): self
@@ -28,6 +42,8 @@ final class InvalidArgumentException extends \InvalidArgumentException implement
     }
 
     /**
+     * @internal
+     *
      * @pure
      */
     public static function invalidStepForScale(int $step, int $scale): self
@@ -36,6 +52,8 @@ final class InvalidArgumentException extends \InvalidArgumentException implement
     }
 
     /**
+     * @internal
+     *
      * @pure
      */
     public static function negativeFractionDigits(): self
@@ -44,6 +62,8 @@ final class InvalidArgumentException extends \InvalidArgumentException implement
     }
 
     /**
+     * @internal
+     *
      * @pure
      */
     public static function allocateEmptyRatios(): self
@@ -52,6 +72,8 @@ final class InvalidArgumentException extends \InvalidArgumentException implement
     }
 
     /**
+     * @internal
+     *
      * @pure
      */
     public static function allocateNegativeRatios(): self
@@ -60,6 +82,8 @@ final class InvalidArgumentException extends \InvalidArgumentException implement
     }
 
     /**
+     * @internal
+     *
      * @pure
      */
     public static function allocateAllZeroRatios(): self
@@ -68,6 +92,8 @@ final class InvalidArgumentException extends \InvalidArgumentException implement
     }
 
     /**
+     * @internal
+     *
      * @pure
      */
     public static function splitTooFewParts(): self
@@ -76,6 +102,8 @@ final class InvalidArgumentException extends \InvalidArgumentException implement
     }
 
     /**
+     * @internal
+     *
      * @pure
      */
     public static function pairwiseDoesNotSupportMoneyBag(): self
