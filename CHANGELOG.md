@@ -37,6 +37,9 @@
   - `RationalMoney::convertedTo()`
   - `CurrencyConverter::convert()`
   - `CurrencyConverter::convertToRational()`
+- The following methods now throw when performing same-currency operations with a rate different from `1`:
+  - `Money::convertedTo()`
+  - `RationalMoney::convertedTo()`
 - Constructors and factory methods of library-internal exceptions are now `@internal`
 - Interfaces `Context` and `Monetary` are now sealed: userland implementations are no longer supported
 - Built-in `ExchangeRateProvider` implementations now consistently return `1` for same-currency pairs

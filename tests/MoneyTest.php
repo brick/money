@@ -810,6 +810,8 @@ class MoneyTest extends AbstractTestCase
             [['1.23', 'USD'], ['JPY', '125', new CustomContext(2)], 'JPY 153.75'],
             [['1.23', 'USD'], ['JPY', '125', new DefaultContext(), RoundingMode::Down], 'JPY 153'],
             [['1.23', 'USD'], ['JPY', '125', new DefaultContext(), RoundingMode::Up], 'JPY 154'],
+            [['1.23', 'USD'], ['USD', '1'], 'USD 1.23'],
+            [['1.230', 'USD', new CustomContext(3)], ['USD', '1', new DefaultContext()], 'USD 1.23'],
         ];
     }
 
@@ -826,6 +828,14 @@ class MoneyTest extends AbstractTestCase
         $this->expectExceptionMessage('Exchange rate must be greater than zero.');
 
         Money::of('1.23', 'USD')->convertedTo('EUR', '0');
+    }
+
+    public function testConvertedToWithSameCurrencyAndRateNotOne(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Same-currency conversion requires an exchange rate of 1.');
+
+        Money::of('1.23', 'USD')->convertedTo('USD', '1.01');
     }
 
     /**
