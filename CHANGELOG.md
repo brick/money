@@ -85,6 +85,7 @@ The following breaking changes only affect you if you're using named arguments:
 - New methods in `RationalMoney`: `min()`, `max()`, `sum()`
 - Support for custom PSR-16 cache implementations in `CachedProvider`
 - New exchange rate provider: `ChainProvider` (replaces `ProviderChain`)
+- Support for numeric currency codes in `PdoProvider`
 
 ## [0.12.3](https://github.com/brick/money/releases/tag/0.12.3) - 2026-03-23
 
