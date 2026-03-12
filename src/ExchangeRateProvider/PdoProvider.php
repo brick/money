@@ -202,28 +202,32 @@ final class PdoProvider implements ExchangeRateProvider
         try {
             /** @var int|float|numeric-string|false $exchangeRate */
             $exchangeRate = $this->exec(function () use ($statement, $parameters, $omittedDimensions) {
-                $statement->execute($parameters);
+                try {
+                    $statement->execute($parameters);
 
-                $exchangeRate = $statement->fetchColumn();
+                    $exchangeRate = $statement->fetchColumn();
 
-                if ($exchangeRate === false) {
-                    return false;
-                }
-
-                if ($statement->fetchColumn() !== false) {
-                    $message = 'Exchange rate lookup matched multiple rows.';
-
-                    if ($omittedDimensions !== []) {
-                        $message .= ' Missing dimensions may be required to disambiguate: ' .
-                            implode(', ', $omittedDimensions) . '.';
+                    if ($exchangeRate === false) {
+                        return false;
                     }
 
-                    $message .= ' Configure orderBy() to select one row deterministically if that is intended.';
+                    if ($statement->fetchColumn() !== false) {
+                        $message = 'Exchange rate lookup matched multiple rows.';
 
-                    throw new ExchangeRateProviderException($message);
+                        if ($omittedDimensions !== []) {
+                            $message .= ' Missing dimensions may be required to disambiguate: ' .
+                                implode(', ', $omittedDimensions) . '.';
+                        }
+
+                        $message .= ' Configure orderBy() to select one row deterministically if that is intended.';
+
+                        throw new ExchangeRateProviderException($message);
+                    }
+
+                    return $exchangeRate;
+                } finally {
+                    $statement->closeCursor();
                 }
-
-                return $exchangeRate;
             });
         } catch (PDOException $e) {
             throw new ExchangeRateProviderException('Failed to retrieve exchange rate due to a PDO exception.', $e);
