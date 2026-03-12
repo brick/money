@@ -6,14 +6,21 @@ namespace Brick\Money\ExchangeRateProvider;
 
 use DateInterval;
 use DateTimeImmutable;
+use LogicException;
 use Psr\SimpleCache\CacheInterface;
 
 use function array_key_exists;
 use function is_int;
+use function sprintf;
 use function time;
 
 /**
- * Simple in-memory PSR-16 cache backed by a PHP array.
+ * Simple in-memory cache backed by a PHP array.
+ *
+ * This cache is internal to the CachedProvider, and not part of the public API.
+ * Do not use it in your own code.
+ *
+ * @internal
  */
 final class ArrayCache implements CacheInterface
 {
@@ -30,7 +37,7 @@ final class ArrayCache implements CacheInterface
 
         ['value' => $value, 'expires' => $expires] = $this->items[$key];
 
-        if ($expires !== null && time() >= $expires) {
+        if ($expires !== null && $expires <= time()) {
             unset($this->items[$key]);
 
             return $default;
@@ -41,11 +48,19 @@ final class ArrayCache implements CacheInterface
 
     public function set(string $key, mixed $value, null|int|DateInterval $ttl = null): bool
     {
-        $expires = match (true) {
-            $ttl === null => null,
-            is_int($ttl) => time() + $ttl,
-            default => (new DateTimeImmutable())->add($ttl)->getTimestamp(),
-        };
+        if ($ttl === null) {
+            $expires = null;
+        } else {
+            $expires = is_int($ttl)
+                ? time() + $ttl
+                : (new DateTimeImmutable())->add($ttl)->getTimestamp();
+
+            if ($expires <= time()) {
+                unset($this->items[$key]);
+
+                return true;
+            }
+        }
 
         $this->items[$key] = ['value' => $value, 'expires' => $expires];
 
@@ -54,61 +69,39 @@ final class ArrayCache implements CacheInterface
 
     public function delete(string $key): bool
     {
-        unset($this->items[$key]);
-
-        return true;
+        throw self::unsupported(__METHOD__);
     }
 
     public function clear(): bool
     {
-        $this->items = [];
+        throw self::unsupported(__METHOD__);
+    }
 
-        return true;
+    public function getMultiple(iterable $keys, mixed $default = null): iterable
+    {
+        throw self::unsupported(__METHOD__);
     }
 
     /**
-     * @return iterable<string, mixed>
+     * @param iterable<mixed, mixed> $values
      */
-    public function getMultiple(iterable $keys, mixed $default = null): iterable
-    {
-        foreach ($keys as $key) {
-            yield $key => $this->get($key, $default);
-        }
-    }
-
-    /** @param iterable<string, mixed> $values */
     public function setMultiple(iterable $values, null|int|DateInterval $ttl = null): bool
     {
-        foreach ($values as $key => $value) {
-            $this->set($key, $value, $ttl);
-        }
-
-        return true;
+        throw self::unsupported(__METHOD__);
     }
 
     public function deleteMultiple(iterable $keys): bool
     {
-        foreach ($keys as $key) {
-            $this->delete($key);
-        }
-
-        return true;
+        throw self::unsupported(__METHOD__);
     }
 
     public function has(string $key): bool
     {
-        if (! array_key_exists($key, $this->items)) {
-            return false;
-        }
+        throw self::unsupported(__METHOD__);
+    }
 
-        $expires = $this->items[$key]['expires'];
-
-        if ($expires !== null && time() >= $expires) {
-            unset($this->items[$key]);
-
-            return false;
-        }
-
-        return true;
+    private static function unsupported(string $method): LogicException
+    {
+        return new LogicException(sprintf('%s() is not supported on internal class %s.', $method, self::class));
     }
 }

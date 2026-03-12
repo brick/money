@@ -24,9 +24,9 @@ final readonly class CachedProvider implements ExchangeRateProvider
     /**
      * @param ExchangeRateProvider        $provider                    The underlying exchange rate provider.
      * @param CacheInterface              $cache                       The PSR-16 cache to store exchange rates in.
-     *                                                                 Defaults to an in-memory {@see ArrayCache}.
-     *                                                                 Pass an explicit instance if you need to call
-     *                                                                 clear() on it to invalidate cached rates.
+     *                                                                 Defaults to an internal in-memory cache.
+     *                                                                 Pass an explicit instance if you need direct
+     *                                                                 cache control or invalidation.
      * @param DimensionsCacheKeyGenerator $dimensionsCacheKeyGenerator The cache key generator for dimensions.
      * @param int|DateInterval|null       $ttl                         The TTL for cached exchange rates. Null means
      *                                                                 the cache stores values indefinitely. Applies

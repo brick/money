@@ -21,7 +21,55 @@ class CachedProviderTest extends AbstractTestCase
     public function testGetExchangeRateAndInvalidate(): void
     {
         $mock = new ProviderMock();
-        $cache = new ArrayCache();
+        $cache = new class() implements CacheInterface {
+            private array $items = [];
+
+            public function get(string $key, mixed $default = null): mixed
+            {
+                return $this->items[$key] ?? $default;
+            }
+
+            public function set(string $key, mixed $value, null|int|DateInterval $ttl = null): bool
+            {
+                $this->items[$key] = $value;
+
+                return true;
+            }
+
+            public function delete(string $key): bool
+            {
+                unset($this->items[$key]);
+
+                return true;
+            }
+
+            public function clear(): bool
+            {
+                $this->items = [];
+
+                return true;
+            }
+
+            public function getMultiple(iterable $keys, mixed $default = null): iterable
+            {
+                return [];
+            }
+
+            public function setMultiple(iterable $values, null|int|DateInterval $ttl = null): bool
+            {
+                return true;
+            }
+
+            public function deleteMultiple(iterable $keys): bool
+            {
+                return true;
+            }
+
+            public function has(string $key): bool
+            {
+                return false;
+            }
+        };
         $provider = new CachedProvider($mock, $cache);
 
         $eur = Currency::of('EUR');
