@@ -353,6 +353,8 @@ class RationalMoneyTest extends AbstractTestCase
             [['3/7', 'USD'], 'EUR', '7/3', 'EUR 1'],
             [['100', 'USD'], 'JPY', 150, 'JPY 15000'],
             [['1.23', 'USD'], 'INVALID', '1', UnknownCurrencyException::class],
+            [['1.23', 'USD'], 'USD', '1', 'USD 123/100'],
+            [['1.23', 'USD'], 'USD', '1.01', InvalidArgumentException::class],
             [['1.23', 'USD'], 'EUR', '0', InvalidArgumentException::class],
             [['1.23', 'USD'], 'EUR', '-1', InvalidArgumentException::class],
         ];

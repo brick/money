@@ -76,6 +76,16 @@ final class InvalidArgumentException extends \InvalidArgumentException implement
      *
      * @pure
      */
+    public static function sameCurrencyConversion(): self
+    {
+        return new self('Same-currency conversion requires an exchange rate of 1.');
+    }
+
+    /**
+     * @internal
+     *
+     * @pure
+     */
     public static function allocateEmptyRatios(): self
     {
         return new self('Cannot allocate() an empty list of ratios.');

@@ -665,7 +665,8 @@ final readonly class Money extends AbstractMoney
      *
      * @throws UnknownCurrencyException   If an unknown currency code is given.
      * @throws MathException              If the exchange rate is an invalid number.
-     * @throws InvalidArgumentException   If the exchange rate is not strictly positive.
+     * @throws InvalidArgumentException   If the exchange rate is not strictly positive, or if same-currency conversion
+     *                                    is attempted with an exchange rate other than 1.
      * @throws RoundingNecessaryException If the rounding mode is RoundingMode::Unnecessary, and rounding is necessary.
      * @throws ContextException           If the context does not apply.
      *
@@ -682,6 +683,14 @@ final readonly class Money extends AbstractMoney
         }
 
         $exchangeRate = BigNumber::of($exchangeRate);
+
+        if ($currency->isEqualTo($this->currency)) {
+            if (! $exchangeRate->isEqualTo(1)) {
+                throw InvalidArgumentException::sameCurrencyConversion();
+            }
+
+            return self::create($this->amount, $currency, $context, $roundingMode);
+        }
 
         if ($exchangeRate->isNegativeOrZero()) {
             throw InvalidArgumentException::nonPositiveExchangeRate();
