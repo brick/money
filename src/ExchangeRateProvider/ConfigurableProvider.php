@@ -8,6 +8,7 @@ use Brick\Math\BigInteger;
 use Brick\Math\BigNumber;
 use Brick\Money\Currency;
 use Brick\Money\ExchangeRateProvider;
+use Brick\Money\ExchangeRateProvider\Configurable\ConfigurableProviderBuilder;
 use Override;
 
 /**
