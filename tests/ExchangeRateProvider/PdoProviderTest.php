@@ -355,6 +355,40 @@ class PdoProviderTest extends AbstractTestCase
         self::assertNull($rate);
     }
 
+    public function testSameCurrencyReturnsOne(): void
+    {
+        $pdo = new PDO('sqlite::memory:');
+        $pdo->query('CREATE TABLE exchange_rates (source_currency TEXT, target_currency TEXT, exchange_rate REAL)');
+
+        $configuration = PdoProviderConfiguration::builder('exchange_rates', 'exchange_rate')
+            ->setSourceCurrencyColumn('source_currency')
+            ->setTargetCurrencyColumn('target_currency')
+            ->build();
+
+        $provider = new PdoProvider($pdo, $configuration);
+
+        self::assertBigNumberEquals('1', $provider->getExchangeRate(Currency::of('EUR'), Currency::of('EUR')));
+    }
+
+    public function testSameCurrencyReturnsOneWithDimensions(): void
+    {
+        $pdo = new PDO('sqlite::memory:');
+        $pdo->query('CREATE TABLE exchange_rates (source_currency TEXT, target_currency TEXT, exchange_rate REAL)');
+
+        $configuration = PdoProviderConfiguration::builder('exchange_rates', 'exchange_rate')
+            ->setSourceCurrencyColumn('source_currency')
+            ->setTargetCurrencyColumn('target_currency')
+            ->build();
+
+        $provider = new PdoProvider($pdo, $configuration);
+
+        self::assertBigNumberEquals('1', $provider->getExchangeRate(
+            Currency::of('EUR'),
+            Currency::of('EUR'),
+            ['date' => new DateTimeImmutable('2017-08-01')],
+        ));
+    }
+
     public function testDimensionCanResolveToNull(): void
     {
         $pdo = new PDO('sqlite::memory:');

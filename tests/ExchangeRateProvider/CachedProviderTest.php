@@ -59,6 +59,28 @@ class CachedProviderTest extends AbstractTestCase
         self::assertSame(1, $mock->getCalls());
     }
 
+    public function testSameCurrencyReturnsOne(): void
+    {
+        $mock = new ProviderMock();
+        $provider = new CachedProvider($mock, new ArrayCache());
+
+        self::assertBigNumberEquals('1', $provider->getExchangeRate(Currency::of('EUR'), Currency::of('EUR')));
+        self::assertSame(0, $mock->getCalls());
+    }
+
+    public function testSameCurrencyReturnsOneWithDimensions(): void
+    {
+        $mock = new ProviderMock();
+        $provider = new CachedProvider($mock, new ArrayCache());
+
+        self::assertBigNumberEquals('1', $provider->getExchangeRate(
+            Currency::of('EUR'),
+            Currency::of('EUR'),
+            ['date' => new DateTimeImmutable('2026-03-12')],
+        ));
+        self::assertSame(0, $mock->getCalls());
+    }
+
     public function testCachesWithSupportedDimensions(): void
     {
         $mock = new ProviderMock();

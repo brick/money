@@ -32,6 +32,7 @@
 - `ConfigurableProvider` is now immutable: `setExchangeRate()` has been removed, use `ConfigurableProvider::builder()->addExchangeRate()->build()` instead
 - Constructors and factory methods of library-internal exceptions are now `@internal`
 - Interfaces `Context` and `Monetary` are now sealed: userland implementations are no longer supported
+- Built-in `ExchangeRateProvider` implementations now consistently return `1` for same-currency pairs
 
 Deprecated methods removed:
 

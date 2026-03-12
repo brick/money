@@ -39,6 +39,24 @@ class ChainProviderTest extends AbstractTestCase
         self::assertNull($providerChain->getExchangeRate(Currency::of('USD'), Currency::of('GBP')));
     }
 
+    public function testSameCurrencyReturnsOne(): void
+    {
+        $providerChain = new ChainProvider();
+
+        self::assertBigNumberEquals('1', $providerChain->getExchangeRate(Currency::of('USD'), Currency::of('USD')));
+    }
+
+    public function testSameCurrencyReturnsOneWithDimensions(): void
+    {
+        $providerChain = new ChainProvider(self::$provider1, self::$provider2);
+
+        self::assertBigNumberEquals('1', $providerChain->getExchangeRate(
+            Currency::of('USD'),
+            Currency::of('USD'),
+            ['date' => '2026-03-12'],
+        ));
+    }
+
     public function testOneProvider(): ChainProvider
     {
         $provider = new ChainProvider(self::$provider1);

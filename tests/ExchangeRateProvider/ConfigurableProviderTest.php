@@ -47,6 +47,23 @@ class ConfigurableProviderTest extends AbstractTestCase
         ];
     }
 
+    public function testSameCurrencyReturnsOne(): void
+    {
+        self::assertBigNumberEquals('1', $this->getExchangeRateProvider()->getExchangeRate(
+            Currency::of('EUR'),
+            Currency::of('EUR'),
+        ));
+    }
+
+    public function testSameCurrencyReturnsOneWithDimensions(): void
+    {
+        self::assertBigNumberEquals('1', $this->getExchangeRateProvider()->getExchangeRate(
+            Currency::of('EUR'),
+            Currency::of('EUR'),
+            ['date' => '2026-03-12'],
+        ));
+    }
+
     private function getExchangeRateProvider(): ExchangeRateProvider
     {
         return ConfigurableProvider::builder()
