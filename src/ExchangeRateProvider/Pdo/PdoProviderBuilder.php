@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace Brick\Money\ExchangeRateProvider\Pdo;
 
 use Brick\Money\Exception\InvalidArgumentException;
+use Brick\Money\ExchangeRateProvider\PdoProvider;
 use Closure;
+use PDO;
 
 use function implode;
 use function sprintf;
 
-final class PdoProviderConfigurationBuilder
+final class PdoProviderBuilder
 {
     private ?string $sourceCurrencyCode = null;
 
@@ -43,6 +45,7 @@ final class PdoProviderConfigurationBuilder
      * @param string $exchangeRateColumnName The column containing the exchange rate value.
      */
     public function __construct(
+        private readonly PDO $pdo,
         private readonly string $tableName,
         private readonly string $exchangeRateColumnName,
     ) {
@@ -208,11 +211,11 @@ final class PdoProviderConfigurationBuilder
     }
 
     /**
-     * Builds the final PdoProviderConfiguration.
+     * Builds the final PdoProvider.
      */
-    public function build(): PdoProviderConfiguration
+    public function build(): PdoProvider
     {
-        return PdoProviderConfiguration::fromBuilder($this);
+        return PdoProvider::fromBuilder($this);
     }
 
     /**
@@ -236,6 +239,11 @@ final class PdoProviderConfigurationBuilder
     public function getTableName(): string
     {
         return $this->tableName;
+    }
+
+    public function getPdo(): PDO
+    {
+        return $this->pdo;
     }
 
     public function getExchangeRateColumnName(): string
