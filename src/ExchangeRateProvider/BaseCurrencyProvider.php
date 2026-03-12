@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Brick\Money\ExchangeRateProvider;
 
+use Brick\Math\BigInteger;
 use Brick\Math\BigNumber;
 use Brick\Math\Exception\DivisionByZeroException;
 use Brick\Money\Currency;
@@ -41,6 +42,10 @@ final readonly class BaseCurrencyProvider implements ExchangeRateProvider
     #[Override]
     public function getExchangeRate(Currency $sourceCurrency, Currency $targetCurrency, array $dimensions = []): ?BigNumber
     {
+        if ($sourceCurrency->isEqualTo($targetCurrency)) {
+            return BigInteger::one();
+        }
+
         $baseCurrencyCode = $this->baseCurrency->getCurrencyCode();
 
         if ($sourceCurrency->getCurrencyCode() === $baseCurrencyCode) {

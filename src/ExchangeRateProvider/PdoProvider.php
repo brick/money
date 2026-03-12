@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Brick\Money\ExchangeRateProvider;
 
+use Brick\Math\BigInteger;
 use Brick\Math\BigNumber;
 use Brick\Math\Exception\MathException;
 use Brick\Money\Currency;
@@ -64,6 +65,10 @@ final class PdoProvider implements ExchangeRateProvider
     {
         $sourceCurrencyCode = $sourceCurrency->getCurrencyCode();
         $targetCurrencyCode = $targetCurrency->getCurrencyCode();
+
+        if ($sourceCurrency->isEqualTo($targetCurrency)) {
+            return BigInteger::one();
+        }
 
         $conditions = [];
         $parameters = [];

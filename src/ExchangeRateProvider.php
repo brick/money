@@ -21,8 +21,9 @@ interface ExchangeRateProvider
      * Providers are not required to support all dimensions. If a provider does not support a dimension, it should
      * return null.
      *
-     * Providers are not required to return an exchange rate for same-currency pairs: CurrencyConverter short-circuits
-     * same-currency conversions and does not call providers in that case.
+     * Providers should return 1 or null for same-currency pairs. Returning any other non-null value is invalid as per
+     * this library's conventions. Currency conversion through CurrencyConverter does not rely on providers for this
+     * case, so this rule mainly matters when providers are used directly.
      *
      * @param array<string, mixed> $dimensions Additional exchange-rate lookup dimensions (e.g., date or rate type).
      *
