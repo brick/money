@@ -251,7 +251,8 @@ final readonly class RationalMoney extends AbstractMoney
      *
      * @throws UnknownCurrencyException If an unknown currency code is given.
      * @throws MathException            If the exchange rate is an invalid number.
-     * @throws InvalidArgumentException If the exchange rate is not strictly positive.
+     * @throws InvalidArgumentException If the exchange rate is not strictly positive, or if same-currency conversion
+     *                                  is attempted with an exchange rate other than 1.
      *
      * @pure
      */
@@ -262,6 +263,14 @@ final readonly class RationalMoney extends AbstractMoney
         }
 
         $exchangeRate = BigNumber::of($exchangeRate);
+
+        if ($currency->isEqualTo($this->currency)) {
+            if (! $exchangeRate->isEqualTo(1)) {
+                throw InvalidArgumentException::sameCurrencyRateNotOne();
+            }
+
+            return new self($this->amount, $currency);
+        }
 
         if ($exchangeRate->isNegativeOrZero()) {
             throw InvalidArgumentException::nonPositiveExchangeRate();
