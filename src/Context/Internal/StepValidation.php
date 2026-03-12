@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Brick\Money\Context;
+namespace Brick\Money\Context\Internal;
 
 use Brick\Math\BigInteger;
 
