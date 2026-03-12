@@ -6,7 +6,6 @@ namespace Brick\Money\Tests\ExchangeRateProvider;
 
 use Brick\Money\Currency;
 use Brick\Money\Exception\ExchangeRateProviderException;
-use Brick\Money\ExchangeRateProvider\Pdo\PdoProviderConfiguration;
 use Brick\Money\ExchangeRateProvider\Pdo\SqlCondition;
 use Brick\Money\ExchangeRateProvider\PdoProvider;
 use Brick\Money\Tests\AbstractTestCase;
@@ -23,61 +22,32 @@ use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 #[RequiresPhpExtension('pdo_sqlite')]
 class PdoProviderTest extends AbstractTestCase
 {
-    public function testConfigurationBuilderForCurrencyPair(): void
+    public function testBuilderRequiresSourceSelector(): void
     {
-        $configuration = PdoProviderConfiguration::builder('exchange_rates', 'exchange_rate')
-            ->setSourceCurrencyColumn('source_currency')
-            ->setTargetCurrencyColumn('target_currency')
-            ->setStaticCondition(new SqlCondition('year = ?', 2025))
-            ->build();
+        $pdo = new PDO('sqlite::memory:');
 
-        self::assertSame('exchange_rates', $configuration->tableName);
-        self::assertSame('exchange_rate', $configuration->exchangeRateColumnName);
-        self::assertNull($configuration->sourceCurrencyCode);
-        self::assertSame('source_currency', $configuration->sourceCurrencyColumnName);
-        self::assertNull($configuration->targetCurrencyCode);
-        self::assertSame('target_currency', $configuration->targetCurrencyColumnName);
-        self::assertSame('year = ?', $configuration->staticCondition?->getSql());
-        self::assertSame([2025], $configuration->staticCondition?->getParameters());
-        self::assertSame([], $configuration->dimensionBindings);
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            'A source currency selector must be configured using setFixedSourceCurrency() or setSourceCurrencyColumn().',
+        );
+
+        PdoProvider::builder($pdo, 'exchange_rates', 'exchange_rate')
+            ->setTargetCurrencyColumn('target_currency')
+            ->build();
     }
 
-    public function testConfigurationBuilderForFixedSourceCurrency(): void
+    public function testBuilderRequiresTargetSelector(): void
     {
-        $configuration = PdoProviderConfiguration::builder('exchange_rates', 'exchange_rate')
-            ->setFixedSourceCurrency('EUR')
-            ->setTargetCurrencyColumn('target_currency')
-            ->setStaticCondition(new SqlCondition('year = ?'))
-            ->build();
+        $pdo = new PDO('sqlite::memory:');
 
-        self::assertSame('exchange_rates', $configuration->tableName);
-        self::assertSame('exchange_rate', $configuration->exchangeRateColumnName);
-        self::assertSame('EUR', $configuration->sourceCurrencyCode);
-        self::assertNull($configuration->sourceCurrencyColumnName);
-        self::assertNull($configuration->targetCurrencyCode);
-        self::assertSame('target_currency', $configuration->targetCurrencyColumnName);
-        self::assertSame('year = ?', $configuration->staticCondition?->getSql());
-        self::assertSame([], $configuration->staticCondition?->getParameters());
-        self::assertSame([], $configuration->dimensionBindings);
-    }
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            'A target currency selector must be configured using setFixedTargetCurrency() or setTargetCurrencyColumn().',
+        );
 
-    public function testConfigurationBuilderForFixedTargetCurrency(): void
-    {
-        $configuration = PdoProviderConfiguration::builder('exchange_rates', 'exchange_rate')
+        PdoProvider::builder($pdo, 'exchange_rates', 'exchange_rate')
             ->setSourceCurrencyColumn('source_currency')
-            ->setFixedTargetCurrency('EUR')
-            ->setStaticCondition(new SqlCondition('year = ?'))
             ->build();
-
-        self::assertSame('exchange_rates', $configuration->tableName);
-        self::assertSame('exchange_rate', $configuration->exchangeRateColumnName);
-        self::assertNull($configuration->sourceCurrencyCode);
-        self::assertSame('source_currency', $configuration->sourceCurrencyColumnName);
-        self::assertSame('EUR', $configuration->targetCurrencyCode);
-        self::assertNull($configuration->targetCurrencyColumnName);
-        self::assertSame('year = ?', $configuration->staticCondition?->getSql());
-        self::assertSame([], $configuration->staticCondition?->getParameters());
-        self::assertSame([], $configuration->dimensionBindings);
     }
 
     /**
@@ -104,12 +74,10 @@ class PdoProviderTest extends AbstractTestCase
         $statement->execute(['USD', 'EUR', '0.9']);
         $statement->execute(['USD', 'CAD', '1.2']);
 
-        $configuration = PdoProviderConfiguration::builder('exchange_rates', 'exchange_rate')
+        $provider = PdoProvider::builder($pdo, 'exchange_rates', 'exchange_rate')
             ->setSourceCurrencyColumn('source_currency')
             ->setTargetCurrencyColumn('target_currency')
             ->build();
-
-        $provider = new PdoProvider($pdo, $configuration);
 
         $sourceCurrency = Currency::of($sourceCurrencyCode);
         $targetCurrency = Currency::of($targetCurrencyCode);
@@ -156,12 +124,10 @@ class PdoProviderTest extends AbstractTestCase
         $statement->execute(['USD', '1.1']);
         $statement->execute(['CAD', '1.2']);
 
-        $configuration = PdoProviderConfiguration::builder('exchange_rates', 'exchange_rate')
+        $provider = PdoProvider::builder($pdo, 'exchange_rates', 'exchange_rate')
             ->setFixedSourceCurrency('EUR')
             ->setTargetCurrencyColumn('target_currency')
             ->build();
-
-        $provider = new PdoProvider($pdo, $configuration);
 
         $sourceCurrency = Currency::of($sourceCurrencyCode);
         $targetCurrency = Currency::of($targetCurrencyCode);
@@ -208,12 +174,10 @@ class PdoProviderTest extends AbstractTestCase
         $statement->execute(['USD', '0.9']);
         $statement->execute(['CAD', '0.8']);
 
-        $configuration = PdoProviderConfiguration::builder('exchange_rates', 'exchange_rate')
+        $provider = PdoProvider::builder($pdo, 'exchange_rates', 'exchange_rate')
             ->setSourceCurrencyColumn('source_currency')
             ->setFixedTargetCurrency('EUR')
             ->build();
-
-        $provider = new PdoProvider($pdo, $configuration);
 
         $sourceCurrency = Currency::of($sourceCurrencyCode);
         $targetCurrency = Currency::of($targetCurrencyCode);
@@ -266,7 +230,7 @@ class PdoProviderTest extends AbstractTestCase
         $statement->execute([2017, 9, 'EUR', 'USD', '1.15']);
         $statement->execute([2017, 9, 'EUR', 'CAD', '1.25']);
 
-        $configuration = PdoProviderConfiguration::builder('exchange_rates', 'exchange_rate')
+        $provider = PdoProvider::builder($pdo, 'exchange_rates', 'exchange_rate')
             ->setSourceCurrencyColumn('source_currency')
             ->setTargetCurrencyColumn('target_currency')
             ->bindDimension('year', fn ($year) => new SqlCondition('year = ?', $year))
@@ -280,8 +244,6 @@ class PdoProviderTest extends AbstractTestCase
                 ),
             )
             ->build();
-
-        $provider = new PdoProvider($pdo, $configuration);
 
         $sourceCurrency = Currency::of($sourceCurrencyCode);
         $targetCurrency = Currency::of($targetCurrencyCode);
@@ -316,12 +278,10 @@ class PdoProviderTest extends AbstractTestCase
         $pdo = new PDO('sqlite::memory:');
         $pdo->query('CREATE TABLE exchange_rates (source_currency TEXT, target_currency TEXT, exchange_rate REAL)');
 
-        $configuration = PdoProviderConfiguration::builder('exchange_rates', 'exchange_rate')
+        $provider = PdoProvider::builder($pdo, 'exchange_rates', 'exchange_rate')
             ->setSourceCurrencyColumn('source_currency')
             ->setTargetCurrencyColumn('target_currency')
             ->build();
-
-        $provider = new PdoProvider($pdo, $configuration);
 
         $rate = $provider->getExchangeRate(Currency::of('EUR'), Currency::of('USD'), ['date' => new DateTimeImmutable('2017-08-01')]);
 
@@ -333,12 +293,10 @@ class PdoProviderTest extends AbstractTestCase
         $pdo = new PDO('sqlite::memory:');
         $pdo->query('CREATE TABLE exchange_rates (source_currency TEXT, target_currency TEXT, exchange_rate REAL)');
 
-        $configuration = PdoProviderConfiguration::builder('exchange_rates', 'exchange_rate')
+        $provider = PdoProvider::builder($pdo, 'exchange_rates', 'exchange_rate')
             ->setSourceCurrencyColumn('source_currency')
             ->setTargetCurrencyColumn('target_currency')
             ->build();
-
-        $provider = new PdoProvider($pdo, $configuration);
 
         self::assertBigNumberEquals('1', $provider->getExchangeRate(Currency::of('EUR'), Currency::of('EUR')));
     }
@@ -348,12 +306,10 @@ class PdoProviderTest extends AbstractTestCase
         $pdo = new PDO('sqlite::memory:');
         $pdo->query('CREATE TABLE exchange_rates (source_currency TEXT, target_currency TEXT, exchange_rate REAL)');
 
-        $configuration = PdoProviderConfiguration::builder('exchange_rates', 'exchange_rate')
+        $provider = PdoProvider::builder($pdo, 'exchange_rates', 'exchange_rate')
             ->setSourceCurrencyColumn('source_currency')
             ->setTargetCurrencyColumn('target_currency')
             ->build();
-
-        $provider = new PdoProvider($pdo, $configuration);
 
         self::assertBigNumberEquals(
             '1',
@@ -368,13 +324,11 @@ class PdoProviderTest extends AbstractTestCase
         $statement = $pdo->prepare('INSERT INTO exchange_rates VALUES (?, ?, ?, ?)');
         $statement->execute([1, 'EUR', 'USD', '1.1']);
 
-        $configuration = PdoProviderConfiguration::builder('exchange_rates', 'exchange_rate')
+        $provider = PdoProvider::builder($pdo, 'exchange_rates', 'exchange_rate')
             ->setSourceCurrencyColumn('source_currency')
             ->setTargetCurrencyColumn('target_currency')
             ->bindDimension('flag', fn (bool $flag) => $flag ? new SqlCondition('flag = 1') : null)
             ->build();
-
-        $provider = new PdoProvider($pdo, $configuration);
 
         $rate = $provider->getExchangeRate(Currency::of('EUR'), Currency::of('USD'), ['flag' => false]);
 
@@ -386,13 +340,11 @@ class PdoProviderTest extends AbstractTestCase
         $pdo = new PDO('sqlite::memory:');
         $pdo->query('CREATE TABLE exchange_rates (source_currency TEXT, target_currency TEXT, exchange_rate REAL)');
 
-        $configuration = PdoProviderConfiguration::builder('exchange_rates', 'exchange_rate')
+        $provider = PdoProvider::builder($pdo, 'exchange_rates', 'exchange_rate')
             ->setSourceCurrencyColumn('source_currency')
             ->setTargetCurrencyColumn('target_currency')
             ->bindDimension('year', fn () => new SqlCondition('year = ?', new DateTimeImmutable('2025-01-01')))
             ->build();
-
-        $provider = new PdoProvider($pdo, $configuration);
 
         $this->expectException(ExchangeRateProviderException::class);
         $this->expectExceptionMessage(
@@ -406,12 +358,10 @@ class PdoProviderTest extends AbstractTestCase
     {
         $pdo = new PDO('sqlite::memory:');
 
-        $configuration = PdoProviderConfiguration::builder('exchange_rates WHERE', 'exchange_rate')
+        $provider = PdoProvider::builder($pdo, 'exchange_rates WHERE', 'exchange_rate')
             ->setFixedSourceCurrency('EUR')
             ->setFixedTargetCurrency('USD')
             ->build();
-
-        $provider = new PdoProvider($pdo, $configuration);
 
         $this->expectException(ExchangeRateProviderException::class);
         $this->expectExceptionMessage('Failed to prepare exchange rate query due to a PDO exception.');
@@ -436,13 +386,11 @@ class PdoProviderTest extends AbstractTestCase
         $statement->execute(['ECB', 'EUR', 'USD', '1.1']);
         $statement->execute(['INTERNAL', 'EUR', 'USD', '1.12']);
 
-        $configuration = PdoProviderConfiguration::builder('exchange_rates', 'exchange_rate')
+        $provider = PdoProvider::builder($pdo, 'exchange_rates', 'exchange_rate')
             ->setSourceCurrencyColumn('source_currency')
             ->setTargetCurrencyColumn('target_currency')
             ->setStaticCondition(new SqlCondition('provider = ?', 'ECB'))
             ->build();
-
-        $provider = new PdoProvider($pdo, $configuration);
         $rate = $provider->getExchangeRate(Currency::of('EUR'), Currency::of('USD'));
 
         self::assertBigNumberEquals('1.1', $rate);
@@ -454,12 +402,10 @@ class PdoProviderTest extends AbstractTestCase
         $pdo->query('CREATE TABLE exchange_rates (exchange_rate REAL NOT NULL)');
         $pdo->prepare('INSERT INTO exchange_rates VALUES (?)')->execute(['1.1']);
 
-        $configuration = PdoProviderConfiguration::builder('exchange_rates', 'exchange_rate')
+        $provider = PdoProvider::builder($pdo, 'exchange_rates', 'exchange_rate')
             ->setFixedSourceCurrency('EUR')
             ->setFixedTargetCurrency('USD')
             ->build();
-
-        $provider = new PdoProvider($pdo, $configuration);
         $rate = $provider->getExchangeRate(Currency::of('EUR'), Currency::of('USD'));
 
         self::assertBigNumberEquals('1.1', $rate);
@@ -473,12 +419,10 @@ class PdoProviderTest extends AbstractTestCase
         $statement->execute(['1.1']);
         $statement->execute(['1.2']);
 
-        $configuration = PdoProviderConfiguration::builder('exchange_rates', 'exchange_rate')
+        $provider = PdoProvider::builder($pdo, 'exchange_rates', 'exchange_rate')
             ->setFixedSourceCurrency('EUR')
             ->setFixedTargetCurrency('USD')
             ->build();
-
-        $provider = new PdoProvider($pdo, $configuration);
 
         $this->expectException(ExchangeRateProviderException::class);
         $this->expectExceptionMessage(
@@ -505,14 +449,12 @@ class PdoProviderTest extends AbstractTestCase
         $statement->execute([2017, 8, 'EUR', 'USD', '1.1']);
         $statement->execute([2017, 9, 'EUR', 'USD', '1.15']);
 
-        $configuration = PdoProviderConfiguration::builder('exchange_rates', 'exchange_rate')
+        $provider = PdoProvider::builder($pdo, 'exchange_rates', 'exchange_rate')
             ->setSourceCurrencyColumn('source_currency')
             ->setTargetCurrencyColumn('target_currency')
             ->bindDimension('year', fn (int $year) => new SqlCondition('year = ?', $year))
             ->bindDimension('month', fn (int $month) => new SqlCondition('month = ?', $month))
             ->build();
-
-        $provider = new PdoProvider($pdo, $configuration);
 
         $this->expectException(ExchangeRateProviderException::class);
         $this->expectExceptionMessage(
@@ -530,13 +472,11 @@ class PdoProviderTest extends AbstractTestCase
         $statement->execute([1, '1.1']);
         $statement->execute([2, '1.2']);
 
-        $configuration = PdoProviderConfiguration::builder('exchange_rates', 'exchange_rate')
+        $provider = PdoProvider::builder($pdo, 'exchange_rates', 'exchange_rate')
             ->setFixedSourceCurrency('EUR')
             ->setFixedTargetCurrency('USD')
             ->orderBy('priority', 'DESC')
             ->build();
-
-        $provider = new PdoProvider($pdo, $configuration);
         $rate = $provider->getExchangeRate(Currency::of('EUR'), Currency::of('USD'));
 
         self::assertBigNumberEquals('1.2', $rate);
@@ -547,7 +487,7 @@ class PdoProviderTest extends AbstractTestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Order direction must be ASC or DESC.');
 
-        PdoProviderConfiguration::builder('exchange_rates', 'exchange_rate')
+        PdoProvider::builder(new PDO('sqlite::memory:'), 'exchange_rates', 'exchange_rate')
             ->setSourceCurrencyColumn('source_currency')
             ->setTargetCurrencyColumn('target_currency')
             ->orderBy('priority', 'DOWN');
@@ -562,14 +502,12 @@ class PdoProviderTest extends AbstractTestCase
         $statement->execute([2, 3, '1.23']);
         $statement->execute([2, 2, '1.22']);
 
-        $configuration = PdoProviderConfiguration::builder('exchange_rates', 'exchange_rate')
+        $provider = PdoProvider::builder($pdo, 'exchange_rates', 'exchange_rate')
             ->setFixedSourceCurrency('EUR')
             ->setFixedTargetCurrency('USD')
             ->orderBy('priority', 'DESC')
             ->thenOrderBy('version', 'DESC')
             ->build();
-
-        $provider = new PdoProvider($pdo, $configuration);
         $rate = $provider->getExchangeRate(Currency::of('EUR'), Currency::of('USD'));
 
         self::assertBigNumberEquals('1.23', $rate);
