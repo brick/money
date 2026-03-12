@@ -26,6 +26,8 @@
 - `ExchangeRateProvider::getExchangeRate()` signature has changed: it now accepts `Currency` instances, and returns `BigNumber|null`
 - `CurrencyConversionException` has been renamed to `ExchangeRateException`, with `ExchangeRateProviderException` and `ExchangeRateNotFoundException` subclasses
 - `PdoProvider::setParameters()` has been removed, use the new dimensions configuration instead
+- `PdoProvider` constructor is now private, use `PdoProvider::builder()->...->build()` to create an instance
+- `PdoProviderConfiguration` has been removed, use `PdoProvider::builder()` instead
 - `CurrencyConverter::convert()` signature has changed: parameter `$dimensions` now comes before `$context`
 - `CachedProvider::invalidate()` has been removed, pass a PSR-16 cache implementation to the constructor if you need to invalidate the cache
 - `MoneyComparator` constructor now requires a `ComparisonMode` instance, explicitly pass an instance of `PairwiseMode` to keep the same behaviour as before

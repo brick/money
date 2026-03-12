@@ -10,7 +10,7 @@ use Brick\Math\Exception\MathException;
 use Brick\Money\Currency;
 use Brick\Money\Exception\ExchangeRateProviderException;
 use Brick\Money\ExchangeRateProvider;
-use Brick\Money\ExchangeRateProvider\Pdo\PdoProviderConfiguration;
+use Brick\Money\ExchangeRateProvider\Pdo\PdoProviderBuilder;
 use Brick\Money\ExchangeRateProvider\Pdo\SqlCondition;
 use Closure;
 use Override;
@@ -42,26 +42,58 @@ use function sprintf;
 final class PdoProvider implements ExchangeRateProvider
 {
     /**
-     * The PDO connection.
-     */
-    private readonly PDO $pdo;
-
-    /**
-     * The configuration object.
-     */
-    private readonly PdoProviderConfiguration $configuration;
-
-    /**
      * The cached prepared statements indexed by SQL query.
      *
      * @var array<string, PDOStatement>
      */
     private array $statements = [];
 
-    public function __construct(PDO $pdo, PdoProviderConfiguration $configuration)
+    /**
+     * @param array<string, Closure(mixed): (SqlCondition|null)> $dimensionBindings
+     */
+    private function __construct(
+        private readonly PDO $pdo,
+        private readonly string $tableName,
+        private readonly string $exchangeRateColumnName,
+        private readonly ?string $sourceCurrencyCode,
+        private readonly ?string $sourceCurrencyColumnName,
+        private readonly ?string $targetCurrencyCode,
+        private readonly ?string $targetCurrencyColumnName,
+        private readonly ?SqlCondition $staticCondition,
+        private array $dimensionBindings,
+        private readonly ?string $orderBy,
+    ) {
+    }
+
+    /**
+     * @param PDO    $pdo                    The PDO instance.
+     * @param string $tableName              The table name containing exchange rates.
+     * @param string $exchangeRateColumnName The column containing the exchange rate value.
+     */
+    public static function builder(PDO $pdo, string $tableName, string $exchangeRateColumnName): PdoProviderBuilder
     {
-        $this->pdo = $pdo;
-        $this->configuration = $configuration;
+        return new PdoProviderBuilder($pdo, $tableName, $exchangeRateColumnName);
+    }
+
+    /**
+     * @internal
+     */
+    public static function fromBuilder(PdoProviderBuilder $builder): self
+    {
+        $builder->validate();
+
+        return new self(
+            pdo: $builder->getPdo(),
+            tableName: $builder->getTableName(),
+            exchangeRateColumnName: $builder->getExchangeRateColumnName(),
+            sourceCurrencyCode: $builder->getSourceCurrencyCode(),
+            sourceCurrencyColumnName: $builder->getSourceCurrencyColumnName(),
+            targetCurrencyCode: $builder->getTargetCurrencyCode(),
+            targetCurrencyColumnName: $builder->getTargetCurrencyColumnName(),
+            staticCondition: $builder->getStaticCondition(),
+            dimensionBindings: $builder->getDimensionBindings(),
+            orderBy: $builder->getOrderBy(),
+        );
     }
 
     #[Override]
@@ -76,40 +108,40 @@ final class PdoProvider implements ExchangeRateProvider
 
         $sqlConditions = [];
 
-        if ($this->configuration->staticCondition !== null) {
-            $sqlConditions[] = $this->configuration->staticCondition;
+        if ($this->staticCondition !== null) {
+            $sqlConditions[] = $this->staticCondition;
         }
 
-        if ($this->configuration->sourceCurrencyColumnName !== null) {
+        if ($this->sourceCurrencyColumnName !== null) {
             $sqlConditions[] = new SqlCondition(
-                sprintf('%s = ?', $this->configuration->sourceCurrencyColumnName),
+                sprintf('%s = ?', $this->sourceCurrencyColumnName),
                 $sourceCurrencyCode,
             );
-        } elseif ($this->configuration->sourceCurrencyCode !== $sourceCurrencyCode) {
+        } elseif ($this->sourceCurrencyCode !== $sourceCurrencyCode) {
             // source currency not supported
             return null;
         }
 
-        if ($this->configuration->targetCurrencyColumnName !== null) {
+        if ($this->targetCurrencyColumnName !== null) {
             $sqlConditions[] = new SqlCondition(
-                sprintf('%s = ?', $this->configuration->targetCurrencyColumnName),
+                sprintf('%s = ?', $this->targetCurrencyColumnName),
                 $targetCurrencyCode,
             );
-        } elseif ($this->configuration->targetCurrencyCode !== $targetCurrencyCode) {
+        } elseif ($this->targetCurrencyCode !== $targetCurrencyCode) {
             // target currency not supported
             return null;
         }
 
         ksort($dimensions);
-        $omittedDimensions = array_keys(array_diff_key($this->configuration->dimensionBindings, $dimensions));
+        $omittedDimensions = array_keys(array_diff_key($this->dimensionBindings, $dimensions));
 
         foreach ($dimensions as $dimension => $value) {
-            if (! isset($this->configuration->dimensionBindings[$dimension])) {
+            if (! isset($this->dimensionBindings[$dimension])) {
                 // dimension not supported
                 return null;
             }
 
-            $dimensionResolver = $this->configuration->dimensionBindings[$dimension];
+            $dimensionResolver = $this->dimensionBindings[$dimension];
 
             try {
                 $sqlCondition = $dimensionResolver($value);
@@ -143,8 +175,8 @@ final class PdoProvider implements ExchangeRateProvider
 
         $query = sprintf(
             'SELECT %s FROM %s',
-            $this->configuration->exchangeRateColumnName,
-            $this->configuration->tableName,
+            $this->exchangeRateColumnName,
+            $this->tableName,
         );
 
         $parameters = [];
@@ -161,8 +193,8 @@ final class PdoProvider implements ExchangeRateProvider
             ));
         }
 
-        if ($this->configuration->orderBy !== null) {
-            $query .= ' ORDER BY ' . $this->configuration->orderBy;
+        if ($this->orderBy !== null) {
+            $query .= ' ORDER BY ' . $this->orderBy;
             $query .= ' LIMIT 1';
         }
 
