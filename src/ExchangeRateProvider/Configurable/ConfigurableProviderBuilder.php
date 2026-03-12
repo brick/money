@@ -51,6 +51,10 @@ final class ConfigurableProviderBuilder
             throw InvalidArgumentException::nonPositiveExchangeRate();
         }
 
+        if ($sourceCurrencyCode === $targetCurrencyCode && ! $exchangeRate->isEqualTo(1)) {
+            throw InvalidArgumentException::sameCurrencyRateNotOne();
+        }
+
         $this->exchangeRates[$sourceCurrencyCode][$targetCurrencyCode] = $exchangeRate;
 
         return $this;
