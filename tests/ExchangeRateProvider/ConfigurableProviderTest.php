@@ -83,6 +83,25 @@ class ConfigurableProviderTest extends AbstractTestCase
         ];
     }
 
+    public function testBuilderRejectsSameCurrencyRateNotOne(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Same-currency conversion requires an exchange rate of 1.');
+
+        ConfigurableProvider::builder()
+            ->addExchangeRate('USD', 'USD', '1.01');
+    }
+
+    public function testBuilderAcceptsSameCurrencyRateOne(): void
+    {
+        $provider = ConfigurableProvider::builder()
+            ->addExchangeRate('USD', 'USD', '1')
+            ->build();
+
+        self::assertBigNumberEquals('1', $provider->getExchangeRate(Currency::of('USD'), Currency::of('USD')));
+        self::assertBigNumberEquals('1', $provider->getExchangeRate(Currency::of('EUR'), Currency::of('EUR')));
+    }
+
     private function getExchangeRateProvider(): ExchangeRateProvider
     {
         return ConfigurableProvider::builder()
