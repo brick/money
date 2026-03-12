@@ -54,10 +54,11 @@ final class PdoProvider implements ExchangeRateProvider
         private readonly PDO $pdo,
         private readonly string $tableName,
         private readonly string $exchangeRateColumnName,
-        private readonly ?string $sourceCurrencyCode,
+        private readonly string|int|null $sourceCurrencyCode,
         private readonly ?string $sourceCurrencyColumnName,
-        private readonly ?string $targetCurrencyCode,
+        private readonly string|int|null $targetCurrencyCode,
         private readonly ?string $targetCurrencyColumnName,
+        private readonly bool $useNumericCurrencyCode,
         private readonly ?SqlCondition $staticCondition,
         private array $dimensionBindings,
         private readonly ?string $orderBy,
@@ -89,6 +90,7 @@ final class PdoProvider implements ExchangeRateProvider
             sourceCurrencyColumnName: $builder->getSourceCurrencyColumnName(),
             targetCurrencyCode: $builder->getTargetCurrencyCode(),
             targetCurrencyColumnName: $builder->getTargetCurrencyColumnName(),
+            useNumericCurrencyCode: $builder->getUseNumericCurrencyCode(),
             staticCondition: $builder->getStaticCondition(),
             dimensionBindings: $builder->getDimensionBindings(),
             orderBy: $builder->getOrderBy(),
@@ -98,11 +100,19 @@ final class PdoProvider implements ExchangeRateProvider
     #[Override]
     public function getExchangeRate(Currency $sourceCurrency, Currency $targetCurrency, array $dimensions = []): ?BigNumber
     {
-        $sourceCurrencyCode = $sourceCurrency->getCurrencyCode();
-        $targetCurrencyCode = $targetCurrency->getCurrencyCode();
-
         if ($sourceCurrency->isEqualTo($targetCurrency)) {
             return BigInteger::one();
+        }
+
+        $sourceCurrencyCode = $this->useNumericCurrencyCode
+            ? $sourceCurrency->getNumericCode()
+            : $sourceCurrency->getCurrencyCode();
+        $targetCurrencyCode = $this->useNumericCurrencyCode
+            ? $targetCurrency->getNumericCode()
+            : $targetCurrency->getCurrencyCode();
+
+        if ($sourceCurrencyCode === null || $targetCurrencyCode === null) {
+            return null;
         }
 
         $conditions = [];

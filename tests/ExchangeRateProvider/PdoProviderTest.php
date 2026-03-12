@@ -229,6 +229,137 @@ class PdoProviderTest extends AbstractTestCase
     }
 
     /**
+     * @param string      $sourceCurrencyCode The code of the source currency.
+     * @param string      $targetCurrencyCode The code of the target currency.
+     * @param string|null $expectedResult     The expected exchange rate, or null if not found.
+     */
+    #[DataProvider('providerGetExchangeRateByNumericCode')]
+    public function testGetExchangeRateByNumericCode(string $sourceCurrencyCode, string $targetCurrencyCode, ?string $expectedResult): void
+    {
+        $pdo = new PDO('sqlite::memory:');
+
+        $pdo->query('
+            CREATE TABLE exchange_rates (
+                source_numeric_currency INTEGER NOT NULL,
+                target_numeric_currency INTEGER NOT NULL,
+                exchange_rate REAL NOT NULL
+            )
+        ');
+
+        $statement = $pdo->prepare('INSERT INTO exchange_rates VALUES (?, ?, ?)');
+
+        $statement->execute([978, 840, '1.1']);
+        $statement->execute([840, 978, '0.9']);
+        $statement->execute([840, 124, '1.2']);
+
+        $provider = PdoProvider::builder($pdo, 'exchange_rates', 'exchange_rate')
+            ->useNumericCurrencyCode()
+            ->setSourceCurrencyColumn('source_numeric_currency')
+            ->setTargetCurrencyColumn('target_numeric_currency')
+            ->build();
+
+        $actualRate = $provider->getExchangeRate(Currency::of($sourceCurrencyCode), Currency::of($targetCurrencyCode));
+
+        if ($expectedResult === null) {
+            self::assertNull($actualRate);
+        } else {
+            self::assertBigNumberEquals($expectedResult, $actualRate);
+        }
+    }
+
+    public static function providerGetExchangeRateByNumericCode(): array
+    {
+        return [
+            ['USD', 'EUR', '0.9'],
+            ['EUR', 'USD', '1.1'],
+            ['USD', 'CAD', '1.2'],
+            ['CAD', 'USD', null],
+            ['EUR', 'CAD', null],
+        ];
+    }
+
+    public function testNumericCodeSelectorReturnsNullForCurrencyWithoutNumericCode(): void
+    {
+        $pdo = new PDO('sqlite::memory:');
+        $pdo->query('CREATE TABLE exchange_rates (source_numeric_currency INTEGER, target_numeric_currency INTEGER, exchange_rate REAL)');
+
+        $provider = PdoProvider::builder($pdo, 'exchange_rates', 'exchange_rate')
+            ->useNumericCurrencyCode()
+            ->setSourceCurrencyColumn('source_numeric_currency')
+            ->setTargetCurrencyColumn('target_numeric_currency')
+            ->build();
+
+        self::assertNull(
+            $provider->getExchangeRate(
+                new Currency('XBT', null, 'Bitcoin', 8),
+                Currency::of('USD'),
+            ),
+        );
+    }
+
+    public function testWithFixedNumericCurrencySelectors(): void
+    {
+        $pdo = new PDO('sqlite::memory:');
+
+        $pdo->query('
+            CREATE TABLE exchange_rates (
+                exchange_rate REAL NOT NULL
+            )
+        ');
+
+        $statement = $pdo->prepare('INSERT INTO exchange_rates VALUES (?)');
+        $statement->execute(['1.1']);
+
+        $provider = PdoProvider::builder($pdo, 'exchange_rates', 'exchange_rate')
+            ->useNumericCurrencyCode()
+            ->setFixedSourceCurrency(978)
+            ->setFixedTargetCurrency(840)
+            ->build();
+
+        self::assertBigNumberEquals('1.1', $provider->getExchangeRate(Currency::of('EUR'), Currency::of('USD')));
+        self::assertNull($provider->getExchangeRate(Currency::of('USD'), Currency::of('EUR')));
+    }
+
+    public function testBuilderRejectsFixedNumericSelectorWhenNumericModeIsDisabled(): void
+    {
+        $builder = PdoProvider::builder(new PDO('sqlite::memory:'), 'exchange_rates', 'exchange_rate')
+            ->setFixedSourceCurrency(978)
+            ->setTargetCurrencyColumn('target_currency');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            'Fixed source currency is configured as a numeric code, but numeric currency code mode is disabled. Call useNumericCurrencyCode() to enable it.',
+        );
+
+        $builder->build();
+    }
+
+    public function testBuilderRejectsFixedAlphabeticSelectorWhenNumericModeIsEnabled(): void
+    {
+        $builder = PdoProvider::builder(new PDO('sqlite::memory:'), 'exchange_rates', 'exchange_rate')
+            ->useNumericCurrencyCode()
+            ->setFixedSourceCurrency('EUR')
+            ->setTargetCurrencyColumn('target_currency');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            'Fixed source currency is configured as an alphabetic code, but numeric currency code mode is enabled.',
+        );
+
+        $builder->build();
+    }
+
+    public function testNumericCurrencyCodeModeCannotBeEnabledTwice(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Numeric currency code mode is already enabled.');
+
+        PdoProvider::builder(new PDO('sqlite::memory:'), 'exchange_rates', 'exchange_rate')
+            ->useNumericCurrencyCode()
+            ->useNumericCurrencyCode();
+    }
+
+    /**
      * @param string               $sourceCurrencyCode The code of the source currency.
      * @param string               $targetCurrencyCode The code of the target currency.
      * @param array<string, mixed> $dimensions         The dimensions used to resolve rate lookup.
