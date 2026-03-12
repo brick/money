@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Brick\Money\Tests\ExchangeRateProvider;
+namespace Brick\Money\Tests\ExchangeRateProvider\Cache;
 
-use Brick\Money\ExchangeRateProvider\ArrayCache;
+use Brick\Money\ExchangeRateProvider\Cache\ArrayCache;
 use Brick\Money\Tests\AbstractTestCase;
 use Closure;
 use DateInterval;

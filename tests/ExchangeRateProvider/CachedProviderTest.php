@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Brick\Money\Tests\ExchangeRateProvider;
 
 use Brick\Money\Currency;
-use Brick\Money\ExchangeRateProvider\ArrayCache;
+use Brick\Money\ExchangeRateProvider\Cache\ArrayCache;
 use Brick\Money\ExchangeRateProvider\CachedProvider;
 use Brick\Money\Tests\AbstractTestCase;
 use DateTimeImmutable;

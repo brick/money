@@ -10,6 +10,8 @@ use Brick\Math\Exception\MathException;
 use Brick\Money\Currency;
 use Brick\Money\Exception\ExchangeRateProviderException;
 use Brick\Money\ExchangeRateProvider;
+use Brick\Money\ExchangeRateProvider\Pdo\PdoProviderConfiguration;
+use Brick\Money\ExchangeRateProvider\Pdo\SqlCondition;
 use Closure;
 use Override;
 use PDO;

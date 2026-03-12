@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Brick\Money\ExchangeRateProvider;
+namespace Brick\Money\ExchangeRateProvider\Cache;
 
 use DateInterval;
 use DateTimeImmutable;

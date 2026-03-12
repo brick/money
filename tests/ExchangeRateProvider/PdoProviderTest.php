@@ -7,9 +7,9 @@ namespace Brick\Money\Tests\ExchangeRateProvider;
 use Brick\Money\Currency;
 use Brick\Money\Exception\ExchangeRateProviderException;
 use Brick\Money\Exception\InvalidArgumentException;
+use Brick\Money\ExchangeRateProvider\Pdo\PdoProviderConfiguration;
+use Brick\Money\ExchangeRateProvider\Pdo\SqlCondition;
 use Brick\Money\ExchangeRateProvider\PdoProvider;
-use Brick\Money\ExchangeRateProvider\PdoProviderConfiguration;
-use Brick\Money\ExchangeRateProvider\SqlCondition;
 use Brick\Money\Tests\AbstractTestCase;
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -432,7 +432,7 @@ class PdoProviderTest extends AbstractTestCase
 
         $this->expectException(ExchangeRateProviderException::class);
         $this->expectExceptionMessage(
-            'The dimension resolver for dimension: year must return Brick\Money\ExchangeRateProvider\SqlCondition|null, got: bool.',
+            'The dimension resolver for dimension: year must return Brick\Money\ExchangeRateProvider\Pdo\SqlCondition|null, got: bool.',
         );
 
         $provider->getExchangeRate(Currency::of('EUR'), Currency::of('USD'), ['year' => 2025]);
