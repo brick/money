@@ -37,6 +37,7 @@ class BaseCurrencyProviderTest extends AbstractTestCase
     public static function providerGetExchangeRate(): array
     {
         return [
+            ['USD', 'USD', '1.000000'],
             ['USD', 'EUR', '0.900000'],
             ['USD', 'GBP', '0.800000'],
             ['USD', 'CAD', '1.100000'],
@@ -45,6 +46,9 @@ class BaseCurrencyProviderTest extends AbstractTestCase
             ['GBP', 'USD', '1.250000'],
             ['CAD', 'USD', '0.909090'],
 
+            ['EUR', 'EUR', '1.000000'],
+            ['GBP', 'GBP', '1.000000'],
+            ['CAD', 'CAD', '1.000000'],
             ['EUR', 'GBP', '0.888888'],
             ['EUR', 'CAD', '1.222222'],
             ['GBP', 'EUR', '1.125000'],
