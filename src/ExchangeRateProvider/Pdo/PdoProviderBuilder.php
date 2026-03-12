@@ -10,17 +10,21 @@ use Closure;
 use PDO;
 
 use function implode;
+use function is_int;
+use function is_string;
 use function sprintf;
 
 final class PdoProviderBuilder
 {
-    private ?string $sourceCurrencyCode = null;
+    private string|int|null $sourceCurrencyCode = null;
 
     private ?string $sourceCurrencyColumnName = null;
 
-    private ?string $targetCurrencyCode = null;
+    private string|int|null $targetCurrencyCode = null;
 
     private ?string $targetCurrencyColumnName = null;
+
+    private bool $useNumericCurrencyCode = false;
 
     private ?SqlCondition $staticCondition = null;
 
@@ -56,15 +60,9 @@ final class PdoProviderBuilder
      *
      * Mutually exclusive with `setSourceCurrencyColumn()`: only one source selector can be configured.
      */
-    public function setFixedSourceCurrency(string $sourceCurrencyCode): self
+    public function setFixedSourceCurrency(string|int $sourceCurrencyCode): self
     {
-        if ($this->sourceCurrencyCode !== null) {
-            throw new InvalidArgumentException('Source currency selector already set to fixed source currency.');
-        }
-
-        if ($this->sourceCurrencyColumnName !== null) {
-            throw new InvalidArgumentException('Source currency selector already set to source currency column.');
-        }
+        $this->ensureSourceSelectorUnset();
 
         $this->sourceCurrencyCode = $sourceCurrencyCode;
 
@@ -79,13 +77,7 @@ final class PdoProviderBuilder
      */
     public function setSourceCurrencyColumn(string $sourceCurrencyColumnName): self
     {
-        if ($this->sourceCurrencyCode !== null) {
-            throw new InvalidArgumentException('Source currency selector already set to fixed source currency.');
-        }
-
-        if ($this->sourceCurrencyColumnName !== null) {
-            throw new InvalidArgumentException('Source currency selector already set to source currency column.');
-        }
+        $this->ensureSourceSelectorUnset();
 
         $this->sourceCurrencyColumnName = $sourceCurrencyColumnName;
 
@@ -97,15 +89,9 @@ final class PdoProviderBuilder
      *
      * Mutually exclusive with `setTargetCurrencyColumn()`: only one target selector can be configured.
      */
-    public function setFixedTargetCurrency(string $targetCurrencyCode): self
+    public function setFixedTargetCurrency(string|int $targetCurrencyCode): self
     {
-        if ($this->targetCurrencyCode !== null) {
-            throw new InvalidArgumentException('Target currency selector already set to fixed target currency.');
-        }
-
-        if ($this->targetCurrencyColumnName !== null) {
-            throw new InvalidArgumentException('Target currency selector already set to target currency column.');
-        }
+        $this->ensureTargetSelectorUnset();
 
         $this->targetCurrencyCode = $targetCurrencyCode;
 
@@ -120,15 +106,29 @@ final class PdoProviderBuilder
      */
     public function setTargetCurrencyColumn(string $targetCurrencyColumnName): self
     {
-        if ($this->targetCurrencyCode !== null) {
-            throw new InvalidArgumentException('Target currency selector already set to fixed target currency.');
-        }
-
-        if ($this->targetCurrencyColumnName !== null) {
-            throw new InvalidArgumentException('Target currency selector already set to target currency column.');
-        }
+        $this->ensureTargetSelectorUnset();
 
         $this->targetCurrencyColumnName = $targetCurrencyColumnName;
+
+        return $this;
+    }
+
+    /**
+     * Configures the provider to use numeric currency codes instead of alphabetic currency codes.
+     *
+     * This is intended for database schemas that store ISO 4217 numeric codes instead of alphabetic codes.
+     *
+     * Note: numeric codes are not the library's canonical currency identity and may be reassigned by ISO over time, so
+     * this mode has weaker stability guarantees than alphabetic-code lookups. In addition, custom currencies without a
+     * numeric code cannot be matched in this mode.
+     */
+    public function useNumericCurrencyCode(): self
+    {
+        if ($this->useNumericCurrencyCode) {
+            throw new InvalidArgumentException('Numeric currency code mode is already enabled.');
+        }
+
+        $this->useNumericCurrencyCode = true;
 
         return $this;
     }
@@ -234,6 +234,34 @@ final class PdoProviderBuilder
                 'A target currency selector must be configured using setFixedTargetCurrency() or setTargetCurrencyColumn().',
             );
         }
+
+        if ($this->useNumericCurrencyCode) {
+            if (is_string($this->sourceCurrencyCode)) {
+                throw new InvalidArgumentException(
+                    'Fixed source currency is configured as an alphabetic code, but numeric currency code mode is enabled.',
+                );
+            }
+
+            if (is_string($this->targetCurrencyCode)) {
+                throw new InvalidArgumentException(
+                    'Fixed target currency is configured as an alphabetic code, but numeric currency code mode is enabled.',
+                );
+            }
+        } else {
+            if (is_int($this->sourceCurrencyCode)) {
+                throw new InvalidArgumentException(
+                    'Fixed source currency is configured as a numeric code, but numeric currency code mode is disabled. ' .
+                    'Call useNumericCurrencyCode() to enable it.',
+                );
+            }
+
+            if (is_int($this->targetCurrencyCode)) {
+                throw new InvalidArgumentException(
+                    'Fixed target currency is configured as a numeric code, but numeric currency code mode is disabled. ' .
+                    'Call useNumericCurrencyCode() to enable it.',
+                );
+            }
+        }
     }
 
     public function getTableName(): string
@@ -251,7 +279,7 @@ final class PdoProviderBuilder
         return $this->exchangeRateColumnName;
     }
 
-    public function getSourceCurrencyCode(): ?string
+    public function getSourceCurrencyCode(): string|int|null
     {
         return $this->sourceCurrencyCode;
     }
@@ -261,9 +289,14 @@ final class PdoProviderBuilder
         return $this->sourceCurrencyColumnName;
     }
 
-    public function getTargetCurrencyCode(): ?string
+    public function getTargetCurrencyCode(): string|int|null
     {
         return $this->targetCurrencyCode;
+    }
+
+    public function getUseNumericCurrencyCode(): bool
+    {
+        return $this->useNumericCurrencyCode;
     }
 
     public function getTargetCurrencyColumnName(): ?string
@@ -302,5 +335,27 @@ final class PdoProviderBuilder
         $this->orderByClauses[] = $column . ' ' . $direction;
 
         return $this;
+    }
+
+    private function ensureSourceSelectorUnset(): void
+    {
+        if ($this->sourceCurrencyCode !== null) {
+            throw new InvalidArgumentException('Source currency selector already set to fixed source currency.');
+        }
+
+        if ($this->sourceCurrencyColumnName !== null) {
+            throw new InvalidArgumentException('Source currency selector already set to source currency column.');
+        }
+    }
+
+    private function ensureTargetSelectorUnset(): void
+    {
+        if ($this->targetCurrencyCode !== null) {
+            throw new InvalidArgumentException('Target currency selector already set to fixed target currency.');
+        }
+
+        if ($this->targetCurrencyColumnName !== null) {
+            throw new InvalidArgumentException('Target currency selector already set to target currency column.');
+        }
     }
 }
