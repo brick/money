@@ -6,9 +6,9 @@ namespace Brick\Money\Tests\ExchangeRateProvider;
 
 use Brick\Money\Currency;
 use Brick\Money\Exception\ExchangeRateProviderException;
+use Brick\Money\ExchangeRateProvider\Pdo\PdoProviderConfiguration;
+use Brick\Money\ExchangeRateProvider\Pdo\SqlCondition;
 use Brick\Money\ExchangeRateProvider\PdoProvider;
-use Brick\Money\ExchangeRateProvider\PdoProviderConfiguration;
-use Brick\Money\ExchangeRateProvider\SqlCondition;
 use Brick\Money\Tests\AbstractTestCase;
 use DateTimeImmutable;
 use DateTimeInterface;

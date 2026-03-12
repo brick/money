@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Brick\Money\ExchangeRateProvider;
+namespace Brick\Money\ExchangeRateProvider\Configurable;
 
 use Brick\Math\BigNumber;
 use Brick\Math\Exception\MathException;
 use Brick\Money\Currency;
+use Brick\Money\ExchangeRateProvider\ConfigurableProvider;
 
 /**
  * Builder for ConfigurableProvider.

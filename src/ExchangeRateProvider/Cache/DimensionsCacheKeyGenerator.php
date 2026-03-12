@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Brick\Money\ExchangeRateProvider;
+namespace Brick\Money\ExchangeRateProvider\Cache;
 
 /**
  * Generates a cache key for exchange-rate dimensions.
