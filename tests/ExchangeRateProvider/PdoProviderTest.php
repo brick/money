@@ -6,12 +6,12 @@ namespace Brick\Money\Tests\ExchangeRateProvider;
 
 use Brick\Money\Currency;
 use Brick\Money\Exception\ExchangeRateProviderException;
+use Brick\Money\Exception\InvalidArgumentException;
 use Brick\Money\ExchangeRateProvider\Pdo\SqlCondition;
 use Brick\Money\ExchangeRateProvider\PdoProvider;
 use Brick\Money\Tests\AbstractTestCase;
 use DateTimeImmutable;
 use DateTimeInterface;
-use InvalidArgumentException;
 use PDO;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
@@ -350,6 +350,23 @@ class PdoProviderTest extends AbstractTestCase
         $this->expectExceptionMessage(
             'An exception occurred while resolving SQL condition for dimension: year.',
         );
+
+        $provider->getExchangeRate(Currency::of('EUR'), Currency::of('USD'), ['year' => 2025]);
+    }
+
+    public function testDimensionResolverReturningWrongTypeThrowsException(): void
+    {
+        $pdo = new PDO('sqlite::memory:');
+        $pdo->query('CREATE TABLE exchange_rates (source_currency TEXT, target_currency TEXT, exchange_rate REAL)');
+
+        $provider = PdoProvider::builder($pdo, 'exchange_rates', 'exchange_rate')
+            ->setSourceCurrencyColumn('source_currency')
+            ->setTargetCurrencyColumn('target_currency')
+            ->bindDimension('year', fn () => 'year = 2025')
+            ->build();
+
+        $this->expectException(ExchangeRateProviderException::class);
+        $this->expectExceptionMessage('Dimension resolver must return Brick\Money\ExchangeRateProvider\Pdo\SqlCondition|null, but returned string for dimension "year".');
 
         $provider->getExchangeRate(Currency::of('EUR'), Currency::of('USD'), ['year' => 2025]);
     }

@@ -22,6 +22,7 @@ use Throwable;
 use function array_diff_key;
 use function array_keys;
 use function assert;
+use function get_debug_type;
 use function implode;
 use function is_float;
 use function ksort;
@@ -151,6 +152,16 @@ final class PdoProvider implements ExchangeRateProvider
 
             if ($sqlCondition === null) {
                 continue;
+            }
+
+            // @phpstan-ignore instanceof.alwaysTrue
+            if (! $sqlCondition instanceof SqlCondition) {
+                throw new ExchangeRateProviderException(sprintf(
+                    'Dimension resolver must return %s|null, but returned %s for dimension "%s".',
+                    SqlCondition::class,
+                    get_debug_type($sqlCondition),
+                    $dimension,
+                ));
             }
 
             $conditions[] = sprintf('(%s)', $sqlCondition->getSql());
