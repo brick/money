@@ -191,7 +191,7 @@ final readonly class Currency implements Stringable, JsonSerializable
      * @pure
      */
     #[Override]
-    final public function jsonSerialize(): string
+    public function jsonSerialize(): string
     {
         return $this->currencyCode;
     }
