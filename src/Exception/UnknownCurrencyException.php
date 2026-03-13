@@ -28,9 +28,19 @@ final class UnknownCurrencyException extends RuntimeException implements MoneyEx
      *
      * @pure
      */
-    public static function unknownCurrency(string|int $currencyCode): self
+    public static function unknownCurrencyCode(string $currencyCode): self
     {
         return new self('Unknown currency code: ' . $currencyCode . '.');
+    }
+
+    /**
+     * @internal
+     *
+     * @pure
+     */
+    public static function unknownNumericCurrencyCode(int $numericCode): self
+    {
+        return new self('Unknown numeric currency code: ' . $numericCode . '.');
     }
 
     /**
