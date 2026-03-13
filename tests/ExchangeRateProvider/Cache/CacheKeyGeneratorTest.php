@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Brick\Money\Tests\ExchangeRateProvider\Cache;
 
-use Brick\Money\ExchangeRateProvider\Cache\DefaultDimensionsCacheKeyGenerator;
+use Brick\Money\ExchangeRateProvider\Cache\CacheKeyGenerator;
 use Brick\Money\Tests\AbstractTestCase;
 use DateTimeImmutable;
 use stdClass;
@@ -16,21 +16,21 @@ use const INF;
 use const NAN;
 
 /**
- * Tests for class DefaultDimensionsCacheKeyGenerator.
+ * Tests for class CacheKeyGenerator.
  */
-class DefaultDimensionsCacheKeyGeneratorTest extends AbstractTestCase
+class CacheKeyGeneratorTest extends AbstractTestCase
 {
     public function testDateTime(): void
     {
-        $generator = new DefaultDimensionsCacheKeyGenerator();
+        $generator = new CacheKeyGenerator();
 
-        $keyA = $generator->generateCacheKey([
+        $keyA = $generator->generateCacheKey('EUR', 'USD', [
             'date' => new DateTimeImmutable('2026-03-05T14:30:45.123456+02:00'),
         ]);
-        $keyB = $generator->generateCacheKey([
+        $keyB = $generator->generateCacheKey('EUR', 'USD', [
             'date' => new DateTimeImmutable('2026-03-05T12:30:45.123456+00:00'),
         ]);
-        $keyC = $generator->generateCacheKey([
+        $keyC = $generator->generateCacheKey('EUR', 'USD', [
             'date' => new DateTimeImmutable('2026-03-05T12:30:45.123457+00:00'),
         ]);
 
@@ -44,7 +44,7 @@ class DefaultDimensionsCacheKeyGeneratorTest extends AbstractTestCase
 
     public function testScalars(): void
     {
-        $generator = new DefaultDimensionsCacheKeyGenerator();
+        $generator = new CacheKeyGenerator();
 
         $values = [
             'int1' => 1,
@@ -62,7 +62,7 @@ class DefaultDimensionsCacheKeyGeneratorTest extends AbstractTestCase
         ];
 
         $generateKeys = fn () => array_map(
-            fn ($value) => $generator->generateCacheKey(['value' => $value]),
+            fn ($value) => $generator->generateCacheKey('EUR', 'USD', ['value' => $value]),
             $values,
         );
 
@@ -80,12 +80,24 @@ class DefaultDimensionsCacheKeyGeneratorTest extends AbstractTestCase
         self::assertSame($keys, $generateKeys());
     }
 
+    public function testDifferentCurrencies(): void
+    {
+        $generator = new CacheKeyGenerator();
+
+        $keyA = $generator->generateCacheKey('EUR', 'USD', []);
+        $keyB = $generator->generateCacheKey('EUR', 'GBP', []);
+
+        self::assertNotNull($keyA);
+        self::assertNotNull($keyB);
+        self::assertNotSame($keyA, $keyB);
+    }
+
     public function testDifferentDimensionKeys(): void
     {
-        $generator = new DefaultDimensionsCacheKeyGenerator();
+        $generator = new CacheKeyGenerator();
 
-        $keyA = $generator->generateCacheKey(['a' => 1]);
-        $keyB = $generator->generateCacheKey(['b' => 1]);
+        $keyA = $generator->generateCacheKey('EUR', 'USD', ['a' => 1]);
+        $keyB = $generator->generateCacheKey('EUR', 'USD', ['b' => 1]);
 
         self::assertNotNull($keyA);
         self::assertNotNull($keyB);
@@ -94,9 +106,9 @@ class DefaultDimensionsCacheKeyGeneratorTest extends AbstractTestCase
 
     public function testReturnsNullWhenNotSupported(): void
     {
-        $generator = new DefaultDimensionsCacheKeyGenerator();
+        $generator = new CacheKeyGenerator();
 
-        self::assertNull($generator->generateCacheKey([
+        self::assertNull($generator->generateCacheKey('EUR', 'USD', [
             'opaque' => new stdClass(),
         ]));
     }

@@ -90,13 +90,15 @@ class CachedProviderTest extends AbstractTestCase
         $usd = Currency::of('USD');
         $gbp = Currency::of('GBP');
 
+        $type = new class() {
+            public function __toString(): string
+            {
+                return 'spot';
+            }
+        };
+
         $dimensionsA = [
-            'type' => new class() {
-                public function __toString(): string
-                {
-                    return 'spot';
-                }
-            },
+            'type' => $type,
             'date' => new DateTimeImmutable('2026-03-05T14:30:45.123456+02:00'),
             'strict' => true,
             'attempt' => 1,
@@ -110,12 +112,7 @@ class CachedProviderTest extends AbstractTestCase
             'attempt' => 1,
             'strict' => true,
             'date' => new DateTimeImmutable('2026-03-05T12:30:45.123456+00:00'),
-            'type' => new class() {
-                public function __toString(): string
-                {
-                    return 'spot';
-                }
-            },
+            'type' => $type,
         ];
 
         self::assertBigNumberEquals('1.1', $provider->getExchangeRate($eur, $usd, $dimensionsA));
