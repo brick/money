@@ -119,7 +119,7 @@ final class IsoCurrencyProvider
         }
 
         if (! isset($this->currencyData[$currencyCode])) {
-            throw UnknownCurrencyException::unknownCurrency($currencyCode);
+            throw UnknownCurrencyException::unknownCurrencyCode($currencyCode);
         }
 
         $currency = new Currency(...$this->currencyData[$currencyCode]);
@@ -156,7 +156,7 @@ final class IsoCurrencyProvider
             return $this->getCurrency($this->numericToCurrency[$numericCode]);
         }
 
-        throw UnknownCurrencyException::unknownCurrency($numericCode);
+        throw UnknownCurrencyException::unknownNumericCurrencyCode($numericCode);
     }
 
     /**
