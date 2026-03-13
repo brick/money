@@ -9,37 +9,47 @@ use Brick\Math\BigNumber;
 use Brick\Money\Currency;
 use Brick\Money\ExchangeRateProvider;
 use Brick\Money\ExchangeRateProvider\Cache\ArrayCache;
-use Brick\Money\ExchangeRateProvider\Cache\DefaultDimensionsCacheKeyGenerator;
-use Brick\Money\ExchangeRateProvider\Cache\DimensionsCacheKeyGenerator;
+use Brick\Money\ExchangeRateProvider\Cache\CacheKeyGenerator;
 use DateInterval;
 use Override;
 use Psr\SimpleCache\CacheInterface;
 
-use function hash;
-use function json_encode;
-
-use const JSON_THROW_ON_ERROR;
-
 /**
  * Caches the results of another exchange rate provider using a PSR-16 cache.
+ *
+ * Cache entries are keyed by source currency code, target currency code, and the requested dimensions.
+ * The cache stores both found rates and not-found results (`null`), using the configured TTL for both.
+ *
+ * Dimensions are considered cacheable when every dimension value is supported by the cache key generator:
+ * scalars, `null`, `DateTimeInterface`, and `Stringable` are supported out of the box. Additional object types can be
+ * supported by passing a `$dimensionObjectNormalizer`. For object values, the custom normalizer runs first:
+ * returning a scalar uses that normalized value, while returning `null` falls back to the built-in handling for
+ * `DateTimeInterface` and `Stringable`. If the object is unsupported by the custom object normalizer and the built-in
+ * normalizers, then caching is bypassed for that lookup and the wrapped provider is queried directly.
  */
 final readonly class CachedProvider implements ExchangeRateProvider
 {
+    private CacheKeyGenerator $cacheKeyGenerator;
+
     /**
-     * @param ExchangeRateProvider        $provider                    The underlying exchange rate provider.
-     * @param CacheInterface              $cache                       The PSR-16 cache to store exchange rates in.
-     *                                                                 Defaults to an internal in-memory cache.
-     * @param DimensionsCacheKeyGenerator $dimensionsCacheKeyGenerator The cache key generator for dimensions.
-     * @param int|DateInterval|null       $ttl                         The TTL for cached exchange rates. Null means
-     *                                                                 the cache stores values indefinitely. Applies
-     *                                                                 to both found and not-found rates.
+     * @param ExchangeRateProvider       $provider                  The underlying exchange rate provider.
+     * @param CacheInterface             $cache                     The PSR-16 cache to store exchange rates in.
+     *                                                              Defaults to an internal in-memory cache.
+     * @param ?callable(object): ?scalar $dimensionObjectNormalizer Optional normalizer for object dimension values.
+     *                                                              Returning a scalar uses that normalized value for
+     *                                                              building the cache key. Returning null falls back to
+     *                                                              the built-in handlers.
+     * @param int|DateInterval|null      $ttl                       The TTL for cached exchange rates. Null means
+     *                                                              the cache stores values indefinitely.
+     *                                                              Applies to both found and not-found rates.
      */
     public function __construct(
         private ExchangeRateProvider $provider,
         private CacheInterface $cache = new ArrayCache(),
-        private DimensionsCacheKeyGenerator $dimensionsCacheKeyGenerator = new DefaultDimensionsCacheKeyGenerator(),
+        ?callable $dimensionObjectNormalizer = null,
         private int|DateInterval|null $ttl = null,
     ) {
+        $this->cacheKeyGenerator = new CacheKeyGenerator($dimensionObjectNormalizer);
     }
 
     #[Override]
@@ -52,24 +62,12 @@ final readonly class CachedProvider implements ExchangeRateProvider
         $sourceCurrencyCode = $sourceCurrency->getCurrencyCode();
         $targetCurrencyCode = $targetCurrency->getCurrencyCode();
 
-        if ($dimensions !== []) {
-            $dimensionsCacheKey = $this->dimensionsCacheKeyGenerator->generateCacheKey($dimensions);
+        $cacheKey = $this->cacheKeyGenerator->generateCacheKey($sourceCurrencyCode, $targetCurrencyCode, $dimensions);
 
-            if ($dimensionsCacheKey === null) {
-                // uncacheable dimensions
-                return $this->provider->getExchangeRate($sourceCurrency, $targetCurrency, $dimensions);
-            }
-        } else {
-            $dimensionsCacheKey = null;
+        if ($cacheKey === null) {
+            // uncacheable dimensions
+            return $this->provider->getExchangeRate($sourceCurrency, $targetCurrency, $dimensions);
         }
-
-        $keyData = [$sourceCurrencyCode, $targetCurrencyCode];
-
-        if ($dimensionsCacheKey !== null) {
-            $keyData[] = $dimensionsCacheKey;
-        }
-
-        $cacheKey = hash('sha256', json_encode($keyData, JSON_THROW_ON_ERROR));
 
         $cached = $this->cache->get($cacheKey, false);
 
