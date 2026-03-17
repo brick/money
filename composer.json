@@ -10,7 +10,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
-        "brick/math": "~0.15.0 || ~0.16.0"
+        "brick/math": "~0.15.0 || ~0.16.0 || ~0.17.0"
     },
     "require-dev": {
         "ext-dom": "*",
