@@ -3,9 +3,6 @@ parameters:
     paths:
         - src
     ignoreErrors:
-        # Methods that return void are considered impure.
-        # https://phpstan.org/blog/remembering-and-forgetting-returned-values
-        - '#^Impure call to method .*::checkContext\(\) in pure method .*\.$#'
         # PHPStan does not consider array_map() or usort() as pure.
         # https://github.com/phpstan/phpstan/issues/11100
         - '#^Possibly impure call to function array_map\(\) in pure method .*\.$#'
