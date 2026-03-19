@@ -121,13 +121,21 @@ final readonly class Money extends AbstractMoney
      */
     public static function sum(Money $money, Money ...$monies): Money
     {
-        $sum = $money;
+        $amount = $money->amount;
 
-        foreach ($monies as $money) {
-            $sum = $sum->plus($money);
+        foreach ($monies as $other) {
+            if (! $money->currency->isEqualTo($other->currency)) {
+                throw CurrencyMismatchException::currencyMismatch($money->currency, $other->currency);
+            }
+
+            if (! $money->context->isEqualTo($other->context)) {
+                throw ContextMismatchException::contextMismatch($money->context, $other->context);
+            }
+
+            $amount = $amount->plus($other->amount);
         }
 
-        return $sum;
+        return self::create($amount, $money->currency, $money->context);
     }
 
     /**
@@ -720,10 +728,10 @@ final readonly class Money extends AbstractMoney
      *
      * @pure
      */
-    protected function checkContext(Money $money, ?string $method = null): void
+    protected function checkContext(Money $money, string $method): void
     {
         if (! $this->context->isEqualTo($money->getContext())) {
-            throw ContextMismatchException::contextMismatch($this->context, $money->getContext(), $method);
+            throw ContextMismatchException::contextMismatchWithHint($this->context, $money->getContext(), $method);
         }
     }
 
