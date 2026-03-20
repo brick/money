@@ -14,6 +14,10 @@
 
 ## [0.12.1](https://github.com/brick/money/releases/tag/0.12.1) - 2026-03-11
 
+⚠️ **Deprecations**
+
+- Calling `AbstractMoney::isEqualTo()` with a money in a different currency now triggers a deprecation notice; in a future version, it will return `false` instead of throwing a `MoneyMismatchException`. Use `compareTo() === 0` if you need the throwing behaviour.
+
 📌 **Compatibility**
 
 - Compatibility with `brick/math` version `0.16`
