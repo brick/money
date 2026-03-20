@@ -1,5 +1,15 @@
 # Changelog
 
+## UNRELEASED (0.12.3)
+
+⚠️ **Deprecations**
+
+- Method `AbstractMoney::isAmountAndCurrencyEqualTo()` is deprecated, use `isSameValueAs()` instead
+
+✨ **New features**
+
+- New method: `AbstractMoney::isSameValueAs()` (replaces `isAmountAndCurrencyEqualTo()`)
+
 ## [0.12.2](https://github.com/brick/money/releases/tag/0.12.2) - 2026-03-19
 
 ✨ **New features**

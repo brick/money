@@ -766,18 +766,25 @@ class MoneyTest extends AbstractTestCase
         Money::of('1.00', 'EUR')->isGreaterThanOrEqualTo(Money::of('1.00', 'USD'));
     }
 
-    #[DataProvider('providerIsAmountAndCurrencyEqualTo')]
+    #[DataProvider('providerIsSameValueAs')]
+    public function testIsSameValueAs(array $a, array $b, bool $c): void
+    {
+        self::assertSame($c, Money::of(...$a)->isSameValueAs(Money::of(...$b)));
+    }
+
+    #[DataProvider('providerIsSameValueAs')]
     public function testIsAmountAndCurrencyEqualTo(array $a, array $b, bool $c): void
     {
         self::assertSame($c, Money::of(...$a)->isAmountAndCurrencyEqualTo(Money::of(...$b)));
     }
 
-    public static function providerIsAmountAndCurrencyEqualTo(): Generator
+    public static function providerIsSameValueAs(): Generator
     {
         foreach (self::providerCompare() as [$a, $b, $c]) {
             yield [$a, $b, $c === 0];
         }
 
+        yield [[0, 'EUR'], [0, 'USD'], false];
         yield [[1, 'EUR'], [1, 'USD'], false];
     }
 

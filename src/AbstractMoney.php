@@ -166,6 +166,9 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
     /**
      * Returns whether this money is equal to the given amount.
      *
+     * This method throws an exception if the argument is a money in a different currency.
+     * If you want to return false when the currencies differ, use isSameValueAs() instead.
+     *
      * @throws MathException          If the argument is an invalid number.
      * @throws MoneyMismatchException If the argument is a money in a different currency. This will change in a future
      *                                version: isEqualTo() will return false instead of throwing. Use compareTo() === 0
@@ -246,10 +249,23 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
      *
      * @pure
      */
-    final public function isAmountAndCurrencyEqualTo(AbstractMoney $that): bool
+    final public function isSameValueAs(AbstractMoney $that): bool
     {
         return $this->getAmount()->isEqualTo($that->getAmount())
             && $this->getCurrency()->isEqualTo($that->getCurrency());
+    }
+
+    /**
+     * @deprecated Use isSameValueAs() instead.
+     */
+    final public function isAmountAndCurrencyEqualTo(AbstractMoney $that): bool
+    {
+        trigger_error(
+            'AbstractMoney::isAmountAndCurrencyEqualTo() is deprecated, and will be removed in a future version. Use isSameValueAs() instead.',
+            E_USER_DEPRECATED,
+        );
+
+        return $this->isSameValueAs($that);
     }
 
     /**
