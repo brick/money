@@ -170,22 +170,12 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
      * If you want to return false when the currencies differ, use isSameValueAs() instead.
      *
      * @throws MathException          If the argument is an invalid number.
-     * @throws MoneyMismatchException If the argument is a money in a different currency. This will change in a future
-     *                                version: isEqualTo() will return false instead of throwing. Use compareTo() === 0
-     *                                if you need the throwing behaviour.
+     * @throws MoneyMismatchException If the argument is a money in a different currency.
      *
      * @pure
      */
     final public function isEqualTo(AbstractMoney|BigNumber|int|string $that): bool
     {
-        if ($that instanceof AbstractMoney && ! $that->getCurrency()->isEqualTo($this->getCurrency())) {
-            trigger_error(
-                'isEqualTo() will return false instead of throwing for different currencies in a future version. ' .
-                'Use compareTo() === 0 if you need the throwing behaviour.',
-                E_USER_DEPRECATED,
-            );
-        }
-
         return $this->getAmount()->isEqualTo($this->getAmountOf($that));
     }
 

@@ -6,6 +6,10 @@
 
 - Method `AbstractMoney::isAmountAndCurrencyEqualTo()` is deprecated, use `isSameValueAs()` instead
 
+🔄 **Reverted deprecations**
+
+- The deprecation notice when calling `AbstractMoney::isEqualTo()` with a money in a different currency (introduced in 0.12.1) has been removed; this method will continue to throw a `MoneyMismatchException`
+
 ✨ **New features**
 
 - New method: `AbstractMoney::isSameValueAs()` (replaces `isAmountAndCurrencyEqualTo()`)
@@ -26,7 +30,7 @@
 
 ⚠️ **Deprecations**
 
-- Calling `AbstractMoney::isEqualTo()` with a money in a different currency now triggers a deprecation notice; in a future version, it will return `false` instead of throwing a `MoneyMismatchException`. Use `compareTo() === 0` if you need the throwing behaviour.
+- Calling `AbstractMoney::isEqualTo()` with a money in a different currency now triggers a deprecation notice; ~~in a future version, it will return `false` instead of throwing a `MoneyMismatchException`. Use `compareTo() === 0` if you need the throwing behaviour.~~ Note: this deprecation has been reverted in version `0.12.3`.
 
 📌 **Compatibility**
 
