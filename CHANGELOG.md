@@ -7,6 +7,7 @@
 Deprecated methods removed:
 
 - `AbstractMoney::to()` has been removed, use `toContext()` instead
+- `AbstractMoney::isAmountAndCurrencyEqualTo()` has been removed, use `isSameValueAs()` instead
 - `Money::total()` has been removed, use `sum()` instead
 - `Money::getUnscaledAmount()` has been removed, use `getAmount()->getUnscaledValue()` instead
 

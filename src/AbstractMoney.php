@@ -13,10 +13,6 @@ use JsonSerializable;
 use Override;
 use Stringable;
 
-use function trigger_error;
-
-use const E_USER_DEPRECATED;
-
 /**
  * Base class for Money and RationalMoney.
  *
@@ -221,19 +217,6 @@ abstract readonly class AbstractMoney implements Monetary, Stringable, JsonSeria
     {
         return $this->getAmount()->isEqualTo($that->getAmount())
             && $this->getCurrency()->isEqualTo($that->getCurrency());
-    }
-
-    /**
-     * @deprecated Use isSameValueAs() instead.
-     */
-    final public function isAmountAndCurrencyEqualTo(AbstractMoney $that): bool
-    {
-        trigger_error(
-            'AbstractMoney::isAmountAndCurrencyEqualTo() is deprecated, and will be removed in a future version. Use isSameValueAs() instead.',
-            E_USER_DEPRECATED,
-        );
-
-        return $this->isSameValueAs($that);
     }
 
     /**

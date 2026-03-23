@@ -755,12 +755,6 @@ class MoneyTest extends AbstractTestCase
         self::assertSame($c, Money::of(...$a)->isSameValueAs(Money::of(...$b)));
     }
 
-    #[DataProvider('providerIsSameValueAs')]
-    public function testIsAmountAndCurrencyEqualTo(array $a, array $b, bool $c): void
-    {
-        self::assertSame($c, Money::of(...$a)->isAmountAndCurrencyEqualTo(Money::of(...$b)));
-    }
-
     public static function providerIsSameValueAs(): Generator
     {
         foreach (self::providerCompare() as [$a, $b, $c]) {
