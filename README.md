@@ -149,6 +149,44 @@ $money->dividedBy(3); // RoundingNecessaryException
 $money->dividedBy(3, RoundingMode::Up); // USD 16.67
 ```
 
+## Comparing monies
+
+You can compare two `Money` instances using the following methods:
+
+- `compareTo()` (returns `-1|0|1`)
+- `isEqualTo()`
+- `isGreaterThan()`
+- `isGreaterThanOrEqualTo()`
+- `isLessThan()`
+- `isLessThanOrEqualTo()`
+
+These methods accept either a number or a `Money` instance. If the argument is a `Money` instance, it must be of the same currency as the `Money` instance on which the method is called, or an exception is thrown.
+
+If you need to compare amount & currency without throwing on currency mismatch, you can use `isSameValueAs()` instead of `isEqualTo()`:
+
+```php
+$oneEuro = Money::of(1, 'EUR');
+
+$oneEuro->isEqualTo(Money::of(1, 'EUR')); // true
+$oneEuro->isEqualTo(Money::of(2, 'EUR')); // false
+$oneEuro->isEqualTo(Money::of(1, 'USD')); // MoneyMismatchException
+
+$oneEuro->isSameValueAs(Money::of(1, 'EUR')); // true
+$oneEuro->isSameValueAs(Money::of(2, 'EUR')); // false
+$oneEuro->isSameValueAs(Money::of(1, 'USD')); // false
+```
+
+## Checking the sign
+
+You can inspect the sign of a `Money` instance using the following methods:
+
+- `getSign()` (returns `-1|0|1`)
+- `isZero()`
+- `isPositive()`
+- `isPositiveOrZero()`
+- `isNegative()`
+- `isNegativeOrZero()`
+
 ## Money contexts
 
 By default, monies have the official scale for the currency, as defined by the [ISO 4217 standard](https://www.currency-iso.org/) (for example, EUR and USD have 2 decimal places, while JPY has 0) and increment by steps of 1 minor unit (cent); they internally use what is called the `DefaultContext`. You can change this behaviour by providing a `Context` instance. All operations on Money return another Money with the same context. Each context targets a particular use case:
