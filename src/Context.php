@@ -32,6 +32,8 @@ interface Context extends Stringable
      * In case the rounding mode is irrelevant, for example in AutoContext, this method MUST throw an exception if a
      * rounding mode other than RoundingMode::Unnecessary is used.
      *
+     * @internal
+     *
      * @param BigNumber    $amount       The amount.
      * @param Currency     $currency     The target currency.
      * @param RoundingMode $roundingMode The rounding mode.
@@ -48,6 +50,8 @@ interface Context extends Stringable
      *
      * If no cash rounding is involved, this must return 1.
      *
+     * @internal
+     *
      * @return positive-int
      *
      * @pure
@@ -63,6 +67,8 @@ interface Context extends Stringable
      * When false, operations such as quotient(), remainder(), allocate(), and split() throw a ContextException.
      * Their results depend on the scale, which with a non-fixed-scale context is a property of the runtime value.
      *
+     * @internal
+     *
      * @pure
      */
     public function isFixedScale(): bool;
@@ -70,12 +76,16 @@ interface Context extends Stringable
     /**
      * Returns whether this context is equal to the given context.
      *
+     * @internal
+     *
      * @pure
      */
     public function isEqualTo(Context $context): bool;
 
     /**
      * Returns a string representation of this Context, for debugging purposes.
+     *
+     * @internal
      *
      * @pure
      */

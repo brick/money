@@ -78,6 +78,8 @@ final readonly class CustomContext implements Context
     /**
      * Returns the scale used by this context.
      *
+     * @internal
+     *
      * @return non-negative-int
      *
      * @pure

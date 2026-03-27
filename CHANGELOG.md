@@ -41,6 +41,7 @@
   - `Money::convertedTo()`
   - `RationalMoney::convertedTo()`
 - Constructors and factory methods of library-internal exceptions are now `@internal`
+- `Context` methods are now `@internal`: userland code should only rely on constructors
 - Interfaces `Context` and `Monetary` are now sealed: userland implementations are no longer supported
 - Built-in `ExchangeRateProvider` implementations now consistently return `1` for same-currency pairs
 
