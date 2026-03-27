@@ -112,4 +112,61 @@ class CacheKeyGeneratorTest extends AbstractTestCase
             'opaque' => new stdClass(),
         ]));
     }
+
+    public function testWithObjectNormalizer(): void
+    {
+        $generator = new CacheKeyGenerator(
+            fn (stdClass $object) => $object->value,
+        );
+
+        $obj1 = (object) ['value' => 1];
+        $obj2 = (object) ['value' => 2];
+
+        $key1a = $generator->generateCacheKey('EUR', 'USD', [
+            'opaque' => $obj1,
+        ]);
+
+        $key1b = $generator->generateCacheKey('EUR', 'USD', [
+            'opaque' => $obj1,
+        ]);
+
+        $key2 = $generator->generateCacheKey('EUR', 'USD', [
+            'opaque' => $obj2,
+        ]);
+
+        self::assertNotNull($key1a);
+        self::assertNotNull($key1b);
+        self::assertNotNull($key2);
+
+        self::assertSame($key1a, $key1b);
+        self::assertNotSame($key1a, $key2);
+    }
+
+    public function testCustomObjectNormalizerOverridesBuiltInNormalizer(): void
+    {
+        $withBuiltInNormalizer = new CacheKeyGenerator();
+
+        $withCustomNormalizer = new CacheKeyGenerator(
+            fn (DateTimeImmutable $object) => $object->format('Y-m-d'),
+        );
+
+        $builtInKey = $withBuiltInNormalizer->generateCacheKey('EUR', 'USD', [
+            'date' => new DateTimeImmutable('2026-03-05T15:25:00+00:00'),
+        ]);
+
+        $customKey1 = $withCustomNormalizer->generateCacheKey('EUR', 'USD', [
+            'date' => new DateTimeImmutable('2026-03-05T15:25:00+00:00'),
+        ]);
+
+        $customKey2 = $withCustomNormalizer->generateCacheKey('EUR', 'USD', [
+            'date' => new DateTimeImmutable('2026-03-05T14:30:45+00:00'),
+        ]);
+
+        self::assertNotNull($builtInKey);
+        self::assertNotNull($customKey1);
+        self::assertNotNull($customKey2);
+
+        self::assertNotSame($builtInKey, $customKey1);
+        self::assertSame($customKey1, $customKey2);
+    }
 }
