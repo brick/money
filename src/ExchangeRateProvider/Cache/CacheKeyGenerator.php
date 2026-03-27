@@ -10,6 +10,7 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use DateTimeZone;
 use Stringable;
+use Throwable;
 
 use function get_debug_type;
 use function hash;
@@ -90,7 +91,18 @@ final readonly class CacheKeyGenerator
         }
 
         if (is_object($value) && $this->objectNormalizer !== null) {
-            $normalizedValue = ($this->objectNormalizer)($value);
+            try {
+                $normalizedValue = ($this->objectNormalizer)($value);
+            } catch (Throwable $e) {
+                if ($e instanceof ExchangeRateProviderException) {
+                    throw $e;
+                }
+
+                throw new ExchangeRateProviderException(sprintf(
+                    'An exception occurred while normalizing object dimension "%s" for caching.',
+                    $dimension,
+                ), $e);
+            }
 
             if ($normalizedValue !== null) {
                 if (is_scalar($normalizedValue)) {

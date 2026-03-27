@@ -38,7 +38,8 @@ final readonly class CachedProvider implements ExchangeRateProvider
      * @param ?callable(object): ?scalar $dimensionObjectNormalizer Optional normalizer for object dimension values.
      *                                                              Returning a scalar uses that normalized value for
      *                                                              building the cache key. Returning null falls back to
-     *                                                              the built-in handlers.
+     *                                                              the built-in handlers. The normalizer may throw an
+     *                                                              ExchangeRateProviderException if an error occurs.
      * @param int|DateInterval|null      $ttl                       The TTL for cached exchange rates. Null means
      *                                                              the cache stores values indefinitely.
      *                                                              Applies to both found and not-found rates.

@@ -5,11 +5,16 @@ declare(strict_types=1);
 namespace Brick\Money\Tests\ExchangeRateProvider;
 
 use Brick\Money\Currency;
+use Brick\Money\Exception\ExchangeRateProviderException;
 use Brick\Money\ExchangeRateProvider\Cache\ArrayCache;
 use Brick\Money\ExchangeRateProvider\CachedProvider;
 use Brick\Money\Tests\AbstractTestCase;
+use Closure;
 use DateTimeImmutable;
+use PHPUnit\Framework\Attributes\DataProvider;
+use RuntimeException;
 use stdClass;
+use TypeError;
 
 /**
  * Tests for class CachedProvider.
@@ -149,5 +154,50 @@ class CachedProviderTest extends AbstractTestCase
 
         self::assertBigNumberEquals('1.1', $provider->getExchangeRate($eur, $usd, $dimensions));
         self::assertSame(2, $mock->getCalls());
+    }
+
+    public function testObjectNormalizerCanThrowException(): void
+    {
+        $mock = new ProviderMock();
+        $provider = new CachedProvider(
+            $mock,
+            new ArrayCache(),
+            fn (object $value) => throw new ExchangeRateProviderException('Normalizer failed.'),
+        );
+
+        $this->expectException(ExchangeRateProviderException::class);
+        $this->expectExceptionMessage('Normalizer failed.');
+
+        $provider->getExchangeRate(Currency::of('EUR'), Currency::of('USD'), ['opaque' => new stdClass()]);
+    }
+
+    #[DataProvider('providerUnexpectedThrowableInObjectNormalizer')]
+    public function testUnexpectedThrowableInObjectNormalizer(Closure $normalizer, string $expectedThrowable): void
+    {
+        $mock = new ProviderMock();
+        $provider = new CachedProvider(
+            $mock,
+            new ArrayCache(),
+            $normalizer,
+        );
+
+        self::assertException(function () use ($provider): void {
+            $provider->getExchangeRate(Currency::of('EUR'), Currency::of('USD'), ['opaque' => new stdClass()]);
+        }, function (ExchangeRateProviderException $e) use ($mock, $expectedThrowable): void {
+            self::assertSame(
+                'An exception occurred while normalizing object dimension "opaque" for caching.',
+                $e->getMessage(),
+            );
+            self::assertInstanceOf($expectedThrowable, $e->getPrevious());
+            self::assertSame(0, $mock->getCalls());
+        });
+    }
+
+    public static function providerUnexpectedThrowableInObjectNormalizer(): array
+    {
+        return [
+            [fn (object $value) => throw new RuntimeException('boom'), RuntimeException::class],
+            [fn (int $value) => null, TypeError::class],
+        ];
     }
 }
