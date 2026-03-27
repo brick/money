@@ -263,52 +263,81 @@ final class PdoProviderBuilder
         }
     }
 
-    public function getTableName(): string
-    {
-        return $this->tableName;
-    }
-
+    /**
+     * @internal
+     */
     public function getPdo(): PDO
     {
         return $this->pdo;
     }
 
+    /**
+     * @internal
+     */
+    public function getTableName(): string
+    {
+        return $this->tableName;
+    }
+
+    /**
+     * @internal
+     */
     public function getExchangeRateColumnName(): string
     {
         return $this->exchangeRateColumnName;
     }
 
+    /**
+     * @internal
+     */
     public function getSourceCurrencyCode(): string|int|null
     {
         return $this->sourceCurrencyCode;
     }
 
+    /**
+     * @internal
+     */
     public function getSourceCurrencyColumnName(): ?string
     {
         return $this->sourceCurrencyColumnName;
     }
 
+    /**
+     * @internal
+     */
     public function getTargetCurrencyCode(): string|int|null
     {
         return $this->targetCurrencyCode;
     }
 
+    /**
+     * @internal
+     */
     public function getUseNumericCurrencyCode(): bool
     {
         return $this->useNumericCurrencyCode;
     }
 
+    /**
+     * @internal
+     */
     public function getTargetCurrencyColumnName(): ?string
     {
         return $this->targetCurrencyColumnName;
     }
 
+    /**
+     * @internal
+     */
     public function getStaticCondition(): ?SqlCondition
     {
         return $this->staticCondition;
     }
 
     /**
+     * @internal
+     *
      * @return array<string, Closure(mixed): (SqlCondition|null)>
      */
     public function getDimensionBindings(): array
@@ -316,6 +345,9 @@ final class PdoProviderBuilder
         return $this->dimensionBindings;
     }
 
+    /**
+     * @internal
+     */
     public function getOrderBy(): ?string
     {
         if ($this->orderBy === []) {

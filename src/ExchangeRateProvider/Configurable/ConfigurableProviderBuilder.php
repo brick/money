@@ -74,6 +74,8 @@ final class ConfigurableProviderBuilder
     }
 
     /**
+     * @internal
+     *
      * @return array<string, array<string, BigNumber>>
      *
      * @pure
