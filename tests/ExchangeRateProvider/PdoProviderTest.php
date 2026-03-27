@@ -28,7 +28,7 @@ class PdoProviderTest extends AbstractTestCase
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
-            'A source currency selector must be configured using setFixedSourceCurrency() or setSourceCurrencyColumn().',
+            'A source currency selector must be configured using setFixedSourceCurrencyCode() or setSourceCurrencyColumn().',
         );
 
         PdoProvider::builder($pdo, 'exchange_rates', 'exchange_rate')
@@ -42,7 +42,7 @@ class PdoProviderTest extends AbstractTestCase
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
-            'A target currency selector must be configured using setFixedTargetCurrency() or setTargetCurrencyColumn().',
+            'A target currency selector must be configured using setFixedTargetCurrencyCode() or setTargetCurrencyColumn().',
         );
 
         PdoProvider::builder($pdo, 'exchange_rates', 'exchange_rate')
@@ -139,7 +139,7 @@ class PdoProviderTest extends AbstractTestCase
         $statement->execute(['CAD', '1.2']);
 
         $provider = PdoProvider::builder($pdo, 'exchange_rates', 'exchange_rate')
-            ->setFixedSourceCurrency('EUR')
+            ->setFixedSourceCurrencyCode('EUR')
             ->setTargetCurrencyColumn('target_currency')
             ->build();
 
@@ -191,7 +191,7 @@ class PdoProviderTest extends AbstractTestCase
 
         $provider = PdoProvider::builder($pdo, 'exchange_rates', 'exchange_rate')
             ->setSourceCurrencyColumn('source_currency')
-            ->setFixedTargetCurrency('EUR')
+            ->setFixedTargetCurrencyCode('EUR')
             ->build();
 
         $sourceCurrency = Currency::of($sourceCurrencyCode);
@@ -286,7 +286,7 @@ class PdoProviderTest extends AbstractTestCase
         );
     }
 
-    public function testWithFixedNumericCurrencySelectors(): void
+    public function testWithFixedNumericCurrencyCodes(): void
     {
         $pdo = new PDO('sqlite::memory:');
 
@@ -301,8 +301,8 @@ class PdoProviderTest extends AbstractTestCase
 
         $provider = PdoProvider::builder($pdo, 'exchange_rates', 'exchange_rate')
             ->useNumericCurrencyCode()
-            ->setFixedSourceCurrency(978)
-            ->setFixedTargetCurrency(840)
+            ->setFixedSourceCurrencyCode(978)
+            ->setFixedTargetCurrencyCode(840)
             ->build();
 
         self::assertBigNumberEquals('1.1', $provider->getExchangeRate(Currency::of('EUR'), Currency::of('USD')));
@@ -311,10 +311,10 @@ class PdoProviderTest extends AbstractTestCase
         self::assertNull($provider->getExchangeRate(Currency::of('CAD'), Currency::of('USD')));
     }
 
-    public function testBuilderRejectsFixedNumericSourceCurrencyWhenNumericModeIsDisabled(): void
+    public function testBuilderRejectsFixedNumericSourceCurrencyCodeWhenNumericModeIsDisabled(): void
     {
         $builder = PdoProvider::builder(new PDO('sqlite::memory:'), 'exchange_rates', 'exchange_rate')
-            ->setFixedSourceCurrency(978)
+            ->setFixedSourceCurrencyCode(978)
             ->setTargetCurrencyColumn('target_currency');
 
         $this->expectException(InvalidArgumentException::class);
@@ -325,11 +325,11 @@ class PdoProviderTest extends AbstractTestCase
         $builder->build();
     }
 
-    public function testBuilderRejectsFixedNumericTargetCurrencyWhenNumericModeIsDisabled(): void
+    public function testBuilderRejectsFixedNumericTargetCurrencyCodeWhenNumericModeIsDisabled(): void
     {
         $builder = PdoProvider::builder(new PDO('sqlite::memory:'), 'exchange_rates', 'exchange_rate')
             ->setSourceCurrencyColumn('source_currency')
-            ->setFixedTargetCurrency(978);
+            ->setFixedTargetCurrencyCode(978);
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
@@ -339,11 +339,11 @@ class PdoProviderTest extends AbstractTestCase
         $builder->build();
     }
 
-    public function testBuilderRejectsFixedAlphabeticSourceCurrencyWhenNumericModeIsEnabled(): void
+    public function testBuilderRejectsFixedAlphabeticSourceCurrencyCodeWhenNumericModeIsEnabled(): void
     {
         $builder = PdoProvider::builder(new PDO('sqlite::memory:'), 'exchange_rates', 'exchange_rate')
             ->useNumericCurrencyCode()
-            ->setFixedSourceCurrency('EUR')
+            ->setFixedSourceCurrencyCode('EUR')
             ->setTargetCurrencyColumn('target_currency');
 
         $this->expectException(InvalidArgumentException::class);
@@ -354,12 +354,12 @@ class PdoProviderTest extends AbstractTestCase
         $builder->build();
     }
 
-    public function testBuilderRejectsFixedAlphabeticTargetCurrencyWhenNumericModeIsEnabled(): void
+    public function testBuilderRejectsFixedAlphabeticTargetCurrencyCodeWhenNumericModeIsEnabled(): void
     {
         $builder = PdoProvider::builder(new PDO('sqlite::memory:'), 'exchange_rates', 'exchange_rate')
             ->useNumericCurrencyCode()
             ->setSourceCurrencyColumn('source_currency')
-            ->setFixedTargetCurrency('EUR');
+            ->setFixedTargetCurrencyCode('EUR');
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
@@ -558,8 +558,8 @@ class PdoProviderTest extends AbstractTestCase
         $pdo = new PDO('sqlite::memory:');
 
         $provider = PdoProvider::builder($pdo, 'exchange_rates WHERE', 'exchange_rate')
-            ->setFixedSourceCurrency('EUR')
-            ->setFixedTargetCurrency('USD')
+            ->setFixedSourceCurrencyCode('EUR')
+            ->setFixedTargetCurrencyCode('USD')
             ->build();
 
         $this->expectException(ExchangeRateProviderException::class);
@@ -603,8 +603,8 @@ class PdoProviderTest extends AbstractTestCase
         $pdo->prepare('INSERT INTO exchange_rates VALUES (?)')->execute(['1.1']);
 
         $provider = PdoProvider::builder($pdo, 'exchange_rates', 'exchange_rate')
-            ->setFixedSourceCurrency('EUR')
-            ->setFixedTargetCurrency('USD')
+            ->setFixedSourceCurrencyCode('EUR')
+            ->setFixedTargetCurrencyCode('USD')
             ->build();
         $rate = $provider->getExchangeRate(Currency::of('EUR'), Currency::of('USD'));
 
@@ -621,8 +621,8 @@ class PdoProviderTest extends AbstractTestCase
         $statement->execute(['1.2']);
 
         $provider = PdoProvider::builder($pdo, 'exchange_rates', 'exchange_rate')
-            ->setFixedSourceCurrency('EUR')
-            ->setFixedTargetCurrency('USD')
+            ->setFixedSourceCurrencyCode('EUR')
+            ->setFixedTargetCurrencyCode('USD')
             ->build();
 
         $this->expectException(ExchangeRateProviderException::class);
@@ -677,8 +677,8 @@ class PdoProviderTest extends AbstractTestCase
         $statement->execute([2, '1.2']);
 
         $provider = PdoProvider::builder($pdo, 'exchange_rates', 'exchange_rate')
-            ->setFixedSourceCurrency('EUR')
-            ->setFixedTargetCurrency('USD')
+            ->setFixedSourceCurrencyCode('EUR')
+            ->setFixedTargetCurrencyCode('USD')
             ->orderBy('priority', 'DESC')
             ->build();
         $rate = $provider->getExchangeRate(Currency::of('EUR'), Currency::of('USD'));
@@ -697,8 +697,8 @@ class PdoProviderTest extends AbstractTestCase
         $statement->execute([1, 2, '1.22']);
 
         $provider = PdoProvider::builder($pdo, 'exchange_rates', 'exchange_rate')
-            ->setFixedSourceCurrency('EUR')
-            ->setFixedTargetCurrency('USD')
+            ->setFixedSourceCurrencyCode('EUR')
+            ->setFixedTargetCurrencyCode('USD')
             ->orderBy('priority', 'DESC')
             ->thenOrderBy('version', 'DESC')
             ->build();

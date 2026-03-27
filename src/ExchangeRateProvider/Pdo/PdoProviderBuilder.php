@@ -60,7 +60,7 @@ final class PdoProviderBuilder
      *
      * Mutually exclusive with `setSourceCurrencyColumn()`: only one source selector can be configured.
      */
-    public function setFixedSourceCurrency(string|int $sourceCurrencyCode): self
+    public function setFixedSourceCurrencyCode(string|int $sourceCurrencyCode): self
     {
         $this->ensureSourceSelectorUnset();
 
@@ -72,7 +72,7 @@ final class PdoProviderBuilder
     /**
      * Sets the source currency code column name.
      *
-     * Mutually exclusive with `setFixedSourceCurrency()`: only one source selector can be configured.
+     * Mutually exclusive with `setFixedSourceCurrencyCode()`: only one source selector can be configured.
      * The column name is interpolated directly into SQL and must therefore be trusted.
      */
     public function setSourceCurrencyColumn(string $sourceCurrencyColumnName): self
@@ -89,7 +89,7 @@ final class PdoProviderBuilder
      *
      * Mutually exclusive with `setTargetCurrencyColumn()`: only one target selector can be configured.
      */
-    public function setFixedTargetCurrency(string|int $targetCurrencyCode): self
+    public function setFixedTargetCurrencyCode(string|int $targetCurrencyCode): self
     {
         $this->ensureTargetSelectorUnset();
 
@@ -101,7 +101,7 @@ final class PdoProviderBuilder
     /**
      * Sets the target currency code column name.
      *
-     * Mutually exclusive with `setFixedTargetCurrency()`: only one target selector can be configured.
+     * Mutually exclusive with `setFixedTargetCurrencyCode()`: only one target selector can be configured.
      * The column name is interpolated directly into SQL and must therefore be trusted.
      */
     public function setTargetCurrencyColumn(string $targetCurrencyColumnName): self
@@ -224,13 +224,13 @@ final class PdoProviderBuilder
     {
         if ($this->sourceCurrencyCode === null && $this->sourceCurrencyColumnName === null) {
             throw new InvalidArgumentException(
-                'A source currency selector must be configured using setFixedSourceCurrency() or setSourceCurrencyColumn().',
+                'A source currency selector must be configured using setFixedSourceCurrencyCode() or setSourceCurrencyColumn().',
             );
         }
 
         if ($this->targetCurrencyCode === null && $this->targetCurrencyColumnName === null) {
             throw new InvalidArgumentException(
-                'A target currency selector must be configured using setFixedTargetCurrency() or setTargetCurrencyColumn().',
+                'A target currency selector must be configured using setFixedTargetCurrencyCode() or setTargetCurrencyColumn().',
             );
         }
 
