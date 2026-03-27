@@ -4,17 +4,26 @@ declare(strict_types=1);
 
 namespace Brick\Money;
 
+use Brick\Money\ComparisonMode\BaseCurrencyMode;
+use Brick\Money\ComparisonMode\PairwiseMode;
 use Brick\Money\Exception\ExchangeRateNotFoundException;
 use Brick\Money\Exception\ExchangeRateProviderException;
 use Brick\Money\Exception\InvalidArgumentException;
 
 /**
  * Strategy for comparing two monetary values, potentially in different currencies.
+ *
+ * This interface is sealed: implementing it in userland code is not supported, and breaking changes to this interface
+ * can happen at any time, even in minor or patch releases.
+ *
+ * @phpstan-sealed PairwiseMode|BaseCurrencyMode
  */
 interface ComparisonMode
 {
     /**
      * Compares two monetary values.
+     *
+     * @internal
      *
      * @param array<string, mixed> $dimensions Additional exchange-rate lookup dimensions (e.g., date or rate type).
      *
