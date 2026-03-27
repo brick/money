@@ -126,6 +126,16 @@ final class InvalidArgumentException extends \InvalidArgumentException implement
      *
      * @pure
      */
+    public static function duplicateExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode): self
+    {
+        return new self(sprintf('Exchange rate already set for %s to %s.', $sourceCurrencyCode, $targetCurrencyCode));
+    }
+
+    /**
+     * @internal
+     *
+     * @pure
+     */
     public static function pairwiseDoesNotSupportMoneyBag(): self
     {
         return new self(

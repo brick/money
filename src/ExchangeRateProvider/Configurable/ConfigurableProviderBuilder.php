@@ -23,9 +23,6 @@ final class ConfigurableProviderBuilder
     /**
      * Adds an exchange rate for a currency pair.
      *
-     * If an exchange rate is added more than once for the same currency pair, the later value replaces the previous
-     * one.
-     *
      * Both ISO and non-ISO currency codes are accepted.
      *
      * @param Currency|string      $sourceCurrency The source currency or currency code.
@@ -35,8 +32,9 @@ final class ConfigurableProviderBuilder
      * @return $this This builder, for chaining.
      *
      * @throws MathException            If the exchange rate is not a valid number.
-     * @throws InvalidArgumentException If the exchange rate is not strictly positive, or if the source and target
-     *                                  currencies are the same and the rate is not equal to 1.
+     * @throws InvalidArgumentException If the exchange rate is not strictly positive, if the source and target
+     *                                  currencies are the same and the rate is not equal to 1, or if a rate has
+     *                                  already been set for this currency pair.
      */
     public function addExchangeRate(
         Currency|string $sourceCurrency,
@@ -58,6 +56,10 @@ final class ConfigurableProviderBuilder
             }
 
             throw InvalidArgumentException::sameCurrencyRateNotOne();
+        }
+
+        if (isset($this->exchangeRates[$sourceCurrencyCode][$targetCurrencyCode])) {
+            throw InvalidArgumentException::duplicateExchangeRate($sourceCurrencyCode, $targetCurrencyCode);
         }
 
         $this->exchangeRates[$sourceCurrencyCode][$targetCurrencyCode] = $exchangeRate;

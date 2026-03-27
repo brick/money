@@ -92,6 +92,16 @@ class ConfigurableProviderTest extends AbstractTestCase
             ->addExchangeRate('USD', 'USD', '1.01');
     }
 
+    public function testBuilderRejectsDuplicateExchangeRate(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Exchange rate already set for USD to EUR.');
+
+        ConfigurableProvider::builder()
+            ->addExchangeRate('USD', 'EUR', '0.8')
+            ->addExchangeRate('USD', 'EUR', '0.9');
+    }
+
     public function testBuilderAcceptsSameCurrencyRateOne(): void
     {
         $provider = ConfigurableProvider::builder()
