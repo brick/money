@@ -21,6 +21,15 @@ final class ConfigurableProviderBuilder
     private array $exchangeRates = [];
 
     /**
+     * @internal Use ConfigurableProvider::builder() instead, which is the canonical way to create a builder.
+     *
+     * @pure
+     */
+    public function __construct()
+    {
+    }
+
+    /**
      * Adds an exchange rate for a currency pair.
      *
      * Both ISO and non-ISO currency codes are accepted.

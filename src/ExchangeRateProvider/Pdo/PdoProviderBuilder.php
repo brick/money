@@ -39,11 +39,7 @@ final class PdoProviderBuilder
     private array $orderBy = [];
 
     /**
-     * Note: The configured table names, column names, ORDER BY clauses, and SQL condition fragments are not quoted or
-     * escaped by this library. Only parameter values are bound safely through PDO placeholders.
-     *
-     * Callers are responsible for ensuring that all SQL identifiers and SQL fragments supplied to the builder are safe
-     * and never derived from untrusted input.
+     * @internal Use PdoProvider::builder() instead, which is the canonical way to create a builder.
      *
      * @param string $tableName              The table name containing exchange rates.
      * @param string $exchangeRateColumnName The column containing the exchange rate value.

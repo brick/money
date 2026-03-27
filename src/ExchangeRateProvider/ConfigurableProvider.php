@@ -19,6 +19,10 @@ use Override;
 final readonly class ConfigurableProvider implements ExchangeRateProvider
 {
     /**
+     * Private constructor.
+     *
+     * To create an instance, use ConfigurableProvider::builder()->...->build().
+     *
      * @param array<string, array<string, BigNumber>> $exchangeRates The exchange rates, indexed by source and target
      *                                                               currency code.
      *
@@ -30,18 +34,6 @@ final readonly class ConfigurableProvider implements ExchangeRateProvider
     }
 
     /**
-     * Creates a ConfigurableProvider from the given builder.
-     *
-     * @internal
-     *
-     * @pure
-     */
-    public static function fromBuilder(ConfigurableProviderBuilder $builder): self
-    {
-        return new self($builder->getExchangeRates());
-    }
-
-    /**
      * Returns a new builder for creating a ConfigurableProvider.
      *
      * @pure
@@ -49,6 +41,16 @@ final readonly class ConfigurableProvider implements ExchangeRateProvider
     public static function builder(): ConfigurableProviderBuilder
     {
         return new ConfigurableProviderBuilder();
+    }
+
+    /**
+     * @internal
+     *
+     * @pure
+     */
+    public static function fromBuilder(ConfigurableProviderBuilder $builder): self
+    {
+        return new self($builder->getExchangeRates());
     }
 
     #[Override]

@@ -32,12 +32,6 @@ use function sprintf;
 
 /**
  * Reads exchange rates from a PDO database connection.
- *
- * Note: the configured table names, column names, ORDER BY clauses, and SQL condition fragments are not quoted or
- * escaped by this library. Only parameter values are bound safely through PDO placeholders.
- *
- * Callers are responsible for ensuring that all SQL identifiers and SQL fragments supplied to the PdoProvider are safe
- * and never derived from untrusted input.
  */
 final class PdoProvider implements ExchangeRateProvider
 {
@@ -49,6 +43,10 @@ final class PdoProvider implements ExchangeRateProvider
     private array $statements = [];
 
     /**
+     * Private constructor.
+     *
+     * To create an instance, use PdoProvider::builder(...)->...->build().
+     *
      * @param array<string, Closure(mixed): (SqlCondition|null)> $dimensionBindings
      */
     private function __construct(
@@ -67,6 +65,10 @@ final class PdoProvider implements ExchangeRateProvider
     }
 
     /**
+     * Returns a new builder for creating a PdoProvider.
+     *
+     * The table name and column name are interpolated directly into SQL and must therefore be trusted.
+     *
      * @param PDO    $pdo                    The PDO instance.
      * @param string $tableName              The table name containing exchange rates.
      * @param string $exchangeRateColumnName The column containing the exchange rate value.
