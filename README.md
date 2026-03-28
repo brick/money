@@ -12,9 +12,9 @@ A money and currency library for PHP.
 
 ## Introduction
 
-Working with financial data is a serious matter, and small rounding mistakes in an application may lead to serious consequences in real life. That's why floating-point arithmetic is not suited for monetary calculations.
+This library provides immutable classes to work with monies and currencies, with exact arithmetic and explicit control over rounding — avoiding the silent rounding errors inherent to floating-point.
 
-This library is based on [brick/math](https://github.com/brick/math) and handles exact calculations on monies of any size.
+It is based on [brick/math](https://github.com/brick/math) and handles exact calculations on monies of any size.
 
 ### Installation
 
@@ -125,7 +125,7 @@ use Brick\Money\Money;
 $a = Money::of(1, 'USD');
 $b = Money::of(1, 'EUR');
 
-$a->plus($b); // MoneyMismatchException
+$a->plus($b); // CurrencyMismatchException
 ```
 
 If the result needs rounding, a [rounding mode](https://github.com/brick/math/blob/0.12.0/src/RoundingMode.php) must be passed as second parameter, or an exception is thrown:
@@ -169,7 +169,7 @@ $oneEuro = Money::of(1, 'EUR');
 
 $oneEuro->isEqualTo(Money::of(1, 'EUR')); // true
 $oneEuro->isEqualTo(Money::of(2, 'EUR')); // false
-$oneEuro->isEqualTo(Money::of(1, 'USD')); // MoneyMismatchException
+$oneEuro->isEqualTo(Money::of(1, 'USD')); // CurrencyMismatchException
 
 $oneEuro->isSameValueAs(Money::of(1, 'EUR')); // true
 $oneEuro->isSameValueAs(Money::of(2, 'EUR')); // false
@@ -243,64 +243,80 @@ You may occasionally need to chain several operations on a Money, and only apply
 use Brick\Money\Money;
 use Brick\Math\RoundingMode;
 
-$money = Money::of('9.5', 'EUR') // EUR 9.50
-  ->toRational() // EUR 950/100
-  ->dividedBy(3) // EUR 950/300
-  ->plus('17.795') // EUR 6288500/300000
-  ->multipliedBy('1.196') // EUR 7521046000/300000000
-  ->toContext($money->getContext(), RoundingMode::Down) // EUR 25.07
+$money = Money::of('9.5', 'EUR');                       // EUR 9.50 (Money)
+$money = $money->toRational()                           // EUR 19/2 (RationalMoney)
+  ->dividedBy(3)                                        // EUR 19/6 (RationalMoney)
+  ->plus('17.795')                                      // EUR 12577/600 (RationalMoney)
+  ->multipliedBy('1.196')                               // EUR 3760523/150000 (RationalMoney)
+  ->toContext($money->getContext(), RoundingMode::Down) // EUR 25.07 (Money)
 ```
 
-As you can see, the intermediate results are represented as fractions, and no rounding is ever performed. The final `toContext()` method converts it to a `Money`, applying a context and a rounding mode if necessary. Most of the time you want the result in the same context as the original Money, which is what the example above does. But you can really apply any context:
+The intermediate results are represented as fractions, and no rounding is ever performed. The final `toContext()` method converts it to a `Money`, applying a context and a rounding mode. Most of the time you want the result in the same context as the original Money, which is what the example above does. But you can really apply any context:
 
 ```php
 ...
   ->toContext(new CustomContext(scale: 8), RoundingMode::Up); // EUR 25.07015334
 ```
 
-Note: as you can see in the example above, the numbers in the fractions can quickly get very large.
-This is usually not a problem—there is no hard limit on the number of digits involved in the calculations—but if necessary,
-you can simplify the fraction at any time, without affecting the actual monetary value:
-
-```php
-...
-  ->multipliedBy('1.196') // EUR 7521046000/300000000
-  ->simplified() // EUR 3760523/150000
-```
-
 ## Money allocation
+
+### Splitting
 
 You can easily split a Money into a number of parts:
 
 ```php
 use Brick\Money\Money;
+use Brick\Money\SplitMode;
 
 $money = Money::of(100, 'USD');
-[$a, $b, $c] = $money->split(3); // USD 33.34, USD 33.33, USD 33.33
+[$a, $b, $c] = $money->split(3, SplitMode::ToFirst); // USD 33.34, USD 33.33, USD 33.33
 ```
 
-You can also allocate a Money according to a list of ratios. Say you want to distribute a profit of 987.65 CHF to 3 shareholders, having shares of `48%`, `41%` and `11%` of a company:
+With `SplitMode::ToFirst`, the remainder is distributed one step at a time to the first parts. You can also use `SplitMode::Separate` to get the remainder as a separate last element:
+
+```php
+$money->split(3, SplitMode::Separate); // [USD 33.33, USD 33.33, USD 33.33, USD 0.01]
+```
+
+### Allocating
+
+You can also allocate a Money according to a list of ratios. Say you want to distribute a profit of `987.65 CHF`f to 3 shareholders, having shares of `48%`, `41%` and `11%` of a company:
 
 ```php
 use Brick\Money\Money;
+use Brick\Money\AllocationMode;
 
 $profit = Money::of('987.65', 'CHF');
-[$a, $b, $c] = $profit->allocate(48, 41, 11); // CHF 474.08, CHF 404.93, CHF 108.64
+
+// CHF 474.08, CHF 404.93, CHF 108.64
+[$a, $b, $c] = $profit->allocate([48, 41, 11], AllocationMode::FloorToFirst);
 ```
 
 It plays well with cash roundings, too:
 
 ```php
 use Brick\Money\Money;
+use Brick\Money\AllocationMode;
 use Brick\Money\Context\CashContext;
 
 $profit = Money::of('987.65', 'CHF', new CashContext(step: 5));
-[$a, $b, $c] = $profit->allocate(48, 41, 11); // CHF 474.10, CHF 404.95, CHF 108.60
+
+// CHF 474.10, CHF 404.95, CHF 108.60
+[$a, $b, $c] = $profit->allocate([48, 41, 11], AllocationMode::FloorToFirst);
 ```
 
-Note that the ratios can be any (non-negative) integer values and *do not need to add up to 100*.
+> [!TIP]
+> Ratios can be any type of number (integer, decimal, rational) and do not need to add up to 100.
 
-When the allocation yields a remainder, both `split()` and `allocate()` spread it on the first monies in the list, until the total adds up to the original Money. This is the algorithm suggested by Martin Fowler in his book [Patterns of Enterprise Application Architecture](https://martinfowler.com/books/eaa.html). You can see that in the first example, where the first money gets `33.34` dollars while the others get `33.33` dollars.
+Several allocation modes are available. For example, given `1.00 USD` allocated by `[2, 3, 1]`:
+
+| Mode                                                                                                                                         | Result                         |
+|----------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------|
+| `FloorToFirst`<br><sub>Proportional floor amounts, remainder distributed to first allocatees (Martin Fowler method)</sub>                    | `0.34`, `0.50`, `0.16`         |
+| `FloorToLargestRemainder`<br><sub>Proportional floor amounts, remainder distributed to largest fractional remainders (Hamilton method)</sub> | `0.33`, `0.50`, `0.17`         |
+| `FloorToLargestRatio`<br><sub>Proportional floor amounts, remainder distributed to largest ratios</sub>                                      | `0.33`, `0.51`, `0.16`         |
+| `FloorSeparate`<br><sub>Proportional floor amounts, remainder returned as a separate last element</sub>                                      | `0.33`, `0.50`, `0.16`, `0.01` |
+| `BlockSeparate`<br><sub>Only complete blocks allocated, remainder returned as a separate last element</sub>                                  | `0.32`, `0.48`, `0.16`, `0.04` |
 
 ## Money bags (mixed currencies)
 
@@ -313,7 +329,7 @@ use Brick\Money\MoneyBag;
 $eur = Money::of('12.34', 'EUR');
 $jpy = Money::of(123, 'JPY');
 
-$moneyBag = MoneyBag::fromMonies($eur, $jpy);
+$moneyBag = MoneyBag::of($eur, $jpy);
 
 // or:
 
@@ -321,8 +337,6 @@ $moneyBag = MoneyBag::zero()->plus($eur)->plus($jpy);
 ```
 
 You can add any kind of money to a MoneyBag: a `Money`, a `RationalMoney`, or even another `MoneyBag`.
-
-Note that unlike other classes, **`MoneyBag` is mutable**: its value changes when you call `add()` or `subtract()`.
 
 What can you do with a MoneyBag? Well, you can convert it to a Money in the currency of your choice, using a `CurrencyConverter`. Keep reading!
 
@@ -333,8 +347,8 @@ This library ships with a `CurrencyConverter` that can convert any kind of money
 ```php
 use Brick\Money\CurrencyConverter;
 
-$exchangeRateProvider = ...;
-$converter = new CurrencyConverter($exchangeRateProvider); // optionally provide a Context here
+$exchangeRateProvider = ...; // see below
+$converter = new CurrencyConverter($exchangeRateProvider);
 
 $money = Money::of('50', 'USD');
 $converter->convert($money, 'EUR', roundingMode: RoundingMode::Down);
@@ -346,35 +360,16 @@ To use the currency converter, you need an `ExchangeRateProvider`. Several imple
 
 ### ConfigurableProvider 
 
-This provider starts with a blank state, and allows you to add exchange rates manually:
+This provider allows you to configure exchange rates manually using a builder:
 
 ```php
 use Brick\Money\ExchangeRateProvider\ConfigurableProvider;
 
-$provider = new ConfigurableProvider();
-$provider->setExchangeRate('EUR', 'USD', '1.0987');
-$provider->setExchangeRate('USD', 'EUR', '0.9123');
-```
-
-### PdoProvider
-
-This provider reads exchange rates from a database table:
-
-```php
-use Brick\Money\ExchangeRateProvider\PdoProvider;
-use Brick\Money\ExchangeRateProvider\PdoProviderConfiguration;
-
-$pdo = new \PDO(...);
-
-$configuration = PdoProviderConfiguration::builder('exchange_rates', 'exchange_rate')
-    ->withSourceCurrencyColumn('source_currency_code')
-    ->withTargetCurrencyColumn('target_currency_code')
+$provider = ConfigurableProvider::builder()
+    ->addExchangeRate('EUR', 'USD', '1.0987')
+    ->addExchangeRate('USD', 'EUR', '0.9123')
     ->build();
-
-$provider = new PdoProvider($pdo, $configuration);
 ```
-
-PdoProvider also supports fixed source or target currency, and dynamic `WHERE` conditions. Check the [PdoProviderConfiguration](https://github.com/brick/money/blob/0.12.0/src/ExchangeRateProvider/PdoProviderConfiguration.php) class for more information.
 
 ### BaseCurrencyProvider
 
@@ -386,21 +381,182 @@ This provider will combine exchange rates to get the expected result:
 use Brick\Money\ExchangeRateProvider\ConfigurableProvider;
 use Brick\Money\ExchangeRateProvider\BaseCurrencyProvider;
 
-$provider = new ConfigurableProvider();
-$provider->setExchangeRate('EUR', 'USD', '1.1');
-$provider->setExchangeRate('EUR', 'GBP', '0.9');
+$provider = ConfigurableProvider::builder()
+    ->addExchangeRate('EUR', 'USD', '1.1')
+    ->addExchangeRate('EUR', 'GBP', '0.9')
+    ->build();
 
 $provider = new BaseCurrencyProvider($provider, 'EUR');
-$provider->getExchangeRate('EUR', 'USD'); // 1.1
-$provider->getExchangeRate('USD', 'EUR'); // 10/11
-$provider->getExchangeRate('GBP', 'USD'); // 11/9
+$provider->getExchangeRate(Currency::of('EUR'), Currency::of('USD')); // 1.1
+$provider->getExchangeRate(Currency::of('USD'), Currency::of('EUR')); // 10/11
+$provider->getExchangeRate(Currency::of('GBP'), Currency::of('USD')); // 11/9
 ```
 
-Notice that exchange rate providers can return rational numbers!
+> [!TIP]
+> Notice that exchange rate providers can return rational numbers (fractions)!
+
+### PdoProvider
+
+This provider reads exchange rates from a database table:
+
+```php
+use Brick\Money\ExchangeRateProvider\PdoProvider;
+
+$pdo = new \PDO(...);
+
+$provider = PdoProvider::builder($pdo, 'exchange_rates', 'exchange_rate')
+    ->setSourceCurrencyColumn('source_currency_code')
+    ->setTargetCurrencyColumn('target_currency_code')
+    ->build();
+```
+
+`PdoProvider` supports fixed source or target currency, numeric currency codes, dimensions, and static `WHERE` conditions. Check the [PdoProviderBuilder](https://github.com/brick/money/blob/0.13.0/src/ExchangeRateProvider/Pdo/PdoProviderBuilder.php) class for more information.
+
+#### Dimensions
+
+Dimensions allow you to narrow exchange rate lookups beyond just a currency pair. For example, if your exchange rates table includes a date or rate type, you can bind these as dimensions:
+
+```php
+use Brick\Money\ExchangeRateProvider\PdoProvider;
+use Brick\Money\ExchangeRateProvider\Pdo\SqlCondition;
+
+$provider = PdoProvider::builder($pdo, 'exchange_rates', 'exchange_rate')
+    ->setSourceCurrencyColumn('source_currency_code')
+    ->setTargetCurrencyColumn('target_currency_code')
+    ->bindDimension('year', fn (int $year) => new SqlCondition('year = ?', $year))
+    ->bindDimension('month', fn (int $month) => new SqlCondition('month = ?', $month))
+    ->build();
+```
+
+Each dimension binding is a callback that receives the dimension value and returns a `SqlCondition` (an SQL fragment with positional parameters), or `null` to skip filtering on that dimension.
+
+You can then pass dimensions when looking up an exchange rate:
+
+```php
+use Brick\Money\Currency;
+
+$rate = $provider->getExchangeRate(
+    Currency::of('EUR'),
+    Currency::of('USD'),
+    ['year' => 2017, 'month' => 8],
+);
+```
+
+Dimensions also flow through the `CurrencyConverter`:
+
+```php
+use Brick\Math\RoundingMode;
+use Brick\Money\CurrencyConverter;
+use Brick\Money\Money;
+
+$converter = new CurrencyConverter($provider);
+
+$converter->convert(
+    Money::of('10.00', 'EUR'),
+    'USD',
+    ['year' => 2017, 'month' => 8],
+    roundingMode: RoundingMode::HalfUp,
+);
+```
+
+A dimension binding can also accept complex types. For example, you can accept a `DateTimeInterface` and derive multiple SQL conditions from it:
+
+```php
+$provider = PdoProvider::builder($pdo, 'exchange_rates', 'exchange_rate')
+    ->setSourceCurrencyColumn('source_currency_code')
+    ->setTargetCurrencyColumn('target_currency_code')
+    ->bindDimension(
+        'as_of',
+        fn (\DateTimeInterface $date) => new SqlCondition(
+            'year = ? AND month = ?',
+            (int) $date->format('Y'),
+            (int) $date->format('m'),
+        ),
+    )
+    ->build();
+
+$rate = $provider->getExchangeRate(
+    Currency::of('EUR'),
+    Currency::of('USD'),
+    ['as_of' => new \DateTimeImmutable('2017-08-15')],
+);
+```
+
+If your table may contain multiple matching rows (e.g. daily rates within a month), use `orderBy()` to select the first match:
+
+```php
+$provider = PdoProvider::builder($pdo, 'exchange_rates', 'exchange_rate')
+    ->setSourceCurrencyColumn('source_currency_code')
+    ->setTargetCurrencyColumn('target_currency_code')
+    ->bindDimension('date', fn (string $date) => new SqlCondition('date <= ?', $date))
+    ->orderBy('date', 'DESC')
+    ->build();
+```
+
+> [!NOTE]
+> If a dimension is passed that has no binding, the provider returns `null` (rate not found). Conversely, if a bound dimension is **not** passed, its condition is simply omitted from the query — this may cause multiple rows to match and throw an exception unless `orderBy()` is configured.
+
+### CachedProvider
+
+This provider wraps another provider and caches the results using a [PSR-16](https://www.php-fig.org/psr/psr-16/) cache. Both found and not-found rates are cached:
+
+```php
+use Brick\Money\ExchangeRateProvider\CachedProvider;
+
+$cachedProvider = new CachedProvider($provider);
+```
+
+By default, an in-memory array cache is used. You can pass your own PSR-16 cache implementation and a TTL:
+
+```php
+$cachedProvider = new CachedProvider(
+    provider: $provider,
+    cache: $yourPsr16Cache,
+    ttl: 3600, // seconds
+);
+```
+
+Dimensions are included in the cache key. Scalars, `null`, `DateTimeInterface`, and `Stringable` values are supported out of the box. For other object types, pass a custom normalizer:
+
+```php
+$cachedProvider = new CachedProvider(
+    provider: $provider,
+    cache: $yourPsr16Cache,
+    dimensionObjectNormalizer: function (object $value) {
+        if ($value instanceof YourCustomType) {
+            return $value->toKey(); // string, int, float, bool accepted
+        }
+
+        return null; // fall back to built-in handling
+    },
+);
+```
+
+If a dimension value is not cacheable (unsupported object type and no custom normalizer), the cache is bypassed and the wrapped provider is queried directly.
+
+### ChainProvider
+
+This provider tries multiple providers in order and returns the first non-null result:
+
+```php
+use Brick\Money\ExchangeRateProvider\ChainProvider;
+
+$provider = new ChainProvider($primaryProvider, $fallbackProvider);
+```
+
+This is useful for combining providers — for example, different providers each supporting specific currency pairs or dimensions. Dimensions are passed through to each provider unchanged.
 
 ### Write your own provider
 
-Writing your own provider is easy: the `ExchangeRateProvider` interface has just one method, `getExchangeRate()`, that takes the currency codes and returns a number.
+Writing your own provider is easy: the `ExchangeRateProvider` interface has just one method, `getExchangeRate()`, that takes the currency codes, optional dimensions, and returns a number or `null` if the rate is not found:
+
+```php
+public function getExchangeRate(
+    Currency $sourceCurrency,
+    Currency $targetCurrency,
+    array $dimensions = [],
+): ?BigNumber;
+```
 
 ## Custom currencies
 
@@ -412,9 +568,9 @@ use Brick\Money\Money;
 
 $bitcoin = new Currency(
     'XBT',     // currency code
-    0,         // numeric currency code, useful when storing monies in a database; set to 0 if unused
+    null,      // numeric currency code, optional; set to null if unused
     'Bitcoin', // currency name
-    8          // default scale
+    8,         // default scale
 );
 ```
 
@@ -454,9 +610,10 @@ $money = Money::of(5000, 'USD');
 echo (new MoneyNumberFormatter($formatter))->format($money); // US$5·000.00
 ```
 
-*Important note: because formatting is performed using `NumberFormatter`, the amount is converted to floating point in the process; so discrepancies can appear when formatting very large monetary values.*
+> [!IMPORTANT]
+> Because formatting is performed using `NumberFormatter`, the amount is converted to floating point in the process; so discrepancies can appear when formatting very large monetary values.
 
-## Storing Money objects in the database
+## Storing Money objects in a database
 
 ### Persisting the amount
 
@@ -477,7 +634,7 @@ echo (new MoneyNumberFormatter($formatter))->format($money); // US$5·000.00
 - **As a decimal**: for most other cases, storing the amount string as a decimal type is advised:
   
   ```php
-  $decimalAmount = (string) $money->getAmount();
+  $decimalAmount = $money->getAmount()->toString();
   ```
   
   And later retrieve it as:
@@ -503,8 +660,11 @@ echo (new MoneyNumberFormatter($formatter))->format($money); // US$5·000.00
   ```
 
   When retrieving the currency: for ISO currencies, first convert the numeric code to a `Currency` instance with `Currency::ofNumericCode()`, then pass that `Currency` instance to `Money::of()` or `Money::ofMinor()`. For custom currencies, you'll likewise need to convert the numeric code to a `Currency` instance first.
-  
+
 - **Hardcoded**: if your application only ever deals with one currency, you may very well hardcode the currency code and not store it in your database at all.
+
+> [!NOTE]
+> Numeric currency codes of ISO currencies may be reassigned over time, so prefer alphabetical currency codes whenever possible.
 
 ### Using an ORM
 
