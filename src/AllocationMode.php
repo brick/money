@@ -21,6 +21,9 @@ enum AllocationMode
      * first allocatees in order (Martin Fowler method).
      *
      * For example, allocating `USD 1.00` by `[2, 3, 1]` yields `[USD 0.34, USD 0.50, USD 0.16]`.
+     *
+     * Because the remainder is distributed by position rather than by ratio, an allocatee with a ratio of `0` can
+     * still receive remainder steps; e.g. allocating `USD 1.00` by `[0, 2, 1]` yields `[USD 0.01, USD 0.66, USD 0.33]`.
      */
     case FloorToFirst;
 
