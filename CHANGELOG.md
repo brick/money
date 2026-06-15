@@ -1,5 +1,12 @@
 # Changelog
 
+## UNRELEASED (0.14.0)
+
+💥 **Breaking changes**
+
+- deprecated class `ProviderChain` has been removed; use `ChainProvider` instead
+- deprecated method `MoneyBag::fromMonies()` has been removed; use `of()` instead
+
 ## [0.13.0](https://github.com/brick/money/releases/tag/0.13.0) - 2026-03-28
 
 💥 **Breaking changes**

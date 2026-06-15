@@ -70,17 +70,6 @@ class MoneyBagTest extends AbstractTestCase
         );
     }
 
-    public function testFromMonies(): void
-    {
-        $moneyBag = MoneyBag::fromMonies(
-            Money::of('123', 'EUR'),
-            Money::of('234.99', 'EUR'),
-            Money::of(3, 'JPY'),
-        );
-
-        self::assertMoneyBagContains([Money::of('357.99', 'EUR'), Money::of('3', 'JPY')], $moneyBag);
-    }
-
     public function testOf(): void
     {
         $moneyBag = MoneyBag::of(

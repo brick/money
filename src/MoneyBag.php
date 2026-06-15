@@ -51,18 +51,6 @@ final readonly class MoneyBag implements Monetary, JsonSerializable
     }
 
     /**
-     * Creates a MoneyBag from a list of monies.
-     *
-     * @deprecated Use of() instead.
-     */
-    public static function fromMonies(Monetary ...$monies): MoneyBag
-    {
-        trigger_error('MoneyBag::fromMonies() is deprecated. Use MoneyBag::of() instead.', E_USER_DEPRECATED);
-
-        return self::of(...$monies);
-    }
-
-    /**
      * Returns a MoneyBag containing the given monies.
      *
      * Monies in the same currency are added together into a single slot.
