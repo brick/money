@@ -17,9 +17,6 @@ use function array_keys;
 use function array_map;
 use function array_values;
 use function ksort;
-use function trigger_error;
-
-use const E_USER_DEPRECATED;
 
 /**
  * Container for monies in different currencies.
