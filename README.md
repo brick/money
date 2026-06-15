@@ -176,6 +176,8 @@ $oneEuro->isSameValueAs(Money::of(2, 'EUR')); // false
 $oneEuro->isSameValueAs(Money::of(1, 'USD')); // false
 ```
 
+Comparison methods on `Money` instances only compare monies of the **same currency**. To compare monies in **different currencies** using exchange rates, see [Comparing monies across currencies](#comparing-monies-across-currencies).
+
 ## Checking the sign
 
 You can inspect the sign of a `Money` instance using the following methods:
@@ -280,7 +282,7 @@ $money->split(3, SplitMode::Separate); // [USD 33.33, USD 33.33, USD 33.33, USD 
 
 ### Allocating
 
-You can also allocate a Money according to a list of ratios. Say you want to distribute a profit of `987.65 CHF`f to 3 shareholders, having shares of `48%`, `41%` and `11%` of a company:
+You can also allocate a Money according to a list of ratios. Say you want to distribute a profit of `987.65 CHF` to 3 shareholders, having shares of `48%`, `41%` and `11%` of a company:
 
 ```php
 use Brick\Money\Money;
@@ -556,6 +558,66 @@ public function getExchangeRate(
     Currency $targetCurrency,
     array $dimensions = [],
 ): ?BigNumber;
+```
+
+## Comparing monies across currencies
+
+In addition to performing currency conversions, you can also use an `ExchangeRateProvider` to compare monies in different currencies, using a `MoneyComparator`:
+
+```php
+use Brick\Money\Money;
+use Brick\Money\MoneyComparator;
+use Brick\Money\ComparisonMode\PairwiseMode;
+use Brick\Money\ExchangeRateProvider\ConfigurableProvider;
+
+$provider = ConfigurableProvider::builder()
+    ->addExchangeRate('EUR', 'USD', '1.10')
+    ->build();
+
+$comparator = new MoneyComparator($provider, new PairwiseMode());
+
+$eur = Money::of('10.00', 'EUR'); // worth USD 11.00 at this rate
+$usd = Money::of('10.50', 'USD');
+
+$comparator->compare($eur, $usd);   // 1 (EUR 10.00 is worth more than USD 10.50)
+$comparator->isGreater($eur, $usd); // true
+$comparator->max($eur, $usd);       // EUR 10.00 (the original instance, unchanged)
+```
+
+Each method accepts two `Monetary` operands — a `Money`, `RationalMoney`, or `MoneyBag`:
+
+- `compare()` (returns `-1|0|1`)
+- `isEqual()`
+- `isGreater()`
+- `isGreaterOrEqual()`
+- `isLess()`
+- `isLessOrEqual()`
+
+The comparator also has `min()` and `max()` methods, which accept any number of monies and return the smallest/largest as the original instance, unchanged.
+
+### Comparison modes
+
+The second argument of the `MoneyComparator` constructor selects how two monies are compared:
+
+| Mode               | Supported money instances            | Description                                                                                                                                                                                                                                                                              |
+|--------------------|--------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `PairwiseMode`     | `Money`, `RationalMoney`             | Converts the first operand into the second operand's currency (without rounding), then compares. Most precise for a single pair, but with asymmetric rates it can be non-transitive (`A < B`, `B < C` and `C < A` all at once), so `min()`/`max()` results may depend on argument order. |
+| `BaseCurrencyMode` | `Money`, `RationalMoney`, `MoneyBag` | Converts **both** operands to a common base currency, then compares. Ordering is always consistent (if `A ≤ B` and `B ≤ C` then `A ≤ C`), so `min()`/`max()` results never depend on argument order.                                                                                     |
+
+`BaseCurrencyMode` takes the base currency as its constructor argument:
+
+```php
+use Brick\Money\ComparisonMode\BaseCurrencyMode;
+
+$comparator = new MoneyComparator($provider, new BaseCurrencyMode('USD'));
+```
+
+### Dimensions
+
+If your `ExchangeRateProvider` supports dimensions, you can provide them as the third constructor parameter:
+
+```php
+$comparator = new MoneyComparator($provider, new PairwiseMode(), ['year' => 2017, 'month' => 8]);
 ```
 
 ## Custom currencies
