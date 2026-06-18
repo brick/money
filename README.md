@@ -128,7 +128,7 @@ $b = Money::of(1, 'EUR');
 $a->plus($b); // CurrencyMismatchException
 ```
 
-If the result needs rounding, a [rounding mode](https://github.com/brick/math/blob/0.17.0/src/RoundingMode.php) must be passed as second parameter, or an exception is thrown:
+If the result needs rounding, a [rounding mode](https://github.com/brick/math/blob/0.18.0/src/RoundingMode.php) must be passed as second parameter, or an exception is thrown:
 
 ```php
 use Brick\Money\Money;
