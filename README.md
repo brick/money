@@ -128,7 +128,7 @@ $b = Money::of(1, 'EUR');
 $a->plus($b); // CurrencyMismatchException
 ```
 
-If the result needs rounding, a [rounding mode](https://github.com/brick/math/blob/0.18.0/src/RoundingMode.php) must be passed as second parameter, or an exception is thrown:
+If the result needs rounding, a [rounding mode](https://github.com/brick/math/blob/0.19.0/src/RoundingMode.php) must be passed as second parameter, or an exception is thrown:
 
 ```php
 use Brick\Money\Money;
@@ -412,7 +412,7 @@ $provider = PdoProvider::builder($pdo, 'exchange_rates', 'exchange_rate')
     ->build();
 ```
 
-`PdoProvider` supports fixed source or target currency, numeric currency codes, dimensions, and static `WHERE` conditions. Check the [PdoProviderBuilder](https://github.com/brick/money/blob/0.14.0/src/ExchangeRateProvider/Pdo/PdoProviderBuilder.php) class for more information.
+`PdoProvider` supports fixed source or target currency, numeric currency codes, dimensions, and static `WHERE` conditions. Check the [PdoProviderBuilder](https://github.com/brick/money/blob/0.14.1/src/ExchangeRateProvider/Pdo/PdoProviderBuilder.php) class for more information.
 
 #### Dimensions
 
