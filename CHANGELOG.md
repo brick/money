@@ -1,5 +1,11 @@
 # Changelog
 
+## UNRELEASED (0.14.2)
+
+📌 **Compatibility**
+
+- Compatibility with `brick/math` version `0.20`
+
 ## [0.14.1](https://github.com/brick/money/releases/tag/0.14.1) - 2026-07-30
 
 📌 **Compatibility**
