@@ -412,7 +412,7 @@ $provider = PdoProvider::builder($pdo, 'exchange_rates', 'exchange_rate')
     ->build();
 ```
 
-`PdoProvider` supports fixed source or target currency, numeric currency codes, dimensions, and static `WHERE` conditions. Check the [PdoProviderBuilder](https://github.com/brick/money/blob/0.14.1/src/ExchangeRateProvider/Pdo/PdoProviderBuilder.php) class for more information.
+`PdoProvider` supports fixed source or target currency, numeric currency codes, dimensions, and static `WHERE` conditions. Check the [PdoProviderBuilder](https://github.com/brick/money/blob/0.14.2/src/ExchangeRateProvider/Pdo/PdoProviderBuilder.php) class for more information.
 
 #### Dimensions
 

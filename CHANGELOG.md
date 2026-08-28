@@ -1,6 +1,6 @@
 # Changelog
 
-## UNRELEASED (0.14.2)
+## [0.14.2](https://github.com/brick/money/releases/tag/0.14.2) - 2026-08-28
 
 📌 **Compatibility**
 
