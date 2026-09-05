@@ -11,6 +11,11 @@ use Throwable;
  */
 final class ExchangeRateProviderException extends ExchangeRateException
 {
+    /**
+     * @internal
+     *
+     * @pure
+     */
     public function __construct(string $message, ?Throwable $previous = null)
     {
         parent::__construct($message, 0, $previous);

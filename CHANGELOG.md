@@ -1,5 +1,13 @@
 # Changelog
 
+## UNRELEASED (0.15.0)
+
+💥 **Breaking changes**
+
+- The constructors of these exception classes are now `@internal`:
+  - `ExchangeRateProviderException`
+  - `MoneyFormatException`
+
 ## [0.14.2](https://github.com/brick/money/releases/tag/0.14.2) - 2026-08-28
 
 📌 **Compatibility**
