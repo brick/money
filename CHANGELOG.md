@@ -7,6 +7,7 @@
 - The constructors of these exception classes are now `@internal`:
   - `ExchangeRateProviderException`
   - `MoneyFormatException`
+- `MoneyNumberFormatter` has been removed; call `NumberFormatter::formatCurrency()` directly instead
 
 ## [0.14.2](https://github.com/brick/money/releases/tag/0.14.2) - 2026-08-28
 

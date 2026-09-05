@@ -11,6 +11,8 @@ use NumberFormatter;
 use Override;
 
 use function extension_loaded;
+use function intl_get_error_message;
+use function sprintf;
 
 /**
  * Note that this formatter uses NumberFormatter, which internally represents values using floating point arithmetic,
@@ -21,8 +23,6 @@ final readonly class MoneyLocaleFormatter implements MoneyFormatter
     private bool $allowWholeNumber;
 
     private NumberFormatter $numberFormatter;
-
-    private MoneyNumberFormatter $moneyNumberFormatter;
 
     /**
      * @param string $locale           The locale to format to, for example 'fr_FR' or 'en_US'.
@@ -38,21 +38,38 @@ final readonly class MoneyLocaleFormatter implements MoneyFormatter
 
         $this->allowWholeNumber = $allowWholeNumber;
         $this->numberFormatter = new NumberFormatter($locale, NumberFormatter::CURRENCY);
-        $this->moneyNumberFormatter = new MoneyNumberFormatter($this->numberFormatter);
     }
 
     #[Override]
     public function format(Money $money): string
     {
-        if ($this->allowWholeNumber && $money->getAmount()->strippedOfTrailingZeros()->getScale() === 0) {
-            $scale = 0;
-        } else {
-            $scale = $money->getAmount()->getScale();
+        $amount = $money->getAmount();
+
+        if ($this->allowWholeNumber) {
+            $strippedAmount = $amount->strippedOfTrailingZeros();
+
+            if ($strippedAmount->getScale() === 0) {
+                $amount = $strippedAmount;
+            }
         }
+
+        $scale = $amount->getScale();
 
         $this->numberFormatter->setAttribute(NumberFormatter::MIN_FRACTION_DIGITS, $scale);
         $this->numberFormatter->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, $scale);
 
-        return $this->moneyNumberFormatter->format($money);
+        $formatted = $this->numberFormatter->formatCurrency(
+            $amount->toFloat(),
+            $money->getCurrency()->getCurrencyCode(),
+        );
+
+        if ($formatted === false) {
+            throw new MoneyFormatException(sprintf(
+                'NumberFormatter failed to format the given Money: %s',
+                intl_get_error_message(),
+            ));
+        }
+
+        return $formatted;
     }
 }
