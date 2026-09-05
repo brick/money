@@ -657,8 +657,8 @@ echo $money->formatToLocale('en_US'); // $5,000.00
 echo $money->formatToLocale('fr_FR'); // 5 000,00 $US
 ```
 
-> [!IMPORTANT]
-> Because formatting is performed using `NumberFormatter`, the amount is converted to floating point in the process; so discrepancies can appear when formatting very large monetary values.
+> [!NOTE]
+> Formatting is performed using intl's `NumberFormatter`, which represents values using floats. If the amount cannot be accurately represented as a float, a `MoneyFormatException` is thrown rather than formatting it with wrong digits.
 
 ## Storing Money objects in a database
 

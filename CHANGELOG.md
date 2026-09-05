@@ -8,6 +8,7 @@
   - `ExchangeRateProviderException`
   - `MoneyFormatException`
 - `MoneyNumberFormatter` has been removed; call `NumberFormatter::formatCurrency()` directly instead
+- `Money::formatToLocale()` and `MoneyLocaleFormatter` now throw a `MoneyFormatException` if the amount cannot be accurately represented as a float, rather than formatting it with wrong digits
 
 ## [0.14.2](https://github.com/brick/money/releases/tag/0.14.2) - 2026-08-28
 

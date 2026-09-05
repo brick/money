@@ -698,8 +698,9 @@ final readonly class Money extends AbstractMoney
     /**
      * Formats this Money to the given locale.
      *
-     * Note that this method uses MoneyLocaleFormatter, which in turn internally uses NumberFormatter, which represents values using floating
-     * point arithmetic, so discrepancies can appear when formatting very large monetary values.
+     * Note that this method uses intl's NumberFormatter internally, which represents values using floats. If the
+     * amount cannot be accurately represented as a float, a MoneyFormatException is thrown rather than formatting
+     * it with wrong digits.
      *
      * @param string $locale           The locale to format to, for example 'fr_FR' or 'en_US'.
      * @param bool   $allowWholeNumber Whether to allow formatting as a whole number if the amount has no fraction.
