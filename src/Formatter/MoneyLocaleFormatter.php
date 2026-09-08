@@ -54,16 +54,16 @@ final readonly class MoneyLocaleFormatter implements MoneyFormatter
 
     private CurrencyDisplay $currencyDisplay;
 
-    private bool $allowWholeNumber;
+    private bool $hideFractionIfWhole;
 
     /**
-     * @param string          $locale           The locale to format to, for example 'fr_FR' or 'en_US'.
-     * @param CurrencyDisplay $currencyDisplay  How the currency should be displayed in the formatted output.
-     * @param bool            $allowWholeNumber Whether to allow formatting as a whole number if the amount has no fraction.
+     * @param string          $locale              The locale to format to, for example 'fr_FR' or 'en_US'.
+     * @param CurrencyDisplay $currencyDisplay     How the currency should be displayed in the formatted output.
+     * @param bool            $hideFractionIfWhole Whether to hide the fraction digits when the amount is a whole number.
      *
      * @throws MoneyFormatException If the intl extension is not installed, or the ICU version is too old.
      */
-    public function __construct(string $locale, CurrencyDisplay $currencyDisplay = CurrencyDisplay::Symbol, bool $allowWholeNumber = false)
+    public function __construct(string $locale, CurrencyDisplay $currencyDisplay = CurrencyDisplay::Symbol, bool $hideFractionIfWhole = false)
     {
         if (! extension_loaded('intl')) {
             throw new MoneyFormatException('Formatting a Money to a locale requires the intl extension.');
@@ -80,7 +80,7 @@ final readonly class MoneyLocaleFormatter implements MoneyFormatter
 
         $this->locale = $locale;
         $this->currencyDisplay = $currencyDisplay;
-        $this->allowWholeNumber = $allowWholeNumber;
+        $this->hideFractionIfWhole = $hideFractionIfWhole;
     }
 
     #[Override]
@@ -88,7 +88,7 @@ final readonly class MoneyLocaleFormatter implements MoneyFormatter
     {
         $amount = $money->getAmount();
 
-        if ($this->allowWholeNumber) {
+        if ($this->hideFractionIfWhole) {
             $strippedAmount = $amount->strippedOfTrailingZeros();
 
             if ($strippedAmount->getScale() === 0) {

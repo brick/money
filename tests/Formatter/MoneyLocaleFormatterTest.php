@@ -21,16 +21,16 @@ use function str_repeat;
 class MoneyLocaleFormatterTest extends AbstractTestCase
 {
     /**
-     * @param array           $money            The money to test.
-     * @param string          $locale           The target locale.
-     * @param CurrencyDisplay $currencyDisplay  How the currency is displayed in the formatted output.
-     * @param bool            $allowWholeNumber Whether to allow formatting as a whole number if the amount has no fraction.
-     * @param string          $expected         The expected output.
+     * @param array           $money               The money to test.
+     * @param string          $locale              The target locale.
+     * @param CurrencyDisplay $currencyDisplay     How the currency is displayed in the formatted output.
+     * @param bool            $hideFractionIfWhole Whether to hide the fraction digits when the amount is a whole number.
+     * @param string          $expected            The expected output.
      */
     #[DataProvider('providerFormat')]
-    public function testFormat(array $money, string $locale, CurrencyDisplay $currencyDisplay, bool $allowWholeNumber, string $expected): void
+    public function testFormat(array $money, string $locale, CurrencyDisplay $currencyDisplay, bool $hideFractionIfWhole, string $expected): void
     {
-        $formatter = new MoneyLocaleFormatter($locale, $currencyDisplay, $allowWholeNumber);
+        $formatter = new MoneyLocaleFormatter($locale, $currencyDisplay, $hideFractionIfWhole);
         self::assertSame($expected, $formatter->format(Money::of(...$money)));
     }
 
@@ -58,14 +58,14 @@ class MoneyLocaleFormatterTest extends AbstractTestCase
             [['1.23', 'EUR'], 'fr_FR', CurrencyDisplay::Name, false, '1,23 euro'],
             [['1.23', 'EUR'], 'fr_FR', CurrencyDisplay::None, false, '1,23'],
 
-            // all five display modes, GBP/en_GB, zero fraction, allowWholeNumber = false
+            // all five display modes, GBP/en_GB, zero fraction, hideFractionIfWhole = false
             [['1.00', 'GBP'], 'en_GB', CurrencyDisplay::Symbol, false, '£1.00'],
             [['1.00', 'GBP'], 'en_GB', CurrencyDisplay::NarrowSymbol, false, '£1.00'],
             [['1.00', 'GBP'], 'en_GB', CurrencyDisplay::Code, false, "GBP\u{A0}1.00"],
             [['1.00', 'GBP'], 'en_GB', CurrencyDisplay::Name, false, '1.00 British pounds'],
             [['1.00', 'GBP'], 'en_GB', CurrencyDisplay::None, false, '1.00'],
 
-            // all five display modes, GBP/en_GB, zero fraction, allowWholeNumber = true
+            // all five display modes, GBP/en_GB, zero fraction, hideFractionIfWhole = true
             [['1.00', 'GBP'], 'en_GB', CurrencyDisplay::Symbol, true, '£1'],
             [['1.00', 'GBP'], 'en_GB', CurrencyDisplay::NarrowSymbol, true, '£1'],
             [['1.00', 'GBP'], 'en_GB', CurrencyDisplay::Code, true, "GBP\u{A0}1"],
@@ -177,14 +177,14 @@ class MoneyLocaleFormatterTest extends AbstractTestCase
     }
 
     /**
-     * @param array $money            The money to test.
-     * @param bool  $allowWholeNumber Whether to allow formatting as a whole number if the amount has no fraction.
-     * @param int   $digitCount       The digit count expected in the exception message.
+     * @param array $money               The money to test.
+     * @param bool  $hideFractionIfWhole Whether to hide the fraction digits when the amount is a whole number.
+     * @param int   $digitCount          The digit count expected in the exception message.
      */
     #[DataProvider('providerFormatWithTooManyDigitsThrowsException')]
-    public function testFormatWithTooManyDigitsThrowsException(array $money, bool $allowWholeNumber, int $digitCount): void
+    public function testFormatWithTooManyDigitsThrowsException(array $money, bool $hideFractionIfWhole, int $digitCount): void
     {
-        $formatter = new MoneyLocaleFormatter('en_US', allowWholeNumber: $allowWholeNumber);
+        $formatter = new MoneyLocaleFormatter('en_US', hideFractionIfWhole: $hideFractionIfWhole);
 
         $this->expectException(MoneyFormatException::class);
         $this->expectExceptionMessage("has $digitCount significant digits");
@@ -204,7 +204,7 @@ class MoneyLocaleFormatterTest extends AbstractTestCase
             [['1.200000000000000', 'USD', new CustomContext(15)], false, 16],
             [['-1.0000000000000000', 'USD', new CustomContext(16)], false, 17],
 
-            // allowWholeNumber does not help when the amount has a fraction
+            // hideFractionIfWhole does not help when the amount has a fraction
             [['12345678901234.56', 'USD'], true, 16],
 
             // ...or when the integral part alone exceeds the limit

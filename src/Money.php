@@ -704,15 +704,15 @@ final readonly class Money extends AbstractMoney
      *
      * This method requires the intl extension, linked against ICU 62 or later.
      *
-     * @param string          $locale           The locale to format to, for example 'fr_FR' or 'en_US'.
-     * @param CurrencyDisplay $currencyDisplay  How the currency should be displayed in the formatted output.
-     * @param bool            $allowWholeNumber Whether to allow formatting as a whole number if the amount has no fraction.
+     * @param string          $locale              The locale to format to, for example 'fr_FR' or 'en_US'.
+     * @param CurrencyDisplay $currencyDisplay     How the currency should be displayed in the formatted output.
+     * @param bool            $hideFractionIfWhole Whether to hide the fraction digits when the amount is a whole number.
      *
      * @throws MoneyFormatException If the money cannot be formatted to the locale.
      */
-    public function formatToLocale(string $locale, CurrencyDisplay $currencyDisplay = CurrencyDisplay::Symbol, bool $allowWholeNumber = false): string
+    public function formatToLocale(string $locale, CurrencyDisplay $currencyDisplay = CurrencyDisplay::Symbol, bool $hideFractionIfWhole = false): string
     {
-        return (new MoneyLocaleFormatter($locale, $currencyDisplay, $allowWholeNumber))->format($this);
+        return (new MoneyLocaleFormatter($locale, $currencyDisplay, $hideFractionIfWhole))->format($this);
     }
 
     #[Override]

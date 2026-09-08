@@ -843,17 +843,17 @@ class MoneyTest extends AbstractTestCase
      * Money::formatToLocale() delegates to MoneyLocaleFormatter; this only checks that the delegation works fine.
      * The extensive formatting tests are in MoneyLocaleFormatterTest.
      *
-     * @param array           $money            The money to test.
-     * @param string          $locale           The target locale.
-     * @param CurrencyDisplay $currencyDisplay  How the currency is displayed in the formatted output.
-     * @param bool            $allowWholeNumber Whether to allow formatting as a whole number if the amount has no fraction.
-     * @param string          $expected         The expected output.
+     * @param array           $money               The money to test.
+     * @param string          $locale              The target locale.
+     * @param CurrencyDisplay $currencyDisplay     How the currency is displayed in the formatted output.
+     * @param bool            $hideFractionIfWhole Whether to hide the fraction digits when the amount is a whole number.
+     * @param string          $expected            The expected output.
      */
     #[RequiresPhpExtension('intl')]
     #[DataProvider('providerFormatToLocale')]
-    public function testFormatToLocale(array $money, string $locale, CurrencyDisplay $currencyDisplay, bool $allowWholeNumber, string $expected): void
+    public function testFormatToLocale(array $money, string $locale, CurrencyDisplay $currencyDisplay, bool $hideFractionIfWhole, string $expected): void
     {
-        self::assertSame($expected, Money::of(...$money)->formatToLocale($locale, $currencyDisplay, $allowWholeNumber));
+        self::assertSame($expected, Money::of(...$money)->formatToLocale($locale, $currencyDisplay, $hideFractionIfWhole));
     }
 
     public static function providerFormatToLocale(): array

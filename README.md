@@ -691,14 +691,14 @@ echo $money->formatToLocale('en_US', CurrencyDisplay::Name); // 5,000.00 USDT
 echo $money->formatToLocale('en_US', CurrencyDisplay::None); // 5,000.00
 ```
 
-The optional `$allowWholeNumber` parameter drops the fraction digits when the amount has no fraction:
+The optional `$hideFractionIfWhole` parameter drops the fraction digits when the amount has no fraction:
 
 ```php
 $money = Money::of(5000, 'USD');
-echo $money->formatToLocale('en_US', CurrencyDisplay::Symbol, true); // $5,000
+echo $money->formatToLocale('en_US', CurrencyDisplay::Symbol, hideFractionIfWhole: true); // $5,000
 
 $money = Money::of('5000.50', 'USD');
-echo $money->formatToLocale('en_US', CurrencyDisplay::Symbol, true); // $5,000.50
+echo $money->formatToLocale('en_US', CurrencyDisplay::Symbol, hideFractionIfWhole: true); // $5,000.50
 ```
 
 ## Storing Money objects in a database
