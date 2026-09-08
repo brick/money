@@ -698,18 +698,21 @@ final readonly class Money extends AbstractMoney
     /**
      * Formats this Money to the given locale.
      *
-     * Note that this method uses intl's NumberFormatter internally, which represents values using floats. If the
+     * Note that this method uses intl's MessageFormatter internally, which represents values using floats. If the
      * amount cannot be accurately represented as a float, a MoneyFormatException is thrown rather than formatting
      * it with wrong digits.
      *
-     * @param string $locale           The locale to format to, for example 'fr_FR' or 'en_US'.
-     * @param bool   $allowWholeNumber Whether to allow formatting as a whole number if the amount has no fraction.
+     * This method requires the intl extension, linked against ICU 62 or later.
+     *
+     * @param string          $locale           The locale to format to, for example 'fr_FR' or 'en_US'.
+     * @param CurrencyDisplay $currencyDisplay  How the currency should be displayed in the formatted output.
+     * @param bool            $allowWholeNumber Whether to allow formatting as a whole number if the amount has no fraction.
      *
      * @throws MoneyFormatException If the money cannot be formatted to the locale.
      */
-    public function formatToLocale(string $locale, bool $allowWholeNumber = false): string
+    public function formatToLocale(string $locale, CurrencyDisplay $currencyDisplay = CurrencyDisplay::Symbol, bool $allowWholeNumber = false): string
     {
-        return (new MoneyLocaleFormatter($locale, $allowWholeNumber))->format($this);
+        return (new MoneyLocaleFormatter($locale, $currencyDisplay, $allowWholeNumber))->format($this);
     }
 
     #[Override]

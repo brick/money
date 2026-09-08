@@ -8,7 +8,15 @@
   - `ExchangeRateProviderException`
   - `MoneyFormatException`
 - `MoneyNumberFormatter` has been removed; call `NumberFormatter::formatCurrency()` directly instead
+- `Money::formatToLocale()` and `MoneyLocaleFormatter` now format through ICU's modern number skeleton pipeline, and minor formatting differences may appear in some locales
+- `Money::formatToLocale()` and `MoneyLocaleFormatter` now require the intl extension to be linked against **ICU 62.1 or later**, and throw a `MoneyFormatException` on older ICU (this is independent of the PHP version)
+- `Money::formatToLocale()` and `MoneyLocaleFormatter` now accept a `CurrencyDisplay` parameter in the second position
 - `Money::formatToLocale()` and `MoneyLocaleFormatter` now throw a `MoneyFormatException` if the amount cannot be accurately represented as a float, rather than formatting it with wrong digits
+
+✨ **New features**
+
+- `Money::formatToLocale()` and `MoneyLocaleFormatter` now accept a `CurrencyDisplay` parameter controlling how the currency is displayed: `Symbol` (default), `NarrowSymbol`, `Code`, `Name`, or `None` (amount only)
+- `MoneyLocaleFormatter` now properly displays custom currencies whose code is not three letters (e.g. `USDT`, `GOLD`)
 
 ## [0.14.2](https://github.com/brick/money/releases/tag/0.14.2) - 2026-08-28
 

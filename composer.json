@@ -21,7 +21,7 @@
         "phpunit/phpunit": "^11.0"
     },
     "suggest": {
-        "ext-intl": "Required to format Money objects"
+        "ext-intl": "Required to format Money objects to a locale (needs ICU 62.1 or later)"
     },
     "autoload": {
         "psr-4": {

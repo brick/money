@@ -647,7 +647,8 @@ $money = Money::of('0.123', $bitcoin); // XBT 0.12300000
 
 ## Formatting
 
-**Formatting requires the [intl extension](http://php.net/manual/en/book.intl.php).**
+> [!IMPORTANT]
+> Formatting requires the [intl extension](http://php.net/manual/en/book.intl.php), linked against ICU 62.1 or later.
 
 Money objects can be formatted according to a given locale:
 
@@ -657,8 +658,48 @@ echo $money->formatToLocale('en_US'); // $5,000.00
 echo $money->formatToLocale('fr_FR'); // 5 000,00 $US
 ```
 
-> [!NOTE]
-> Formatting is performed using intl's `NumberFormatter`, which represents values using floats. If the amount cannot be accurately represented as a float, a `MoneyFormatException` is thrown rather than formatting it with wrong digits.
+The optional `$currencyDisplay` parameter controls how the currency is rendered:
+
+```php
+use Brick\Money\CurrencyDisplay;
+
+$money = Money::of(5000, 'USD');
+echo $money->formatToLocale('en_US', CurrencyDisplay::Symbol);       // $5,000.00
+echo $money->formatToLocale('en_US', CurrencyDisplay::NarrowSymbol); // $5,000.00
+echo $money->formatToLocale('en_US', CurrencyDisplay::Code);         // USD 5,000.00
+echo $money->formatToLocale('en_US', CurrencyDisplay::Name);         // 5,000.00 US dollars
+echo $money->formatToLocale('en_US', CurrencyDisplay::None);         // 5,000.00
+```
+
+`Symbol` uses the symbol the locale considers appropriate, disambiguating a foreign currency where needed;
+`NarrowSymbol` always uses the bare glyph. They differ only in that case:
+
+```php
+$money = Money::of(5000, 'USD');
+echo $money->formatToLocale('en_CA', CurrencyDisplay::Symbol);       // US$5,000.00
+echo $money->formatToLocale('en_CA', CurrencyDisplay::NarrowSymbol); // $5,000.00
+```
+
+A [custom currency](#custom-currencies) displays its code in every mode, placed and spaced the way the locale displays
+any currency it has no symbol or name for:
+
+```php
+$money = Money::of(5000, new Currency('USDT', null, 'Tether', 2));
+echo $money->formatToLocale('en_US');                        // USDT 5,000.00
+echo $money->formatToLocale('fr_FR');                        // 5 000,00 USDT
+echo $money->formatToLocale('en_US', CurrencyDisplay::Name); // 5,000.00 USDT
+echo $money->formatToLocale('en_US', CurrencyDisplay::None); // 5,000.00
+```
+
+The optional `$allowWholeNumber` parameter drops the fraction digits when the amount has no fraction:
+
+```php
+$money = Money::of(5000, 'USD');
+echo $money->formatToLocale('en_US', CurrencyDisplay::Symbol, true); // $5,000
+
+$money = Money::of('5000.50', 'USD');
+echo $money->formatToLocale('en_US', CurrencyDisplay::Symbol, true); // $5,000.50
+```
 
 ## Storing Money objects in a database
 
