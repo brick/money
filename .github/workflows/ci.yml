@@ -36,7 +36,9 @@ jobs:
 
   phpunit:
     name: PHPUnit
-    runs-on: ubuntu-latest
+    # Pinned: the intl tests assert on CLDR data, which changes with the ICU version shipped by the runner image.
+    # Moving to a newer image is a deliberate upgrade that may require updating the expected strings.
+    runs-on: ubuntu-24.04
 
     strategy:
       fail-fast: false

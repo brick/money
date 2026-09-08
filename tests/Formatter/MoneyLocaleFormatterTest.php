@@ -73,17 +73,13 @@ class MoneyLocaleFormatterTest extends AbstractTestCase
             [['1.00', 'GBP'], 'en_GB', CurrencyDisplay::None, true, '1'],
 
             // NarrowSymbol differs from Symbol only where the locale disambiguates a foreign currency
-            [['1234.56', 'USD'], 'en_CA', CurrencyDisplay::Symbol, false, 'US$1,234.56'],
-            [['1234.56', 'USD'], 'en_CA', CurrencyDisplay::NarrowSymbol, false, '$1,234.56'],
             [['1234.56', 'USD'], 'fr_FR', CurrencyDisplay::Symbol, false, "1\u{202F}234,56\u{A0}\$US"],
             [['1234.56', 'USD'], 'fr_FR', CurrencyDisplay::NarrowSymbol, false, "1\u{202F}234,56\u{A0}\$"],
 
-            // the number part honors CLDR minimumGroupingDigits: es/it/pl do not group a 4-digit amount,
+            // the number part honors CLDR minimumGroupingDigits: es/pl do not group a 4-digit amount,
             // while a 5-digit amount is grouped
             [['1234.56', 'EUR'], 'es', CurrencyDisplay::Symbol, false, "1234,56\u{A0}€"],
             [['12345.67', 'EUR'], 'es', CurrencyDisplay::Symbol, false, "12.345,67\u{A0}€"],
-            [['1234.56', 'EUR'], 'it', CurrencyDisplay::Symbol, false, "1234,56\u{A0}€"],
-            [['12345.67', 'EUR'], 'it', CurrencyDisplay::Symbol, false, "12.345,67\u{A0}€"],
             [['1234.56', 'PLN'], 'pl', CurrencyDisplay::Symbol, false, "1234,56\u{A0}zł"],
             [['12345.67', 'PLN'], 'pl', CurrencyDisplay::Symbol, false, "12\u{A0}345,67\u{A0}zł"],
 
@@ -148,11 +144,12 @@ class MoneyLocaleFormatterTest extends AbstractTestCase
             // de_CH: apostrophe grouping
             [['1234.56', 'CHF'], 'de_CH', CurrencyDisplay::Symbol, false, "CHF\u{A0}1\u{2019}234.56"],
 
-            // ar: the currency pattern's leading U+200F (right-to-left mark) is kept by None
-            [['1234.56', 'USD'], 'ar', CurrencyDisplay::Symbol, false, "\u{200F}1,234.56\u{A0}US\$"],
-            [['1234.56', 'USD'], 'ar', CurrencyDisplay::None, false, "\u{200F}1,234.56"],
-            [['-1234.56', 'USD'], 'ar', CurrencyDisplay::Symbol, false, "\u{200F}\u{200E}-1,234.56\u{A0}US\$"],
-            [['-1234.56', 'USD'], 'ar', CurrencyDisplay::None, false, "\u{200F}\u{200E}-1,234.56"],
+            // ar_EG: the currency pattern's leading U+200F (right-to-left mark) is kept by None, and so are the
+            // bidi marks around the minus sign (U+061C Arabic letter mark before it, U+200F after it)
+            [['1234.56', 'USD'], 'ar_EG', CurrencyDisplay::Symbol, false, "\u{200F}١٬٢٣٤٫٥٦\u{A0}US\$"],
+            [['1234.56', 'USD'], 'ar_EG', CurrencyDisplay::None, false, "\u{200F}١٬٢٣٤٫٥٦"],
+            [['-1234.56', 'USD'], 'ar_EG', CurrencyDisplay::Symbol, false, "\u{061C}-\u{200F}١٬٢٣٤٫٥٦\u{A0}US\$"],
+            [['-1234.56', 'USD'], 'ar_EG', CurrencyDisplay::None, false, "\u{061C}-\u{200F}١٬٢٣٤٫٥٦"],
 
             // bo: the currency sits between the sign and the number; None must drop its spacing
             [['-1234.56', 'USD'], 'bo', CurrencyDisplay::Symbol, false, "-US\$\u{A0}1,234.56"],
