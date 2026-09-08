@@ -12,6 +12,7 @@
 - `Money::formatToLocale()` and `MoneyLocaleFormatter` now require the intl extension to be linked against **ICU 62.1 or later**, and throw a `MoneyFormatException` on older ICU (this is independent of the PHP version)
 - `Money::formatToLocale()` and `MoneyLocaleFormatter` now accept a `CurrencyDisplay` parameter in the second position
 - `Money::formatToLocale()` and `MoneyLocaleFormatter` now throw a `MoneyFormatException` if the amount cannot be accurately represented as a float, rather than formatting it with wrong digits
+- `Money::formatToLocale()` and `MoneyLocaleFormatter` now throw a `MoneyFormatException` if the intl extension has no data for the locale's language (e.g. `xx_YY`), rather than silently formatting in the process default locale
 - The `$allowWholeNumber` parameter of `Money::formatToLocale()` and `MoneyLocaleFormatter` has been renamed to `$hideFractionIfWhole`
 
 ✨ **New features**

@@ -702,6 +702,10 @@ final readonly class Money extends AbstractMoney
      * amount cannot be accurately represented as a float, a MoneyFormatException is thrown rather than formatting
      * it with wrong digits.
      *
+     * ICU must have data for the locale's language: an unknown language such as 'xx_YY' is rejected with a
+     * MoneyFormatException, rather than silently formatted in the process default locale. An unknown region, script
+     * or variant is resolved by inheritance, so 'en_XX' formats like 'en'.
+     *
      * This method requires the intl extension, linked against ICU 62 or later.
      *
      * @param string          $locale              The locale to format to, for example 'fr_FR' or 'en_US'.

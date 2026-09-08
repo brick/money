@@ -170,6 +170,101 @@ class MoneyLocaleFormatterTest extends AbstractTestCase
             // an ISO-shaped code is uppercased like ICU does, and rendered as-is when CLDR has no symbol for it
             [['1234.56', new Currency('eur', null, 'Euro', 2)], 'en_US', CurrencyDisplay::Symbol, false, '€1,234.56'],
             [['1234.56', new Currency('abc', null, 'Abc', 2)], 'en_US', CurrencyDisplay::Symbol, false, "ABC\u{A0}1,234.56"],
+
+            // an unknown region is resolved by inheritance: en_XX formats as en
+            [['1234.56', 'USD'], 'en_XX', CurrencyDisplay::Symbol, false, '$1,234.56'],
+
+            // BCP 47 keywords are honored: Arabic-Indic digits in an English locale
+            [['1234.56', 'USD'], 'en-US-u-nu-arab', CurrencyDisplay::Symbol, false, "١٬٢٣٤٫٥٦\u{A0}\$"],
+        ];
+    }
+
+    /**
+     * @param string $locale A locale whose language ICU has no data for.
+     */
+    #[DataProvider('providerUnknownLocaleThrowsException')]
+    public function testUnknownLocaleThrowsException(string $locale): void
+    {
+        $this->expectException(MoneyFormatException::class);
+        $this->expectExceptionMessage('Unknown locale "' . $locale . '"');
+
+        new MoneyLocaleFormatter($locale);
+    }
+
+    public static function providerUnknownLocaleThrowsException(): array
+    {
+        return [
+            // the empty string no longer means the process default locale
+            [''],
+
+            // ICU has no data for these languages, and would silently format in the process default locale
+            ['xx_YY'],
+            ['zz'],
+            ['123'],
+            ['x-private'],
+
+            // a valid ISO 639 code, which NumberFormatter accepts, but ICU has no data for
+            ['tlh'],
+
+            // root and und name no language, with or without a region
+            ['root'],
+            ['und'],
+            ['root_US'],
+            ['und_US'],
+
+            // POSIX locale names are not ICU locales
+            ['C'],
+            ['POSIX'],
+            ['C.UTF-8'],
+
+            // too long for ICU to parse
+            [str_repeat('a', 200)],
+
+            // a NUL byte, which recent PHP versions reject and older ones truncate the string at
+            ["\0"],
+            ["en\0US"],
+        ];
+    }
+
+    /**
+     * @param string $locale A locale whose language ICU has data for, whatever its other subtags.
+     */
+    #[DataProvider('providerKnownLocaleIsAccepted')]
+    public function testKnownLocaleIsAccepted(string $locale): void
+    {
+        $formatter = new MoneyLocaleFormatter($locale);
+        self::assertNotSame('', $formatter->format(Money::of('1234.56', 'USD')));
+    }
+
+    public static function providerKnownLocaleIsAccepted(): array
+    {
+        return [
+            // an unknown region, script or variant is resolved by inheritance
+            ['en_XX'],
+            ['en_US_bogus'],
+            ['en_US_POSIX'],
+
+            // BCP 47 tags and keywords, ICU keywords, and POSIX-style suffixes
+            ['zh-Hant-TW'],
+            ['en-US-u-nu-arab'],
+            ['de_DE@collation=phonebook'],
+            ['en_US.UTF-8'],
+
+            // case is not significant
+            ['EN_us'],
+
+            // scripts and three-letter language codes
+            ['sr_Latn_RS'],
+            ['fr'],
+            ['ml_IN'],
+            ['fil'],
+            ['ast'],
+
+            // deprecated language codes, which ICU resolves through alias bundles (iw → he, no → nb, ...)
+            ['iw'],
+            ['no'],
+            ['tl'],
+            ['sh'],
         ];
     }
 

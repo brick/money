@@ -56,4 +56,17 @@ final class MoneyFormatException extends RuntimeException implements MoneyExcept
             $maxScale,
         ));
     }
+
+    /**
+     * @internal
+     *
+     * @pure
+     */
+    public static function unknownLocale(string $locale): self
+    {
+        return new self(sprintf(
+            'Unknown locale "%s": the intl extension has no data for its language.',
+            $locale,
+        ));
+    }
 }

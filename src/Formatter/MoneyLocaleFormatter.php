@@ -10,8 +10,10 @@ use Brick\Money\Exception\MoneyFormatException;
 use Brick\Money\Money;
 use Brick\Money\MoneyFormatter;
 use IntlException;
+use Locale;
 use MessageFormatter;
 use Override;
+use ResourceBundle;
 
 use function extension_loaded;
 use function floor;
@@ -35,6 +37,10 @@ use const PHP_FLOAT_MIN;
  *
  * This formatter uses intl's MessageFormatter internally, which represents values using floats. If the amount cannot be
  * accurately represented as a float, a MoneyFormatException is thrown rather than formatting it with wrong digits.
+ *
+ * The locale's language must be one ICU has data for: a locale whose language it has no data for, such as 'xx_YY' or
+ * an empty string, is rejected with a MoneyFormatException rather than silently formatted in the process default
+ * locale. An unknown region, script or variant is fine, as ICU resolves it by inheritance: 'en_XX' formats like 'en'.
  *
  * This formatter requires the intl extension, linked against ICU 62 or later.
  */
@@ -61,7 +67,8 @@ final readonly class MoneyLocaleFormatter implements MoneyFormatter
      * @param CurrencyDisplay $currencyDisplay     How the currency should be displayed in the formatted output.
      * @param bool            $hideFractionIfWhole Whether to hide the fraction digits when the amount is a whole number.
      *
-     * @throws MoneyFormatException If the intl extension is not installed, or the ICU version is too old.
+     * @throws MoneyFormatException If the intl extension is not installed, the ICU version is too old, or ICU has no
+     *                              data for the locale's language.
      */
     public function __construct(string $locale, CurrencyDisplay $currencyDisplay = CurrencyDisplay::Symbol, bool $hideFractionIfWhole = false)
     {
@@ -77,6 +84,10 @@ final readonly class MoneyLocaleFormatter implements MoneyFormatter
                 INTL_ICU_VERSION,
             ));
         }
+
+        // MessageFormatter accepts any locale string, and silently formats with the process default locale when ICU
+        // has no data for the locale's language; reject such a locale up front instead.
+        self::checkLocale($locale);
 
         $this->locale = $locale;
         $this->currencyDisplay = $currencyDisplay;
@@ -209,6 +220,42 @@ final readonly class MoneyLocaleFormatter implements MoneyFormatter
         }
 
         return $trimmed;
+    }
+
+    /**
+     * Checks that ICU has data for the language of the given locale.
+     *
+     * Only the language is checked: ICU resolves an unknown region, script or variant by inheritance ('en_XX' formats
+     * as 'en'), which is correct and must stay accepted.
+     *
+     * @throws MoneyFormatException If ICU has no data for the locale's language.
+     */
+    private static function checkLocale(string $locale): void
+    {
+        // Locale::getPrimaryLanguage() substitutes the process default locale for an empty string, which is exactly
+        // the silent fallback this check exists to stop. A NUL byte makes recent PHP versions throw a ValueError,
+        // and older ones truncate the string at it, so "en\0US" would pass as "en".
+        if ($locale === '' || str_contains($locale, "\0")) {
+            throw MoneyFormatException::unknownLocale($locale);
+        }
+
+        // Locale::getPrimaryLanguage() returns '' when the locale has no language (root, und, _US), 'root' for root_XX
+        // (a bundle, but not a language), and null on error; under intl.use_exceptions=1, intl throws instead.
+        try {
+            $language = Locale::getPrimaryLanguage($locale);
+
+            $isKnown = $language !== null
+                // @phpstan-ignore notIdentical.alwaysTrue (the stub says non-empty-string, but root and und yield '')
+                && $language !== ''
+                && $language !== 'root'
+                && ResourceBundle::create($language, null, false) !== null;
+        } catch (IntlException) {
+            $isKnown = false;
+        }
+
+        if (! $isKnown) {
+            throw MoneyFormatException::unknownLocale($locale);
+        }
     }
 
     /**
