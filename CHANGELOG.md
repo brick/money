@@ -1,6 +1,6 @@
 # Changelog
 
-## UNRELEASED (0.15.0)
+## [0.15.0](https://github.com/brick/money/releases/tag/0.15.0) - 2026-09-09
 
 💥 **Breaking changes**
 
@@ -8,11 +8,12 @@
   - `ExchangeRateProviderException`
   - `MoneyFormatException`
 - `MoneyNumberFormatter` has been removed; call `NumberFormatter::formatCurrency()` directly instead
-- `Money::formatToLocale()` and `MoneyLocaleFormatter` now format through ICU's modern number skeleton pipeline, and minor formatting differences may appear in some locales
-- `Money::formatToLocale()` and `MoneyLocaleFormatter` now require the intl extension to be linked against **ICU 62.1 or later**, and throw a `MoneyFormatException` on older ICU (this is independent of the PHP version)
-- `Money::formatToLocale()` and `MoneyLocaleFormatter` now accept a `CurrencyDisplay` parameter in the second position
-- `Money::formatToLocale()` and `MoneyLocaleFormatter` now throw a `MoneyFormatException` if the amount cannot be accurately represented as a float, rather than formatting it with wrong digits
-- `Money::formatToLocale()` and `MoneyLocaleFormatter` now throw a `MoneyFormatException` if the intl extension has no data for the locale's language (e.g. `xx_YY`), rather than silently formatting in the process default locale
+- `Money::formatToLocale()` and `MoneyLocaleFormatter`:
+  - now format through ICU's modern number skeleton pipeline, and minor formatting differences may appear in some locales
+  - now require the intl extension to be linked against **ICU 62.1 or later**, and throw a `MoneyFormatException` on older ICU (this is independent of the PHP version)
+  - now accept a `CurrencyDisplay` parameter in the second position
+  - now throw a `MoneyFormatException` if the amount cannot be accurately represented as a float, rather than formatting it with wrong digits
+  - now throw a `MoneyFormatException` if the intl extension has no data for the locale's language (e.g. `xx_YY`), rather than silently formatting in the process default locale
 - The `$allowWholeNumber` parameter of `Money::formatToLocale()` and `MoneyLocaleFormatter` has been renamed to `$hideFractionIfWhole`
 
 ✨ **New features**
