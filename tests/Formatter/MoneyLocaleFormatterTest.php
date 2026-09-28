@@ -11,8 +11,11 @@ use Brick\Money\Exception\MoneyFormatException;
 use Brick\Money\Formatter\MoneyLocaleFormatter;
 use Brick\Money\Money;
 use Brick\Money\Tests\AbstractTestCase;
+use NumberFormatter;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 use function ini_set;
 use function str_repeat;
@@ -265,6 +268,32 @@ class MoneyLocaleFormatterTest extends AbstractTestCase
             ['no'],
             ['tl'],
             ['sh'],
+        ];
+    }
+
+    /**
+     * Opening an alias locale's bundle without fallback leaves a broken entry in ICU's cache, after which every
+     * formatter for that locale in the process falls back to root data. Since ICU 74, nb is an alias of no; before,
+     * no was an alias of nb. The test must be the first to touch the locale, hence the separate process.
+     *
+     * @param string $locale A locale that is an alias of another locale, depending on the ICU version.
+     */
+    #[DataProvider('providerCheckLocaleDoesNotBreakAliasLocale')]
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
+    public function testCheckLocaleDoesNotBreakAliasLocale(string $locale): void
+    {
+        new MoneyLocaleFormatter($locale);
+
+        $numberFormatter = new NumberFormatter($locale, NumberFormatter::DECIMAL);
+        self::assertSame(',', $numberFormatter->getSymbol(NumberFormatter::DECIMAL_SEPARATOR_SYMBOL));
+    }
+
+    public static function providerCheckLocaleDoesNotBreakAliasLocale(): array
+    {
+        return [
+            ['nb'],
+            ['no'],
         ];
     }
 
