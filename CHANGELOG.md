@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.15.2](https://github.com/brick/money/releases/tag/0.15.2) - 2026-09-29
+
+🐛 **Bug fix**
+
+- `Money::formatToLocale()` and `MoneyLocaleFormatter` would, for some locales, format with root locale data, and break every intl formatter created afterwards for that locale in the same process (#135 by @tomsommer)
+
 ## [0.15.1](https://github.com/brick/money/releases/tag/0.15.1) - 2026-09-14
 
 📌 **Compatibility**
