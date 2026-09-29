@@ -268,6 +268,8 @@ final readonly class MoneyLocaleFormatter implements MoneyFormatter
      * ures_openDirect(), which breaks every later formatter for some locales (nb and nn, whose parent is no since
      * ICU 74) for the rest of the process. The bundle is opened with fallback instead, and the fallback warnings are
      * checked here.
+     *
+     * @see https://unicode-org.atlassian.net/browse/ICU-23536
      */
     private static function hasBundle(string $language): bool
     {
