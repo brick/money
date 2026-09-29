@@ -272,16 +272,16 @@ class MoneyLocaleFormatterTest extends AbstractTestCase
     }
 
     /**
-     * Opening an alias locale's bundle without fallback leaves a broken entry in ICU's cache, after which every
-     * formatter for that locale in the process falls back to root data. Since ICU 74, nb is an alias of no; before,
-     * no was an alias of nb. The test must be the first to touch the locale, hence the separate process.
+     * Opening the bundle of some locales without fallback (nb and nn, whose parent is no since ICU 74) leaves a broken
+     * entry in ICU's cache, after which every formatter for that locale in the process falls back to root data. The
+     * test must be the first to touch the locale, hence the separate process.
      *
-     * @param string $locale A locale that is an alias of another locale, depending on the ICU version.
+     * @param string $locale A locale affected on some ICU versions.
      */
-    #[DataProvider('providerCheckLocaleDoesNotBreakAliasLocale')]
+    #[DataProvider('providerCheckLocaleDoesNotBreakLaterFormatters')]
     #[RunInSeparateProcess]
     #[PreserveGlobalState(false)]
-    public function testCheckLocaleDoesNotBreakAliasLocale(string $locale): void
+    public function testCheckLocaleDoesNotBreakLaterFormatters(string $locale): void
     {
         new MoneyLocaleFormatter($locale);
 
@@ -289,10 +289,11 @@ class MoneyLocaleFormatterTest extends AbstractTestCase
         self::assertSame(',', $numberFormatter->getSymbol(NumberFormatter::DECIMAL_SEPARATOR_SYMBOL));
     }
 
-    public static function providerCheckLocaleDoesNotBreakAliasLocale(): array
+    public static function providerCheckLocaleDoesNotBreakLaterFormatters(): array
     {
         return [
             ['nb'],
+            ['nn'],
             ['no'],
         ];
     }

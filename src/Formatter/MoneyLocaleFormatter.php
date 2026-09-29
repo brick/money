@@ -265,12 +265,13 @@ final readonly class MoneyLocaleFormatter implements MoneyFormatter
      * Checks that ICU has a resource bundle of its own for the given language, without falling back to root.
      *
      * This is what ResourceBundle::create($language, null, false) checks, but that opens the bundle with
-     * ures_openDirect(), which breaks every later formatter for an alias locale (nb since ICU 74, no before) for the
-     * rest of the process. The bundle is opened with fallback instead, and the fallback warnings are checked here.
+     * ures_openDirect(), which breaks every later formatter for some locales (nb and nn, whose parent is no since
+     * ICU 74) for the rest of the process. The bundle is opened with fallback instead, and the fallback warnings are
+     * checked here.
      */
     private static function hasBundle(string $language): bool
     {
-        $bundle = ResourceBundle::create($language, null, true);
+        $bundle = ResourceBundle::create($language, null);
 
         return $bundle !== null
             && $bundle->getErrorCode() !== U_USING_FALLBACK_WARNING
