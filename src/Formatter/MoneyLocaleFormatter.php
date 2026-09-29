@@ -31,6 +31,8 @@ use function version_compare;
 use const INTL_ICU_VERSION;
 use const PHP_FLOAT_DIG;
 use const PHP_FLOAT_MIN;
+use const U_USING_DEFAULT_WARNING;
+use const U_USING_FALLBACK_WARNING;
 
 /**
  * Formats a Money to a locale.
@@ -240,15 +242,16 @@ final readonly class MoneyLocaleFormatter implements MoneyFormatter
         }
 
         // Locale::getPrimaryLanguage() returns '' when the locale has no language (root, und, _US), 'root' for root_XX
-        // (a bundle, but not a language), and null on error; under intl.use_exceptions=1, intl throws instead.
+        // (a bundle, but not a language), the whole tag for a private use or grandfathered tag (x-private, i-klingon),
+        // and null on error; under intl.use_exceptions=1, intl throws instead. Only a BCP 47 language subtag, 2 to 8
+        // letters, is looked up: ICU reduces anything else to root before opening the bundle.
         try {
             $language = Locale::getPrimaryLanguage($locale);
 
             $isKnown = $language !== null
-                // @phpstan-ignore notIdentical.alwaysTrue (the stub says non-empty-string, but root and und yield '')
-                && $language !== ''
                 && $language !== 'root'
-                && ResourceBundle::create($language, null, false) !== null;
+                && preg_match('/^[a-z]{2,8}$/D', $language) === 1
+                && self::hasBundle($language);
         } catch (IntlException) {
             $isKnown = false;
         }
@@ -256,6 +259,23 @@ final readonly class MoneyLocaleFormatter implements MoneyFormatter
         if (! $isKnown) {
             throw MoneyFormatException::unknownLocale($locale);
         }
+    }
+
+    /**
+     * Checks that ICU has a resource bundle of its own for the given language, without falling back to root.
+     *
+     * This is what ResourceBundle::create($language, null, false) checks, but that opens the bundle with
+     * ures_openDirect(), which breaks every later formatter for some locales (nb and nn, whose parent is no since
+     * ICU 74) for the rest of the process. The bundle is opened with fallback instead, and the fallback warnings are
+     * checked here.
+     */
+    private static function hasBundle(string $language): bool
+    {
+        $bundle = ResourceBundle::create($language, null);
+
+        return $bundle !== null
+            && $bundle->getErrorCode() !== U_USING_FALLBACK_WARNING
+            && $bundle->getErrorCode() !== U_USING_DEFAULT_WARNING;
     }
 
     /**

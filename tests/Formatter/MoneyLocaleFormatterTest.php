@@ -11,8 +11,11 @@ use Brick\Money\Exception\MoneyFormatException;
 use Brick\Money\Formatter\MoneyLocaleFormatter;
 use Brick\Money\Money;
 use Brick\Money\Tests\AbstractTestCase;
+use NumberFormatter;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 use function ini_set;
 use function str_repeat;
@@ -265,6 +268,35 @@ class MoneyLocaleFormatterTest extends AbstractTestCase
             ['no'],
             ['tl'],
             ['sh'],
+        ];
+    }
+
+    /**
+     * Opening the bundle of some locales without fallback (nb and nn, whose parent is no since ICU 74) leaves a broken
+     * entry in ICU's cache, after which every formatter for that locale in the process falls back to root data. The
+     * test must be the first to touch the locale, hence the separate process.
+     *
+     * @see https://unicode-org.atlassian.net/browse/ICU-23536
+     *
+     * @param string $locale A locale affected on some ICU versions.
+     */
+    #[DataProvider('providerCheckLocaleDoesNotBreakLaterFormatters')]
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
+    public function testCheckLocaleDoesNotBreakLaterFormatters(string $locale): void
+    {
+        new MoneyLocaleFormatter($locale);
+
+        $numberFormatter = new NumberFormatter($locale, NumberFormatter::DECIMAL);
+        self::assertSame(',', $numberFormatter->getSymbol(NumberFormatter::DECIMAL_SEPARATOR_SYMBOL));
+    }
+
+    public static function providerCheckLocaleDoesNotBreakLaterFormatters(): array
+    {
+        return [
+            ['nb'],
+            ['nn'],
+            ['no'],
         ];
     }
 
