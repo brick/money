@@ -276,6 +276,8 @@ class MoneyLocaleFormatterTest extends AbstractTestCase
      * entry in ICU's cache, after which every formatter for that locale in the process falls back to root data. The
      * test must be the first to touch the locale, hence the separate process.
      *
+     * @see https://unicode-org.atlassian.net/browse/ICU-23536
+     *
      * @param string $locale A locale affected on some ICU versions.
      */
     #[DataProvider('providerCheckLocaleDoesNotBreakLaterFormatters')]
